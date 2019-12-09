@@ -1,6 +1,5 @@
 import React, { createContext } from 'react';
 import App from 'next/app';
-import Head from 'next/head';
 import { ThemeProvider, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../src/theme';
@@ -9,6 +8,9 @@ import { mobileCheck } from '../src/helpers/MobileCheck';
 import Footer from '../src/components/layout/Footer';
 import { api } from '../src/services/api';
 import Loading from '../src/components/loading/Loading';
+import Messaging from '../src/components/messaging/Messaging';
+import { verifyToken } from '../src/helpers/verifyToken';
+import { withRouter } from 'next/router';
 
 const styles = {
   container: {
@@ -34,20 +36,18 @@ export const AppContext = createContext({
   isMobile: false,
   windowWidth: null,
   restaurant: null,
+  user: null,
+  handleSetUser: () => {},
+  handleLogout: () => {},
 });
 
 class MyApp extends App {
-  /*
-  static async getInitialProps(ctx) {
-    const appProps = await App.getInitialProps(ctx);
-    return { ...appProps };
-  }
-  */
-
   state = {
     isMobile: false,
     windowWidth: 1500,
     restaurant: null,
+    user: null,
+    loading: false,
   };
 
   componentDidMount() {
@@ -57,8 +57,6 @@ class MyApp extends App {
       jssStyles.parentElement.removeChild(jssStyles);
     }
 
-    window.addEventListener('resize', this.handleResize);
-
     let restaurant;
 
     api()
@@ -67,12 +65,16 @@ class MyApp extends App {
         restaurant = response.data;
       })
       .finally(() => {
+        const payload = verifyToken();
         this.setState({
           isMobile: mobileCheck(),
           windowWidth: window.innerWidth,
           restaurant: restaurant,
+          user: payload,
         });
       });
+
+    window.addEventListener('resize', this.handleResize);
   }
 
   handleResize = () => {
@@ -82,36 +84,66 @@ class MyApp extends App {
     });
   };
 
+  handleSetUser = user => {
+    this.setState({
+      user,
+    });
+  };
+
+  handleLogout = () => {
+    this.setState({
+      loading: true,
+    });
+
+    api()
+      .post('/logout')
+      .then(response => {
+        const { router } = this.props;
+        localStorage.removeItem(process.env.localStorageTokenName);
+        this.setState({
+          user: null,
+        });
+        router.push('/');
+      })
+      .finally(() => {
+        this.setState({
+          loading: false,
+        });
+      });
+  };
+
   render() {
     const { Component, pageProps, classes } = this.props;
-    const { isMobile, windowWidth, restaurant } = this.state;
+    const { isMobile, windowWidth, restaurant, user, loading } = this.state;
 
     return (
-      <React.Fragment>
-        <Head>
-          <title>My page</title>
-        </Head>
+      <>
         <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
           <AppContext.Provider
             value={{
+              handleSetUser: this.handleSetUser,
+              handleLogout: this.handleLogout,
               isMobile: isMobile,
               windowWidth: windowWidth,
               restaurant: restaurant,
+              user: user,
             }}
           >
             {!restaurant && <Loading background />}
-            <Header />
-            <div className={isMobile || windowWidth < 1280 ? classes.mobileContainer : classes.container}>
-              <Component {...pageProps} />
-            </div>
-            <Footer />
+            {loading && <Loading background />}
+            <Messaging>
+              <Header />
+              <div className={isMobile || windowWidth < 1280 ? classes.mobileContainer : classes.container}>
+                <Component {...pageProps} />
+              </div>
+              <Footer />
+            </Messaging>
           </AppContext.Provider>
         </ThemeProvider>
-      </React.Fragment>
+      </>
     );
   }
 }
 
-export default withStyles(styles)(MyApp);
+export default withStyles(styles)(withRouter(MyApp));

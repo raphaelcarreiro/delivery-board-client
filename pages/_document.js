@@ -18,6 +18,9 @@ export default class MyDocument extends Document {
             a:hover {
               text-decoration: none;
             }
+            form {
+              width: 100%;
+            }
           `}</style>
         </Head>
         <body>

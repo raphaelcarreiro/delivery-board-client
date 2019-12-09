@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import Snackbar from '@material-ui/core/Snackbar';
-import PropTypes from 'prop-types';
+import PropTypes, { oneOfType } from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { AppContext } from '../../../pages/_app';
@@ -16,9 +16,6 @@ const useStyles = makeStyles(theme => ({
   },
   snackbar: {
     bottom: 10,
-  },
-  warningText: {
-    color: '#ffc107',
   },
   actionText: {
     color: theme.palette.primary.light,
@@ -36,7 +33,7 @@ function Messaging({ children }) {
   const [message, setMessage] = useState('');
   const [action, setAction] = useState(null);
   const [options, setOptions] = useState(null);
-  const { appContext } = useContext(AppContext);
+  const appContext = useContext(AppContext);
 
   function handleClose(event, reason) {
     if (reason === 'clickaway') return false;
@@ -125,7 +122,7 @@ function Messaging({ children }) {
 }
 
 Messaging.propTypes = {
-  children: PropTypes.element.isRequired,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.array]).isRequired,
 };
 
 export default Messaging;

@@ -1,29 +1,26 @@
 import axios from 'axios';
 
 function getAxiosInstance() {
-  // let instance;
-  const hastoken = false;
+  let instance;
+  const token = localStorage.getItem(process.env.localStorageTokenName);
 
-  /* if (localStorage.getItem('token')) {
+  if (token)
     instance = axios.create({
       baseURL: process.env.BASEURL_API,
       headers: {
-        // Authorization: 'Bearer ' + localStorage.getItem('token'),
-        RestaurantID: process.env.ID,
+        Authorization: `Bearer ${token}`,
+        RestaurantId: process.env.RESTAURANT_ID,
+      },
+    });
+  else
+    instance = axios.create({
+      baseURL: process.env.BASEURL_API,
+      headers: {
+        RestaurantId: process.env.RESTAURANT_ID,
       },
     });
 
-    hastoken = true;
-  } else */
-
-  const instance = axios.create({
-    baseURL: process.env.BASEURL_API,
-    headers: {
-      RestaurantId: process.env.RESTAURANT_ID,
-    },
-  });
-
-  if (hastoken)
+  if (token)
     instance.interceptors.response.use(
       function(response) {
         return response;
@@ -31,7 +28,7 @@ function getAxiosInstance() {
       function(error) {
         if (error.response) {
           if (error.response.status === 401) {
-            // localStorage.removeItem('token');
+            localStorage.removeItem(process.env.localStorageTokenName);
           } else {
             return Promise.reject(error);
           }
