@@ -3,15 +3,16 @@ import { Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppContext } from '../../../pages/_app';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   footer: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     borderTop: '1px solid #eee',
     height: 70,
+    backgroundColor: '#fff',
   },
-});
+}));
 
 function Footer() {
   const classes = useStyles();

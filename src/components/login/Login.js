@@ -1,20 +1,67 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Grid, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Grid, Button, Typography, LinearProgress, IconButton } from '@material-ui/core';
 import LoginEmailStep from './LoginEmailStep';
 import LoginPasswordStep from './LoginPasswordStep';
 import { api } from '../../services/api';
 import { MessagingContext } from '../messaging/Messaging';
 import { AppContext } from '../../../pages/_app';
-import Loading from '../loading/Loading';
 import { useRouter } from 'next/router';
 import { isAuthenticated } from '../../services/auth';
+import Link from '../link/Link';
+import { makeStyles } from '@material-ui/core/styles';
+import NavigateBoforeIcon from '@material-ui/icons/ArrowBack';
 
-const useStyles = makeStyles({
-  action: {
-    marginTop: 20,
+const useStyles = makeStyles(theme => ({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    border: `2px solid #ddd`,
+    height: 500,
+    padding: '20px 15px',
+    margin: '0 15px',
+    justifyContent: 'space-between',
+    borderRadius: 4,
+    position: 'relative',
+    backgroundColor: '#fff',
   },
-});
+  action: {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+  },
+  loading: {
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    position: 'absolute',
+    zIndex: 10,
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  linearProgress: {
+    width: '99%',
+    marginTop: '-3px',
+    borderRadius: 4,
+  },
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: 250,
+    justifyContent: 'space-between',
+  },
+  btnBack: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+  },
+  logoContainer: {
+    textAlign: 'center',
+  },
+  logo: {
+    width: 70,
+  },
+}));
 
 function Login() {
   const classes = useStyles();
@@ -46,7 +93,9 @@ function Login() {
         })
         .catch(err => {
           if (err.response) {
-            if (err.response.status === 401) messaging.handleOpen('E-mail não encontrado');
+            if (err.response.status === 401) {
+              messaging.handleOpen(`E-mail não encontrado`);
+            }
           } else messaging.handleOpen(err.message);
         })
         .finally(() => {
@@ -66,8 +115,6 @@ function Login() {
           if (err.response)
             if (err.response.status === 401) messaging.handleOpen('Usuário ou senha incorretos');
             else messaging.handleOpen(err.message);
-        })
-        .finally(() => {
           setLoading(false);
         });
     }
@@ -75,19 +122,47 @@ function Login() {
 
   return (
     <>
-      {loading && <Loading />}
       <Grid container justify="center" alignItems="center">
-        <Grid item xs={12} lg={4} xl={4} md={6}>
+        <Grid item xs={12} lg={4} xl={3} md={6}>
           <form onSubmit={handleSubmit}>
-            {step === 'email' ? (
-              <LoginEmailStep email={email} setEmail={setEmail} />
-            ) : (
-              <LoginPasswordStep name={name} password={password} setPassword={setPassword} />
-            )}
-            <div className={classes.action}>
-              <Button type="submit" fullWidth variant="contained" color="primary" disabled={loading}>
-                {step === 'email' ? 'Próximo' : 'Entrar'}
-              </Button>
+            <div className={classes.container}>
+              {step === 'password' && (
+                <IconButton onClick={() => setStep('email')} className={classes.btnBack}>
+                  <NavigateBoforeIcon />
+                </IconButton>
+              )}
+              {loading && (
+                <div className={classes.loading}>
+                  <LinearProgress className={classes.linearProgress} color="primary" />
+                </div>
+              )}
+              <div className={classes.content}>
+                <div className={classes.logoContainer}>
+                  <img
+                    className={classes.logo}
+                    src="http://api.topnfe.com.br/storage/uploaded/images/161113201912085ded3cc187f51.png"
+                    alt="Logo"
+                  />
+                  <Typography align="center" variant="h6">
+                    Login
+                  </Typography>
+                </div>
+                {step === 'email' ? (
+                  <LoginEmailStep email={email} setEmail={setEmail} />
+                ) : (
+                  <LoginPasswordStep name={name} password={password} setPassword={setPassword} />
+                )}
+              </div>
+              <div className={classes.action}>
+                {step === 'email' && (
+                  <Button component={Link} href="/register" color="primary" variant="text">
+                    Criar conta
+                  </Button>
+                )}
+                <Button type="submit" variant="contained" color="primary" disabled={loading}>
+                  {step === 'email' ? 'Próximo' : 'Entrar'}
+                </Button>
+              </div>
             </div>
           </form>
         </Grid>

@@ -26,6 +26,7 @@ const useStyles = makeStyles({
     display: 'flex',
     boxShadow: '1px 1px 7px 1px #d4d4d4',
     padding: '0 15px',
+    backgroundColor: '#fff',
   },
   headerCol1: {},
   headerCol2: {},

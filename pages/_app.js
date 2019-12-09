@@ -3,14 +3,14 @@ import App from 'next/app';
 import { ThemeProvider, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../src/theme';
-import Header from '../src/components/layout/Header';
 import { mobileCheck } from '../src/helpers/MobileCheck';
-import Footer from '../src/components/layout/Footer';
 import { api } from '../src/services/api';
 import Loading from '../src/components/loading/Loading';
 import Messaging from '../src/components/messaging/Messaging';
 import { verifyToken } from '../src/helpers/verifyToken';
 import { withRouter } from 'next/router';
+import OnlyMain from '../src/components/layout/OnlyMain';
+import Default from '../src/components/layout/Default';
 
 const styles = {
   container: {
@@ -49,6 +49,8 @@ class MyApp extends App {
     user: null,
     loading: false,
   };
+
+  paths = ['/register', '/login'];
 
   componentDidMount() {
     // Remove the server-side injected CSS.
@@ -113,7 +115,7 @@ class MyApp extends App {
   };
 
   render() {
-    const { Component, pageProps, classes } = this.props;
+    const { Component, pageProps, classes, router } = this.props;
     const { isMobile, windowWidth, restaurant, user, loading } = this.state;
 
     return (
@@ -132,12 +134,13 @@ class MyApp extends App {
           >
             {!restaurant && <Loading background />}
             {loading && <Loading background />}
+
             <Messaging>
-              <Header />
-              <div className={isMobile || windowWidth < 1280 ? classes.mobileContainer : classes.container}>
-                <Component {...pageProps} />
-              </div>
-              <Footer />
+              {this.paths.includes(router.route) ? (
+                <OnlyMain pageProps={pageProps} component={Component} />
+              ) : (
+                <Default pageProps={pageProps} component={Component} isMobile={isMobile} windowWidth={windowWidth} />
+              )}
             </Messaging>
           </AppContext.Provider>
         </ThemeProvider>
