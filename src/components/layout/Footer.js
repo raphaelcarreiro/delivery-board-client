@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppContext } from '../../../pages/_app';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   footer: {
@@ -16,11 +16,11 @@ const useStyles = makeStyles(theme => ({
 
 function Footer() {
   const classes = useStyles();
-  const appContext = useContext(AppContext);
+  const restaurant = useSelector(state => state.restaurant);
 
   return (
     <footer className={classes.footer}>
-      {appContext.restaurant ? <Typography>{appContext.restaurant.name}</Typography> : <span>teste</span>}
+      {restaurant.id ? <Typography>{restaurant.name}</Typography> : <span>teste</span>}
     </footer>
   );
 }

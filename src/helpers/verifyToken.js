@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 export function verifyToken(withData = false) {
   let payload;
-  const token = localStorage.getItem(process.env.localStorageTokenName);
+  const token = localStorage.getItem(process.env.TOKEN_NAME);
 
   if (token) {
     try {

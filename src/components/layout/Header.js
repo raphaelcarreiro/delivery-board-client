@@ -1,15 +1,16 @@
 import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, TextField, InputAdornment, IconButton, Button, Menu, MenuItem } from '@material-ui/core';
-import { AppContext } from '../../../pages/_app';
+import { Grid, TextField, InputAdornment, IconButton, Menu, MenuItem, Avatar } from '@material-ui/core';
 import CustomAppbar from '../appbar/CustomAppbar';
 import SearchIcon from '@material-ui/icons/Search';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingBasket';
-import PersonIcon from '@material-ui/icons/Person';
 import InputIcon from '@material-ui/icons/Input';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 import Link from '../link/Link';
 import LinkNext from 'next/link';
 import { useRouter } from 'next/router';
+import { AppContext } from '../../App';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles({
   container: {
@@ -37,6 +38,14 @@ const useStyles = makeStyles({
   img: {
     width: 80,
   },
+  link: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: 16,
+    '& svg': {
+      marginRight: 10,
+    },
+  },
 });
 
 export default function Header() {
@@ -44,14 +53,11 @@ export default function Header() {
   const appContext = useContext(AppContext);
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
+  const restaurant = useSelector(state => state.restaurant);
+  const user = useSelector(state => state.user);
 
   function handleCloseMenu() {
     setAnchorEl(null);
-  }
-
-  function handleLoginClick() {
-    handleCloseMenu();
-    router.push('/login');
   }
 
   function handleMyAccountClick() {
@@ -80,11 +86,7 @@ export default function Header() {
                 <div className={classes.logoContent}>
                   <LinkNext href="/">
                     <a style={{ display: 'flex' }}>
-                      <img
-                        className={classes.img}
-                        src="http://api.topnfe.com.br/storage/uploaded/images/161113201912085ded3cc187f51.png"
-                        alt="test"
-                      />
+                      <img className={classes.img} src={restaurant.image && restaurant.image.imageUrl} alt="test" />
                     </a>
                   </LinkNext>
                 </div>
@@ -116,10 +118,20 @@ export default function Header() {
                 spacing={3}
               >
                 <Grid item>
-                  {!appContext.user ? (
-                    <Button startIcon={<InputIcon />} variant="text" color="primary" onClick={handleLoginClick}>
-                      Entrar
-                    </Button>
+                  <Link color="primary" href="/menu" className={classes.link}>
+                    <MenuBookIcon /> Cardápio
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link color="primary" href="/cart" className={classes.link}>
+                    <ShoppingCartIcon /> Cesta
+                  </Link>
+                </Grid>
+                <Grid item>
+                  {!user.id ? (
+                    <Link color="primary" href="/login" className={classes.link}>
+                      <InputIcon /> Entrar
+                    </Link>
                   ) : (
                     <>
                       <Menu
@@ -140,21 +152,11 @@ export default function Header() {
                         <MenuItem onClick={handleMyOrdersClick}>Meus pedidos</MenuItem>
                         <MenuItem onClick={handleLogoutClick}>Sair</MenuItem>
                       </Menu>
-                      <Button
-                        startIcon={<PersonIcon />}
-                        variant="text"
-                        color="primary"
-                        onClick={event => setAnchorEl(event.currentTarget)}
-                      >
-                        {appContext.user.name}
-                      </Button>
+                      <IconButton onClick={event => setAnchorEl(event.currentTarget)}>
+                        {user.image ? <Avatar src={user.image.imageUrl} /> : <Avatar>{user.name[0]}</Avatar>}
+                      </IconButton>
                     </>
                   )}
-                </Grid>
-                <Grid item>
-                  <Button component={Link} href="/cart" startIcon={<ShoppingCartIcon />} variant="text" color="primary">
-                    Cestinha
-                  </Button>
                 </Grid>
               </Grid>
             </Grid>

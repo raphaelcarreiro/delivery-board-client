@@ -5,7 +5,7 @@ function Cart() {
   return (
     <>
       <Head>
-        <title>Minha cestinha</title>
+        <title>Minha cesta</title>
       </Head>
     </>
   );

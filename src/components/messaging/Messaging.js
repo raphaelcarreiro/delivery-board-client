@@ -1,10 +1,10 @@
 import React, { useState, useContext } from 'react';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import Snackbar from '@material-ui/core/Snackbar';
-import PropTypes, { oneOfType } from 'prop-types';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { AppContext } from '../../../pages/_app';
+import { AppContext } from '../../App';
 
 const useStyles = makeStyles(theme => ({
   message: {

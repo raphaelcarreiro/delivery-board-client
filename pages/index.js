@@ -5,7 +5,7 @@ function Index() {
   return (
     <>
       <Head>
-        <title>Home page</title>
+        <title>Delivery X</title>
       </Head>
     </>
   );

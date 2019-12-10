@@ -10,6 +10,8 @@ import { isAuthenticated } from '../../services/auth';
 import Link from '../link/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigateBoforeIcon from '@material-ui/icons/ArrowBack';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser } from '../../store/redux/modules/user/actions';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -71,8 +73,8 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const messaging = useContext(MessagingContext);
-  const appContext = useContext(AppContext);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (isAuthenticated()) router.push('/account');
@@ -107,8 +109,8 @@ function Login() {
       api()
         .post('/login', { email, password })
         .then(response => {
-          localStorage.setItem(process.env.localStorageTokenName, response.data.token);
-          appContext.handleSetUser(response.data.user);
+          localStorage.setItem(process.env.TOKEN_NAME, response.data.token);
+          dispatch(setUser(response.data.user));
           router.push('/');
         })
         .catch(err => {

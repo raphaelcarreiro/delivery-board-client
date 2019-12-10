@@ -2,7 +2,7 @@ import axios from 'axios';
 
 function getAxiosInstance() {
   let instance;
-  const token = localStorage.getItem(process.env.localStorageTokenName);
+  const token = localStorage.getItem(process.env.TOKEN_NAME);
 
   if (token)
     instance = axios.create({
@@ -28,7 +28,7 @@ function getAxiosInstance() {
       function(error) {
         if (error.response) {
           if (error.response.status === 401) {
-            localStorage.removeItem(process.env.localStorageTokenName);
+            localStorage.removeItem(process.env.TOKEN_NAME);
           } else {
             return Promise.reject(error);
           }
