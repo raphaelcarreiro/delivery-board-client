@@ -11,22 +11,33 @@ import { setRestaurant } from './store/redux/modules/restaurant/actions';
 import PropTypes from 'prop-types';
 import { setUser, removeUser } from './store/redux/modules/user/actions';
 import { verifyToken } from './helpers/verifyToken';
+import Sidebar from './components/sidebar/Sidebar';
 
 export const AppContext = createContext({
   isMobile: false,
   windowWidth: null,
+  isOpenMenu: false,
   handleLogout: () => {},
+  handleOpenMenu: () => {},
 });
 
 export const menuWidth = 240;
 
 function App({ pageProps, component: Component }) {
   const [isMobile, setIsMobile] = useState(false);
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1500);
-  const [loading, setLoading] = useState(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
   const dispatch = useDispatch();
-  const restaurant = useSelector(state => state.restaurant);
+
+  const appProviderValue = {
+    handleLogout: handleLogout,
+    handleOpenMenu: handleOpenMenu,
+    isMobile,
+    windowWidth,
+    isOpenMenu,
+  };
 
   // paginas que não precisam no cabeçalho e rodapé padrões
   const paths = ['/register', '/login'];
@@ -45,8 +56,6 @@ function App({ pageProps, component: Component }) {
 
     setIsMobile(mobileCheck());
     setWindowWidth(window.innerWidth);
-
-    setLoading(true);
 
     api()
       .get('restaurants')
@@ -78,17 +87,15 @@ function App({ pageProps, component: Component }) {
     setWindowWidth(window.innerWidth);
   }
 
-  return (
-    <AppContext.Provider
-      value={{
-        handleLogout: handleLogout,
-        isMobile: isMobile,
-        windowWidth: windowWidth,
-      }}
-    >
-      {loading && <Loading background />}
-      {!restaurant.id && <Loading background />}
+  function handleOpenMenu() {
+    setIsOpenMenu(!isOpenMenu);
+  }
 
+  return (
+    <AppContext.Provider value={appProviderValue}>
+      {loading && <Loading background />}
+
+      <Sidebar handleLogout={handleLogout} handleOpenMenu={handleOpenMenu} isOpenMenu={isOpenMenu} />
       <Messaging>
         {paths.includes(router.route) ? (
           <OnlyMain pageProps={pageProps} component={Component} />

@@ -20,7 +20,7 @@ function Footer() {
 
   return (
     <footer className={classes.footer}>
-      {restaurant.id ? <Typography>{restaurant.name}</Typography> : <span>teste</span>}
+      {restaurant ? <Typography>{restaurant.name}</Typography> : <span>Carregando...</span>}
     </footer>
   );
 }

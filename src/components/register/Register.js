@@ -1,18 +1,18 @@
 import React, { useState, useContext, useReducer } from 'react';
-import { Grid, Button, LinearProgress, Typography } from '@material-ui/core';
+import { Grid, Button, LinearProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '../link/Link';
 import { api } from '../../services/api';
 import { MessagingContext } from '../messaging/Messaging';
 import RegisterForm from './RegisterForm';
 import * as yup from 'yup';
-import userReducer, { INITIAL_STATE as userInitiaState } from '../../store/modules/user/reducer';
-import { userChange } from '../../store/modules/user/actions';
+import userReducer, { INITIAL_STATE as userInitiaState } from '../../store/context-api/modules/user/reducer';
+import { userChange } from '../../store/context-api/modules/user/actions';
 import RegisterSucess from './RegisterSuccess';
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    padding: '20px 15px',
+    padding: '35px',
     borderRadius: 4,
     height: 600,
     display: 'flex',
@@ -77,7 +77,13 @@ export function Register() {
         .string()
         .email('Você deve informar um email válido')
         .required('O e-mail é obrigatório'),
-      phone: yup.string().required('O telefone é obrigatório'),
+      phone: yup
+        .string()
+        .transform((value, originalValue) => {
+          return originalValue.replace(/\D/g, '');
+        })
+        .min(10, 'Telefone inválido')
+        .required('O telefone é obrigatório'),
       name: yup.string().required('O nome é obrigatório'),
     });
 

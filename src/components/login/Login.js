@@ -1,15 +1,15 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Grid, Button, Typography, LinearProgress, IconButton } from '@material-ui/core';
 import LoginEmailStep from './LoginEmailStep';
 import LoginPasswordStep from './LoginPasswordStep';
+import Link from '../link/Link';
+import NextLink from 'next/link';
+import NavigateBoforeIcon from '@material-ui/icons/ArrowBack';
+import { Grid, Button, Typography, LinearProgress, IconButton } from '@material-ui/core';
 import { api } from '../../services/api';
 import { MessagingContext } from '../messaging/Messaging';
-import { AppContext } from '../../../pages/_app';
 import { useRouter } from 'next/router';
 import { isAuthenticated } from '../../services/auth';
-import Link from '../link/Link';
 import { makeStyles } from '@material-ui/core/styles';
-import NavigateBoforeIcon from '@material-ui/icons/ArrowBack';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../../store/redux/modules/user/actions';
 
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     border: `2px solid #ddd`,
     height: 500,
-    padding: '20px 15px',
+    padding: '35px',
     margin: '0 15px',
     justifyContent: 'space-between',
     borderRadius: 4,
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     bottom: 0,
     right: 0,
     left: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    backgroundColor: 'rgba(255, 255, 255, 0.35)',
     position: 'absolute',
     zIndex: 10,
     display: 'flex',
@@ -75,6 +75,7 @@ function Login() {
   const messaging = useContext(MessagingContext);
   const router = useRouter();
   const dispatch = useDispatch();
+  const restaurant = useSelector(state => state.restaurant);
 
   useEffect(() => {
     if (isAuthenticated()) router.push('/account');
@@ -140,15 +141,15 @@ function Login() {
               )}
               <div className={classes.content}>
                 <div className={classes.logoContainer}>
-                  <img
-                    className={classes.logo}
-                    src="http://api.topnfe.com.br/storage/uploaded/images/161113201912085ded3cc187f51.png"
-                    alt="Logo"
-                  />
-                  <Typography align="center" variant="h6">
-                    Login
-                  </Typography>
+                  <NextLink href="/">
+                    <a>
+                      <img className={classes.logo} src={restaurant && restaurant.image.imageUrl} alt="Logo" />
+                    </a>
+                  </NextLink>
                 </div>
+                <Typography align="center" variant="h6">
+                  Login
+                </Typography>
                 {step === 'email' ? (
                   <LoginEmailStep email={email} setEmail={setEmail} />
                 ) : (

@@ -3,6 +3,7 @@ import { Typography, TextField } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import PhoneInput from '../masked-input/PhoneInput';
 import { makeStyles } from '@material-ui/core/styles';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles({
   header: {
@@ -12,18 +13,15 @@ const useStyles = makeStyles({
 
 export default function RegisterForm({ user, validation, handleChange }) {
   const classes = useStyles();
+  const restaurant = useSelector(state => state.restaurant);
 
   return (
     <div>
       <div className={classes.header}>
-        <img
-          width={70}
-          src="http://api.topnfe.com.br/storage/uploaded/images/161113201912085ded3cc187f51.png"
-          alt="Logo"
-        />
+        <img width={70} src={restaurant && restaurant.image.imageUrl} alt="Logo" />
         <Typography variant="h6">Criar conta</Typography>
         <Typography variant="body2" color="textSecondary">
-          É rapidinho, complete os 4 campos abaixo.
+          É rapidinho, complete os 5 campos abaixo.
         </Typography>
       </div>
       <TextField
@@ -38,11 +36,12 @@ export default function RegisterForm({ user, validation, handleChange }) {
         autoFocus
       />
       <TextField
+        error={!!validation.phone}
+        helperText={validation.phone}
         label="Telefone"
         placeholder="Seu telefone"
         margin="normal"
         fullWidth
-        required
         InputProps={{
           inputComponent: PhoneInput,
         }}

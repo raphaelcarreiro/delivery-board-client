@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import AppBar from '@material-ui/core/AppBar/AppBar';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -6,7 +6,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
-import { menuWidth } from '../../App';
+import { menuWidth, AppContext } from '../../App';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -56,39 +56,38 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function CustomAppbar({ ActionComponent, title, TabComponent, appContext, cancel, cancelAction }) {
+function CustomAppbar({ actionComponent, title, TabComponent, cancel, cancelAction }) {
   const [appBarTabs] = useState(true);
   const classes = useStyles();
+  const { handleOpenMenu, isMobile, windowWidth } = useContext(AppContext);
 
   return (
     <Fragment>
-      <AppBar
-        className={`${classes.appBar} ${appBarTabs && TabComponent && classes.appBarShadow}`}
-        position="fixed"
-        color="primary"
-      >
-        <Toolbar>
-          <IconButton color="inherit">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant={'h6'} color={'inherit'} className={classes.appBarTitle}>
-            {title}
-          </Typography>
-          <div className={classes.grow} />
-          {ActionComponent}
-        </Toolbar>
-      </AppBar>
-      {TabComponent && (
-        <Fragment>
+      {(isMobile || windowWidth <= 960) && (
+        <>
           <AppBar
-            className={`${classes.appBarTabs} ${!appContext.isMobile &&
-              appContext.windowWidth > 1280 &&
-              classes.appBarTabsMenuOpen}`}
+            className={`${classes.appBar} ${appBarTabs && TabComponent && classes.appBarShadow}`}
+            position="fixed"
+            color="primary"
           >
-            {TabComponent}
+            <Toolbar>
+              <IconButton color="inherit" onClick={handleOpenMenu}>
+                <MenuIcon />
+              </IconButton>
+              <Typography variant="h6" color="inherit" className={classes.appBarTitle}>
+                {title}
+              </Typography>
+              <div className={classes.grow} />
+              {actionComponent}
+            </Toolbar>
           </AppBar>
-          <div className={TabComponent && classes.appBarTabsSpace} />
-        </Fragment>
+          {TabComponent && (
+            <Fragment>
+              <AppBar className={classes.appBarTabs}>{TabComponent}</AppBar>
+              <div className={TabComponent && classes.appBarTabsSpace} />
+            </Fragment>
+          )}
+        </>
       )}
     </Fragment>
   );
@@ -96,9 +95,8 @@ function CustomAppbar({ ActionComponent, title, TabComponent, appContext, cancel
 
 CustomAppbar.propTypes = {
   title: PropTypes.string.isRequired,
-  ActionComponent: PropTypes.element,
+  actionComponent: PropTypes.element,
   TabComponent: PropTypes.element,
-  appContext: PropTypes.object.isRequired,
   cancel: PropTypes.bool,
   cancelAction: PropTypes.func,
 };

@@ -1,6 +1,4 @@
-export const INITIAL_STATE = {
-  id: null,
-};
+export const INITIAL_STATE = null;
 
 export default function restaurant(state = INITIAL_STATE, action) {
   switch (action.type) {

@@ -1,6 +1,6 @@
 import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
+import Header from './header/Header';
+import Footer from './footer/Footer';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -14,9 +14,9 @@ const useStyles = makeStyles({
     position: 'relative',
   },
   mobileContainer: {
-    margin: '80px 0 0',
+    marginTop: 65,
     padding: '0 20px',
-    minHeight: 'calc(100vh - 150px)',
+    minHeight: 'calc(100vh - 135px)',
     position: 'relative',
     display: 'flex',
   },
@@ -27,7 +27,7 @@ export default function Default({ pageProps, component: Component, isMobile, win
 
   return (
     <>
-      <Header />
+      {!isMobile && windowWidth >= 960 && <Header />}
       <div className={isMobile || windowWidth < 1280 ? classes.mobileContainer : classes.container}>
         <Component {...pageProps} />
       </div>
