@@ -1,30 +1,32 @@
 import React from 'react';
 import Head from 'next/head';
 import Index from '../src/components/index/Index';
-import axios from 'axios';
+// import axios from 'axios';
 
-function IndexPage({ restaurant }) {
+function IndexPage() {
   return (
     <>
       <Head>
-        <title>{restaurant.name}</title>
+        <title>Delivery X</title>
       </Head>
       <Index />
     </>
   );
 }
 
-IndexPage.getInitialProps = async () => {
-  const instance = axios.create({
+/*
+IndexPage.getInitialProps = async ctx => {
+  const axiosInstance = axios.create({
     baseURL: process.env.BASEURL_API,
     headers: {
       RestaurantId: process.env.RESTAURANT_ID,
     },
   });
 
-  const response = await instance.get('/restaurants');
+  const response = await axiosInstance.get('/restaurants');
 
   return { restaurant: response.data };
 };
+*/
 
 export default IndexPage;

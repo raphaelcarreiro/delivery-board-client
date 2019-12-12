@@ -93,7 +93,7 @@ function App({ pageProps, component: Component }) {
 
   return (
     <AppContext.Provider value={appProviderValue}>
-      {loading && <Loading background />}
+      {loading && <Loading background="#fafafa" />}
 
       <Sidebar handleLogout={handleLogout} handleOpenMenu={handleOpenMenu} isOpenMenu={isOpenMenu} />
       <Messaging>

@@ -15,14 +15,15 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     flexDirection: 'column',
     alignItems: 'center',
+    overflow: 'none',
   },
   circularProgress: {
     top: '25%',
     position: 'absolute',
   },
-  background: {
-    backgroundColor: 'rgba(255,255,255,1)',
-  },
+  background: ({ background }) => ({
+    backgroundColor: background,
+  }),
   body: {
     overflowY: 'hidden',
     paddingRight: 17,
@@ -30,7 +31,7 @@ const useStyles = makeStyles({
 });
 
 function Loading({ background }) {
-  const classes = useStyles();
+  const classes = useStyles({ background });
 
   return (
     <div className={background ? `${classes.loading} ${classes.background}` : `${classes.loading}`}>

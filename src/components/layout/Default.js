@@ -7,18 +7,22 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles({
   container: {
     display: 'flex',
-    maxWidth: 1366,
-    margin: '0 auto',
-    paddingTop: 15,
-    minHeight: 'calc(100vh - 150px)',
+    maxWidth: 1396,
+    margin: '0 auto 100px',
+    padding: '15px 15px 0',
+    minHeight: 'calc(100vh - 250px)',
     position: 'relative',
+    alignItems: 'flex-start',
   },
   mobileContainer: {
     marginTop: 65,
+    marginBottom: 100,
     padding: '0 20px',
-    minHeight: 'calc(100vh - 135px)',
+    minHeight: 'calc(100vh - 235px)',
     position: 'relative',
     display: 'flex',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
   },
 });
 
@@ -28,7 +32,7 @@ export default function Default({ pageProps, component: Component, isMobile, win
   return (
     <>
       {!isMobile && windowWidth >= 960 && <Header />}
-      <div className={isMobile || windowWidth < 1280 ? classes.mobileContainer : classes.container}>
+      <div className={isMobile || windowWidth < 960 ? classes.mobileContainer : classes.container}>
         <Component {...pageProps} />
       </div>
       <Footer />
