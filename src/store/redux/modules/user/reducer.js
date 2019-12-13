@@ -46,6 +46,59 @@ export default function user(state = INITIAL_STATE, action) {
       };
     }
 
+    case '@user/ADD_ADDRESS': {
+      return {
+        ...state,
+        customer: {
+          ...state.customer,
+          addresses: [...state.customer.addresses, action.address],
+        },
+      };
+    }
+
+    case '@user/DELETE_ADDRESS': {
+      const addresses = state.customer.addresses.filter(address => address.id !== action.addressId);
+
+      return {
+        ...state,
+        customer: {
+          ...state.customer,
+          addresses,
+        },
+      };
+    }
+
+    case '@user/UPDATE_ADDRESS': {
+      const addresses = state.customer.addresses.map(address => {
+        if (address.id === action.address.id) {
+          return action.address;
+        }
+
+        return address;
+      });
+      return {
+        ...state,
+        customer: {
+          ...state.customer,
+          addresses,
+        },
+      };
+    }
+    case '@user/SET_MAIN_ADDRESS': {
+      const addresses = state.customer.addresses.map(address => {
+        address.is_main = address.id === action.addressId;
+        return address;
+      });
+
+      return {
+        ...state,
+        customer: {
+          ...state.customer,
+          addresses,
+        },
+      };
+    }
+
     default: {
       return state;
     }

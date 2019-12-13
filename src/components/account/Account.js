@@ -1,8 +1,15 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Typography, Grid, TextField, Tabs, Tab } from '@material-ui/core';
+import { Typography, Grid } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { api } from '../../services/api';
-import { setUser, userChange, customerChange, selectImage, deleteImage } from '../../store/redux/modules/user/actions';
+import {
+  setUser,
+  userChange,
+  customerChange,
+  selectImage,
+  deleteImage,
+  deleteCustomerAddress,
+} from '../../store/redux/modules/user/actions';
 import { MessagingContext } from '../messaging/Messaging';
 import CustomAppbar from '../appbar/CustomAppbar';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,8 +17,11 @@ import AccountForm from './AccountForm';
 import AccountTabs from './AccountTabs';
 import AccountTabsAppbar from './AccountTabsAppbar';
 import { AppContext } from '../../App';
-import AccountAddresses from './AccountAddresses';
+import AccountAddresses from './addresses/AccountAddresses';
 import Loading from '../loading/Loading';
+import DialogDelete from '../dialog/delete/DialogDelete';
+import * as Yup from 'yup';
+import { cpfValidation } from '../../helpers/cpfValidation';
 
 const useStyles = makeStyles(theme => ({
   header: {
@@ -32,6 +42,8 @@ export function Account() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
+  const [dialogDeleteAddress, setDialogDeleteAddress] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
   const classes = useStyles();
 
   useEffect(() => {
@@ -72,9 +84,28 @@ export function Account() {
     dispatch(deleteImage());
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  function handleDeleteAddress(address) {
+    setDialogDeleteAddress(true);
+    setSelectedAddress(address);
+  }
 
+  function handleConfirmDelete(addressId) {
+    setSaving(true);
+    api()
+      .delete(`/customerAddresses/${selectedAddress.id}`)
+      .then(() => {
+        messaging.handleOpen('Excluído');
+        dispatch(deleteCustomerAddress(selectedAddress.id));
+      })
+      .catch(err => {
+        if (err.response) messaging.handleOpen(err.response.data.error);
+      })
+      .finally(() => {
+        setSaving(false);
+      });
+  }
+
+  function handleSubmit() {
     setSaving(true);
     api()
       .put(`users/${user.id}`, user)
@@ -95,10 +126,19 @@ export function Account() {
         title="Minha conta"
         TabComponent={<AccountTabsAppbar tabIndex={tabIndex} handleTabChange={handleTabChange} />}
       />
+      {dialogDeleteAddress && (
+        <DialogDelete
+          title="Excluir endereço"
+          message="Deseja realmente excluir esse endereço?"
+          onExited={() => setDialogDeleteAddress(false)}
+          handleDelete={handleConfirmDelete}
+          buttonText="Sim, excluir"
+        />
+      )}
       {saving && <Loading background="rgba(250,250,250, 0.5)" />}
 
       {loading ? (
-        <Loading background />
+        <Loading />
       ) : (
         <Grid container>
           <Grid item xs={12} className={classes.header}>
@@ -122,7 +162,9 @@ export function Account() {
                 saving={saving}
               />
             ) : (
-              tabIndex === 1 && <AccountAddresses addresses={user.customer.addresses} />
+              tabIndex === 1 && (
+                <AccountAddresses handleDeleteAddress={handleDeleteAddress} addresses={user.customer.addresses} />
+              )
             )}
           </Grid>
         </Grid>

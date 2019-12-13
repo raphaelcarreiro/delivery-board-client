@@ -38,3 +38,31 @@ export function deleteImage() {
     type: '@user/DELETE_IMAGE',
   };
 }
+
+export function addCustomerAddress(address) {
+  return {
+    type: '@user/ADD_ADDRESS',
+    address,
+  };
+}
+
+export function deleteCustomerAddress(addressId) {
+  return {
+    type: '@user/DELETE_ADDRESS',
+    addressId,
+  };
+}
+
+export function updateCustomerAddress(address) {
+  return {
+    type: '@user/UPDATE_ADDRESS',
+    address,
+  };
+}
+
+export function setMainCustomerAddress(addressId) {
+  return {
+    type: '@user/SET_MAIN_ADDRESS',
+    addressId,
+  };
+}

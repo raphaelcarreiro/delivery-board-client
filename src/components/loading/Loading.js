@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     position: 'absolute',
   },
   background: ({ background }) => ({
-    backgroundColor: background,
+    backgroundColor: background || '#fafafa',
   }),
   body: {
     overflowY: 'hidden',
@@ -35,13 +35,13 @@ function Loading({ background }) {
 
   return (
     <div className={background ? `${classes.loading} ${classes.background}` : `${classes.loading}`}>
-      <CircularProgress className={classes.circularProgress} color={'primary'} />
+      <CircularProgress color={'primary'} />
     </div>
   );
 }
 
 Loading.propTypes = {
-  background: PropTypes.bool,
+  background: PropTypes.string,
 };
 
 export default Loading;

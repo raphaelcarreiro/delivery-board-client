@@ -27,6 +27,9 @@ const useStyles = makeStyles({
     boxShadow: '1px 1px 7px 1px #d4d4d4',
     padding: '0 15px',
     backgroundColor: '#fff',
+    position: 'fixed',
+    width: '100%',
+    zIndex: 10,
   },
   headerCol1: {},
   headerCol2: {},
@@ -71,6 +74,7 @@ export default function Header() {
 
   function handleMyOrdersClick() {
     handleCloseMenu();
+    router.push('/account/orders');
   }
 
   return (

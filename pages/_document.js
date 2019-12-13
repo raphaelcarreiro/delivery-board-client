@@ -14,12 +14,63 @@ export default class MyDocument extends Document {
           <meta name="theme-color" content={theme.palette.primary.main} />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
           <style jsx global>{`
+            html,
+            body,
+            #__next {
+              overflow: hidden;
+              height: 100%;
+              width: 100%;
+            }
+            #__next {
+              position: absolute;
+              top: 0;
+              left: 0;
+            }
             a,
             a:hover {
               text-decoration: none;
             }
             form {
               width: 100%;
+            }
+            @media (min-width: 1200px) {
+              /* width */
+              ::-webkit-scrollbar {
+                width: 8px;
+              }
+
+              /* Track */
+              ::-webkit-scrollbar-track {
+                background: transparent;
+                border-radius: 10px;
+              }
+
+              /* Handle */
+              ::-webkit-scrollbar-thumb {
+                background: #c6c6c6;
+                border-radius: 10px;
+              }
+
+              /* Handle on hover */
+              ::-webkit-scrollbar-thumb:hover {
+                background: #c6c6c6;
+              }
+            }
+            @keyframes zoom {
+              from {
+                transform: scale(1.4);
+                opacity: 0;
+              }
+              to {
+                transform: scale(1);
+                opacity: 1;
+              }
+            }
+            .zoom {
+              animation-name: zoom;
+              animation-duration: 0.3s;
+              animation-iteration-count: 1;
+              animation-timing-function: cubic-bezier(0.1, 0.82, 0.25, 1);
             }
           `}</style>
         </Head>

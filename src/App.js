@@ -6,12 +6,13 @@ import Messaging from './components/messaging/Messaging';
 import OnlyMain from './components/layout/OnlyMain';
 import Default from './components/layout/Default';
 import { mobileCheck } from './helpers/MobileCheck';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setRestaurant } from './store/redux/modules/restaurant/actions';
 import PropTypes from 'prop-types';
 import { setUser, removeUser } from './store/redux/modules/user/actions';
 import { verifyToken } from './helpers/verifyToken';
 import Sidebar from './components/sidebar/Sidebar';
+import InitialLoading from './components/loading/InitialLoading';
 
 export const AppContext = createContext({
   isMobile: false,
@@ -27,7 +28,8 @@ function App({ pageProps, component: Component }) {
   const [isMobile, setIsMobile] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1500);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -63,7 +65,8 @@ function App({ pageProps, component: Component }) {
         dispatch(setRestaurant(response.data));
       })
       .finally(() => {
-        setLoading(false);
+        setInitialLoading(false);
+        document.body.classList.add('zoom');
       });
   }, []);
 
@@ -93,6 +96,7 @@ function App({ pageProps, component: Component }) {
 
   return (
     <AppContext.Provider value={appProviderValue}>
+      {initialLoading && <InitialLoading background="#fafafa" />}
       {loading && <Loading background="#fafafa" />}
 
       <Sidebar handleLogout={handleLogout} handleOpenMenu={handleOpenMenu} isOpenMenu={isOpenMenu} />

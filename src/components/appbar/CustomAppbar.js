@@ -10,7 +10,7 @@ import { menuWidth, AppContext } from '../../App';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
-    zIndex: 1102,
+    zIndex: 10,
     '@media print': {
       display: 'none',
     },

@@ -15,7 +15,6 @@ const useStyles = makeStyles({
     alignItems: 'flex-start',
   },
   mobileContainer: {
-    marginTop: 65,
     marginBottom: 100,
     padding: '0 20px',
     minHeight: 'calc(100vh - 235px)',
@@ -24,19 +23,33 @@ const useStyles = makeStyles({
     alignItems: 'flex-start',
     flexDirection: 'column',
   },
+  wrapper: {
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    height: '100%',
+  },
+  containerWrapper: {
+    overflowY: 'auto',
+    position: 'relative',
+    marginTop: 80,
+  },
 });
 
 export default function Default({ pageProps, component: Component, isMobile, windowWidth }) {
   const classes = useStyles();
 
   return (
-    <>
+    <div className={classes.wrapper}>
       {!isMobile && windowWidth >= 960 && <Header />}
-      <div className={isMobile || windowWidth < 960 ? classes.mobileContainer : classes.container}>
-        <Component {...pageProps} />
+      <div className={classes.containerWrapper}>
+        <div className={isMobile || windowWidth < 960 ? classes.mobileContainer : classes.container}>
+          <Component {...pageProps} />
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </>
+    </div>
   );
 }
 
