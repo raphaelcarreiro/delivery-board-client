@@ -3,12 +3,14 @@ import { ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/c
 import PersonIcon from '@material-ui/icons/Person';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import InputIcon from '@material-ui/icons/Input';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import Drawer from '@material-ui/core/Drawer';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 import { menuWidth } from '../../App';
 import Link from '../link/Link';
 import { useRouter } from 'next/router';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
   drawerPaper: {
@@ -52,6 +54,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+Sidebar.propTypes = {
+  handleOpenMenu: PropTypes.func.isRequired,
+  isOpenMenu: PropTypes.bool.isRequired,
+  handleLogout: PropTypes.func.isRequired,
+};
+
 function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
   const classes = useStyles();
   const user = useSelector(state => state.user);
@@ -69,6 +77,11 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
 
   function handleAccountClick() {
     router.push('/account');
+    handleOpenMenu();
+  }
+
+  function handleOrdersClick() {
+    router.push('/account/orders');
     handleOpenMenu();
   }
 
@@ -94,12 +107,20 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
         <ListItemText classes={{ primary: classes.listItemText }} primary="Cardápio" />
       </ListItem>
       {user.id ? (
-        <ListItem button onClick={handleAccountClick}>
-          <ListItemIcon className={classes.listItemIcon}>
-            <PersonIcon />
-          </ListItemIcon>
-          <ListItemText classes={{ primary: classes.listItemText }} primary={user.name} />
-        </ListItem>
+        <>
+          <ListItem button onClick={handleOrdersClick}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <AssignmentIcon />
+            </ListItemIcon>
+            <ListItemText classes={{ primary: classes.listItemText }} primary="Meus pedidos" />
+          </ListItem>
+          <ListItem button onClick={handleAccountClick}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <PersonIcon />
+            </ListItemIcon>
+            <ListItemText classes={{ primary: classes.listItemText }} primary={user.name} />
+          </ListItem>
+        </>
       ) : (
         <ListItem onClick={handleLoginClick} button>
           <ListItemIcon className={classes.listItemIcon}>

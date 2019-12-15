@@ -37,8 +37,8 @@ const useStyles = makeStyles(theme => ({
   },
   icon: {
     position: 'absolute',
-    bottom: 10,
-    right: 10,
+    bottom: 0,
+    right: 0,
   },
   dateDistance: {
     position: 'absolute',
@@ -89,7 +89,7 @@ function OrderList({ orders }) {
   }, [orders]);
 
   return (
-    <List className={classes.list}>
+    <List className={classes.list} disablePadding>
       {formattedOrders.map(order => {
         return (
           <ListItem key={order.id} className={classes.listItem} button>

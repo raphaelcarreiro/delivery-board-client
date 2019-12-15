@@ -20,8 +20,6 @@ import { AppContext } from '../../App';
 import AccountAddresses from './addresses/AccountAddresses';
 import Loading from '../loading/Loading';
 import DialogDelete from '../dialog/delete/DialogDelete';
-import * as Yup from 'yup';
-import { cpfValidation } from '../../helpers/cpfValidation';
 
 const useStyles = makeStyles(theme => ({
   header: {

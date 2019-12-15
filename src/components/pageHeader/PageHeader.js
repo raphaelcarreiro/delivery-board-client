@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 const useStyles = makeStyles({
   header: {
-    marginBottom: 10,
+    marginBottom: 20,
   },
 });
 

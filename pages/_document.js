@@ -33,6 +33,9 @@ export default class MyDocument extends Document {
             form {
               width: 100%;
             }
+            ul {
+              width: 100%;
+            }
             @media (min-width: 1200px) {
               /* width */
               ::-webkit-scrollbar {
@@ -71,6 +74,26 @@ export default class MyDocument extends Document {
               animation-duration: 0.3s;
               animation-iteration-count: 1;
               animation-timing-function: cubic-bezier(0.1, 0.82, 0.25, 1);
+            }
+
+            @keyframes placeHolderShimmer {
+              0% {
+                background-position: -468px 0;
+              }
+              100% {
+                background-position: 468px 0;
+              }
+            }
+            .animated-background {
+              animation-duration: 1s;
+              animation-fill-mode: forwards;
+              animation-iteration-count: infinite;
+              animation-name: placeHolderShimmer;
+              animation-timing-function: linear;
+              background: #f6f7f8;
+              background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+              background-size: 800px 104px;
+              position: relative;
             }
           `}</style>
         </Head>

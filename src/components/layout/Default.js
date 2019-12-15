@@ -6,22 +6,21 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   container: {
+    position: 'relative',
     display: 'flex',
+    flexDirection: 'column',
+    minHeight: 'calc(100vh - 250px)',
     maxWidth: 1396,
     margin: '0 auto 100px',
     padding: '15px 15px 0',
-    minHeight: 'calc(100vh - 250px)',
-    position: 'relative',
-    alignItems: 'flex-start',
   },
   mobileContainer: {
-    marginBottom: 100,
-    padding: '0 20px',
-    minHeight: 'calc(100vh - 235px)',
     position: 'relative',
     display: 'flex',
-    alignItems: 'flex-start',
     flexDirection: 'column',
+    minHeight: 'calc(100vh - 235px)',
+    marginBottom: 100,
+    padding: '0 20px',
   },
   wrapper: {
     position: 'absolute',
