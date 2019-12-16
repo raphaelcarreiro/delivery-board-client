@@ -4,7 +4,7 @@ import CustomAppbar from '../appbar/CustomAppbar';
 import { api } from '../../services/api';
 import { MessagingContext } from '../messaging/Messaging';
 import { Grid } from '@material-ui/core';
-import MenuCategoryList from './category/MenuCategoryList';
+import CategoryList from './category/CategoryList';
 import { moneyFormat } from '../../helpers/numberFormat';
 import MenuLoading from './MenuLoading';
 
@@ -42,7 +42,7 @@ export default function Menu() {
       ) : (
         <Grid container>
           <Grid item xs={12}>
-            <MenuCategoryList categories={categories} />
+            <CategoryList categories={categories} />
           </Grid>
         </Grid>
       )}

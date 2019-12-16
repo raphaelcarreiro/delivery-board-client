@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import ImagePreview from '../../image-preview/ImagePreview';
-import MenuProductList from './MenuProductList';
+import MenuProductList from './ProductList';
 import PropTypes from 'prop-types';
-import MenuProductView from './MenuProductView';
+import ProductView from './view/ProductView';
+import { useDispatch } from 'react-redux';
+import { prepareProduct, addToCart } from '../../../store/redux/modules/cart/actions';
 
-MenuProduct.propTypes = {
+Product.propTypes = {
   products: PropTypes.array.isRequired,
   categoryName: PropTypes.string,
 };
 
-export default function MenuProduct({ products, categoryName }) {
+export default function Product({ products, categoryName }) {
   const [imagePreview, setImagePreview] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [dialogProductView, setDialogProductView] = useState(false);
+  const dispatch = useDispatch();
 
   function handleProductClick(product) {
     setSelectedProduct(product);
@@ -26,6 +29,14 @@ export default function MenuProduct({ products, categoryName }) {
     setImagePreview(true);
   }
 
+  function handlePrepareProduct(product, amount) {
+    dispatch(prepareProduct(product, amount));
+  }
+
+  function handleAddProductToCart() {
+    dispatch(addToCart());
+  }
+
   return (
     <>
       {imagePreview && (
@@ -35,7 +46,14 @@ export default function MenuProduct({ products, categoryName }) {
           description={selectedProduct.name}
         />
       )}
-      {dialogProductView && <MenuProductView onExited={() => setDialogProductView(false)} product={selectedProduct} />}
+      {dialogProductView && (
+        <ProductView
+          handlePrepareProduct={handlePrepareProduct}
+          handleAddProductToCart={handleAddProductToCart}
+          onExited={() => setDialogProductView(false)}
+          selectedProduct={selectedProduct}
+        />
+      )}
       <MenuProductList
         products={products}
         handleProductClick={handleProductClick}
