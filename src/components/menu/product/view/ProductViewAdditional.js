@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 ProductViewAdditional.propTypes = {
-  additional: PropTypes.object.isRequired,
+  additional: PropTypes.array.isRequired,
   handleClickAdditional: PropTypes.func.isRequired,
 };
 

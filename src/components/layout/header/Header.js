@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import { AppContext } from '../../../App';
 import { useSelector } from 'react-redux';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     maxWidth: 1366,
@@ -40,15 +40,30 @@ const useStyles = makeStyles({
   img: {
     width: 80,
   },
+  cartBadge: {
+    position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    top: -15,
+    right: -10,
+    backgroundColor: '#dc640f',
+    borderRadius: '50%',
+    height: 20,
+    width: 20,
+    fontSize: 12,
+    color: '#FFF',
+  },
   link: {
     display: 'flex',
     alignItems: 'center',
     fontSize: 16,
+    position: 'relative',
     '& svg': {
       marginRight: 10,
     },
   },
-});
+}));
 
 export default function Header() {
   const classes = useStyles();
@@ -57,6 +72,7 @@ export default function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
   const restaurant = useSelector(state => state.restaurant);
   const user = useSelector(state => state.user);
+  const cart = useSelector(state => state.cart);
 
   function handleCloseMenu() {
     setAnchorEl(null);
@@ -128,6 +144,7 @@ export default function Header() {
               </Grid>
               <Grid item>
                 <Link color="primary" href="/cart" className={classes.link}>
+                  <span className={classes.cartBadge}>{cart.products.length}</span>
                   <ShoppingCartIcon /> Cesta
                 </Link>
               </Grid>

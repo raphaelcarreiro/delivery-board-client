@@ -7,6 +7,7 @@ import ProductViewAction from './ProductViewAction';
 import { Grid, Typography, TextField } from '@material-ui/core';
 import ImagePreview from '../../../image-preview/ImagePreview';
 import PropTypes from 'prop-types';
+import { moneyFormat } from '../../../../helpers/numberFormat';
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
@@ -64,6 +65,27 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
   const [additionalPrice, setAdditionalPrice] = useState(0);
   const [imagePreview, setImagePreview] = useState(false);
   const classes = useStyles();
+
+  useEffect(() => {
+    const additional = product.additional.map(additional => {
+      additional.selected = false;
+      additional.additional_id = additional.id;
+      additional.formattedPrice = additional.price ? moneyFormat(additional.price) : null;
+      return additional;
+    });
+
+    const ingredients = product.ingredients.map(ingredient => {
+      ingredient.ingredient_id = ingredient.id;
+      ingredient.selected = true;
+      return ingredient;
+    });
+
+    setProduct({
+      ...product,
+      additional,
+      ingredients,
+    });
+  }, []);
 
   useEffect(() => {
     setAdditionalPrice(

@@ -57,7 +57,7 @@ ProductViewAction.propTypes = {
   handleAmountUp: PropTypes.func.isRequired,
   handleAddProductToCart: PropTypes.func.isRequired,
   product: PropTypes.object.isRequired,
-  additionalPrice: PropTypes.object.isRequired,
+  additionalPrice: PropTypes.number.isRequired,
 };
 
 export default function ProductViewAction({
