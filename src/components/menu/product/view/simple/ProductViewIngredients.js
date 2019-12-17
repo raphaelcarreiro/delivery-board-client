@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottom: '1px solid #eee',
+    borderBottom: '1px solid #eaeaea',
     backgroundColor: fade(theme.palette.primary.main, 0.05),
     '&:focus': {
       backgroundColor: fade(theme.palette.primary.main, 0.05),
@@ -40,6 +40,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#fff8dc',
+    marginTop: 10,
   },
   icon: {
     backgroundColor: '#fff',

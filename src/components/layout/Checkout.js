@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import Header from './header/Header';
+import CheckoutHeader from './header/CheckoutHeader';
 import Footer from './footer/Footer';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -53,18 +53,13 @@ const useStyles = makeStyles({
   }),
 });
 
-export default function Default({ pageProps, component: Component, isMobile, windowWidth }) {
+export default function Checkout({ pageProps, component: Component, isMobile, windowWidth }) {
   const app = useContext(AppContext);
   const classes = useStyles({ isCartVisible: app.isCartVisible });
 
   return (
     <div className={classes.wrapper}>
-      {!isMobile && windowWidth >= 960 && <Header />}
-      {!isMobile && windowWidth >= 960 && (
-        <div className={classes.cart}>
-          <Cart />
-        </div>
-      )}
+      {!isMobile && windowWidth >= 960 && <CheckoutHeader />}
       <div className={classes.containerWrapper}>
         <div className={isMobile || windowWidth < 960 ? classes.mobileContainer : classes.container}>
           <Component {...pageProps} />
@@ -75,7 +70,7 @@ export default function Default({ pageProps, component: Component, isMobile, win
   );
 }
 
-Default.propTypes = {
+Checkout.propTypes = {
   pageProps: PropTypes.object.isRequired,
   component: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
   isMobile: PropTypes.bool.isRequired,

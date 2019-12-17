@@ -11,3 +11,10 @@ export function addToCart() {
     type: '@cart/ADD_TO_CART',
   };
 }
+
+export function removeFromCart(productUid) {
+  return {
+    type: '@cart/REMOVE_FROM_CART',
+    productUid,
+  };
+}

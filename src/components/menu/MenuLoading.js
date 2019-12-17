@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
     width: 50,
   },
   categoryName: {
-    height: 30,
+    height: 20,
     width: 100,
     marginBottom: 10,
   },

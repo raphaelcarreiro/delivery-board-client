@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottom: '1px solid #ddd',
+    borderBottom: '1px solid #eaeaea',
     backgroundColor: fade(theme.palette.primary.main, 0.05),
     position: 'relative',
     '&:focus': {
@@ -40,6 +40,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#fff8dc',
+    borderRadius: '4px 4px 0 0',
   },
   price: {
     fontWeight: 500,

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Dialog, Grid, DialogContent, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import { makeStyles } from '@material-ui/core/styles';
+import { AppContext } from 'src/App';
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -33,8 +34,9 @@ const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1,
   },
-  background: props => ({
+  paper: props => ({
     backgroundColor: props.backgroundColor ? props.backgroundColor : '#fff',
+    height: '100vh',
   }),
 }));
 
@@ -44,6 +46,7 @@ export const CustomDialogContext = React.createContext({
 
 export default function CustomDialog({ handleModalState, title, componentActions, children, backgroundColor }) {
   const [open, setOpen] = useState(true);
+  const app = useContext(AppContext);
   const styleProps = { backgroundColor };
   const classes = useStyles(styleProps);
 
@@ -56,12 +59,13 @@ export default function CustomDialog({ handleModalState, title, componentActions
       classes={
         ({ root: classes.root },
         {
-          paper: classes.background,
+          paper: classes.paper,
         })
       }
       open={open}
       onClose={handleClose}
       fullWidth
+      fullScreen={app.isMobile || app.windowWidth < 960}
       maxWidth="md"
       onExited={() => handleModalState()}
     >

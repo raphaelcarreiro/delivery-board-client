@@ -27,9 +27,7 @@ export default function InitialLoading() {
     <div className={classes.container}>
       <div className={classes.progress}>
         <LinearProgress />
-        <Typography variant="h6" color="textSecondary">
-          Olá :)
-        </Typography>
+        <Typography variant="h6" color="textSecondary" />
       </div>
     </div>
   );

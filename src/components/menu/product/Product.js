@@ -1,13 +1,14 @@
 import React, { useState, useContext } from 'react';
 import ImagePreview from '../../image-preview/ImagePreview';
-import MenuProductList from './ProductList';
 import PropTypes from 'prop-types';
 import ProductView from './view/simple/ProductView';
 import { useDispatch } from 'react-redux';
-import { prepareProduct, addToCart } from '../../../store/redux/modules/cart/actions';
+import { prepareProduct, addToCart } from 'src/store/redux/modules/cart/actions';
 import { MessagingContext } from '../../messaging/Messaging';
 import ProductPizzaComplement from './view/pizza_complement/ProductPizzaComplement';
 import ProductComplement from './view/complement/ProductComplement';
+import ProductList from './ProductList';
+import { AppContext } from 'src/App';
 
 Product.propTypes = {
   products: PropTypes.array.isRequired,
@@ -21,6 +22,7 @@ export default function Product({ products, categoryName }) {
   const [dialogProductComplement, setDialogProductComplement] = useState(false);
   const dispatch = useDispatch();
   const messaging = useContext(MessagingContext);
+  const app = useContext(AppContext);
 
   function handleProductClick(product) {
     setSelectedProduct(product);
@@ -48,6 +50,7 @@ export default function Product({ products, categoryName }) {
   function handleAddProductToCart() {
     dispatch(addToCart());
     messaging.handleOpen('Produto adicionado a cesta');
+    app.handleCartVisibility(true);
   }
 
   return (
@@ -86,7 +89,7 @@ export default function Product({ products, categoryName }) {
           )}
         </>
       )}
-      <MenuProductList
+      <ProductList
         products={products}
         handleProductClick={handleProductClick}
         handleOpenImagePreview={handleOpenImagePreview}

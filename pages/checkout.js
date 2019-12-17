@@ -2,23 +2,23 @@ import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { isAuthenticated } from '../src/services/auth';
 import { useRouter } from 'next/router';
-import { Account } from '../src/components/account/Account';
+import Checkout from '../src/components/checkout/Checkout';
 
-function AccountPage() {
+function CheckoutPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated()) router.push('/login?redirect=/account');
+    if (!isAuthenticated()) router.push('/login?redirect=/checkout');
   }, []);
 
   return (
     <>
       <Head>
-        <title>Minha conta</title>
+        <title>Fechar pedido</title>
       </Head>
-      <Account />
+      <Checkout />
     </>
   );
 }
 
-export default AccountPage;
+export default CheckoutPage;

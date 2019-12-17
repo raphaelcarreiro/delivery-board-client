@@ -13,13 +13,16 @@ import { setUser, removeUser } from './store/redux/modules/user/actions';
 import { verifyToken } from './helpers/verifyToken';
 import Sidebar from './components/sidebar/Sidebar';
 import InitialLoading from './components/loading/InitialLoading';
+import Checkout from './components/layout/Checkout';
 
 export const AppContext = createContext({
   isMobile: false,
   windowWidth: null,
   isOpenMenu: false,
+  isCartVisible: false,
   handleLogout: () => {},
   handleOpenMenu: () => {},
+  handleCartVisibility: () => {},
 });
 
 export const menuWidth = 240;
@@ -30,19 +33,23 @@ function App({ pageProps, component: Component }) {
   const [windowWidth, setWindowWidth] = useState(1500);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [isCartVisible, setIsCartVisible] = useState(true);
   const router = useRouter();
   const dispatch = useDispatch();
 
   const appProviderValue = {
     handleLogout: handleLogout,
     handleOpenMenu: handleOpenMenu,
+    handleCartVisibility: handleCartVisibility,
     isMobile,
     windowWidth,
     isOpenMenu,
+    isCartVisible,
   };
 
   // paginas que não precisam no cabeçalho e rodapé padrões
   const paths = ['/register', '/login'];
+  const checkoutPaths = ['/checkout'];
 
   useEffect(() => {
     const payload = verifyToken();
@@ -78,7 +85,7 @@ function App({ pageProps, component: Component }) {
       .then(response => {
         localStorage.removeItem(process.env.TOKEN_NAME);
         dispatch(removeUser());
-        router.push('/');
+        router.push(router.route);
       })
       .finally(() => {
         setLoading(false);
@@ -94,6 +101,10 @@ function App({ pageProps, component: Component }) {
     setIsOpenMenu(!isOpenMenu);
   }
 
+  function handleCartVisibility(state = !isCartVisible) {
+    setIsCartVisible(state);
+  }
+
   return (
     <AppContext.Provider value={appProviderValue}>
       {initialLoading && <InitialLoading background="#fafafa" />}
@@ -103,6 +114,8 @@ function App({ pageProps, component: Component }) {
       <Messaging>
         {paths.includes(router.route) ? (
           <OnlyMain pageProps={pageProps} component={Component} />
+        ) : checkoutPaths.includes(router.route) ? (
+          <Checkout pageProps={pageProps} component={Component} isMobile={isMobile} windowWidth={windowWidth} />
         ) : (
           <Default pageProps={pageProps} component={Component} isMobile={isMobile} windowWidth={windowWidth} />
         )}

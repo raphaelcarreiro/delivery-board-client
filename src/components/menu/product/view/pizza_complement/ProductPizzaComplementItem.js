@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { List, ListItem, Typography, Menu, MenuItem, IconButton } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottom: '1px solid #ddd',
+    borderBottom: '1px solid #eaeaea',
     backgroundColor: fade(theme.palette.primary.main, 0.05),
     position: 'relative',
     '&:focus': {
@@ -33,12 +33,13 @@ const useStyles = makeStyles(theme => ({
   list: {
     padding: 0,
   },
-  icon: {
+  icon: ({ isPizzaTaste }) => ({
     backgroundColor: '#fff',
     borderRadius: '50%',
     position: 'absolute',
-    right: 15,
-  },
+    right: isPizzaTaste ? 10 : 15,
+    top: isPizzaTaste ? 10 : 'inherit',
+  }),
   complementName: {
     fontWeight: 400,
   },
@@ -100,36 +101,42 @@ export default function ProductPizzaComplementItem({
   openDialogAdditional,
   openDialogIngredients,
 }) {
-  const classes = useStyles();
+  const classes = useStyles({ isPizzaTaste: category.is_pizza_taste });
   const [anchorEl, setAnchorEl] = useState(null);
+  const [complementSelected, setComplementSelected] = useState({ additional: [], ingredients: [] });
 
-  function handleClickMore(event, complementId) {
+  function handleClickMore(event, complement) {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
-    setComplementIdSelected(complementId);
+    setComplementIdSelected(complement.id);
     setComplementCategoryIdSelected(category.id);
+    setComplementSelected(complement);
   }
 
   return (
     <>
       {category.is_pizza_taste && (
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
-          <MenuItem
-            onClick={() => {
-              openDialogAdditional();
-              setAnchorEl(null);
-            }}
-          >
-            Adicionais
-          </MenuItem>
-          <MenuItem
-            onClick={() => {
-              openDialogIngredients();
-              setAnchorEl(null);
-            }}
-          >
-            Ingredientes
-          </MenuItem>
+          {complementSelected.additional.length > 0 && (
+            <MenuItem
+              onClick={() => {
+                openDialogAdditional();
+                setAnchorEl(null);
+              }}
+            >
+              Adicionais
+            </MenuItem>
+          )}
+          {complementSelected.ingredients.length > 0 && (
+            <MenuItem
+              onClick={() => {
+                openDialogIngredients();
+                setAnchorEl(null);
+              }}
+            >
+              Ingredientes
+            </MenuItem>
+          )}
         </Menu>
       )}
       <List className={classes.list}>
@@ -140,9 +147,9 @@ export default function ProductPizzaComplementItem({
             key={complement.id}
             onClick={() => handleClickPizzaComplements(productId, category.id, complement.id)}
           >
-            {category.is_pizza_taste && (
-              <IconButton className={classes.more} onClick={event => handleClickMore(event, complement.id)}>
-                <MoreVertIcon />
+            {category.is_pizza_taste && (complement.additional.length > 0 || complement.ingredients.length > 0) && (
+              <IconButton className={classes.more} onClick={event => handleClickMore(event, complement)}>
+                <MoreHorizIcon />
               </IconButton>
             )}
             <div className={classes.complementData}>

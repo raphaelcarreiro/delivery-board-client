@@ -126,6 +126,7 @@ function ProductComplement({ onExited, selectedProduct, handleAddProductToCart, 
 
     setProduct({
       ...product,
+      ready: false,
       complement_categories: categories,
     });
   }, []);
@@ -144,6 +145,7 @@ function ProductComplement({ onExited, selectedProduct, handleAddProductToCart, 
         return categoryPrice + value;
       }, 0)
     );
+    handlePrepareProduct(product, amount);
   }, [product]);
 
   function handleAmountUp() {

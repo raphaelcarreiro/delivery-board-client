@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, TextField, InputAdornment, IconButton, Menu, MenuItem, Avatar } from '@material-ui/core';
+import { Grid, TextField, InputAdornment, IconButton, Menu, MenuItem, Avatar, Typography } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingBasket';
 import InputIcon from '@material-ui/icons/Input';
@@ -40,20 +40,20 @@ const useStyles = makeStyles(theme => ({
   img: {
     width: 80,
   },
-  cartBadge: {
+  cartBadge: ({ cartItems }) => ({
     position: 'absolute',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     top: -15,
     right: -10,
-    backgroundColor: '#dc640f',
+    backgroundColor: cartItems ? '#dc640f' : theme.palette.secondary.main,
     borderRadius: '50%',
     height: 20,
     width: 20,
     fontSize: 12,
     color: '#FFF',
-  },
+  }),
   link: {
     display: 'flex',
     alignItems: 'center',
@@ -63,16 +63,26 @@ const useStyles = makeStyles(theme => ({
       marginRight: 10,
     },
   },
+  cartLink: ({ cartItems }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: 16,
+    position: 'relative',
+    '& svg': {
+      marginRight: 10,
+    },
+    cursor: 'pointer',
+  }),
 }));
 
 export default function Header() {
-  const classes = useStyles();
   const appContext = useContext(AppContext);
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const restaurant = useSelector(state => state.restaurant);
   const user = useSelector(state => state.user);
   const cart = useSelector(state => state.cart);
+  const classes = useStyles({ cartItems: cart.products.length > 0 });
 
   function handleCloseMenu() {
     setAnchorEl(null);
@@ -93,6 +103,10 @@ export default function Header() {
     router.push('/account/orders');
   }
 
+  function handleCartClick() {
+    appContext.handleCartVisibility();
+  }
+
   return (
     <>
       <header className={classes.header}>
@@ -111,21 +125,7 @@ export default function Header() {
                 )}
               </div>
               <Grid item xs={9}>
-                <TextField
-                  variant="outlined"
-                  label="Busca"
-                  placeholder="Faça sua busca"
-                  fullWidth
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton color="primary">
-                          <SearchIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
+                <Typography>Status do restaurante</Typography>
               </Grid>
             </Grid>
             <Grid
@@ -143,10 +143,10 @@ export default function Header() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link color="primary" href="/cart" className={classes.link}>
+                <Typography color="primary" onClick={handleCartClick} className={classes.cartLink}>
                   <span className={classes.cartBadge}>{cart.products.length}</span>
-                  <ShoppingCartIcon /> Cesta
-                </Link>
+                  <ShoppingCartIcon color="primary" /> Cesta
+                </Typography>
               </Grid>
               <Grid item>
                 {!user.id ? (

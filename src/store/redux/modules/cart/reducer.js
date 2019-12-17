@@ -1,4 +1,4 @@
-import { moneyFormat } from '../../../../helpers/numberFormat';
+import { moneyFormat } from 'src/helpers/numberFormat';
 
 export const INITIAL_STATE = {
   products: [],
@@ -71,24 +71,42 @@ export default function cart(state = INITIAL_STATE, action) {
 
       finalPrice = (price + additionalPrice + complementsPrice) * state.product.amount;
 
+      const products = [
+        ...state.products,
+        {
+          ...state.product,
+          uid: new Date().getTime(),
+          product_price: price,
+          formattedProductPrice: moneyFormat(price),
+          price: price + additionalPrice + complementsPrice,
+          final_price: finalPrice,
+          additionalPrice: additionalPrice,
+          complementsPrice: complementsPrice,
+          formattedPrice: moneyFormat(price + additionalPrice + complementsPrice),
+          formattedFinalPrice: moneyFormat(finalPrice),
+        },
+      ];
+
+      const total = products.reduce((sum, value) => sum + value.final_price, 0);
+
       return {
         ...state,
         product: null,
-        products: [
-          ...state.products,
-          {
-            ...action.product,
-            uid: new Date().getTime(),
-            product_price: price,
-            formattedProductPrice: moneyFormat(price),
-            price: price + additionalPrice + complementsPrice,
-            final_price: finalPrice,
-            additionalPrice: additionalPrice,
-            complementsPrice: complementsPrice,
-            formattedPrice: moneyFormat(price + additionalPrice + complementsPrice),
-            formattedFinalPrice: moneyFormat(finalPrice),
-          },
-        ],
+        products,
+        total,
+        formattedTotal: moneyFormat(total),
+      };
+    }
+
+    case '@cart/REMOVE_FROM_CART': {
+      const products = state.products.filter(product => product.uid !== action.productUid);
+      const total = products.reduce((sum, value) => sum + value.final_price, 0);
+
+      return {
+        ...state,
+        products,
+        total,
+        formattedTotal: moneyFormat(total),
       };
     }
 

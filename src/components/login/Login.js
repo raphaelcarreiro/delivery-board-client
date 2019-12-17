@@ -112,7 +112,8 @@ function Login() {
         .then(response => {
           localStorage.setItem(process.env.TOKEN_NAME, response.data.token);
           dispatch(setUser(response.data.user));
-          router.push('/');
+          const redirect = router.query.redirect;
+          router.push(redirect || '/');
         })
         .catch(err => {
           if (err.response)
