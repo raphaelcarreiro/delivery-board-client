@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import DialogFullscreen from '../../../dialog/DialogFullscreen';
 import { makeStyles } from '@material-ui/core/styles';
 import ProductViewIngredients from './ProductViewIngredients';
 import ProductViewAdditional from './ProductViewAdditional';
 import ProductViewAction from './ProductViewAction';
 import { Grid, Typography, TextField } from '@material-ui/core';
-import ImagePreview from '../../../image-preview/ImagePreview';
+import ImagePreview from '../../../../image-preview/ImagePreview';
 import PropTypes from 'prop-types';
-import { moneyFormat } from '../../../../helpers/numberFormat';
+import { moneyFormat } from '../../../../../helpers/numberFormat';
+import CustomDialog from 'src/components/dialog/CustomDialog';
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
@@ -49,6 +49,9 @@ const useStyles = makeStyles(theme => ({
       display: 'flex',
       justifyContent: 'center',
     },
+  },
+  price: {
+    fontWeight: 500,
   },
 }));
 
@@ -130,12 +133,12 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
   }
 
   return (
-    <DialogFullscreen title="Adicionar produto" backgroundColor="#fafafa" handleModalState={onExited}>
+    <CustomDialog title="Adicionar produto" backgroundColor="#fafafa" handleModalState={onExited}>
       {imagePreview && product.image && (
         <ImagePreview src={product.image.imageUrl} description={product.name} onExited={handleImagePreview} />
       )}
       <Grid container className={classes.container} justify="center">
-        <Grid item xl={5} lg={6} md={8} xs={12}>
+        <Grid item xs={12}>
           <Grid item xs={12} container direction="row" className={classes.productData}>
             <div className={classes.imageWrapper}>
               <div className={classes.imageContainer}>
@@ -153,7 +156,9 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
               </Typography>
               <Typography variant="h6">{product.name}</Typography>
               <Typography>{product.description}</Typography>
-              <Typography color="textSecondary">{product.formattedPrice}</Typography>
+              <Typography color="primary" className={classes.price}>
+                {product.formattedPrice}
+              </Typography>
             </div>
           </Grid>
           <Grid item xs={12}>
@@ -190,6 +195,6 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
         product={product}
         additionalPrice={additionalPrice}
       />
-    </DialogFullscreen>
+    </CustomDialog>
   );
 }

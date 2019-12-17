@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#fff',
-    borderBottom: '1px solid #f5f5f5',
+    borderBottom: '1px solid #eee',
     position: 'relative',
   },
   selected: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottom: '1px solid #f5f5f5',
+    borderBottom: '1px solid #ddd',
     backgroundColor: fade(theme.palette.primary.main, 0.05),
     position: 'relative',
     '&:focus': {
@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: '#fff8dc',
   },
   price: {
     fontWeight: 500,

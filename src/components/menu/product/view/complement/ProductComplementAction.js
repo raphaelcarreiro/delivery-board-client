@@ -1,16 +1,13 @@
 import React, { useContext } from 'react';
-import { Grid, IconButton, Button, Typography } from '@material-ui/core';
+import { Typography, Grid, Button, IconButton } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import { makeStyles } from '@material-ui/core/styles';
-import { DialogFullscreenContext } from '../../../dialog/DialogFullscreen';
 import PropTypes from 'prop-types';
-import { moneyFormat } from '../../../../helpers/numberFormat';
+import { moneyFormat } from 'src/helpers/numberFormat';
+import { CustomDialogContext } from 'src/components/dialog/CustomDialog';
 
 const useStyles = makeStyles(theme => ({
-  container: {
-    marginBottom: 150,
-  },
   actionContent: {
     display: 'flex',
     flexDirection: 'row',
@@ -28,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     height: 40,
   },
   action: {
-    position: 'fixed',
+    position: 'absolute',
     bottom: 0,
     left: 0,
     width: '100%',
@@ -44,35 +41,38 @@ const useStyles = makeStyles(theme => ({
     minWidth: 50,
   },
   finalPrice: {
-    color: theme.palette.primary.contrastText,
+    color: ({ isSelected }) => (isSelected ? theme.palette.primary.contrastText : '#888'),
     textAlign: 'right',
     minWidth: 80,
     fontWeight: 500,
   },
 }));
 
-ProductViewAction.propTypes = {
+ProductComplementAction.propTypes = {
   handleAmountDown: PropTypes.func.isRequired,
-  amount: PropTypes.number.isRequired,
   handleAmountUp: PropTypes.func.isRequired,
-  handleAddProductToCart: PropTypes.func.isRequired,
+  amount: PropTypes.number.isRequired,
+  complementsPrice: PropTypes.number.isRequired,
   product: PropTypes.object.isRequired,
-  additionalPrice: PropTypes.number.isRequired,
+  handleConfirmProduct: PropTypes.func.isRequired,
+  isReady: PropTypes.bool.isRequired,
 };
 
-export default function ProductViewAction({
+export default function ProductComplementAction({
   handleAmountDown,
-  amount,
   handleAmountUp,
-  handleAddProductToCart,
+  amount,
+  complementsPrice,
   product,
-  additionalPrice,
+  handleConfirmProduct,
+  isReady,
 }) {
-  const classes = useStyles();
-  const { handleCloseDialog } = useContext(DialogFullscreenContext);
+  const classes = useStyles({ isSelected: isReady });
+  const { handleCloseDialog } = useContext(CustomDialogContext);
+
   return (
     <div className={classes.action}>
-      <Grid item xs={12} xl={5} lg={6} md={10}>
+      <Grid item xs={12}>
         <div className={classes.actionContent}>
           <div className={classes.amountControl}>
             <IconButton variant="text" onClick={handleAmountDown} className={classes.buttonAmount}>
@@ -87,17 +87,18 @@ export default function ProductViewAction({
           </div>
 
           <Button
+            disabled={!product.ready}
             variant="contained"
             size="large"
             color="primary"
             onClick={() => {
-              handleAddProductToCart();
+              handleConfirmProduct();
               handleCloseDialog();
             }}
           >
             <span>Adicionar</span>
             <Typography className={classes.finalPrice} color="textPrimary">
-              {moneyFormat((product.price + additionalPrice) * amount)}
+              {moneyFormat((complementsPrice + product.price) * amount)}
             </Typography>
           </Button>
         </div>

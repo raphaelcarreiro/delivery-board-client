@@ -11,17 +11,17 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#fff',
-    borderBottom: '1px solid #f5f5f5',
+    borderBottom: '1px solid #eee',
     position: 'relative',
   },
   selected: {
+    position: 'relative',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottom: '1px solid #f5f5f5',
+    borderBottom: '1px solid #eee',
     backgroundColor: fade(theme.palette.primary.main, 0.05),
-    position: 'relative',
     '&:focus': {
       backgroundColor: fade(theme.palette.primary.main, 0.05),
     },
@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: '#fff8dc',
   },
   icon: {
     backgroundColor: '#fff',

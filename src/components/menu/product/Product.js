@@ -2,10 +2,12 @@ import React, { useState, useContext } from 'react';
 import ImagePreview from '../../image-preview/ImagePreview';
 import MenuProductList from './ProductList';
 import PropTypes from 'prop-types';
-import ProductView from './view/ProductView';
+import ProductView from './view/simple/ProductView';
 import { useDispatch } from 'react-redux';
 import { prepareProduct, addToCart } from '../../../store/redux/modules/cart/actions';
 import { MessagingContext } from '../../messaging/Messaging';
+import ProductPizzaComplement from './view/pizza_complement/ProductPizzaComplement';
+import ProductComplement from './view/complement/ProductComplement';
 
 Product.propTypes = {
   products: PropTypes.array.isRequired,
@@ -16,11 +18,19 @@ export default function Product({ products, categoryName }) {
   const [imagePreview, setImagePreview] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [dialogProductView, setDialogProductView] = useState(false);
+  const [dialogProductComplement, setDialogProductComplement] = useState(false);
   const dispatch = useDispatch();
   const messaging = useContext(MessagingContext);
 
   function handleProductClick(product) {
     setSelectedProduct(product);
+    messaging.handleClose();
+
+    if (product.category.has_complement) {
+      setDialogProductComplement(true);
+      return false;
+    }
+
     setDialogProductView(true);
   }
 
@@ -56,6 +66,25 @@ export default function Product({ products, categoryName }) {
           onExited={() => setDialogProductView(false)}
           selectedProduct={selectedProduct}
         />
+      )}
+      {dialogProductComplement && (
+        <>
+          {selectedProduct.category.is_pizza ? (
+            <ProductPizzaComplement
+              onExited={() => setDialogProductComplement(false)}
+              handleAddProductToCart={handleAddProductToCart}
+              handlePrepareProduct={handlePrepareProduct}
+              selectedProduct={selectedProduct}
+            />
+          ) : (
+            <ProductComplement
+              onExited={() => setDialogProductComplement(false)}
+              handleAddProductToCart={handleAddProductToCart}
+              handlePrepareProduct={handlePrepareProduct}
+              selectedProduct={selectedProduct}
+            />
+          )}
+        </>
       )}
       <MenuProductList
         products={products}
