@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { ListItem, List, Typography, Menu, MenuItem, IconButton, Tooltip } from '@material-ui/core';
-import NoData from '../../nodata/NoData';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import StarIcon from '@material-ui/icons/Star';
 import PropTypes from 'prop-types';

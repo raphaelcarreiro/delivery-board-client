@@ -6,6 +6,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   selected: {
@@ -30,9 +31,19 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     position: 'relative',
   },
+  listItemNewAddress: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 120,
+    backgroundColor: '#fff',
+    boxShadow: '1px 1px 9px 1px #eee',
+    borderRadius: 4,
+    border: `2px dashed ${theme.palette.primary.main}`,
+  },
   list: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
+    gridTemplateColumns: 'repeat(3, 1fr)',
     gridGap: 6,
     [theme.breakpoints.down('md')]: {
       gridTemplateColumns: 'repeat(2, 1fr)',
@@ -101,39 +112,52 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-ShipmentAddressesList.PropTypes = {
+ShipmentAddressesList.propTypes = {
   addresses: PropTypes.array.isRequired,
   selectAddress: PropTypes.func.isRequired,
-  shipmentAddressId: PropTypes.number.isRequired,
-  handleOpenDialogCustomerEditAddress: PropTypes.func.isRequired,
+  handleDialogEditAddress: PropTypes.func.isRequired,
+  handleDialogNewAddress: PropTypes.func.isRequired,
+  handleDeleteAddress: PropTypes.func.isRequired,
 };
 
 export default function ShipmentAddressesList({
   addresses,
   selectAddress,
-  shipmentAddressId,
-  handleOpenDialogCustomerEditAddress,
+  handleDialogEditAddress,
+  handleDialogNewAddress,
+  handleDeleteAddress,
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedIdAddress, setSelectedIdAddress] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState({});
+  const order = useSelector(state => state.order);
 
-  function handleClick(event, id) {
-    event.stopPropagation();
-    setSelectedIdAddress(id);
+  function handleMoreClick(event, address) {
     setAnchorEl(event.currentTarget);
+    setSelectedAddress(address);
+    event.stopPropagation();
   }
 
   return (
     <div className={classes.container}>
-      <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
+      <Menu onClose={() => setAnchorEl(null)} anchorEl={anchorEl} open={Boolean(anchorEl)}>
+        {!selectedAddress.is_main && (
+          <MenuItem
+            onClick={() => {
+              setAnchorEl(null);
+              handleDialogEditAddress(selectedAddress.id);
+            }}
+          >
+            Editar
+          </MenuItem>
+        )}
         <MenuItem
           onClick={() => {
-            handleOpenDialogCustomerEditAddress(selectedIdAddress);
             setAnchorEl(null);
+            handleDeleteAddress(selectedAddress);
           }}
         >
-          Alterar
+          Excluir
         </MenuItem>
       </Menu>
       <List className={classes.list}>
@@ -141,25 +165,12 @@ export default function ShipmentAddressesList({
           <ListItem
             onClick={() => selectAddress(address.id)}
             button
-            className={address.id === shipmentAddressId ? classes.selected : classes.listItem}
+            className={address.id === order.shipmentAddress.id ? classes.selected : classes.listItem}
             key={address.id}
           >
-            <IconButton className={classes.iconButton} onClick={event => handleClick(event, address.id)}>
+            <IconButton className={classes.iconButton} onClick={event => handleMoreClick(event, address)}>
               <MoreVertIcon />
             </IconButton>
-            <div className={classes.actions}>
-              <Button
-                variant="text"
-                color="primary"
-                size="small"
-                onClick={event => {
-                  event.stopPropagation();
-                  handleOpenDialogCustomerEditAddress(address.id);
-                }}
-              >
-                Alterar
-              </Button>
-            </div>
             <div>
               <Typography variant="h6" className={classes.address}>
                 {address.address}, {address.number}
@@ -175,13 +186,17 @@ export default function ShipmentAddressesList({
               </Typography>
               <Typography color="textSecondary">{address.postal_code}</Typography>
             </div>
-            {address.id === shipmentAddressId && <CheckCircleIcon color="primary" className={classes.checkIcon} />}
+            {address.id === order.shipmentAddress.id && (
+              <CheckCircleIcon color="primary" className={classes.checkIcon} />
+            )}
           </ListItem>
         ))}
+        <ListItem button className={classes.listItemNewAddress} onClick={handleDialogNewAddress}>
+          <Typography variant="h6" color="primary">
+            Adicionar endereço
+          </Typography>
+        </ListItem>
       </List>
-      <Button variant="text" color="primary" className={classes.button} onClick={openDialogNewCustomerAddress}>
-        Adicionar endereço
-      </Button>
     </div>
   );
 }

@@ -18,7 +18,7 @@ export default function CartTotal() {
       <Grid container>
         <Grid item xs={12} container justify="space-between">
           <Typography variant="h6">Total</Typography>
-          <Typography variant="h6" color="primary" className={classes.total}>
+          <Typography variant="h5" className={classes.total}>
             {cart.formattedTotal}
           </Typography>
         </Grid>

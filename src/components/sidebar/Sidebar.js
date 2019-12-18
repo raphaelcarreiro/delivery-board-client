@@ -3,6 +3,7 @@ import { ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/c
 import PersonIcon from '@material-ui/icons/Person';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import InputIcon from '@material-ui/icons/Input';
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import Drawer from '@material-ui/core/Drawer';
 import { makeStyles } from '@material-ui/core/styles';
@@ -52,6 +53,20 @@ const useStyles = makeStyles(theme => ({
       marginRight: 10,
     },
   },
+  cartBadge: ({ cartItems }) => ({
+    position: 'absolute',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    right: 15,
+    backgroundColor: cartItems ? '#dc640f' : '#ccc',
+    borderRadius: '50%',
+    height: 20,
+    width: 20,
+    fontSize: 12,
+    color: '#FFF',
+  }),
 }));
 
 Sidebar.propTypes = {
@@ -61,10 +76,11 @@ Sidebar.propTypes = {
 };
 
 function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
-  const classes = useStyles();
+  const router = useRouter();
   const user = useSelector(state => state.user);
   const restaurant = useSelector(state => state.restaurant);
-  const router = useRouter();
+  const cart = useSelector(state => state.cart);
+  const classes = useStyles({ cartItems: cart.products.length > 0 });
 
   function handleClick() {
     handleOpenMenu();
@@ -105,6 +121,13 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
           <MenuBookIcon />
         </ListItemIcon>
         <ListItemText classes={{ primary: classes.listItemText }} primary="Cardápio" />
+      </ListItem>
+      <ListItem component={Link} href="/cart" onClick={handleClick} button>
+        <span className={classes.cartBadge}>{cart.products.length}</span>
+        <ListItemIcon className={classes.listItemIcon}>
+          <ShoppingBasketIcon />
+        </ListItemIcon>
+        <ListItemText classes={{ primary: classes.listItemText }} primary="Cesta" />
       </ListItem>
       {user.id ? (
         <>

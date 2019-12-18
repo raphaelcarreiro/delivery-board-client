@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#fff',
-    borderBottom: '1px solid #eee',
+    borderBottom: '1px solid #f5f5f5',
     position: 'relative',
   },
   selected: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottom: '1px solid #eaeaea',
+    borderBottom: '1px solid #f5f5f5',
     backgroundColor: fade(theme.palette.primary.main, 0.05),
     position: 'relative',
     '&:focus': {
@@ -39,11 +39,6 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderRadius: '4px 4px 0 0',
-    // backgroundColor: '#fff8dc',
-  },
-  price: {
-    fontWeight: 500,
   },
   icon: {
     backgroundColor: '#fff',
@@ -53,34 +48,31 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-ProductViewAdditional.propTypes = {
-  additional: PropTypes.array.isRequired,
-  handleClickAdditional: PropTypes.func.isRequired,
+ProductSimpleIngredients.propTypes = {
+  ingredients: PropTypes.array.isRequired,
+  handleClickIngredient: PropTypes.func.isRequired,
 };
 
-export default function ProductViewAdditional({ additional, handleClickAdditional }) {
+export default function ProductSimpleIngredients({ ingredients, handleClickIngredient }) {
   const classes = useStyles();
 
   return (
     <Fragment>
       <div className={classes.header}>
-        <Typography variant="h6">Adicionais</Typography>
+        <Typography variant="h6">Ingredientes</Typography>
       </div>
       <List className={classes.list}>
-        {additional.map(item => (
+        {ingredients.map(additional => (
           <ListItem
-            onClick={() => handleClickAdditional(item.id)}
+            onClick={() => handleClickIngredient(additional.id)}
             button
-            className={item.selected ? classes.selected : classes.listItem}
-            key={item.id}
+            className={additional.selected ? classes.selected : classes.listItem}
+            key={additional.id}
           >
             <div>
-              <Typography>{item.name}</Typography>
-              <Typography color="primary" className={classes.price}>
-                + {item.formattedPrice}
-              </Typography>
+              <Typography>{additional.name}</Typography>
             </div>
-            {item.selected && <CheckCircleIcon className={classes.icon} color="primary" />}
+            {additional.selected && <CheckCircleIcon className={classes.icon} color="primary" />}
           </ListItem>
         ))}
       </List>

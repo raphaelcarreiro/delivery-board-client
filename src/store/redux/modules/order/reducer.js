@@ -18,21 +18,21 @@ export default function order(state = INITIAL_STATE, action) {
     case '@order/SET_SHIPMENT_ADDRESS': {
       return {
         ...state,
-        customer: action.shipmentAddress,
+        shipmentAddress: action.address,
       };
     }
 
     case '@order/SET_PAYMENT_METHOD': {
       return {
         ...state,
-        customer: action.paymentMethod,
+        paymentMethod: action.paymentMethod,
       };
     }
 
     case '@order/SET_PRODUCTS': {
       return {
         ...state,
-        customer: action.products,
+        products: action.products,
       };
     }
 

@@ -39,8 +39,8 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff8dc',
     marginTop: 10,
+    // backgroundColor: '#fff8dc',
   },
   icon: {
     backgroundColor: '#fff',

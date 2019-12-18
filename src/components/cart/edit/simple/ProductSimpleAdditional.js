@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#fff',
-    borderBottom: '1px solid #eee',
+    borderBottom: '1px solid #f5f5f5',
     position: 'relative',
   },
   selected: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottom: '1px solid #eaeaea',
+    borderBottom: '1px solid #f5f5f5',
     backgroundColor: fade(theme.palette.primary.main, 0.05),
     position: 'relative',
     '&:focus': {
@@ -39,8 +39,6 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderRadius: '4px 4px 0 0',
-    // backgroundColor: '#fff8dc',
   },
   price: {
     fontWeight: 500,
@@ -53,12 +51,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-ProductViewAdditional.propTypes = {
+ProductSimpleAdditional.propTypes = {
   additional: PropTypes.array.isRequired,
   handleClickAdditional: PropTypes.func.isRequired,
 };
 
-export default function ProductViewAdditional({ additional, handleClickAdditional }) {
+export default function ProductSimpleAdditional({ additional, handleClickAdditional }) {
   const classes = useStyles();
 
   return (

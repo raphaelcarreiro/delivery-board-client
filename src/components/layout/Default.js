@@ -48,8 +48,9 @@ const useStyles = makeStyles({
     right: 0,
     backgroundColor: '#fff',
     boxShadow: '0 0 6px 4px #ddd',
-    padding: 20,
+    padding: '10px 20px 20px 20px',
     zIndex: 9,
+    overflowY: 'auto',
   }),
 });
 

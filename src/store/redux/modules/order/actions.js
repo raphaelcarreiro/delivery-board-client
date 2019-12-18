@@ -7,7 +7,7 @@ export function setCustomer(customer) {
 
 export function setShipmentAddress(address) {
   return {
-    type: '@order/SET_CUSTOMER',
+    type: '@order/SET_SHIPMENT_ADDRESS',
     address,
   };
 }

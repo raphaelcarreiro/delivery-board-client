@@ -11,8 +11,8 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff8dc',
     borderRadius: '4px 4px 0 0',
+    // backgroundColor: '#fff8dc',
   },
   chip: {
     display: 'inline-block',
@@ -52,7 +52,7 @@ export default function ProductPizzaComplementHeader({ category, complementSizeS
                 Escolha até {complementSizeSelected.taste_amount} opções.
               </Typography>
             ) : (
-              <Typography color="primary">Primeiro você deve selecionar o tamanho</Typography>
+              <Typography color="primary">Selecione o tamanho</Typography>
             )}
           </div>
           <div>{category.is_required && <span className={classes.chip}>Obrigatório</span>}</div>
@@ -90,7 +90,7 @@ export default function ProductPizzaComplementHeader({ category, complementSizeS
                 Escolha até {category.max_quantity} opções.
               </Typography>
             ) : (
-              <Typography color="primary">Primeiro você deve selecionar o tamanho</Typography>
+              <Typography color="primary">Selecione o tamanho</Typography>
             )}
           </div>
           <div>{category.is_required && <span className={classes.chip}>Obrigatório</span>}</div>

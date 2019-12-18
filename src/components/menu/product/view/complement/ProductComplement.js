@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Typography, Grid } from '@material-ui/core';
+import { Typography, Grid, TextField } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import ProductComplementItem from './ProductComplementItem';
 import { MessagingContext } from '../../../../messaging/Messaging';
@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff8dc',
+    // backgroundColor: '#fff8dc',
   },
   chip: {
     display: 'inline-block',
@@ -252,6 +252,18 @@ function ProductComplement({ onExited, selectedProduct, handleAddProductToCart, 
             </section>
           ))}
         </Grid>
+        <Grid item xs={12} className={classes.annotationContainer}>
+          <TextField
+            multiline
+            rows={4}
+            label="Tem alguma observação?"
+            placeholder="Por exemplo, carne do hamburguer bem passada"
+            fullWidth
+            margin="normal"
+            value={product.annotation}
+            onChange={event => setProduct({ ...product, annotation: event.target.value })}
+          />
+        </Grid>
       </Grid>
       <ProductComplementAction
         amount={amount}
@@ -260,7 +272,7 @@ function ProductComplement({ onExited, selectedProduct, handleAddProductToCart, 
         handleAmountUp={handleAmountUp}
         handleConfirmProduct={handleConfirmProduct}
         product={product}
-        isReady={product.ready}
+        isReady={product.ready || false}
       />
     </CustomDialog>
   );

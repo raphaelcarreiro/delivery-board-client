@@ -1,20 +1,37 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Grid, TextField } from '@material-ui/core';
+import { Typography, Grid, TextField } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import ProductPizzaComplementItem from './ProductPizzaComplementItem';
-import { MessagingContext } from '../../../../messaging/Messaging';
+import { MessagingContext } from 'src/components/messaging/Messaging';
+import CustomDialog from 'src/components/dialog/CustomDialog';
 import ProductPizzaComplementAction from './ProductPizzaComplementAction';
 import ProductPizzaComplementAdditional from './ProductPizzaComplementAdditional';
 import ProductPizzaComplementIngredient from './ProductPizzaComplementIngredient';
 import PropTypes from 'prop-types';
-import { moneyFormat } from '../../../../../helpers/numberFormat';
-import CustomDialog from 'src/components/dialog/CustomDialog';
-import ProductPizzaComplementHeader from './ProductPizzaComplementHeader';
 
 const useStyles = makeStyles(theme => ({
+  header: {
+    border: `1px solid ${fade(theme.palette.primary.main, 0.1)}`,
+    padding: '7px 15px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  chip: {
+    display: 'inline-block',
+    padding: '3px 5px',
+    borderRadius: 4,
+    backgroundColor: theme.palette.primary.dark,
+    color: theme.palette.primary.contrastText,
+    fontSize: 10,
+  },
   category: {
     display: 'block',
     margin: '10px 0',
+  },
+  categoryName: {
+    fontWeight: 400,
   },
   container: {
     marginBottom: 150,
@@ -22,82 +39,33 @@ const useStyles = makeStyles(theme => ({
 }));
 
 ProductPizzaComplement.propTypes = {
-  onExited: PropTypes.func.isRequired,
-  handleAddProductToCart: PropTypes.func.isRequired,
-  handlePrepareProduct: PropTypes.func.isRequired,
   selectedProduct: PropTypes.object.isRequired,
+  onExited: PropTypes.func.isRequired,
+  handleUpdateCartProduct: PropTypes.func.isRequired,
 };
 
-export default function ProductPizzaComplement({
-  onExited,
-  selectedProduct,
-  handleAddProductToCart,
-  handlePrepareProduct,
-}) {
-  const classes = useStyles();
-  const [amount, setAmount] = useState(1);
+export default function ProductPizzaComplement({ selectedProduct, onExited, handleUpdateCartProduct }) {
+  const [amount, setAmount] = useState(selectedProduct.amount);
   const [product, setProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
+  const messaging = useContext(MessagingContext);
+  const classes = useStyles();
   const [complementsPrice, setComplementsPrice] = useState(0);
+  const categoryComplementSize = product.complement_categories.find(category => category.is_pizza_size);
+  const complementSizeSelected = categoryComplementSize.complements.find(complement => complement.selected);
   const [dialogIngredients, setDialogIngredients] = useState(false);
   const [dialogAdditional, setDialogAdditional] = useState(false);
   const [complementIdSelected, setComplementIdSelected] = useState(null);
   const [complementCategoryIdSelected, setComplementCategoryIdSelected] = useState(null);
-  const [complementSizeSelected, setComplementSizeSelected] = useState({});
-  const messaging = useContext(MessagingContext);
 
   useEffect(() => {
-    const categories = product.complement_categories.map(category => {
-      category.product_complement_category_id = category.id;
-      category.complements = category.complements.map((complement, index) => {
-        complement.product_complement_id = complement.id;
-        // complement.selected = category.is_pizza_size && index === 0;
-        complement.formattedPrice = complement.price && moneyFormat(complement.price);
+    /*
+    Calcula o valor total dos complements selecionados
+   */
 
-        complement.prices = complement.prices.map((price, index) => {
-          price.product_complement_price_id = price.id;
-          price.formattedPrice = price.price && moneyFormat(price.price);
-          // price.selected = index === 0;
-          return price;
-        });
-
-        complement.ingredients = complement.ingredients.map(ingredient => {
-          ingredient.product_complement_ingredient_id = ingredient.id;
-          return ingredient;
-        });
-
-        complement.additional = complement.additional.map(additional => {
-          additional.product_complement_additional_id = additional.id;
-          additional.prices = additional.prices.map((price, index) => {
-            price.product_complement_additional_price_id = price.id;
-            // price.selected = index === 0;
-            price.formattedPrice = price.price && moneyFormat(price.price);
-            return price;
-          });
-          return additional;
-        });
-        return complement;
-      });
-      return category;
-    });
-
-    setProduct({
-      ...product,
-      ready: false,
-      complement_categories: categories,
-    });
-  }, []);
-
-  useEffect(() => {
-    handlePrepareProduct(product, amount);
-    // eslint-disable-next-line
-  }, [amount]);
-
-  useEffect(() => {
-    // Calcula o valor total dos complements selecionados
     let sumPrices = 0;
     let counterTaste = 0;
-    let tastePrice = 0;
     let additionalPrice = 0;
+    let tastePrice = 0;
 
     product.complement_categories.forEach(category => {
       category.complements.forEach(complement => {
@@ -121,7 +89,6 @@ export default function ProductPizzaComplement({
     sumPrices = counterTaste > 0 ? sumPrices + tastePrice / counterTaste : sumPrices;
 
     setComplementsPrice(sumPrices + additionalPrice);
-    handlePrepareProduct(product, amount);
   }, [product]);
 
   function handleAmountUp() {
@@ -142,24 +109,9 @@ export default function ProductPizzaComplement({
     }
   }
 
-  function handleConfirmProduct() {
-    if (!product.ready) {
-      messaging.handleOpen('Você precisa selecionar os itens obrigatório');
-      return;
-    }
-    handleAddProductToCart();
-  }
-
   function handleClickPizzaComplements(productId, complementCategoryId, complementId) {
+    let sizeSelected;
     const complementCategory = product.complement_categories.find(category => category.id === complementCategoryId);
-
-    const complementCategorySize = product.complement_categories.find(category => category.is_pizza_size);
-    let sizeSelected = complementCategorySize.complements.find(complement => complement.selected);
-
-    if (!complementCategory.is_pizza_size && !sizeSelected) {
-      messaging.handleOpen('É necessário escolher o tamanho da pizza primeiro');
-      return;
-    }
 
     const categories = product.complement_categories.map(category => {
       if (category.id === complementCategoryId) {
@@ -191,33 +143,34 @@ export default function ProductPizzaComplement({
         });
       }
 
+      // marca os preços de acordo com o tamanho selecionado
+      if (category.is_pizza_size) {
+        sizeSelected = category.complements.find(complement => complement.selected);
+        if (sizeSelected)
+          product.complement_categories.map(category => {
+            category.complements.map(complement => {
+              // desmarca todos os sabores caso o tamanho tenha sido alterado
+              if (complementCategory.is_pizza_size)
+                complement.selected = category.is_pizza_taste ? false : complement.selected;
+              complement.prices = complement.prices.map(price => {
+                price.selected = price.product_complement_size_id === sizeSelected.id;
+                return price;
+              });
+              complement.additional = complement.additional.map(additional => {
+                additional.prices = additional.prices.map(price => {
+                  price.selected = price.product_complement_size_id === sizeSelected.id;
+                  return price;
+                });
+                return additional;
+              });
+              return complement;
+            });
+            return category;
+          });
+      }
+
       return category;
     });
-
-    sizeSelected = complementCategorySize.complements.find(complement => complement.selected);
-
-    // marca os preços de acordo com o tamanho selecionado
-    if (complementCategory.is_pizza_size && sizeSelected)
-      product.complement_categories.map(category => {
-        category.complements.map(complement => {
-          // desmarca todos os sabores caso o tamanho tenha sido alterado
-          if (complementCategory.is_pizza_size)
-            complement.selected = category.is_pizza_taste ? false : complement.selected;
-          complement.prices = complement.prices.map(price => {
-            price.selected = price.product_complement_size_id === sizeSelected.id;
-            return price;
-          });
-          complement.additional = complement.additional.map(additional => {
-            additional.prices = additional.prices.map(price => {
-              price.selected = price.product_complement_size_id === sizeSelected.id;
-              return price;
-            });
-            return additional;
-          });
-          return complement;
-        });
-        return category;
-      });
 
     // verifica se o produto pode ser adicionado ao pedido
     const ready = product.complement_categories.every(category => {
@@ -238,9 +191,6 @@ export default function ProductPizzaComplement({
     };
 
     setProduct(newProduct);
-    setComplementSizeSelected(sizeSelected);
-
-    if (ready) handlePrepareProduct(newProduct);
   }
 
   return (
@@ -263,23 +213,57 @@ export default function ProductPizzaComplement({
           setProduct={setProduct}
         />
       )}
-      <Grid container className={classes.container} justify="center">
+      <Grid container className={classes.container} direction="column">
         <Grid item xs={12}>
           {product.complement_categories.map(category => (
             <section className={classes.category} key={category.id}>
-              <ProductPizzaComplementHeader category={category} complementSizeSelected={complementSizeSelected} />
-              {(category.is_pizza_size || complementSizeSelected.id) && (
-                <ProductPizzaComplementItem
-                  category={category}
-                  productId={product.id}
-                  handleClickPizzaComplements={handleClickPizzaComplements}
-                  complements={category.complements}
-                  setComplementCategoryIdSelected={setComplementCategoryIdSelected}
-                  setComplementIdSelected={setComplementIdSelected}
-                  openDialogAdditional={() => setDialogAdditional(true)}
-                  openDialogIngredients={() => setDialogIngredients(true)}
-                />
+              {category.is_pizza_taste ? (
+                <div className={classes.header}>
+                  <div>
+                    <Typography className={classes.categoryName} variant="h6">
+                      {category.name}
+                    </Typography>
+                    {complementSizeSelected.taste_amount === 1 ? (
+                      <Typography color="textSecondary" variant="body2">
+                        Escolha 1 opção.
+                      </Typography>
+                    ) : (
+                      <Typography color="textSecondary" variant="body2">
+                        Escolha até {complementSizeSelected.taste_amount} opções.
+                      </Typography>
+                    )}
+                  </div>
+                  <div>{category.is_required && <span className={classes.chip}>Obrigatório</span>}</div>
+                </div>
+              ) : (
+                <div className={classes.header}>
+                  <div>
+                    <Typography className={classes.categoryName} variant="h6">
+                      {category.name}
+                    </Typography>
+                    {category.max_quantity === 1 ? (
+                      <Typography color="textSecondary" variant="body2">
+                        Escolha 1 opção.
+                      </Typography>
+                    ) : (
+                      <Typography color="textSecondary" variant="body2">
+                        Escolha até {category.max_quantity} opções.
+                      </Typography>
+                    )}
+                  </div>
+                  <div>{category.is_required && <span className={classes.chip}>Obrigatório</span>}</div>
+                </div>
               )}
+              <ProductPizzaComplementItem
+                category={category}
+                productId={product.id}
+                handleClickPizzaComplements={handleClickPizzaComplements}
+                complements={category.complements}
+                setComplementCategoryIdSelected={setComplementCategoryIdSelected}
+                setComplementIdSelected={setComplementIdSelected}
+                openDialogAdditional={() => setDialogAdditional(true)}
+                openDialogIngredients={() => setDialogIngredients(true)}
+              />
             </section>
           ))}
         </Grid>
@@ -301,9 +285,9 @@ export default function ProductPizzaComplement({
         complementsPrice={complementsPrice}
         handleAmountDown={handleAmountDown}
         handleAmountUp={handleAmountUp}
-        handleConfirmProduct={handleConfirmProduct}
+        handleUpdateCartProduct={handleUpdateCartProduct}
         product={product}
-        isReady={product.ready || false}
+        isReady={product.ready}
       />
     </CustomDialog>
   );

@@ -18,7 +18,7 @@ export default function cart(state = INITIAL_STATE, action) {
       };
     }
 
-    case '@cart/ADD_TO_CART': {
+    case '@cart/ADD_PRODUCT': {
       const price = state.product.price;
       let additionalPrice = 0;
       let finalPrice = 0;
@@ -98,8 +98,91 @@ export default function cart(state = INITIAL_STATE, action) {
       };
     }
 
-    case '@cart/REMOVE_FROM_CART': {
+    case '@cart/REMOVE_PRODUCT': {
       const products = state.products.filter(product => product.uid !== action.productUid);
+      const total = products.reduce((sum, value) => sum + value.final_price, 0);
+
+      return {
+        ...state,
+        products,
+        total,
+        formattedTotal: moneyFormat(total),
+      };
+    }
+
+    case '@cart/UPDATE_PRODUCT': {
+      const price = action.product.product_price;
+      let additionalPrice = 0;
+      let finalPrice = 0;
+      let complementsPrice = 0;
+      let tastePrice = 0;
+      let counterTaste = 0;
+      let complementAdditionalPrice = 0;
+
+      action.product.additional.forEach(additional => {
+        if (additional.selected) additionalPrice += additional.price;
+      });
+
+      // soma os preços dos complementos de pizza
+      if (action.product.category.is_pizza)
+        action.product.complement_categories.forEach(category => {
+          category.complements.forEach(complement => {
+            if (complement.selected) {
+              counterTaste = category.is_pizza_taste && complement.selected ? counterTaste + 1 : counterTaste;
+              complement.prices.forEach(price => {
+                if (category.is_pizza_taste)
+                  tastePrice = price.selected && price.price ? tastePrice + price.price : tastePrice;
+                else
+                  complementsPrice = price.selected && price.price ? complementsPrice + price.price : complementsPrice;
+              });
+              complement.additional.forEach(additional => {
+                if (additional.selected)
+                  additional.prices.forEach(price => {
+                    complementAdditionalPrice = price.selected
+                      ? price.price + complementAdditionalPrice
+                      : complementAdditionalPrice;
+                  });
+                return additional;
+              });
+            }
+          });
+        });
+      // soma os preços dos complementos em geral
+      else
+        action.product.complement_categories.forEach(category => {
+          complementsPrice = category.complements.reduce((sum, complement) => {
+            return complement.selected && complement.price ? sum + complement.price : sum;
+          }, complementsPrice);
+        });
+
+      // calcula preço das pizzas pela média
+      if (counterTaste > 0) {
+        tastePrice = tastePrice / counterTaste;
+        complementsPrice = complementsPrice + tastePrice + complementAdditionalPrice;
+      }
+
+      finalPrice = (price + additionalPrice + complementsPrice) * action.amount;
+
+      const updatedProduct = {
+        ...action.product,
+        amount: action.amount,
+        product_price: price,
+        formattedProductPrice: moneyFormat(price),
+        price: price + additionalPrice + complementsPrice,
+        final_price: finalPrice,
+        additionalPrice: additionalPrice,
+        complementsPrice: complementsPrice,
+        formattedPrice: moneyFormat(price + additionalPrice + complementsPrice),
+        formattedFinalPrice: moneyFormat(finalPrice),
+      };
+
+      const products = state.products.map(product => {
+        if (product.uid === updatedProduct.uid) {
+          product = updatedProduct;
+        }
+        return product;
+      });
+
       const total = products.reduce((sum, value) => sum + value.final_price, 0);
 
       return {

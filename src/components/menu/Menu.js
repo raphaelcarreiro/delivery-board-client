@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PageHeader from '../pageHeader/PageHeader';
 import CustomAppbar from '../appbar/CustomAppbar';
-import { api } from '../../services/api';
+import { api, getCancelTokenSource } from '../../services/api';
 import { MessagingContext } from '../messaging/Messaging';
 import { Grid } from '@material-ui/core';
 import CategoryList from './category/CategoryList';
@@ -14,8 +14,11 @@ export default function Menu() {
   const messaging = useContext(MessagingContext);
 
   useEffect(() => {
+    const source = getCancelTokenSource();
+
+    let request = true;
     api()
-      .get('/categories')
+      .get('/categories', { cancelToken: source.token })
       .then(response => {
         const categories = response.data.map(category => {
           category.products = category.products.map(product => {
@@ -24,14 +27,19 @@ export default function Menu() {
           });
           return category;
         });
-        setCategories(categories);
+        if (request) setCategories(categories);
       })
       .catch(err => {
         if (err.response) messaging.handleOpen(err.response.data.error);
       })
       .finally(() => {
-        setLoading(false);
+        if (request) setLoading(false);
+        request = false;
       });
+
+    return () => {
+      if (request) source.cancel();
+    };
   }, []);
   return (
     <>

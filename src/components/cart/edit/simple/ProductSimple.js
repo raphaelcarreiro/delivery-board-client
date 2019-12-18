@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import ProductViewIngredients from './ProductViewIngredients';
-import ProductViewAdditional from './ProductViewAdditional';
-import ProductViewAction from './ProductViewAction';
 import { Grid, Typography, TextField } from '@material-ui/core';
-import ImagePreview from '../../../../image-preview/ImagePreview';
+import ProductSimpleAdditional from './ProductSimpleAdditional';
+import ProductSimpleIngredients from './ProductSimpleIngredients';
+import ImagePreview from 'src/components/image-preview/ImagePreview';
 import PropTypes from 'prop-types';
-import { moneyFormat } from '../../../../../helpers/numberFormat';
 import CustomDialog from 'src/components/dialog/CustomDialog';
+import ProductSimpleAction from './ProductSimpleAction';
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
@@ -38,6 +37,9 @@ const useStyles = makeStyles(theme => ({
   complementName: {
     fontWeight: 400,
   },
+  price: {
+    fontWeight: 500,
+  },
   productData: {
     marginBottom: 15,
   },
@@ -50,53 +52,27 @@ const useStyles = makeStyles(theme => ({
       justifyContent: 'center',
     },
   },
-  price: {
-    fontWeight: 300,
-  },
 }));
 
-ProductView.propTypes = {
+ProductSimple.propTypes = {
   onExited: PropTypes.func.isRequired,
   selectedProduct: PropTypes.object.isRequired,
-  handlePrepareProduct: PropTypes.func.isRequired,
-  handleAddProductToCart: PropTypes.func.isRequired,
+  handleUpdateCartProduct: PropTypes.func.isRequired,
 };
 
-export default function ProductView({ onExited, selectedProduct, handlePrepareProduct, handleAddProductToCart }) {
-  const [amount, setAmount] = useState(1);
+export default function ProductSimple({ onExited, selectedProduct, handleUpdateCartProduct }) {
+  const [amount, setAmount] = useState(selectedProduct.amount);
   const [product, setProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
   const [additionalPrice, setAdditionalPrice] = useState(0);
   const [imagePreview, setImagePreview] = useState(false);
   const classes = useStyles();
 
   useEffect(() => {
-    const additional = product.additional.map(additional => {
-      additional.selected = false;
-      additional.additional_id = additional.id;
-      additional.formattedPrice = additional.price ? moneyFormat(additional.price) : null;
-      return additional;
-    });
-
-    const ingredients = product.ingredients.map(ingredient => {
-      ingredient.ingredient_id = ingredient.id;
-      ingredient.selected = true;
-      return ingredient;
-    });
-
-    setProduct({
-      ...product,
-      additional,
-      ingredients,
-    });
-  }, []);
-
-  useEffect(() => {
     setAdditionalPrice(
       product.additional.reduce((value, additional) => (additional.selected ? value + additional.price : value), 0)
     );
-    handlePrepareProduct(product, amount);
     // eslint-disable-next-line
-  }, [product, amount]);
+  }, [product.additional]);
 
   function handleAmountUp() {
     setAmount(amount + 1);
@@ -128,18 +104,22 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
     });
   }
 
+  function handleUpdateClick() {
+    handleUpdateCartProduct(product, amount);
+  }
+
   function handleImagePreview() {
     setImagePreview(!imagePreview);
   }
 
   return (
-    <CustomDialog title="Adicionar produto" backgroundColor="#fafafa" handleModalState={onExited}>
+    <CustomDialog title="Atualizar produto" backgroundColor="#fafafa" handleModalState={onExited}>
       {imagePreview && product.image && (
         <ImagePreview src={product.image.imageUrl} description={product.name} onExited={handleImagePreview} />
       )}
-      <Grid container className={classes.container} justify="center">
+      <Grid container className={classes.container}>
         <Grid item xs={12}>
-          <Grid item xs={12} container direction="row" className={classes.productData}>
+          <Grid item xs={12} container direction="row" alignItems="flex-start" className={classes.productData}>
             <div className={classes.imageWrapper}>
               <div className={classes.imageContainer}>
                 <img
@@ -156,19 +136,20 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
               </Typography>
               <Typography variant="h6">{product.name}</Typography>
               <Typography>{product.description}</Typography>
-              <Typography color="textSecondary" className={classes.price}>
-                {product.formattedPrice}
-              </Typography>
+              <Typography color="textSecondary">{product.formattedProductPrice}</Typography>
             </div>
           </Grid>
           <Grid item xs={12}>
             {product.additional.length > 0 && (
-              <ProductViewAdditional additional={product.additional} handleClickAdditional={handleClickAdditional} />
+              <ProductSimpleAdditional additional={product.additional} handleClickAdditional={handleClickAdditional} />
             )}
           </Grid>
           <Grid item xs={12}>
             {product.ingredients.length > 0 && (
-              <ProductViewIngredients ingredients={product.ingredients} handleClickIngredient={handleClickIngredient} />
+              <ProductSimpleIngredients
+                ingredients={product.ingredients}
+                handleClickIngredient={handleClickIngredient}
+              />
             )}
           </Grid>
           <Grid item xs={12} className={classes.annotationContainer}>
@@ -187,11 +168,11 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
           </Grid>
         </Grid>
       </Grid>
-      <ProductViewAction
+      <ProductSimpleAction
         handleAmountDown={handleAmountDown}
         amount={amount}
         handleAmountUp={handleAmountUp}
-        handleAddProductToCart={handleAddProductToCart}
+        handleUpdateClick={handleUpdateClick}
         product={product}
         additionalPrice={additionalPrice}
       />

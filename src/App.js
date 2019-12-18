@@ -32,8 +32,8 @@ function App({ pageProps, component: Component }) {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1500);
   const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
-  const [isCartVisible, setIsCartVisible] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(false);
+  const [isCartVisible, setIsCartVisible] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
 

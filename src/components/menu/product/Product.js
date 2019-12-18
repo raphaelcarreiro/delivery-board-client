@@ -51,6 +51,9 @@ export default function Product({ products, categoryName }) {
     dispatch(addToCart());
     messaging.handleOpen('Produto adicionado a cesta');
     app.handleCartVisibility(true);
+    setTimeout(() => {
+      app.handleCartVisibility(false);
+    }, 4000);
   }
 
   return (
