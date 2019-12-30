@@ -111,9 +111,6 @@ function AccountImage({ user, handleUserChange, handleImageSelect, handleImageDe
             </Zoom>
             <img alt="Foto do produto" className={classes.image} src={user.image.imageUrl} />
           </div>
-          <Typography variant="body2" color="textSecondary">
-            Foto do perfil
-          </Typography>
         </>
       )}
     </>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, Grid, DialogContent, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
+import { Dialog, DialogContent, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import { makeStyles } from '@material-ui/core/styles';
@@ -23,10 +23,10 @@ const useStyles = makeStyles(theme => ({
   appbarSpace: {
     marginBottom: 80,
     [theme.breakpoints.down('md')]: {
-      marginBottom: 75,
+      marginBottom: 65,
     },
     [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
-      marginBottom: 70,
+      marginBottom: 60,
     },
   },
   grow: {
@@ -80,11 +80,9 @@ function DialogFullscreen({ handleModalState, title, componentActions, children,
       )}
       <div className={classes.appbarSpace} />
       <DialogContent>
-        <Grid item xs={12}>
-          <DialogFullscreenContext.Provider value={{ handleCloseDialog: handleClose }}>
-            {children}
-          </DialogFullscreenContext.Provider>
-        </Grid>
+        <DialogFullscreenContext.Provider value={{ handleCloseDialog: handleClose }}>
+          {children}
+        </DialogFullscreenContext.Provider>
       </DialogContent>
     </Dialog>
   );

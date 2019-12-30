@@ -36,7 +36,7 @@ function Link(props) {
     return <NextComposed className={className} ref={innerRef} {...other} />;
   }
 
-  return <MuiLink component={NextComposed} className={className} ref={innerRef} {...other} />;
+  return <MuiLink color="inherit" component={NextComposed} className={className} ref={innerRef} {...other} />;
 }
 
 Link.propTypes = {

@@ -1,178 +1,78 @@
-import React, { useState, useContext, useEffect } from 'react';
-import LoginEmailStep from './LoginEmailStep';
-import LoginPasswordStep from './LoginPasswordStep';
-import Link from '../link/Link';
-import NextLink from 'next/link';
-import NavigateBoforeIcon from '@material-ui/icons/ArrowBack';
-import { Grid, Button, Typography, LinearProgress, IconButton } from '@material-ui/core';
-import { api } from '../../services/api';
-import { MessagingContext } from '../messaging/Messaging';
-import { useRouter } from 'next/router';
-import { isAuthenticated } from '../../services/auth';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useSelector, useDispatch } from 'react-redux';
-import { setUser } from '../../store/redux/modules/user/actions';
+import { Typography, Grid, Button } from '@material-ui/core';
+import { useRouter } from 'next/router';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   container: {
     display: 'flex',
-    flexDirection: 'column',
-    border: `2px solid #ddd`,
-    height: 500,
-    padding: '35px',
-    margin: '0 15px',
-    justifyContent: 'space-between',
-    borderRadius: 4,
-    position: 'relative',
-    backgroundColor: '#fff',
-  },
-  action: {
-    display: 'flex',
-    justifyContent: 'space-evenly',
-  },
-  loading: {
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.35)',
-    position: 'absolute',
-    zIndex: 10,
-    display: 'flex',
     justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    margin: '0 15px',
   },
-  linearProgress: {
-    width: '99%',
-    marginTop: '-3px',
-    borderRadius: 4,
+  btnFacebookLogin: {
+    marginTop: 20,
   },
-  content: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: 250,
-    justifyContent: 'space-between',
+  btnEmail: {
+    marginTop: 20,
+    width: '100%',
   },
-  btnBack: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
+  btnCreateAccount: {
+    marginTop: 20,
+    width: '100%',
+    borderTop: '1px solid #ddd',
+    paddingTop: 20,
   },
-  logoContainer: {
-    textAlign: 'center',
-  },
-  logo: {
-    width: 70,
-  },
-}));
+});
 
-function Login() {
+export default function Login() {
   const classes = useStyles();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [step, setStep] = useState('email');
-  const [loading, setLoading] = useState(false);
-  const [name, setName] = useState('');
-  const messaging = useContext(MessagingContext);
   const router = useRouter();
-  const dispatch = useDispatch();
-  const restaurant = useSelector(state => state.restaurant);
-
   useEffect(() => {
-    if (isAuthenticated()) router.push('/account');
+    //
   }, []);
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  function handleCheckLoginState() {
+    FB.getLoginStatus(function(response) {
+      console.log(response);
+    });
+  }
 
-    if (step === 'email') {
-      setLoading(true);
+  function handleEmailPasswordClick() {
+    router.push('/login/email');
+  }
 
-      api()
-        .get(`/user/show/${email}`)
-        .then(response => {
-          setName(response.data.name);
-          setStep('password');
-          messaging.handleClose();
-        })
-        .catch(err => {
-          if (err.response) {
-            if (err.response.status === 401) {
-              messaging.handleOpen(`E-mail não encontrado`);
-            }
-          } else messaging.handleOpen(err.message);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
-      setLoading(true);
-
-      api()
-        .post('/login', { email, password })
-        .then(response => {
-          localStorage.setItem(process.env.TOKEN_NAME, response.data.token);
-          dispatch(setUser(response.data.user));
-          const redirect = router.query.redirect;
-          router.push(redirect || '/');
-        })
-        .catch(err => {
-          if (err.response)
-            if (err.response.status === 401) messaging.handleOpen('Usuário ou senha incorretos');
-            else messaging.handleOpen(err.message);
-          setLoading(false);
-        });
-    }
+  function handleCreateAccountClick() {
+    router.push('/register');
   }
 
   return (
-    <>
-      <Grid container justify="center" alignItems="center">
-        <Grid item xs={12} lg={4} xl={3} md={6}>
-          <form onSubmit={handleSubmit}>
-            <div className={classes.container}>
-              {step === 'password' && (
-                <IconButton onClick={() => setStep('email')} className={classes.btnBack}>
-                  <NavigateBoforeIcon />
-                </IconButton>
-              )}
-              {loading && (
-                <div className={classes.loading}>
-                  <LinearProgress className={classes.linearProgress} color="primary" />
-                </div>
-              )}
-              <div className={classes.content}>
-                <div className={classes.logoContainer}>
-                  <NextLink href="/">
-                    <a>
-                      <img className={classes.logo} src={restaurant && restaurant.image.imageUrl} alt="Logo" />
-                    </a>
-                  </NextLink>
-                </div>
-                <Typography align="center" variant="h6">
-                  Login
-                </Typography>
-                {step === 'email' ? (
-                  <LoginEmailStep email={email} setEmail={setEmail} />
-                ) : (
-                  <LoginPasswordStep name={name} password={password} setPassword={setPassword} />
-                )}
-              </div>
-              <div className={classes.action}>
-                {step === 'email' && (
-                  <Button component={Link} href="/register" color="primary" variant="text">
-                    Criar conta
-                  </Button>
-                )}
-                <Button type="submit" variant="contained" color="primary" disabled={loading}>
-                  {step === 'email' ? 'Próximo' : 'Entrar'}
-                </Button>
-              </div>
-            </div>
-          </form>
-        </Grid>
+    <div className={classes.container}>
+      <Grid item xl={2} xs={12} md={4} lg={3} sm={5} container alignItems="center" direction="column">
+        <Typography>Como deseja continuar?</Typography>
+        <div className={classes.btnFacebookLogin}>
+          <div
+            className="fb-login-button"
+            data-width="100%"
+            data-size="large"
+            data-button-type="login_with"
+            data-auto-logout-link="false"
+            data-use-continue-as="false"
+            data-onlogin="handleCheckLoginState();"
+          />
+        </div>
+        <div className={classes.btnEmail}>
+          <Button size="large" color="primary" variant="contained" fullWidth onClick={handleEmailPasswordClick}>
+            Entrar com E-mail ou Telefone
+          </Button>
+        </div>
+        <div className={classes.btnCreateAccount}>
+          <Button size="large" color="primary" variant="contained" fullWidth onClick={handleCreateAccountClick}>
+            Criar conta
+          </Button>
+        </div>
       </Grid>
-    </>
+    </div>
   );
 }
-
-export default Login;

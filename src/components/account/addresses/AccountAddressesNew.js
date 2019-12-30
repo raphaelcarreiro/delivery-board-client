@@ -6,7 +6,7 @@ import DialogFullscreenForm from '../../dialog/DialogFullscreenForm';
 import { MessagingContext } from '../../messaging/Messaging';
 import PropTypes from 'prop-types';
 import AccountAddressesAction from './AccountAddressesAction';
-import { postalCodeSearch } from '../../../services/PostalCodeSearch';
+import { postalCodeSearch } from 'src/services/postalCodeSearch';
 
 const interval = 500;
 let timer = null;
@@ -187,7 +187,6 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
 AccountAddressesNew.propTypes = {
   handleAddressSubmit: PropTypes.func.isRequired,
   handleModalState: PropTypes.func.isRequired,
-  customerId: PropTypes.number.isRequired,
   saving: PropTypes.bool.isRequired,
 };
 

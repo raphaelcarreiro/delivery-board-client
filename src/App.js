@@ -14,12 +14,19 @@ import { verifyToken } from './helpers/verifyToken';
 import Sidebar from './components/sidebar/Sidebar';
 import InitialLoading from './components/loading/InitialLoading';
 import Checkout from './components/layout/Checkout';
+import { setCart } from 'src/store/redux/modules/cart/actions';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider } from '@material-ui/core/styles';
+import { createTheme } from 'src/helpers/createTheme';
+import defaultTheme from '../src/theme';
 
 export const AppContext = createContext({
   isMobile: false,
   windowWidth: null,
   isOpenMenu: false,
   isCartVisible: false,
+  redirect: null,
+  setRedirect: () => {},
   handleLogout: () => {},
   handleOpenMenu: () => {},
   handleCartVisibility: () => {},
@@ -32,8 +39,10 @@ function App({ pageProps, component: Component }) {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1500);
   const [loading, setLoading] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [isCartVisible, setIsCartVisible] = useState(false);
+  const [redirect, setRedirect] = useState(null);
+  const [theme, setTheme] = useState(defaultTheme);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -41,14 +50,16 @@ function App({ pageProps, component: Component }) {
     handleLogout: handleLogout,
     handleOpenMenu: handleOpenMenu,
     handleCartVisibility: handleCartVisibility,
+    setRedirect: setRedirect,
     isMobile,
     windowWidth,
     isOpenMenu,
     isCartVisible,
+    redirect,
   };
 
   // paginas que não precisam no cabeçalho e rodapé padrões
-  const paths = ['/register', '/login'];
+  const paths = ['/register', '/login', '/login/email'];
   const checkoutPaths = ['/checkout'];
 
   useEffect(() => {
@@ -61,6 +72,10 @@ function App({ pageProps, component: Component }) {
         })
       );
 
+    const cart = JSON.parse(localStorage.getItem(process.env.LOCALSTORAGE_CART));
+
+    if (cart) dispatch(setCart(cart));
+
     window.addEventListener('resize', handleResize);
 
     setIsMobile(mobileCheck());
@@ -69,7 +84,9 @@ function App({ pageProps, component: Component }) {
     api()
       .get('restaurants')
       .then(response => {
+        const restaurant = response.data;
         dispatch(setRestaurant(response.data));
+        setTheme(createTheme(restaurant.primary_color, restaurant.secondary_color));
       })
       .finally(() => {
         setInitialLoading(false);
@@ -83,9 +100,9 @@ function App({ pageProps, component: Component }) {
     api()
       .post('/logout')
       .then(response => {
-        localStorage.removeItem(process.env.TOKEN_NAME);
+        router.push('/');
         dispatch(removeUser());
-        router.push(router.route);
+        localStorage.removeItem(process.env.TOKEN_NAME);
       })
       .finally(() => {
         setLoading(false);
@@ -93,8 +110,11 @@ function App({ pageProps, component: Component }) {
   }
 
   function handleResize() {
-    setIsMobile(mobileCheck());
-    setWindowWidth(window.innerWidth);
+    const _isMobile = mobileCheck();
+    const width = window.innerWidth;
+
+    setIsMobile(_isMobile);
+    setWindowWidth(width);
   }
 
   function handleOpenMenu() {
@@ -106,21 +126,24 @@ function App({ pageProps, component: Component }) {
   }
 
   return (
-    <AppContext.Provider value={appProviderValue}>
-      {initialLoading && <InitialLoading background="#fafafa" />}
-      {loading && <Loading background="#fafafa" />}
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AppContext.Provider value={appProviderValue}>
+        {initialLoading && <InitialLoading background="#fafafa" />}
+        {loading && <Loading background="#fafafa" />}
 
-      <Sidebar handleLogout={handleLogout} handleOpenMenu={handleOpenMenu} isOpenMenu={isOpenMenu} />
-      <Messaging>
-        {paths.includes(router.route) ? (
-          <OnlyMain pageProps={pageProps} component={Component} />
-        ) : checkoutPaths.includes(router.route) ? (
-          <Checkout pageProps={pageProps} component={Component} isMobile={isMobile} windowWidth={windowWidth} />
-        ) : (
-          <Default pageProps={pageProps} component={Component} isMobile={isMobile} windowWidth={windowWidth} />
-        )}
-      </Messaging>
-    </AppContext.Provider>
+        <Sidebar handleLogout={handleLogout} handleOpenMenu={handleOpenMenu} isOpenMenu={isOpenMenu} />
+        <Messaging>
+          {paths.includes(router.route) ? (
+            <OnlyMain pageProps={pageProps} component={Component} />
+          ) : checkoutPaths.includes(router.route) ? (
+            <Checkout pageProps={pageProps} component={Component} isMobile={isMobile} windowWidth={windowWidth} />
+          ) : (
+            <Default pageProps={pageProps} component={Component} isMobile={isMobile} windowWidth={windowWidth} />
+          )}
+        </Messaging>
+      </AppContext.Provider>
+    </ThemeProvider>
   );
 }
 

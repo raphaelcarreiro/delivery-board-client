@@ -8,10 +8,7 @@ import { moneyFormat } from '../../../helpers/numberFormat';
 import { Grid } from '@material-ui/core';
 import PageHeader from '../../pageHeader/PageHeader';
 import CustomAppbar from '../../appbar/CustomAppbar';
-
-export function formatId(id) {
-  return '#' + ('00000' + id).slice(-6);
-}
+import { formatId } from 'src/helpers/formatOrderId';
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -48,7 +45,7 @@ function Orders() {
         <Loading />
       ) : (
         <Grid container>
-          <PageHeader title="Meus pedidos" />
+          <PageHeader title="Meus pedidos" description="Acompanhe seus pedidos" />
           <Grid item xs={12}>
             <OrderList orders={orders} />
           </Grid>

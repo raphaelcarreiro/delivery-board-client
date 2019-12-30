@@ -1,9 +1,7 @@
 import React, { useContext } from 'react';
 import CheckoutHeader from './header/CheckoutHeader';
-import Footer from './footer/Footer';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import Cart from '../cart/Cart';
 import { AppContext } from 'src/App';
 
 const cartWidth = 450;
@@ -16,14 +14,14 @@ const useStyles = makeStyles({
     minHeight: 'calc(100vh - 250px)',
     maxWidth: '1366px',
     margin: '0 auto 100px',
-    padding: '15px 0 0 20px',
+    padding: '20px 20px 0 20px',
   },
   mobileContainer: {
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    minHeight: 'calc(100vh - 235px)',
-    marginBottom: 100,
+    minHeight: 'calc(100vh - 110px)',
+    marginBottom: 30,
     padding: '0 20px',
   },
   wrapper: {
@@ -64,7 +62,6 @@ export default function Checkout({ pageProps, component: Component, isMobile, wi
         <div className={isMobile || windowWidth < 960 ? classes.mobileContainer : classes.container}>
           <Component {...pageProps} />
         </div>
-        <Footer />
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Grid, Typography } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import { AppContext } from 'src/App';
 
 const useStyles = makeStyles({
   header: {
@@ -11,12 +12,17 @@ const useStyles = makeStyles({
 
 function PageHeader({ title, description }) {
   const classes = useStyles();
+  const app = useContext(AppContext);
 
   return (
-    <Grid className={classes.header} item xs={12}>
-      <Typography variant="h6">{title}</Typography>
-      <Typography color="textSecondary">{description}</Typography>
-    </Grid>
+    <>
+      {!app.isMobile && app.windowWidth >= 960 && (
+        <Grid className={classes.header} item xs={12}>
+          <Typography variant="h6">{title}</Typography>
+          <Typography color="textSecondary">{description}</Typography>
+        </Grid>
+      )}
+    </>
   );
 }
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { isAuthenticated } from '../src/services/auth';
 import { useRouter } from 'next/router';
@@ -6,9 +6,12 @@ import { Account } from '../src/components/account/Account';
 
 function AccountPage() {
   const router = useRouter();
+  const [auth, setAuth] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated()) router.push('/login?redirect=/account');
+    const _auth = isAuthenticated();
+    setAuth(_auth);
+    if (!_auth) router.push('/login?redirect=/account');
   }, []);
 
   return (
@@ -16,7 +19,7 @@ function AccountPage() {
       <Head>
         <title>Minha conta</title>
       </Head>
-      <Account />
+      {auth && <Account />}
     </>
   );
 }

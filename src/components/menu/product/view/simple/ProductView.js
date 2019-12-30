@@ -4,10 +4,10 @@ import ProductViewIngredients from './ProductViewIngredients';
 import ProductViewAdditional from './ProductViewAdditional';
 import ProductViewAction from './ProductViewAction';
 import { Grid, Typography, TextField } from '@material-ui/core';
-import ImagePreview from '../../../../image-preview/ImagePreview';
 import PropTypes from 'prop-types';
-import { moneyFormat } from '../../../../../helpers/numberFormat';
 import CustomDialog from 'src/components/dialog/CustomDialog';
+import { moneyFormat } from 'src/helpers/numberFormat';
+import ImagePreview from 'src/components/image-preview/ImagePreview';
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
@@ -48,10 +48,16 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
       justifyContent: 'center',
+      width: '100%',
+      marginBottom: 15,
     },
   },
   price: {
     fontWeight: 300,
+  },
+  productDescription: {
+    display: 'flex',
+    flexDirection: 'column',
   },
 }));
 
@@ -150,7 +156,7 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
                 />
               </div>
             </div>
-            <div>
+            <div className={classes.productDescription}>
               <Typography color="primary" variant="caption" display="block">
                 Produto {product.id}
               </Typography>

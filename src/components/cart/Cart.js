@@ -10,17 +10,20 @@ import { MessagingContext } from '../messaging/Messaging';
 import ProductComplement from './edit/complements/ProductComplement';
 import ProductPizzaComplement from './edit/pizza_complement/ProductPizzaComplement';
 import { updateProductFromCart } from 'src/store/redux/modules/cart/actions';
+import CustomAppbar from 'src/components/appbar/CustomAppbar';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   cart: {
     display: 'flex',
     flexDirection: 'column',
+    marginBottom: 30,
   },
   emptyCart: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
+    flex: 1,
   },
   title: {
     display: 'flex',
@@ -29,11 +32,14 @@ const useStyles = makeStyles({
     '& svg': {
       marginRight: 10,
     },
+    [theme.breakpoints.down('md')]: {
+      display: 'none',
+    },
   },
   action: {
     marginTop: 20,
   },
-});
+}));
 
 export default function Cart() {
   const cart = useSelector(state => state.cart);
@@ -67,6 +73,7 @@ export default function Cart() {
 
   return (
     <>
+      <CustomAppbar title="Carrinho" />
       {dialogUpdateSimpleProduct && (
         <ProductSimple
           onExited={() => setDialogUpdateSimpleProduct(false)}
@@ -93,8 +100,8 @@ export default function Cart() {
       )}
       {cart.products.length > 0 ? (
         <div className={classes.cart}>
-          <Typography className={classes.title} variant="h6">
-            Minha cesta
+          <Typography className={classes.title} variant="h5" color="primary">
+            Carrinho
           </Typography>
           <CartProductList handleClickUpdateProduct={handleClickUpdateProduct} products={cart.products} />
           <CartTotal />
@@ -107,7 +114,7 @@ export default function Cart() {
       ) : (
         <div className={classes.emptyCart}>
           <Typography variant="h6" color="textSecondary">
-            Cesta vazia.
+            Carrinho vazio
           </Typography>
         </div>
       )}

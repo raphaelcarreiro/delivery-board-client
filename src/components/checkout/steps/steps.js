@@ -9,7 +9,7 @@ const steps = [
     id: 'STEP_PAYMENT',
     order: 2,
     title: 'Pagamento',
-    description: 'Qual é a forma de pagamento?',
+    description: 'Como você vai pagar?',
   },
   {
     id: 'STEP_CONFIRM',

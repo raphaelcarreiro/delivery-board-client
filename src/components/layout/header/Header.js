@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, TextField, InputAdornment, IconButton, Menu, MenuItem, Avatar, Typography } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingBasket';
+import { Grid, IconButton, Menu, MenuItem, Avatar, Typography } from '@material-ui/core';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import InputIcon from '@material-ui/icons/Input';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
+import StatusIcon from '@material-ui/icons/FiberManualRecord';
 import Link from '../../link/Link';
 import LinkNext from 'next/link';
 import { useRouter } from 'next/router';
@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     flex: '1',
   },
   img: {
-    width: 80,
+    width: 85,
   },
   cartBadge: ({ cartItems }) => ({
     position: 'absolute',
@@ -73,6 +73,17 @@ const useStyles = makeStyles(theme => ({
     },
     cursor: 'pointer',
   }),
+  status: {
+    display: 'flex',
+    alignItems: 'center',
+    '& svg': {
+      marginRight: 10,
+      color: 'green',
+    },
+  },
+  btnAvatar: {
+    padding: 0,
+  },
 }));
 
 export default function Header() {
@@ -125,7 +136,9 @@ export default function Header() {
                 )}
               </div>
               <Grid item xs={9}>
-                <Typography>Status do restaurante</Typography>
+                <Typography variant="h6" className={classes.status}>
+                  <StatusIcon /> Aberto
+                </Typography>
               </Grid>
             </Grid>
             <Grid
@@ -144,8 +157,8 @@ export default function Header() {
               </Grid>
               <Grid item>
                 <Typography color="primary" onClick={handleCartClick} className={classes.cartLink}>
-                  <span className={classes.cartBadge}>{cart.products.length}</span>
-                  <ShoppingCartIcon color="primary" /> Cesta
+                  {cart.products.length > 0 && <span className={classes.cartBadge}>{cart.products.length}</span>}
+                  <ShoppingCartIcon color="primary" /> Carrinho
                 </Typography>
               </Grid>
               <Grid item>
@@ -173,7 +186,7 @@ export default function Header() {
                       <MenuItem onClick={handleMyOrdersClick}>Meus pedidos</MenuItem>
                       <MenuItem onClick={handleLogoutClick}>Sair</MenuItem>
                     </Menu>
-                    <IconButton onClick={event => setAnchorEl(event.currentTarget)}>
+                    <IconButton className={classes.btnAvatar} onClick={event => setAnchorEl(event.currentTarget)}>
                       {user.image ? <Avatar src={user.image.imageUrl} /> : <Avatar>{user.name[0]}</Avatar>}
                     </IconButton>
                   </>

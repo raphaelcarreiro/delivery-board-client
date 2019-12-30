@@ -50,6 +50,8 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('xs')]: {
       display: 'flex',
       justifyContent: 'center',
+      width: '100%',
+      marginBottom: 15,
     },
   },
 }));
@@ -119,7 +121,7 @@ export default function ProductSimple({ onExited, selectedProduct, handleUpdateC
       )}
       <Grid container className={classes.container}>
         <Grid item xs={12}>
-          <Grid item xs={12} container direction="row" alignItems="flex-start" className={classes.productData}>
+          <Grid item xs={12} container direction="row" className={classes.productData}>
             <div className={classes.imageWrapper}>
               <div className={classes.imageContainer}>
                 <img

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { TextField, Grid, Button } from '@material-ui/core';
+import { TextField, Grid, Button, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AccountImage from './AccountImage';
 import PhoneInput from '../masked-input/PhoneInput';
@@ -37,7 +37,7 @@ export default function AccountForm({
     const schema = Yup.object().shape({
       cpf: Yup.string()
         .transform((value, originalValue) => {
-          return originalValue.replace(/\D/g, '');
+          return originalValue ? originalValue.replace(/\D/g, '') : '';
         })
         .test('cpfValidation', 'CPF inválido', value => {
           return cpfValidation(value);
@@ -45,7 +45,7 @@ export default function AccountForm({
         .required('CPF é obrigatório'),
       phone: Yup.string()
         .transform((value, originalValue) => {
-          return originalValue.replace(/\D/g, '');
+          return originalValue ? originalValue.replace(/\D/g, '') : '';
         })
         .min(10, 'Telefone inválido')
         .required('O telefone é obrigatório'),
@@ -131,6 +131,9 @@ export default function AccountForm({
             handleImageSelect={handleImageSelect}
             handleImageDelete={handleImageDelete}
           />
+          <Typography variant="body2" color="textSecondary">
+            Foto do perfil
+          </Typography>
         </Grid>
         <div className={classes.actions}>
           <Button type="submit" variant="contained" color="primary" disabled={saving}>

@@ -9,6 +9,10 @@ import * as yup from 'yup';
 import userReducer, { INITIAL_STATE as userInitiaState } from '../../store/context-api/modules/user/reducer';
 import { userChange } from '../../store/context-api/modules/user/actions';
 import RegisterSucess from './RegisterSuccess';
+import { useRouter } from 'next/router';
+import { AppContext } from 'src/App';
+import { useDispatch } from 'react-redux';
+import { setUser } from 'src/store/redux/modules/user/actions';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -22,6 +26,9 @@ const useStyles = makeStyles(theme => ({
     border: '2px solid #ddd',
     position: 'relative',
     backgroundColor: '#fff',
+    [theme.breakpoints.down('md')]: {
+      padding: 15,
+    },
   },
   actions: {
     display: 'flex',
@@ -52,6 +59,9 @@ export function Register() {
   const [created, setCreated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({});
+  const router = useRouter();
+  const app = useContext(AppContext);
+  const reduxDispatch = useDispatch();
 
   const classes = useStyles();
 
@@ -95,12 +105,16 @@ export function Register() {
         api()
           .post('/users', user)
           .then(response => {
-            setCreated(true);
+            setLoading(false);
+            localStorage.setItem(process.env.TOKEN_NAME, response.data.token);
+            reduxDispatch(setUser(response.data.user));
+            if (app.redirect) {
+              router.push(app.redirect);
+              app.setRedirect(null);
+            } else setCreated(true);
           })
           .catch(err => {
             if (err.response) messaging.handleOpen(err.response.data.error);
-          })
-          .finally(() => {
             setLoading(false);
           });
       })
@@ -131,7 +145,7 @@ export function Register() {
                 <Button href="/login" component={Link} variant="text" color="primary">
                   Voltar
                 </Button>
-                <Button type="submit" variant="contained" color="primary">
+                <Button type="submit" disabled={loading} variant="contained" color="primary">
                   Pronto!
                 </Button>
               </div>

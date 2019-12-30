@@ -109,7 +109,7 @@ function OrderList({ orders }) {
               )}
             </div>
             <Typography className={classes.address} variant="body2" color="textSecondary">
-              {order.customer_address.address}, {order.customer_address.number}, {order.customer_address.district}
+              {order.address}, {order.address_number}, {order.district}
             </Typography>
             <Typography className={classes.total} variant="h6" color="secondary">
               {order.formattedTotal}

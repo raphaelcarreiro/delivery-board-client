@@ -55,6 +55,11 @@ const useStyles = makeStyles(theme => ({
     top: 10,
     right: 10,
   },
+  address: {
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: 260,
+    },
+  },
 }));
 
 function AccountAddresses({ addresses, handleDeleteAddress }) {
@@ -171,7 +176,7 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
             className={classes.listItem}
             key={address.id}
           >
-            <Typography variant="h6">
+            <Typography variant="h6" className={classes.address}>
               {address.address}, {address.number}
             </Typography>
             <Typography color="textSecondary">{address.district}</Typography>

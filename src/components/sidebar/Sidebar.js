@@ -1,14 +1,15 @@
-import React from 'react';
-import { ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
+import React, { useContext } from 'react';
+import { ListItem, ListItemIcon, ListItemText, Typography, Avatar } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import InputIcon from '@material-ui/icons/Input';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import HomeIcon from '@material-ui/icons/Home';
 import Drawer from '@material-ui/core/Drawer';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
-import { menuWidth } from '../../App';
+import { menuWidth, AppContext } from '../../App';
 import Link from '../link/Link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
@@ -58,15 +59,18 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-
     right: 15,
-    backgroundColor: cartItems ? '#dc640f' : '#ccc',
+    backgroundColor: cartItems ? '#dc640f' : '#dc640f',
     borderRadius: '50%',
     height: 20,
     width: 20,
     fontSize: 12,
     color: '#FFF',
   }),
+  avatar: {
+    width: 30,
+    height: 30,
+  },
 }));
 
 Sidebar.propTypes = {
@@ -81,6 +85,7 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
   const restaurant = useSelector(state => state.restaurant);
   const cart = useSelector(state => state.cart);
   const classes = useStyles({ cartItems: cart.products.length > 0 });
+  const app = useContext(AppContext);
 
   function handleClick() {
     handleOpenMenu();
@@ -101,6 +106,11 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
     handleOpenMenu();
   }
 
+  function handleLogoutClick() {
+    app.handleLogout();
+    handleOpenMenu();
+  }
+
   return (
     <Drawer
       variant="temporary"
@@ -116,6 +126,12 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
           </Typography>
         )}
       </div>
+      <ListItem component={Link} href="/" onClick={handleClick} button>
+        <ListItemIcon className={classes.listItemIcon}>
+          <HomeIcon />
+        </ListItemIcon>
+        <ListItemText classes={{ primary: classes.listItemText }} primary="Início" />
+      </ListItem>
       <ListItem component={Link} href="/menu" onClick={handleClick} button>
         <ListItemIcon className={classes.listItemIcon}>
           <MenuBookIcon />
@@ -123,11 +139,11 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
         <ListItemText classes={{ primary: classes.listItemText }} primary="Cardápio" />
       </ListItem>
       <ListItem component={Link} href="/cart" onClick={handleClick} button>
-        <span className={classes.cartBadge}>{cart.products.length}</span>
+        {cart.products.length > 0 && <span className={classes.cartBadge}>{cart.products.length}</span>}
         <ListItemIcon className={classes.listItemIcon}>
-          <ShoppingBasketIcon />
+          <ShoppingCartIcon />
         </ListItemIcon>
-        <ListItemText classes={{ primary: classes.listItemText }} primary="Cesta" />
+        <ListItemText classes={{ primary: classes.listItemText }} primary="Carrinho" />
       </ListItem>
       {user.id ? (
         <>
@@ -139,9 +155,15 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
           </ListItem>
           <ListItem button onClick={handleAccountClick}>
             <ListItemIcon className={classes.listItemIcon}>
-              <PersonIcon />
+              {user.image ? <Avatar src={user.image.imageUrl} className={classes.avatar} /> : <PersonIcon />}
             </ListItemIcon>
             <ListItemText classes={{ primary: classes.listItemText }} primary={user.name} />
+          </ListItem>
+          <ListItem button onClick={handleLogoutClick}>
+            <ListItemIcon className={classes.listItemIcon}>
+              <InputIcon />
+            </ListItemIcon>
+            <ListItemText classes={{ primary: classes.listItemText }} primary="Sair" />
           </ListItem>
         </>
       ) : (

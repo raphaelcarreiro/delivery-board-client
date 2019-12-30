@@ -10,12 +10,12 @@ const useStyles = makeStyles(theme => ({
       gridTemplateColumns: '1fr',
     },
     gridGap: 6,
-    marginBottom: 15,
+    padding: '12px 0',
   },
   listItem: {
     display: 'flex',
     backgroundColor: '#fff',
-    boxShadow: '1px 1px 3px 0px #ddd',
+    border: '1px solid #eee',
     borderRadius: 4,
     position: 'relative',
     alignItems: 'center',
@@ -48,9 +48,9 @@ const useStyles = makeStyles(theme => ({
     width: 50,
   },
   categoryName: {
-    height: 20,
+    height: 23,
     width: 100,
-    marginBottom: 10,
+    marginTop: 5,
   },
 }));
 
@@ -61,7 +61,7 @@ export default function MenuLoading() {
   const classes = useStyles();
 
   return (
-    <>
+    <div className={classes.container}>
       {categories.map((category, index) => (
         <Fragment key={index}>
           <div className={`animated-background ${classes.categoryName}`} />
@@ -79,6 +79,6 @@ export default function MenuLoading() {
           </List>
         </Fragment>
       ))}
-    </>
+    </div>
   );
 }

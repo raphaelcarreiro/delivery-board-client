@@ -1,20 +1,26 @@
 import React from 'react';
 import Head from 'next/head';
 import Index from '../src/components/index/Index';
-// import axios from 'axios';
+import axios from 'axios';
+import PropTypes from 'prop-types';
 
-function IndexPage() {
+IndexPage.propTypes = {
+  restaurant: PropTypes.object.isRequired,
+};
+
+function IndexPage({ restaurant }) {
   return (
     <>
       <Head>
-        <title>Delivery X</title>
+        <title>{restaurant.title}</title>
+        <meta name="keywords" content={restaurant.keywords} />
+        <meta name="description" content={restaurant.description} />
       </Head>
       <Index />
     </>
   );
 }
 
-/*
 IndexPage.getInitialProps = async ctx => {
   const axiosInstance = axios.create({
     baseURL: process.env.BASEURL_API,
@@ -24,9 +30,7 @@ IndexPage.getInitialProps = async ctx => {
   });
 
   const response = await axiosInstance.get('/restaurants');
-
   return { restaurant: response.data };
 };
-*/
 
 export default IndexPage;

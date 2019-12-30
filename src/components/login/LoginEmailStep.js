@@ -5,12 +5,11 @@ import PropTypes from 'prop-types';
 export default function LoginEmailStep({ email, setEmail }) {
   return (
     <div>
-      <Typography align="center">Vamos lá, informe seu email.</Typography>
+      <Typography align="center">Se você já se registrou, informe seu e-mail.</Typography>
       <TextField
-        type="email"
         variant="outlined"
-        label="Seu e-mail"
-        placeholder="Seu e-mail"
+        label="E-mail ou telefone"
+        placeholder="Seu e-mail ou telefone"
         autoFocus
         fullWidth
         value={email}

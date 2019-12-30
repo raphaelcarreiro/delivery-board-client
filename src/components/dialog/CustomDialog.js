@@ -18,6 +18,10 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
   },
   appbar: {
+    position: 'absolute',
+    [theme.breakpoints.down('md')]: {
+      position: 'fixed',
+    },
     '@media print': {
       display: 'none',
     },
@@ -70,7 +74,7 @@ export default function CustomDialog({ handleModalState, title, componentActions
       onExited={() => handleModalState()}
     >
       {title && (
-        <AppBar position="absolute" className={classes.appbar}>
+        <AppBar className={classes.appbar}>
           <Toolbar>
             <IconButton color="inherit" onClick={handleClose}>
               <NavigateBeforeIcon />

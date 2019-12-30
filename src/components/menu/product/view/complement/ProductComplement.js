@@ -94,7 +94,7 @@ function ProductComplement({ onExited, selectedProduct, handleAddProductToCart, 
       category.product_complement_category_id = category.id;
       category.complements = category.complements.map((complement, index) => {
         complement.product_complement_id = complement.id;
-        complement.selected = category.is_pizza_size && index === 0;
+        complement.selected = false;
         complement.formattedPrice = complement.price && moneyFormat(complement.price);
 
         complement.prices = complement.prices.map((price, index) => {

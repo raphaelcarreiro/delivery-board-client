@@ -7,6 +7,7 @@ import { Grid } from '@material-ui/core';
 import CategoryList from './category/CategoryList';
 import { moneyFormat } from '../../helpers/numberFormat';
 import MenuLoading from './MenuLoading';
+import IndexAppbarActions from 'src/components/index/IndexAppbarActions';
 
 export default function Menu() {
   const [categories, setCategories] = useState([]);
@@ -43,12 +44,12 @@ export default function Menu() {
   }, []);
   return (
     <>
-      <CustomAppbar title="Cardápio" />
-      <PageHeader title="Cardápio" />
+      <CustomAppbar title="Cardápio" actionComponent={<IndexAppbarActions />} />
       {loading ? (
         <MenuLoading />
       ) : (
         <Grid container>
+          <PageHeader title="Menu" />
           <Grid item xs={12}>
             <CategoryList categories={categories} />
           </Grid>

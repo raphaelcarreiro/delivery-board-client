@@ -14,9 +14,11 @@ export function verifyToken(withData = false) {
         name: decoded.name,
         id: decoded.sub,
         email: decoded.email,
-        image: {
-          imageUrl: decoded.imageUrl,
-        },
+        image: decoded.imageUrl
+          ? {
+              imageUrl: decoded.imageUrl,
+            }
+          : null,
       };
     } catch (e) {
       console.log(e);

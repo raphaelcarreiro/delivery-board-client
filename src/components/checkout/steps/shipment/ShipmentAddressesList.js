@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { List, ListItem, Typography, Tooltip, Button, IconButton, Menu, MenuItem } from '@material-ui/core';
-import StarIcon from '@material-ui/icons/Star';
+import { List, ListItem, Typography, Tooltip, IconButton, Menu, MenuItem } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -55,25 +54,11 @@ const useStyles = makeStyles(theme => ({
   address: {
     display: 'flex',
     alignItems: 'center',
-    '@media (min-width:1280px) and (max-width:1360px)': {
-      '&': {
-        maxWidth: 300,
-        display: 'block',
-      },
-    },
-    [theme.breakpoints.down('xs')]: {
-      maxWidth: 169,
-      display: 'block',
-    },
   },
   iconButton: {
     position: 'absolute',
-    top: 10,
-    right: 10,
-    display: 'none',
-    [theme.breakpoints.down('md')]: {
-      display: 'block',
-    },
+    bottom: 0,
+    right: 0,
   },
   starIcon: {
     marginLeft: 6,
@@ -114,7 +99,7 @@ const useStyles = makeStyles(theme => ({
 
 ShipmentAddressesList.propTypes = {
   addresses: PropTypes.array.isRequired,
-  selectAddress: PropTypes.func.isRequired,
+  handleSelectAddress: PropTypes.func.isRequired,
   handleDialogEditAddress: PropTypes.func.isRequired,
   handleDialogNewAddress: PropTypes.func.isRequired,
   handleDeleteAddress: PropTypes.func.isRequired,
@@ -122,7 +107,7 @@ ShipmentAddressesList.propTypes = {
 
 export default function ShipmentAddressesList({
   addresses,
-  selectAddress,
+  handleSelectAddress,
   handleDialogEditAddress,
   handleDialogNewAddress,
   handleDeleteAddress,
@@ -141,16 +126,14 @@ export default function ShipmentAddressesList({
   return (
     <div className={classes.container}>
       <Menu onClose={() => setAnchorEl(null)} anchorEl={anchorEl} open={Boolean(anchorEl)}>
-        {!selectedAddress.is_main && (
-          <MenuItem
-            onClick={() => {
-              setAnchorEl(null);
-              handleDialogEditAddress(selectedAddress.id);
-            }}
-          >
-            Editar
-          </MenuItem>
-        )}
+        <MenuItem
+          onClick={() => {
+            setAnchorEl(null);
+            handleDialogEditAddress(selectedAddress);
+          }}
+        >
+          Editar
+        </MenuItem>
         <MenuItem
           onClick={() => {
             setAnchorEl(null);
@@ -163,7 +146,7 @@ export default function ShipmentAddressesList({
       <List className={classes.list}>
         {addresses.map(address => (
           <ListItem
-            onClick={() => selectAddress(address.id)}
+            onClick={() => handleSelectAddress(address)}
             button
             className={address.id === order.shipmentAddress.id ? classes.selected : classes.listItem}
             key={address.id}

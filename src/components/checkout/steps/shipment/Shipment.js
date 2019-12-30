@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import ShipmentAddressesList from './ShipmentAddressesList';
 import PropTypes from 'prop-types';
 import Loading from 'src/components/loading/Loading';
@@ -6,9 +6,13 @@ import AccountAddressesNew from 'src/components/account/addresses/AccountAddress
 import AccountAddressesEdit from 'src/components/account/addresses/AccountAddressesEdit';
 import { useDispatch } from 'react-redux';
 import { addCustomerAddress, updateCustomerAddress, deleteCustomerAddress } from 'src/store/redux/modules/user/actions';
+import { setShipmentAddress } from 'src/store/redux/modules/order/actions';
 import { MessagingContext } from 'src/components/messaging/Messaging';
 import { api } from 'src/services/api';
 import DialogDelete from 'src/components/dialog/delete/DialogDelete';
+import { Grid } from '@material-ui/core';
+import { CheckoutContext } from '../../Checkout';
+import { AppContext } from 'src/App';
 
 Shipment.propTypes = {
   addresses: PropTypes.array.isRequired,
@@ -18,17 +22,23 @@ export default function Shipment({ addresses }) {
   const dispatch = useDispatch();
   const [saving, setSaving] = useState(false);
   const messaging = useContext(MessagingContext);
+  const checkout = useContext(CheckoutContext);
   const [selectedAddress, setSelectedAddress] = useState(false);
   const [dialogNewAddress, setDialogNewAddress] = useState(false);
   const [dialogEditAddress, setDialogEditAddress] = useState(false);
   const [dialogDeleteAddress, setDialogDeleteAddress] = useState(false);
+  const app = useContext(AppContext);
+
+  useEffect(() => {
+    app.handleCartVisibility(false);
+  }, []);
 
   async function handleAddressSubmit(address) {
     try {
       setSaving(true);
       const response = await api().post('/customerAddresses', address);
+      dispatch(setShipmentAddress(response.data));
       dispatch(addCustomerAddress(response.data));
-      messaging.handleOpen('Endereço incluído');
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
     } finally {
@@ -41,7 +51,7 @@ export default function Shipment({ addresses }) {
       setSaving(true);
       const response = await api().put(`/customerAddresses/${selectedAddress.id}`, address);
       dispatch(updateCustomerAddress(response.data));
-      messaging.handleOpen('Endereço incluído');
+      dispatch(setShipmentAddress(response.data));
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
     } finally {
@@ -74,9 +84,14 @@ export default function Shipment({ addresses }) {
     setDialogNewAddress(!dialogNewAddress);
   }
 
-  function handleDialogEditAddress(addressId) {
-    setSelectedAddress(addresses.find(address => address.id === addressId));
+  function handleDialogEditAddress(address) {
+    setSelectedAddress(address);
     setDialogEditAddress(true);
+  }
+
+  function handleSelectAddress(address) {
+    dispatch(setShipmentAddress(address));
+    checkout.handleStepNext();
   }
 
   return (
@@ -106,13 +121,17 @@ export default function Shipment({ addresses }) {
           buttonText="Sim, excluir"
         />
       )}
-      <ShipmentAddressesList
-        addresses={addresses}
-        handleDialogEditAddress={() => handleDialogEditAddress(true)}
-        handleDialogNewAddress={() => handleDialogNewAddress(true)}
-        handleDeleteAddress={handleDeleteAddress}
-        selectAddress={() => {}}
-      />
+      <Grid container>
+        <Grid item xs={12}>
+          <ShipmentAddressesList
+            addresses={addresses}
+            handleDialogEditAddress={handleDialogEditAddress}
+            handleDialogNewAddress={handleDialogNewAddress}
+            handleDeleteAddress={handleDeleteAddress}
+            handleSelectAddress={handleSelectAddress}
+          />
+        </Grid>
+      </Grid>
     </>
   );
 }

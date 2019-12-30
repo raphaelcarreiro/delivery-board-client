@@ -24,7 +24,7 @@ const styles = theme => ({
   appbarSpace: {
     marginBottom: 80,
     [theme.breakpoints.down('md')]: {
-      marginBottom: 75,
+      marginBottom: 66,
     },
     [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
       marginBottom: 70,

@@ -14,8 +14,8 @@ export default function RegisterSucess() {
   return (
     <div className={classes.container}>
       <Typography gutterBottom>Pronto! Você já pode matar sua fome.</Typography>
-      <Button color="primary" component={Link} href="/login" variant="text" size="large">
-        Entrar
+      <Button color="primary" component={Link} href="/menu" variant="text" size="large">
+        Ver cardápio
       </Button>
     </div>
   );

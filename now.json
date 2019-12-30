@@ -1,0 +1,11 @@
+{
+  "build": {
+    "env": {
+      "BASEURL_API": "http://api.topnfe.com.br/api/client/",
+      "RESTAURANT_ID": "1",
+      "SECRET": "9k6wASnUNQmqAGdbbzqGDybIj4G7OxJ94ozjvdNB6DYvF791jXOCKPL3nDbAJwZs",
+      "TOKEN_NAME": "delivery-client-token",
+      "LOCALSTORAGE_CART": "delivery-client-cart"
+    }
+  }
+}

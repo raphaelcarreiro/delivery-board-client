@@ -4,6 +4,7 @@ import { makeStyles, fade } from '@material-ui/core/styles';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import PropTypes from 'prop-types';
+import ImagePreview from 'src/components/image-preview/ImagePreview';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -58,6 +59,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#eee',
+    cursor: 'zoom-in',
   },
   complementData: {
     display: 'flex',
@@ -103,21 +105,35 @@ export default function ProductPizzaComplementItem({
 }) {
   const classes = useStyles({ isPizzaTaste: category.is_pizza_taste });
   const [anchorEl, setAnchorEl] = useState(null);
-  const [complementSelected, setComplementSelected] = useState({ additional: [], ingredients: [] });
+  const [selectedComplement, setSelectedComplement] = useState({ additional: [], ingredients: [] });
+  const [imagePreview, setImagePreview] = useState(false);
 
   function handleClickMore(event, complement) {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setComplementIdSelected(complement.id);
     setComplementCategoryIdSelected(category.id);
-    setComplementSelected(complement);
+    setSelectedComplement(complement);
+  }
+
+  function handleImageClick(event, complement) {
+    event.stopPropagation();
+    setSelectedComplement(complement);
+    setImagePreview(true);
   }
 
   return (
     <>
+      {imagePreview && selectedComplement.image && (
+        <ImagePreview
+          src={selectedComplement.image.imageUrl}
+          onExited={() => setImagePreview(false)}
+          description={selectedComplement.name}
+        />
+      )}
       {category.is_pizza_taste && (
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
-          {complementSelected.additional.length > 0 && (
+          {selectedComplement.additional.length > 0 && (
             <MenuItem
               onClick={() => {
                 openDialogAdditional();
@@ -127,7 +143,7 @@ export default function ProductPizzaComplementItem({
               Adicionais
             </MenuItem>
           )}
-          {complementSelected.ingredients.length > 0 && (
+          {selectedComplement.ingredients.length > 0 && (
             <MenuItem
               onClick={() => {
                 openDialogIngredients();
@@ -155,7 +171,12 @@ export default function ProductPizzaComplementItem({
             <div className={classes.complementData}>
               <div className={classes.imageContainer}>
                 {complement.image && (
-                  <img className={classes.image} src={complement.image.imageUrl} alt={complement.name} />
+                  <img
+                    className={classes.image}
+                    src={complement.image.imageUrl}
+                    alt={complement.name}
+                    onClick={event => handleImageClick(event, complement)}
+                  />
                 )}
               </div>
               <div>

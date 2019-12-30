@@ -20,12 +20,9 @@ class _App extends AppNext {
     const { Component, pageProps } = this.props;
 
     return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Provider store={store}>
-          <App pageProps={pageProps} component={Component} />
-        </Provider>
-      </ThemeProvider>
+      <Provider store={store}>
+        <App pageProps={pageProps} component={Component} />
+      </Provider>
     );
   }
 }

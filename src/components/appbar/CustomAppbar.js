@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { menuWidth, AppContext } from '../../App';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -71,19 +72,21 @@ function CustomAppbar({ actionComponent, title, TabComponent, cancel, cancelActi
             color="primary"
           >
             <Toolbar>
-              <IconButton color="inherit" onClick={handleOpenMenu}>
-                <MenuIcon />
+              <IconButton onClick={cancel ? cancelAction : handleOpenMenu} color="inherit">
+                {cancel ? <NavigateBeforeIcon /> : <MenuIcon />}
               </IconButton>
-              <Typography variant="h6" color="inherit" className={classes.appBarTitle}>
-                {title}
-              </Typography>
+              {title && (
+                <Typography variant="h6" color="inherit" className={classes.appBarTitle}>
+                  {title}
+                </Typography>
+              )}
               <div className={classes.grow} />
               {actionComponent}
             </Toolbar>
           </AppBar>
           {TabComponent && (
             <Fragment>
-              <AppBar className={classes.appBarTabs}>{TabComponent}</AppBar>
+              <AppBar className={`${classes.appBarTabs} ${classes.appBarShadow}`}>{TabComponent}</AppBar>
               <div className={TabComponent && classes.appBarTabsSpace} />
             </Fragment>
           )}

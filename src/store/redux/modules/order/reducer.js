@@ -1,9 +1,11 @@
 const INITIAL_STATE = {
-  shipmentAddress: null,
+  shipmentAddress: {},
   customer: null,
   paymentMethod: null,
   products: [],
   step: 'shipment',
+  shipment_method: 'd',
+  change: 0,
 };
 
 export default function order(state = INITIAL_STATE, action) {
@@ -33,6 +35,13 @@ export default function order(state = INITIAL_STATE, action) {
       return {
         ...state,
         products: action.products,
+      };
+    }
+
+    case '@order/SET_CHANGE': {
+      return {
+        ...state,
+        change: action.value,
       };
     }
 

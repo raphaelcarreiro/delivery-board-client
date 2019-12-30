@@ -25,28 +25,34 @@ export default function CartProductListComplements({ categories }) {
 
   return (
     <List className={classes.list}>
-      {categories.map(category => (
-        <ListItem key={category.id} className={classes.listItem}>
-          {category.complements.some(complement => complement.selected) && (
-            <>
-              <Typography variant="body2" display="inline" className={classes.categoryName}>
-                {category.name}:
-              </Typography>
-              <div>
-                {category.complements.map(
-                  (complement, index) =>
-                    complement.selected && (
-                      <Typography key={complement.id} display="inline" variant="body2">
-                        {complement.name}
-                        {index !== category.complements.lentgh - 1 && <span>, </span>}
-                      </Typography>
-                    )
-                )}
-              </div>
-            </>
-          )}
-        </ListItem>
-      ))}
+      {categories.map(category => {
+        const amount = category.complements.reduce((sum, complement) => (complement.selected ? sum + 1 : sum), 0);
+        let count = 0;
+        return (
+          <ListItem key={category.id} className={classes.listItem}>
+            {category.complements.some(complement => complement.selected) && (
+              <>
+                <Typography variant="body2" display="inline" className={classes.categoryName}>
+                  {category.name}:
+                </Typography>
+                <div>
+                  {category.complements.map((complement, index) => {
+                    if (complement.selected) {
+                      count += 1;
+                      return (
+                        <Typography key={complement.id} display="inline" variant="body2">
+                          {complement.name}
+                          {amount > 1 && amount !== count && <span>, </span>}
+                        </Typography>
+                      );
+                    }
+                  })}
+                </div>
+              </>
+            )}
+          </ListItem>
+        );
+      })}
     </List>
   );
 }

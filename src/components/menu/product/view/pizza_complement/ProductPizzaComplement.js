@@ -50,13 +50,13 @@ export default function ProductPizzaComplement({
       category.product_complement_category_id = category.id;
       category.complements = category.complements.map((complement, index) => {
         complement.product_complement_id = complement.id;
-        // complement.selected = category.is_pizza_size && index === 0;
+        complement.selected = false;
         complement.formattedPrice = complement.price && moneyFormat(complement.price);
 
         complement.prices = complement.prices.map((price, index) => {
           price.product_complement_price_id = price.id;
           price.formattedPrice = price.price && moneyFormat(price.price);
-          // price.selected = index === 0;
+          price.selected = index === 0;
           return price;
         });
 

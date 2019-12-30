@@ -4,10 +4,15 @@ export const INITIAL_STATE = {
   products: [],
   product: null,
   total: 0,
+  history: [],
 };
 
 export default function cart(state = INITIAL_STATE, action) {
   switch (action.type) {
+    case '@cart/SET_CART': {
+      return action.cart;
+    }
+
     case '@cart/PREPARE_PRODUCT': {
       return {
         ...state,
@@ -191,6 +196,29 @@ export default function cart(state = INITIAL_STATE, action) {
         total,
         formattedTotal: moneyFormat(total),
       };
+    }
+
+    case '@cart/RESTORE_CART': {
+      const total = state.history.reduce((sum, value) => sum + value.final_price, 0);
+
+      return {
+        ...state,
+        products: state.history,
+        total,
+        formattedTotal: moneyFormat(total),
+      };
+    }
+
+    case '@cart/CREATE_HISTORY': {
+      return {
+        ...state,
+        history: action.products,
+      };
+    }
+
+    case '@cart/CLEAR_CART': {
+      localStorage.removeItem(process.env.LOCALSTORAGE_CART);
+      return INITIAL_STATE;
     }
 
     default: {

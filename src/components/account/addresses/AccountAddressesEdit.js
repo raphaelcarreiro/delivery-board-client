@@ -7,7 +7,7 @@ import DialogFullscreenForm from '../../dialog/DialogFullscreenForm';
 import PostalCodeInput from '../../masked-input/PostalCodeInput';
 
 function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, saving, selectedAddress }) {
-  const [postalCode] = useState(selectedAddress.postal_code);
+  const [postalCode] = useState(selectedAddress.postal_code || '');
   const [address, setAddress] = useState(selectedAddress.address);
   const [number, setNumber] = useState(selectedAddress.number);
   const [complement, setComplement] = useState(

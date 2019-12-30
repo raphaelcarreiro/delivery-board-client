@@ -6,7 +6,7 @@ function CartPage() {
   return (
     <>
       <Head>
-        <title>Minha cesta</title>
+        <title>Carrinho</title>
       </Head>
       <Cart />
     </>

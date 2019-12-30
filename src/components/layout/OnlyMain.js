@@ -5,11 +5,21 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
-    position: 'fixed',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
+    position: 'relative',
+    minHeight: '100vh',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  wrapper: {
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    height: '100%',
+  },
+  containerWrapper: {
+    overflowY: 'auto',
+    position: 'relative',
   },
 }));
 
@@ -17,8 +27,12 @@ export default function OnlyMain({ pageProps, component: Component }) {
   const classes = useStyles();
 
   return (
-    <div className={classes.container}>
-      <Component {...pageProps} />
+    <div className={classes.wrapper}>
+      <div className={classes.containerWrapper}>
+        <div className={classes.container}>
+          <Component {...pageProps} />
+        </div>
+      </div>
     </div>
   );
 }

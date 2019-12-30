@@ -5,10 +5,11 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Cart from '../cart/Cart';
 import { AppContext } from 'src/App';
+import DialogFullscreen from 'src/components/dialog/DialogFullscreen';
 
 const cartWidth = 450;
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   container: {
     position: 'relative',
     display: 'flex',
@@ -22,8 +23,8 @@ const useStyles = makeStyles({
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    minHeight: 'calc(100vh - 235px)',
-    marginBottom: 100,
+    minHeight: 'calc(100vh - 86px)',
+    marginBottom: 15,
     padding: '0 20px',
   },
   wrapper: {
@@ -37,6 +38,9 @@ const useStyles = makeStyles({
     overflowY: 'auto',
     position: 'relative',
     marginTop: 80,
+    [theme.breakpoints.down('md')]: {
+      marginTop: 71,
+    },
   },
   cart: ({ isCartVisible }) => ({
     transition: 'transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms',
@@ -52,7 +56,7 @@ const useStyles = makeStyles({
     zIndex: 9,
     overflowY: 'auto',
   }),
-});
+}));
 
 export default function Default({ pageProps, component: Component, isMobile, windowWidth }) {
   const app = useContext(AppContext);
@@ -61,16 +65,24 @@ export default function Default({ pageProps, component: Component, isMobile, win
   return (
     <div className={classes.wrapper}>
       {!isMobile && windowWidth >= 960 && <Header />}
-      {!isMobile && windowWidth >= 960 && (
+      {!isMobile && windowWidth >= 960 ? (
         <div className={classes.cart}>
           <Cart />
         </div>
+      ) : (
+        <>
+          {app.isCartVisible && (
+            <DialogFullscreen title="Carrinho" handleModalState={() => app.handleCartVisibility(false)}>
+              <Cart />
+            </DialogFullscreen>
+          )}
+        </>
       )}
       <div className={classes.containerWrapper}>
         <div className={isMobile || windowWidth < 960 ? classes.mobileContainer : classes.container}>
           <Component {...pageProps} />
         </div>
-        <Footer />
+        {!isMobile && windowWidth >= 960 && <Footer />}
       </div>
     </div>
   );

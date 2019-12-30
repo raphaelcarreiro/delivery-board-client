@@ -9,6 +9,8 @@ import ProductPizzaComplement from './view/pizza_complement/ProductPizzaCompleme
 import ProductComplement from './view/complement/ProductComplement';
 import ProductList from './ProductList';
 import { AppContext } from 'src/App';
+import CustomAppbar from 'src/components/appbar/CustomAppbar';
+import ProductAction from './ProductAction';
 
 Product.propTypes = {
   products: PropTypes.array.isRequired,
@@ -23,6 +25,8 @@ export default function Product({ products, categoryName }) {
   const dispatch = useDispatch();
   const messaging = useContext(MessagingContext);
   const app = useContext(AppContext);
+  const [isSearching, setIsSearching] = useState(false);
+  const [filteredProducts, setFilteredProducts] = useState(products);
 
   function handleProductClick(product) {
     setSelectedProduct(product);
@@ -49,15 +53,39 @@ export default function Product({ products, categoryName }) {
 
   function handleAddProductToCart() {
     dispatch(addToCart());
-    messaging.handleOpen('Produto adicionado a cesta');
+    messaging.handleOpen('Produto adicionado ao carrinho');
     app.handleCartVisibility(true);
-    setTimeout(() => {
-      app.handleCartVisibility(false);
-    }, 4000);
+    handleCancelSearch();
+  }
+
+  function handleSearch(searchValue) {
+    const _products = products.filter(product => {
+      const productName = product.name.toLowerCase();
+      return productName.indexOf(searchValue.toLowerCase()) !== -1;
+    });
+
+    setFilteredProducts(_products);
+  }
+
+  function handleCancelSearch() {
+    setIsSearching(false);
+    handleSearch('');
   }
 
   return (
     <>
+      <CustomAppbar
+        cancel={isSearching}
+        cancelAction={handleCancelSearch}
+        title={isSearching ? '' : categoryName}
+        actionComponent={
+          <ProductAction
+            isSearching={isSearching}
+            openSearchBox={() => setIsSearching(true)}
+            handleSearch={handleSearch}
+          />
+        }
+      />
       {imagePreview && (
         <ImagePreview
           src={selectedProduct.image.imageUrl}
@@ -93,7 +121,7 @@ export default function Product({ products, categoryName }) {
         </>
       )}
       <ProductList
-        products={products}
+        products={filteredProducts}
         handleProductClick={handleProductClick}
         handleOpenImagePreview={handleOpenImagePreview}
       />

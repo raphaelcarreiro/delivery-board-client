@@ -20,11 +20,10 @@ import { AppContext } from '../../App';
 import AccountAddresses from './addresses/AccountAddresses';
 import Loading from '../loading/Loading';
 import DialogDelete from '../dialog/delete/DialogDelete';
+import PageHeader from 'src/components/pageHeader/PageHeader';
+import AccountActions from 'src/components/account/AccountActions';
 
 const useStyles = makeStyles(theme => ({
-  header: {
-    marginBottom: 20,
-  },
   container: {
     [theme.breakpoints.up('sm')]: {
       paddingTop: 20,
@@ -122,6 +121,7 @@ export function Account() {
     <>
       <CustomAppbar
         title="Minha conta"
+        actionComponent={<AccountActions tabIndex={tabIndex} handleSubmit={handleSubmit} />}
         TabComponent={<AccountTabsAppbar tabIndex={tabIndex} handleTabChange={handleTabChange} />}
       />
       {dialogDeleteAddress && (
@@ -139,10 +139,7 @@ export function Account() {
         <Loading />
       ) : (
         <Grid container>
-          <Grid item xs={12} className={classes.header}>
-            <Typography variant="h6">Minha conta</Typography>
-            <Typography color="textSecondary">Gerencie os dados e endereços da sua conta</Typography>
-          </Grid>
+          <PageHeader title="Minha conta" description="Gerencie os dados e endereços da sua conta" />
           {!isMobile && windowWidth >= 960 && (
             <Grid item xs={12} container>
               <AccountTabs tabIndex={tabIndex} handleTabChange={handleTabChange} />

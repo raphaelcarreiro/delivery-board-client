@@ -1,21 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { List, ListItem, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
-import { removeFromCart } from 'src/store/redux/modules/cart/actions';
+import { removeFromCart, restoreCart } from 'src/store/redux/modules/cart/actions';
 import CartProductListComplements from './CartProductListComplements';
+import { MessagingContext } from 'src/components/messaging/Messaging';
 
 const useStyles = makeStyles(theme => ({
-  list: {},
+  list: {
+    [theme.breakpoints.down('md')]: {
+      paddingTop: 0,
+      paddingBottom: 15,
+    },
+  },
   listItem: {
     display: 'flex',
-    // borderTop: '1px solid #eee',
+    borderTop: '1px solid #eee',
     flexDirection: 'column',
-    padding: 15,
-    boxShadow: '1px 1px 3px 0px #ddd',
-    borderRadius: 4,
-    marginBottom: 10,
+    padding: '15px 0',
+    alignItems: 'flex-start',
+    '&:first-child': {
+      [theme.breakpoints.down('md')]: {
+        padding: '0 0 15px',
+      },
+    },
+    [theme.breakpoints.down('md')]: {
+      borderBottom: '1px solid #eee',
+      borderTop: 'none',
+      padding: '10px 0',
+    },
   },
   product: {
     display: 'flex',
@@ -25,6 +39,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     '&>div': {
       display: 'flex',
+      alignItems: 'center',
     },
   },
   price: {
@@ -45,7 +60,8 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
   },
   productImage: {
-    width: 30,
+    width: 40,
+    height: 40,
     borderRadius: '50%',
     alignItems: 'center',
     marginRight: 10,
@@ -55,6 +71,18 @@ const useStyles = makeStyles(theme => ({
     position: 'fixed',
     borderRadius: 4,
     zIndex: 15,
+  },
+  additional: {
+    color: '#4CAF50',
+  },
+  ingredients: {
+    color: '#c53328',
+  },
+  options: {
+    padding: '0 0 10px 10px',
+  },
+  productName: {
+    fontWeight: 300,
   },
 }));
 
@@ -66,11 +94,19 @@ CartProductList.propTypes = {
 export default function CartProductList({ products, handleClickUpdateProduct }) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const messaging = useContext(MessagingContext);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [showImageZoom, setShowImageZoom] = useState(false);
 
+  function handleRestoreCart() {
+    dispatch(restoreCart());
+    messaging.handleClose();
+    messaging.handleOpen('Carrinho recuperado');
+  }
+
   function handleRemoveFromCart(productUid) {
     dispatch(removeFromCart(productUid));
+    messaging.handleOpen('Produto removido', handleRestoreCart);
   }
 
   function handleImageMouseEnter(event) {
@@ -81,9 +117,9 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
     setShowImageZoom(false);
   }
 
-  function handleImageMouseMove() {
+  function handleImageMouseMove(productUid) {
     const productDataPosition = document.getElementById('product-data');
-    const imageZoom = document.getElementById('image-zoom');
+    const imageZoom = document.getElementById(`image-zoom-${productUid}`);
     setMousePosition({
       x: event.clientX - productDataPosition.scrollLeft - imageZoom.scrollWidth - 10,
       y: event.clientY - productDataPosition.scrollTop - imageZoom.scrollHeight - 10,
@@ -101,18 +137,18 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
                 src={product.image.imageUrl}
                 alt={product.name}
                 className={classes.imageZoom}
-                id="image-zoom"
+                id={`image-zoom-${product.uid}`}
               />
               <img
                 onMouseEnter={handleImageMouseEnter}
                 onMouseLeave={handleImageMouseLeave}
-                onMouseMoveCapture={handleImageMouseMove}
+                onMouseMoveCapture={() => handleImageMouseMove(product.uid)}
                 src={product.image.imageUrl}
                 alt={product.name}
                 className={classes.productImage}
               />
-              <Typography variant="h6">
-                {product.amount} {product.name}
+              <Typography variant="h6" className={classes.productName}>
+                {product.amount}x {product.name}
               </Typography>
             </div>
             <Typography variant="h5" className={classes.price}>
@@ -120,6 +156,28 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
             </Typography>
           </div>
           {product.category.has_complement && <CartProductListComplements categories={product.complement_categories} />}
+          {(product.ingredients.some(ingredient => !ingredient.selected) ||
+            product.additional.some(additional => additional.selected)) && (
+            <div className={classes.options}>
+              {product.ingredients.map(
+                ingredient =>
+                  !ingredient.selected && (
+                    <Typography key={ingredient.id} variant="body2" display="block" className={classes.ingredients}>
+                      - {ingredient.name}
+                    </Typography>
+                  )
+              )}
+              {product.additional &&
+                product.additional.map(
+                  additional =>
+                    additional.selected && (
+                      <Typography key={additional.id} variant="body2" display="block" className={classes.additional}>
+                        + {additional.name} {additional.formattedPrice}
+                      </Typography>
+                    )
+                )}
+            </div>
+          )}
           <div className={classes.actions}>
             <Typography onClick={() => handleClickUpdateProduct(product)} color="primary" className={classes.link}>
               Editar

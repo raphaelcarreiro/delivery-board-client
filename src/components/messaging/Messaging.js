@@ -61,7 +61,7 @@ function Messaging({ children }) {
   function handleAction() {
     if (typeof action.do === 'function') {
       action.do();
-      handleClose();
+      // handleClose();
     }
   }
 

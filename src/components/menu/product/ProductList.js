@@ -11,15 +11,16 @@ const useStyles = makeStyles(theme => ({
       gridTemplateColumns: '1fr',
     },
     gridGap: 6,
+    padding: '10px 0',
   },
   listItem: {
     display: 'flex',
     backgroundColor: '#fff',
-    boxShadow: '1px 1px 3px 0px #ddd',
+    border: '1px solid #eee',
     borderRadius: 4,
     position: 'relative',
     alignItems: 'center',
-    height: 120,
+    minHeight: 120,
   },
   img: {
     width: 100,
@@ -35,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'flex-start',
   },
   price: {
-    fontWeight: 500,
+    fontWeight: 300,
   },
 }));
 
@@ -53,11 +54,11 @@ export default function ProductList({ products, handleProductClick, handleOpenIm
                 {product.description}
               </Typography>
               {product.price > 0 && (
-                <Typography color="primary" className={classes.price}>
+                <Typography variant="h6" className={classes.price} color="primary">
                   {product.formattedPrice}
                 </Typography>
               )}
-              {product.category.has_complement && <Typography color="textSecondary">Monte esse produto</Typography>}
+              {product.category.has_complement && <Typography color="primary">Monte esse produto</Typography>}
             </div>
             <img
               className={classes.img}

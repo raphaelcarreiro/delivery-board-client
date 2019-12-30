@@ -21,7 +21,14 @@ export function setPaymentMethod(paymentMethod) {
 
 export function setProducts(products) {
   return {
-    type: '@order/SET_CUSTOMER',
+    type: '@order/SET_PRODUCTS',
     products,
+  };
+}
+
+export function setChange(value) {
+  return {
+    type: '@order/SET_CHANGE',
+    value,
   };
 }
