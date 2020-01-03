@@ -21,6 +21,9 @@ export default class MyDocument extends Document {
               height: 100%;
               width: 100%;
             }
+            body {
+              transition: all 0.5s linear;
+            }
             #__next {
               position: absolute;
               top: 0;

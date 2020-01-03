@@ -7,7 +7,7 @@ import OnlyMain from './components/layout/OnlyMain';
 import Default from './components/layout/Default';
 import { mobileCheck } from './helpers/MobileCheck';
 import { useDispatch } from 'react-redux';
-import { setRestaurant } from './store/redux/modules/restaurant/actions';
+import { setRestaurant, setRestaurantIsOpen } from './store/redux/modules/restaurant/actions';
 import PropTypes from 'prop-types';
 import { setUser, removeUser } from './store/redux/modules/user/actions';
 import { verifyToken } from './helpers/verifyToken';
@@ -19,6 +19,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { createTheme } from 'src/helpers/createTheme';
 import defaultTheme from '../src/theme';
+import io from 'socket.io-client';
 
 export const AppContext = createContext({
   isMobile: false,
@@ -94,13 +95,20 @@ function App({ pageProps, component: Component }) {
       });
   }, []);
 
+  useEffect(() => {
+    const socket = io(process.env.URL_NODE_SERVER);
+    socket.on('handleRestaurantState', state => {
+      dispatch(setRestaurantIsOpen(state));
+    });
+  }, []);
+
   function handleLogout() {
     setLoading(true);
 
     api()
       .post('/logout')
       .then(response => {
-        router.push('/');
+        // router.push('/');
         dispatch(removeUser());
         localStorage.removeItem(process.env.TOKEN_NAME);
       })

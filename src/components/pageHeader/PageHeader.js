@@ -18,7 +18,9 @@ function PageHeader({ title, description }) {
     <>
       {!app.isMobile && app.windowWidth >= 960 && (
         <Grid className={classes.header} item xs={12}>
-          <Typography variant="h6">{title}</Typography>
+          <Typography variant="h6" color="primary">
+            {title}
+          </Typography>
           <Typography color="textSecondary">{description}</Typography>
         </Grid>
       )}

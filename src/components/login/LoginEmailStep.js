@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 export default function LoginEmailStep({ email, setEmail }) {
   return (
     <div>
-      <Typography align="center">Se você já se registrou, informe seu e-mail.</Typography>
+      <Typography align="center">Informe seu e-mail ou telefone.</Typography>
       <TextField
         variant="outlined"
         label="E-mail ou telefone"

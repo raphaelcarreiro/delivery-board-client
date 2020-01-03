@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',
-    height: '50vh',
+    flex: 1,
     flexDirection: 'column',
   },
 });
@@ -22,7 +22,7 @@ function NoData({ message, action, buttonText, secondaryMessage }) {
 
   return (
     <div className={classes.container}>
-      <Typography variant="h6">{message}</Typography>
+      <Typography variant="h6" color="textSecondary">{message}</Typography>
       {secondaryMessage && (
         <Typography variant="body2" color="textSecondary">
           {secondaryMessage}

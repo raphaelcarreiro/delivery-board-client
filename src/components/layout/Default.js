@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    minHeight: 'calc(100vh - 250px)',
+    minHeight: 'calc(100vh - 460px)',
     maxWidth: '1366px',
     margin: '0 auto 100px',
     padding: '15px 0 0 20px',

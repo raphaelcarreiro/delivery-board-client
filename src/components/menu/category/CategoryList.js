@@ -18,10 +18,11 @@ const useStyles = makeStyles(theme => ({
     },
   },
   listItem: {
-    display: 'block',
+    display: 'flex',
     backgroundColor: '#fff',
     boxShadow: '1px 1px 9px 1px #eee',
     borderRadius: 4,
+    height: 80,
   },
   content: {
     display: 'flex',
@@ -31,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 15,
+    marginRight: 20,
   },
   image: {
     borderRadius: '50%',

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { IconButton, TextField, InputAdornment } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/search';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
 import PropTypes from 'prop-types';
 import { MuiThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
@@ -120,15 +120,19 @@ export default function ProductAction({ isSearching, openSearchBox, handleSearch
             fullWidth
             autoFocus
             onChange={handleInputChange}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleClearSearch} color="inherit">
-                    <ClearIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
+            InputProps={
+              search
+                ? {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={handleClearSearch} color="inherit">
+                          <ClearIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }
+                : null
+            }
           />
         </MuiThemeProvider>
       ) : (

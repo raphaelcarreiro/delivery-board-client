@@ -10,8 +10,7 @@ const useStyles = makeStyles(theme => ({
   footer: {
     borderTop: '1px solid #eee',
     minHeight: 100,
-    backgroundColor: '#fff',
-    padding: '15px',
+    padding: '15px 15px 20px',
   },
   container: {
     maxWidth: 1366,
@@ -35,9 +34,7 @@ const useStyles = makeStyles(theme => ({
     borderTop: '1px solid #eee',
     paddingTop: 15,
   },
-  title: {
-    fontWeight: 600,
-  },
+  title: {},
   link: {
     display: 'flex',
     alignItems: 'center',
@@ -61,7 +58,7 @@ function Footer() {
     <footer className={classes.footer}>
       <div className={classes.container}>
         <div className={classes.col}>
-          <Typography variant="h6" color="primary" className={classes.title}>
+          <Typography variant="h6" color="secondary" className={classes.title}>
             {restaurant && restaurant.name}
           </Typography>
           <List className={classes.list}>
@@ -77,13 +74,13 @@ function Footer() {
           </List>
         </div>
         <div className={classes.col}>
-          <Typography variant="h6" color="primary" className={classes.title}>
+          <Typography variant="h6" color="secondary" className={classes.title}>
             Atendimento
           </Typography>
           <List className={classes.list}>
             <ListItem>
               <Typography className={classes.link}>
-                <WatchIcon color="primary" />
+                <WatchIcon color="secondary" />
                 {restaurant && restaurant.working_hours}
               </Typography>
             </ListItem>
@@ -91,14 +88,14 @@ function Footer() {
               restaurant.phones.map(phone => (
                 <ListItem key={phone.id}>
                   <Typography className={classes.link}>
-                    <PhoneIcon color="primary" /> {phone.phone}
+                    <PhoneIcon color="secondary" /> {phone.phone}
                   </Typography>
                 </ListItem>
               ))}
           </List>
         </div>
         <div className={classes.col}>
-          <Typography variant="h6" color="primary" className={classes.title}>
+          <Typography variant="h6" color="secondary" className={classes.title}>
             Social
           </Typography>
           <List className={classes.list}>
@@ -121,16 +118,20 @@ function Footer() {
         </div>
         <div className={classes.restaurantData}>
           {restaurant && (
-            <Typography>{restaurant.corporate_name ? restaurant.corporate_name : restaurant.name}</Typography>
+            <Typography variant="body2">
+              {restaurant.corporate_name ? restaurant.corporate_name : restaurant.name}
+            </Typography>
           )}
-          {restaurant && <Typography color="textSecondary">{restaurant.cnpj}</Typography>}
+          {restaurant && (
+            <Typography color="textSecondary" variant="body2">
+              CNPJ: {restaurant.cnpj}
+            </Typography>
+          )}
           {mainAddress && (
             <>
-              <Typography color="textSecondary">
-                {mainAddress.address}, {mainAddress.number}, {mainAddress.district}
-              </Typography>
-              <Typography color="textSecondary">
-                {mainAddress.city}-{mainAddress.region}, CEP {mainAddress.postal_code}
+              <Typography color="textSecondary" variant="body2">
+                {mainAddress.address}, {mainAddress.number}, {mainAddress.district} {mainAddress.city}-
+                {mainAddress.region}, CEP {mainAddress.postal_code}
               </Typography>
             </>
           )}

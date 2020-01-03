@@ -136,7 +136,7 @@ export function Account() {
       {saving && <Loading background="rgba(250,250,250, 0.5)" />}
 
       {loading ? (
-        <Loading />
+        <Loading background="rgba(250,250,250, 0.5)" />
       ) : (
         <Grid container>
           <PageHeader title="Minha conta" description="Gerencie os dados e endereços da sua conta" />

@@ -11,6 +11,7 @@ import ProductComplement from './edit/complements/ProductComplement';
 import ProductPizzaComplement from './edit/pizza_complement/ProductPizzaComplement';
 import { updateProductFromCart } from 'src/store/redux/modules/cart/actions';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
+import CartClosedRestaurant from 'src/components/cart/CartClosedRestaurant';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -50,8 +51,15 @@ export default function Cart() {
   const [dialogUpdateSimpleProduct, setDialogUpdateSimpleProduct] = useState(false);
   const [dialogUpdateComplementProduct, setDialogUpdateComplementProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const restaurant = useSelector(state => state.restaurant);
+  const [dialogClosedRestaurant, setDialogClosedRestaurant] = useState(false);
 
   function handleCheckoutClick() {
+    if (!restaurant.is_open) {
+      setDialogClosedRestaurant(true);
+      return;
+    }
+
     router.push('/checkout');
   }
 
@@ -74,6 +82,7 @@ export default function Cart() {
   return (
     <>
       <CustomAppbar title="Carrinho" />
+      {dialogClosedRestaurant && <CartClosedRestaurant onExited={() => setDialogClosedRestaurant(false)} />}
       {dialogUpdateSimpleProduct && (
         <ProductSimple
           onExited={() => setDialogUpdateSimpleProduct(false)}

@@ -5,6 +5,7 @@ const isProd = process.env.NODE_ENV === 'production';
 exports.default = {
   env: {
     BASEURL_API: isProd ? 'http://api.topnfe.com.br/api/client/' : 'http://localhost:8000/api/client/',
+    URL_NODE_SERVER: isProd ? 'http://api.topnfe.com.br:3333' : 'http://localhost:3333',
     RESTAURANT_ID: 1, // restaurant id encrypted
     SECRET: '9k6wASnUNQmqAGdbbzqGDybIj4G7OxJ94ozjvdNB6DYvF791jXOCKPL3nDbAJwZs', // secret to jwt
     TOKEN_NAME: 'delivery-client-token',

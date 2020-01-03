@@ -4,3 +4,10 @@ export function setRestaurant(restaurant) {
     restaurant,
   };
 }
+
+export function setRestaurantIsOpen(state) {
+  return {
+    type: '@restaurant/SET_RESTAURANT_IS_OPEN',
+    state,
+  };
+}

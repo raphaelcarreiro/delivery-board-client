@@ -101,7 +101,7 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
   function handleRestoreCart() {
     dispatch(restoreCart());
     messaging.handleClose();
-    messaging.handleOpen('Carrinho recuperado');
+    // messaging.handleOpen('Carrinho recuperado');
   }
 
   function handleRemoveFromCart(productUid) {

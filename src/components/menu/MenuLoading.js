@@ -10,7 +10,6 @@ const useStyles = makeStyles(theme => ({
       gridTemplateColumns: '1fr',
     },
     gridGap: 6,
-    padding: '12px 0',
   },
   listItem: {
     display: 'flex',
@@ -19,15 +18,15 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 4,
     position: 'relative',
     alignItems: 'center',
-    height: 120,
+    height: 100,
   },
   img: {
-    width: 100,
-    height: 100,
-    borderRadius: 4,
+    width: 60,
+    height: 60,
+    borderRadius: '50%',
   },
   productData: {
-    marginLeft: 10,
+    marginLeft: 20,
     display: 'flex',
     flexDirection: 'column',
     flex: '1 1',
@@ -54,31 +53,25 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const products = Array(3).fill('');
-const categories = Array(4).fill('');
+const products = Array(6).fill('');
+// const categories = Array(2).fill('');
 
 export default function MenuLoading() {
   const classes = useStyles();
 
   return (
     <div className={classes.container}>
-      {categories.map((category, index) => (
-        <Fragment key={index}>
-          <div className={`animated-background ${classes.categoryName}`} />
-          <List className={classes.list}>
-            {products.map((product, index) => (
-              <ListItem key={index} className={classes.listItem}>
-                <div className={classes.productData}>
-                  <div className={`animated-background ${classes.name}`} />
-                  <div className={`animated-background ${classes.description}`} />
-                  <div className={`animated-background ${classes.price}`} />
-                </div>
-                <div className={`animated-background ${classes.img}`} />
-              </ListItem>
-            ))}
-          </List>
-        </Fragment>
-      ))}
+      <List className={classes.list}>
+        {products.map((product, index) => (
+          <ListItem key={index} className={classes.listItem}>
+            <div className={`animated-background ${classes.img}`} />
+            <div className={classes.productData}>
+              <div className={`animated-background ${classes.name}`} />
+              <div className={`animated-background ${classes.description}`} />
+            </div>
+          </ListItem>
+        ))}
+      </List>
     </div>
   );
 }

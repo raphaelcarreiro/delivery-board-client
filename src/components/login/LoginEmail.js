@@ -28,6 +28,8 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#fff',
     [theme.breakpoints.down('md')]: {
       padding: 15,
+      backgroundColor: 'transparent',
+      border: 'none',
     },
   },
   action: {

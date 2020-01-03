@@ -42,7 +42,7 @@ function Orders() {
     <>
       <CustomAppbar title="Meus pedidos" />
       {loading ? (
-        <Loading />
+        <Loading background="rgba(250,250,250, 0.5)" />
       ) : (
         <Grid container>
           <PageHeader title="Meus pedidos" description="Acompanhe seus pedidos" />

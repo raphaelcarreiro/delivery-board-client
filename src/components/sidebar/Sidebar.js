@@ -13,6 +13,7 @@ import { menuWidth, AppContext } from '../../App';
 import Link from '../link/Link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
+import StatusIcon from '@material-ui/icons/FiberManualRecord';
 
 const useStyles = makeStyles(theme => ({
   drawerPaper: {
@@ -71,6 +72,14 @@ const useStyles = makeStyles(theme => ({
     width: 30,
     height: 30,
   },
+  restaurantName: ({ restaurantIsOpen }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    '& svg': {
+      marginLeft: 20,
+      color: restaurantIsOpen ? '#28a745' : '#dc3545',
+    },
+  }),
 }));
 
 Sidebar.propTypes = {
@@ -84,7 +93,10 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
   const user = useSelector(state => state.user);
   const restaurant = useSelector(state => state.restaurant);
   const cart = useSelector(state => state.cart);
-  const classes = useStyles({ cartItems: cart.products.length > 0 });
+  const classes = useStyles({
+    cartItems: cart.products.length > 0,
+    restaurantIsOpen: restaurant && restaurant.is_open,
+  });
   const app = useContext(AppContext);
 
   function handleClick() {
@@ -121,8 +133,8 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
     >
       <div className={classes.drawerHeader}>
         {restaurant && (
-          <Typography color="inherit" variant="body2">
-            {restaurant.name}
+          <Typography color="inherit" variant="body2" className={classes.restaurantName}>
+            {restaurant.name} <StatusIcon />
           </Typography>
         )}
       </div>

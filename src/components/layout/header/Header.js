@@ -24,7 +24,8 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',
-    boxShadow: '1px 1px 7px 1px #d4d4d4',
+    // boxShadow: '1px 1px 7px 1px #d4d4d4',
+    borderBottom: '1px solid #eee',
     padding: '0 15px',
     backgroundColor: '#fff',
     position: 'fixed',
@@ -73,14 +74,14 @@ const useStyles = makeStyles(theme => ({
     },
     cursor: 'pointer',
   }),
-  status: {
+  status: ({ restaurantIsOpen }) => ({
     display: 'flex',
     alignItems: 'center',
     '& svg': {
       marginRight: 10,
-      color: 'green',
+      color: restaurantIsOpen ? '#28a745' : '#dc3545',
     },
-  },
+  }),
   btnAvatar: {
     padding: 0,
   },
@@ -90,10 +91,13 @@ export default function Header() {
   const appContext = useContext(AppContext);
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
-  const restaurant = useSelector(state => state.restaurant);
+  const restaurant = useSelector(state => state.restaurant) || {};
   const user = useSelector(state => state.user);
   const cart = useSelector(state => state.cart);
-  const classes = useStyles({ cartItems: cart.products.length > 0 });
+  const classes = useStyles({
+    cartItems: cart.products.length > 0,
+    restaurantIsOpen: restaurant && restaurant.is_open,
+  });
 
   function handleCloseMenu() {
     setAnchorEl(null);
@@ -125,7 +129,7 @@ export default function Header() {
           <Grid container alignItems="center">
             <Grid item xs={5} container alignItems="center" className={classes.headerCol1}>
               <div className={classes.logoContent}>
-                {restaurant ? (
+                {restaurant.id ? (
                   <LinkNext href="/">
                     <a style={{ display: 'flex' }}>
                       <img className={classes.img} src={restaurant.image.imageUrl} alt={restaurant.name} />
@@ -136,9 +140,15 @@ export default function Header() {
                 )}
               </div>
               <Grid item xs={9}>
-                <Typography variant="h6" className={classes.status}>
-                  <StatusIcon /> Aberto
-                </Typography>
+                {!restaurant.is_open ? (
+                  <Typography className={classes.status}>
+                    <StatusIcon /> {restaurant.name} está fechado no momento.
+                  </Typography>
+                ) : (
+                  <Typography className={classes.status}>
+                    <StatusIcon /> {restaurant.name} está aberto.
+                  </Typography>
+                )}
               </Grid>
             </Grid>
             <Grid

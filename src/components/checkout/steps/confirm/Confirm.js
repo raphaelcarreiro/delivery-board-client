@@ -6,7 +6,7 @@ import { moneyFormat } from 'src/helpers/numberFormat';
 import { CheckoutContext } from 'src/components/checkout/Checkout';
 import { AppContext } from 'src/App';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   orderItemData: {
     marginBottom: 15,
   },
@@ -16,10 +16,17 @@ const useStyles = makeStyles({
   container: {
     padding: 15,
   },
-});
+  total: {
+    display: 'none',
+    [theme.breakpoints.down('md')]: {
+      display: 'block',
+    },
+  },
+}));
 
 export default function Confirm() {
   const order = useSelector(state => state.order);
+  const cart = useSelector(state => state.cart);
   const checkout = useContext(CheckoutContext);
   const app = useContext(AppContext);
   const classes = useStyles();
@@ -47,6 +54,12 @@ export default function Confirm() {
         </Typography>
         <Typography>{order.paymentMethod.method}</Typography>
         {order.change > 0 && <Typography>Troco para {moneyFormat(order.change)}</Typography>}
+      </Grid>
+      <Grid item xs={12} className={classes.total}>
+        <Typography variant="h5" color="primary">
+          Total à pagar
+        </Typography>
+        <Typography>{cart.formattedTotal}</Typography>
       </Grid>
       <Grid item xs={12} className={classes.action}>
         <Button onClick={checkout.handleSubmitOrder} size="large" variant="contained" color="primary">

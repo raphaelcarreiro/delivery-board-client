@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import ImagePreview from '../../image-preview/ImagePreview';
 import PropTypes from 'prop-types';
 import ProductView from './view/simple/ProductView';
@@ -11,13 +11,48 @@ import ProductList from './ProductList';
 import { AppContext } from 'src/App';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import ProductAction from './ProductAction';
+import NoData from 'src/components/nodata/NoData';
+import { makeStyles } from '@material-ui/core/styles';
+import { Grid, Typography, TextField, InputAdornment } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
+import ClearIcon from '@material-ui/icons/Clear';
+import Link from 'src/components/link/Link';
+
+const useStyles = makeStyles(theme => ({
+  pageHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+    [theme.breakpoints.down('md')]: {
+      display: 'none',
+    },
+  },
+  iconCancelSearch: {
+    cursor: 'pointer',
+  },
+  breadcrumb: {
+    backgroundColor: '#fff',
+    padding: '3px 5px',
+    marginBottom: 15,
+    borderLeft: `2px solid ${theme.palette.primary.main}`,
+    '& span': {
+      marginRight: 5,
+      marginLeft: 5,
+    },
+    [theme.breakpoints.down('md')]: {
+      marginBottom: 5,
+    },
+  },
+}));
 
 Product.propTypes = {
   products: PropTypes.array.isRequired,
   categoryName: PropTypes.string,
+  categoryUrl: PropTypes.string,
 };
 
-export default function Product({ products, categoryName }) {
+export default function Product({ products, categoryName, categoryUrl }) {
   const [imagePreview, setImagePreview] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [dialogProductView, setDialogProductView] = useState(false);
@@ -27,6 +62,9 @@ export default function Product({ products, categoryName }) {
   const app = useContext(AppContext);
   const [isSearching, setIsSearching] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState(products);
+  const classes = useStyles();
+  const [search, setSearch] = useState('');
+  const ref = useRef();
 
   function handleProductClick(product) {
     setSelectedProduct(product);
@@ -59,6 +97,7 @@ export default function Product({ products, categoryName }) {
   }
 
   function handleSearch(searchValue) {
+    setSearch(searchValue);
     const _products = products.filter(product => {
       const productName = product.name.toLowerCase();
       return productName.indexOf(searchValue.toLowerCase()) !== -1;
@@ -70,10 +109,43 @@ export default function Product({ products, categoryName }) {
   function handleCancelSearch() {
     setIsSearching(false);
     handleSearch('');
+    setSearch('');
+    ref.current.focus();
   }
 
   return (
     <>
+      <Grid item xs={12} className={classes.pageHeader}>
+        <div>
+          <Typography variant="h6" color="primary">
+            {categoryName}
+          </Typography>
+          <Typography variant="body1" color="textSecondary">
+            Exibindo {filteredProducts.length} {filteredProducts.length > 1 ? 'produtos' : 'produto'}
+          </Typography>
+        </div>
+
+        <TextField
+          inputRef={ref}
+          onChange={event => handleSearch(event.target.value)}
+          value={search}
+          autoFocus
+          label="Buscar"
+          placeholder="Digite sua busca"
+          variant="outlined"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                {search ? (
+                  <ClearIcon className={classes.iconCancelSearch} onClick={() => handleCancelSearch()} />
+                ) : (
+                  <SearchIcon />
+                )}
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Grid>
       <CustomAppbar
         cancel={isSearching}
         cancelAction={handleCancelSearch}
@@ -120,11 +192,15 @@ export default function Product({ products, categoryName }) {
           )}
         </>
       )}
-      <ProductList
-        products={filteredProducts}
-        handleProductClick={handleProductClick}
-        handleOpenImagePreview={handleOpenImagePreview}
-      />
+      {filteredProducts.length > 0 ? (
+        <ProductList
+          products={filteredProducts}
+          handleProductClick={handleProductClick}
+          handleOpenImagePreview={handleOpenImagePreview}
+        />
+      ) : (
+        <NoData message="Nenhum produto para exibir" />
+      )}
     </>
   );
 }
