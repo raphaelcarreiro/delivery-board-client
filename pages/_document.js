@@ -101,6 +101,13 @@ export default class MyDocument extends Document {
           `}</style>
         </Head>
         <body>
+          <div id="fb-root"></div>
+          <script
+            async
+            defer
+            crossOrigin="anonymous"
+            src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v5.0&appId=588242751734818&autoLogAppEvents=1"
+          ></script>
           <Main />
           <NextScript />
         </body>
