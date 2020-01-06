@@ -101,7 +101,6 @@ export default class MyDocument extends Document {
           `}</style>
         </Head>
         <body>
-          <div id="fb-root"></div>
           <script
             async
             defer
