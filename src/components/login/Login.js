@@ -4,7 +4,7 @@ import { Typography, Grid, Button } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { AppContext } from 'src/App';
 import { api } from 'src/services/api';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from 'src/store/redux/modules/user/actions';
 import Loading from '../loading/Loading';
 
@@ -40,7 +40,7 @@ export default function Login() {
   const router = useRouter();
   const [facebookUser, setFacebookUser] = useState(null);
   const app = useContext(AppContext);
-  const dispatch = useSelector(state => state.user);
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -86,7 +86,7 @@ export default function Login() {
   function hanleAppLogin() {
     setLoading(true);
     api()
-      .post('/login', facebookUser)
+      .post('/login/facebook', facebookUser)
       .then(response => {
         localStorage.setItem(process.env.TOKEN_NAME, response.data.token);
         dispatch(setUser(response.data.user));
@@ -96,8 +96,7 @@ export default function Login() {
           app.setRedirect(null);
         } else router.push('/');
       })
-      .catch(err => {
-        alert(err.response.data.error);
+      .catch(() => {
         setLoading(false);
       });
   }

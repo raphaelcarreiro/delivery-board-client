@@ -26,20 +26,19 @@ function CheckoutPage() {
   const [auth, setAuth] = useState(false);
   const app = useContext(AppContext);
   const user = useSelector(state => state.user);
-  const restaurant = useSelector(state => state.restaurant);
+  const restaurant = useSelector(state => state.restaurant) || {};
 
   useEffect(() => {
-    if (restaurant)
-      if (restaurant.is_open) {
-        const _auth = isAuthenticated();
-        if (!_auth) {
-          router.push('/login');
-          app.setRedirect('/checkout');
-          return;
-        }
-        setAuth(_auth);
+    if (restaurant.is_open) {
+      const _auth = isAuthenticated();
+      if (!_auth) {
+        router.push('/login');
+        app.setRedirect('/checkout');
+        return;
       }
-  }, [user]);
+      setAuth(_auth);
+    }
+  }, [user, restaurant]);
 
   function handleExitModal() {
     router.push('/');
@@ -50,7 +49,7 @@ function CheckoutPage() {
       <Head>
         <title>Fechar pedido</title>
       </Head>
-      {restaurant && !restaurant.is_open && <CartClosedRestaurant onExited={handleExitModal} />}
+      {!restaurant.is_open && <CartClosedRestaurant onExited={handleExitModal} />}
       {auth && <Checkout />}
     </>
   );
