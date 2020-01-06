@@ -32,7 +32,7 @@ export default function Index() {
 
   return (
     <>
-      <CustomAppbar title={restaurant ? restaurant.name : 'Carregando'} actionComponent={<IndexAppbarActions />} />
+      <CustomAppbar title={restaurant.name ? restaurant.name : 'Carregando'} actionComponent={<IndexAppbarActions />} />
       <div className={classes.container}>
         {!restaurant.is_open && (
           <div className={classes.closedRestaurant}>

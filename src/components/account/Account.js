@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Typography, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { api } from '../../services/api';
 import {

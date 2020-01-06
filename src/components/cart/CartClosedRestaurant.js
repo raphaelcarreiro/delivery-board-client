@@ -5,7 +5,7 @@ import { Typography, Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     height: 200,
@@ -15,8 +15,11 @@ const useStyles = makeStyles({
   },
   message: {
     marginBottom: 20,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 16,
+    },
   },
-});
+}));
 
 CartClosedRestaurant.propTypes = {
   onExited: PropTypes.func.isRequired,
