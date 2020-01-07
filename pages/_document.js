@@ -21,6 +21,10 @@ export default class MyDocument extends Document {
               height: 100%;
               width: 100%;
             }
+            html {
+              text-rendering: optimizeLegibility;
+              -webkit-font-smoothing: antialiased;
+            }
             body {
               transition: all 0.5s linear;
             }

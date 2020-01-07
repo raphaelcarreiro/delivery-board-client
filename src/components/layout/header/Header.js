@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     fontSize: 17,
     position: 'relative',
-    fontWeight: 600,
+    fontWeight: 300,
     '& svg': {
       marginRight: 10,
     },
@@ -70,7 +70,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     fontSize: 17,
     position: 'relative',
-    fontWeight: 600,
+    fontWeight: 300,
     '& svg': {
       marginRight: 10,
     },

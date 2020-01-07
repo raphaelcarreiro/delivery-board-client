@@ -16,10 +16,21 @@ import InitialLoading from './components/loading/InitialLoading';
 import Checkout from './components/layout/Checkout';
 import { setCart } from 'src/store/redux/modules/cart/actions';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import { createTheme } from 'src/helpers/createTheme';
 import defaultTheme from '../src/theme';
 import io from 'socket.io-client';
+import { LinearProgress } from '@material-ui/core';
+
+const useStyles = makeStyles({
+  progressBar: {
+    position: 'fixed',
+    width: '100%',
+    top: 0,
+    zIndex: 11,
+    height: 2,
+  },
+});
 
 export const AppContext = createContext({
   isMobile: false,
@@ -44,8 +55,10 @@ function App({ pageProps, component: Component }) {
   const [isCartVisible, setIsCartVisible] = useState(false);
   const [redirect, setRedirect] = useState(null);
   const [theme, setTheme] = useState(defaultTheme);
+  const [isProgressBarVisible, setIsProgressBarVisible] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
+  const classes = useStyles();
 
   const appProviderValue = {
     handleLogout: handleLogout,
@@ -102,6 +115,24 @@ function App({ pageProps, component: Component }) {
     });
   }, []);
 
+  useEffect(() => {
+    router.events.on('routeChangeStart', handleRouteChangeStart);
+    router.events.on('routeChangeComplete', handleRouteChangeComplete);
+    router.events.on('routeChangeError', handleRouteChangeError);
+  }, []);
+
+  function handleRouteChangeStart() {
+    setIsProgressBarVisible(true);
+  }
+
+  function handleRouteChangeComplete() {
+    setIsProgressBarVisible(false);
+  }
+
+  function handleRouteChangeError() {
+    setIsProgressBarVisible(false);
+  }
+
   function handleLogout() {
     setLoading(true);
 
@@ -138,9 +169,13 @@ function App({ pageProps, component: Component }) {
       <CssBaseline />
       <AppContext.Provider value={appProviderValue}>
         {initialLoading && <InitialLoading background="#fafafa" />}
+
         {loading && <Loading background="#fafafa" />}
 
+        {isProgressBarVisible && <LinearProgress color="primary" className={classes.progressBar} />}
+
         <Sidebar handleLogout={handleLogout} handleOpenMenu={handleOpenMenu} isOpenMenu={isOpenMenu} />
+
         <Messaging>
           {paths.includes(router.route) ? (
             <OnlyMain pageProps={pageProps} component={Component} />
