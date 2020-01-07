@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     top: -15,
     left: 15,
-    backgroundColor: cartItems ? '#dc640f' : '#ccc',
+    backgroundColor: cartItems ? theme.palette.primary.dark : theme.palette.primary.dark,
     borderRadius: '50%',
     height: 20,
     width: 20,

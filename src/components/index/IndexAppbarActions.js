@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 import { AppContext } from 'src/App';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   cartBadge: ({ cartItems }) => ({
     position: 'absolute',
     display: 'flex',
@@ -13,14 +13,14 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     top: 3,
     left: 25,
-    backgroundColor: cartItems ? '#dc640f' : '#dc640f',
+    backgroundColor: cartItems ? theme.palette.primary.dark : theme.palette.primary.dark,
     borderRadius: '50%',
     height: 20,
     width: 20,
     fontSize: 12,
     color: '#FFF',
   }),
-});
+}));
 
 export default function IndexAppbarActions() {
   const cart = useSelector(state => state.cart);

@@ -1,51 +1,51 @@
 import React from 'react';
-import { Typography, List, ListItem } from '@material-ui/core';
+import { Typography, List, ListItem, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 import PhoneIcon from '@material-ui/icons/Phone';
-import WatchIcon from '@material-ui/icons/WatchLater';
-import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles(theme => ({
   footer: {
     borderTop: '1px solid #eee',
-    minHeight: 100,
-    padding: '15px 15px 20px',
+    minHeight: 170,
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0 15px',
   },
   container: {
     maxWidth: 1366,
     margin: '0 auto',
     display: 'flex',
     flexWrap: 'wrap',
-  },
-  col: {
-    display: 'flex',
-    flex: 0.33,
-    flexDirection: 'column',
-  },
-  list: {
-    '& li': {
-      paddingRight: 0,
-      paddingLeft: 0,
-    },
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
   },
   restaurantData: {
-    width: '100%',
-    borderTop: '1px solid #eee',
-    paddingTop: 15,
+    display: 'flex',
+    flexDirection: 'column',
   },
-  title: {},
-  link: {
+  phone: {
+    display: 'flex',
+    flexDirection: 'column',
+    textAlign: 'center',
+  },
+  textIcon: {
     display: 'flex',
     alignItems: 'center',
     '& svg': {
-      marginRight: 10,
+      marginRight: 20,
     },
-    fontSize: 16,
   },
-  defaultLink: {
-    color: theme.palette.text.primary,
-    fontSize: 16,
+  listItem: {
+    padding: 0,
+  },
+  links: {
+    marginTop: 10,
+    display: 'flex',
+    '& a': {
+      marginRight: 15,
+    },
   },
 }));
 
@@ -57,66 +57,10 @@ function Footer() {
   return (
     <footer className={classes.footer}>
       <div className={classes.container}>
-        <div className={classes.col}>
-          <Typography variant="h6" color="secondary" className={classes.title}>
-            {restaurant && restaurant.name}
-          </Typography>
-          <List className={classes.list}>
-            <ListItem>
-              <Typography>Fale conosco</Typography>
-            </ListItem>
-            <ListItem>
-              <Typography>Sobre</Typography>
-            </ListItem>
-            <ListItem>
-              <Typography>Formas de pagamento</Typography>
-            </ListItem>
-          </List>
-        </div>
-        <div className={classes.col}>
-          <Typography variant="h6" color="secondary" className={classes.title}>
-            Atendimento
-          </Typography>
-          <List className={classes.list}>
-            <ListItem>
-              <Typography className={classes.link}>
-                <WatchIcon color="secondary" />
-                {restaurant && restaurant.working_hours}
-              </Typography>
-            </ListItem>
-            {restaurant &&
-              restaurant.phones.map(phone => (
-                <ListItem key={phone.id}>
-                  <Typography className={classes.link}>
-                    <PhoneIcon color="secondary" /> {phone.phone}
-                  </Typography>
-                </ListItem>
-              ))}
-          </List>
-        </div>
-        <div className={classes.col}>
-          <Typography variant="h6" color="secondary" className={classes.title}>
-            Social
-          </Typography>
-          <List className={classes.list}>
-            <ListItem>
-              <a target="blank" className={classes.defaultLink} href="http://www.facebook.com">
-                Facebook
-              </a>
-            </ListItem>
-            <ListItem>
-              <a target="blank" className={classes.defaultLink} href="http://www.instagram.com">
-                Instagram
-              </a>
-            </ListItem>
-            <ListItem>
-              <a target="blank" className={classes.defaultLink} href="http://www.twitter.com">
-                Twitter
-              </a>
-            </ListItem>
-          </List>
-        </div>
         <div className={classes.restaurantData}>
+          <Typography variant="h6" color="primary">
+            Informações
+          </Typography>
           {restaurant && (
             <Typography variant="body2">
               {restaurant.corporate_name ? restaurant.corporate_name : restaurant.name}
@@ -135,6 +79,26 @@ function Footer() {
               </Typography>
             </>
           )}
+          <div className={classes.links}>
+            <Link href="https://www.facebook.com">Facebook</Link>
+            <Link href="https://www.instagram.com">Instagram</Link>
+            <Link href="https://www.twitter.com">Twitter</Link>
+          </div>
+        </div>
+        <div className={classes.phone}>
+          <Typography variant="h6" color="primary">
+            Peça pelo telefone
+          </Typography>
+          <List>
+            {restaurant &&
+              restaurant.phones.map(phone => (
+                <ListItem key={phone.id} className={classes.listItem}>
+                  <Typography className={classes.textIcon}>
+                    <PhoneIcon color="primary" /> {phone.phone}
+                  </Typography>
+                </ListItem>
+              ))}
+          </List>
         </div>
       </div>
     </footer>

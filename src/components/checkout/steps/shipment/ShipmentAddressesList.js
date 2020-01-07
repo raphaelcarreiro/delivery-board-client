@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { List, ListItem, Typography, Tooltip, IconButton, Menu, MenuItem } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import StarIcon from '@material-ui/icons/Star';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';

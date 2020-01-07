@@ -14,10 +14,15 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    minHeight: 'calc(100vh - 460px)',
+    minHeight: 'calc(100vh - 350px)',
     maxWidth: '1366px',
     margin: '0 auto 100px',
-    padding: '15px 0 0 20px',
+    padding: '15px 0 0',
+    '@media (max-width:1366px)': {
+      '&': {
+        padding: '15px 15px 0',
+      },
+    },
   },
   mobileContainer: {
     position: 'relative',

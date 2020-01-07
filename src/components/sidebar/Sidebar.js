@@ -61,7 +61,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     right: 15,
-    backgroundColor: cartItems ? '#dc640f' : '#dc640f',
+    backgroundColor: cartItems ? theme.palette.primary.main : theme.palette.primary.main,
     borderRadius: '50%',
     height: 20,
     width: 20,

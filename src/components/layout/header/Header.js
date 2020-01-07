@@ -41,25 +41,26 @@ const useStyles = makeStyles(theme => ({
   img: {
     width: 85,
   },
-  cartBadge: ({ cartItems }) => ({
+  cartBadge: {
     position: 'absolute',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     top: -15,
     left: 15,
-    backgroundColor: cartItems ? '#dc640f' : '#ccc',
+    backgroundColor: theme.palette.primary.dark,
     borderRadius: '50%',
     height: 20,
     width: 20,
     fontSize: 12,
     color: '#FFF',
-  }),
+  },
   link: {
     display: 'flex',
     alignItems: 'center',
-    fontSize: 16,
+    fontSize: 17,
     position: 'relative',
+    fontWeight: 600,
     '& svg': {
       marginRight: 10,
     },
@@ -67,8 +68,9 @@ const useStyles = makeStyles(theme => ({
   cartLink: ({ cartItems }) => ({
     display: 'flex',
     alignItems: 'center',
-    fontSize: 16,
+    fontSize: 17,
     position: 'relative',
+    fontWeight: 600,
     '& svg': {
       marginRight: 10,
     },
@@ -161,20 +163,20 @@ export default function Header() {
               spacing={3}
             >
               <Grid item>
-                <Link color="primary" href="/menu" className={classes.link}>
-                  <MenuBookIcon /> Cardápio
+                <Link href="/menu" className={classes.link}>
+                  <MenuBookIcon color="primary" /> Cardápio
                 </Link>
               </Grid>
               <Grid item>
-                <Typography color="primary" onClick={handleCartClick} className={classes.cartLink}>
+                <Typography onClick={handleCartClick} className={classes.cartLink}>
                   {cart.products.length > 0 && <span className={classes.cartBadge}>{cart.products.length}</span>}
                   <ShoppingCartIcon color="primary" /> Carrinho
                 </Typography>
               </Grid>
               <Grid item>
                 {!user.id ? (
-                  <Link color="primary" href="/login" className={classes.link}>
-                    <InputIcon /> Entrar
+                  <Link href="/login" className={classes.link}>
+                    <InputIcon color="primary" /> Entrar
                   </Link>
                 ) : (
                   <>
