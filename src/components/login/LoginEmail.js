@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../../store/redux/modules/user/actions';
 import { AppContext } from 'src/App';
+import Loading from '../loading/Loading';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -145,9 +146,15 @@ function LoginEmail() {
                 </IconButton>
               )}
               {loading && (
-                <div className={classes.loading}>
-                  <LinearProgress className={classes.linearProgress} color="primary" />
-                </div>
+                <>
+                  {app.isMobile || app.windowWidth < 960 ? (
+                    <Loading background="rgba(250,250,250,0.5)" />
+                  ) : (
+                    <div className={classes.loading}>
+                      <LinearProgress className={classes.linearProgress} color="primary" />
+                    </div>
+                  )}
+                </>
               )}
               <div className={classes.content}>
                 <div className={classes.logoContainer}>

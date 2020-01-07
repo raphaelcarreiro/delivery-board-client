@@ -16,7 +16,6 @@ const useStyles = makeStyles(theme => ({
   },
   listItem: {
     display: 'flex',
-    borderTop: '1px solid #eee',
     flexDirection: 'column',
     padding: '15px 0',
     alignItems: 'flex-start',

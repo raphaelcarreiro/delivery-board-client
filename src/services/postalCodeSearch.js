@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'http://viacep.com.br/ws/';
+const baseUrl = 'https://viacep.com.br/ws/';
 
 function getUrl(cep) {
   return `${baseUrl}${cep}/json/`;

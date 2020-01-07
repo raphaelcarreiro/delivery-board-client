@@ -73,7 +73,12 @@ export default function Login() {
       if (response.status !== 'connected') {
         FB.login(
           function(response) {
-            console.log(response);
+            if (response.status === 'connected') {
+              FB.api('/me?locale=pt_BR&fields=name,email', response => {
+                setFacebookUser(response);
+                hanleAppLogin(response);
+              });
+            }
           },
           { scope: 'public_profile,email' }
         );
@@ -83,10 +88,10 @@ export default function Login() {
     });
   }
 
-  function hanleAppLogin() {
+  function hanleAppLogin(response) {
     setLoading(true);
     api()
-      .post('/login/facebook', facebookUser)
+      .post('/login/facebook', response || facebookUser)
       .then(response => {
         localStorage.setItem(process.env.TOKEN_NAME, response.data.token);
         dispatch(setUser(response.data.user));

@@ -16,7 +16,6 @@ const theme = createMuiTheme({
     // error: will use the default color
   },
   typography: {
-    useNextVariants: true,
     fontWeightLight: 200,
     fontWeightRegular: 300,
     fontWeightMedium: 400,

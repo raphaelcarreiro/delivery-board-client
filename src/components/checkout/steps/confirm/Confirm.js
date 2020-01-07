@@ -15,11 +15,19 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     padding: 15,
+    [theme.breakpoints.down('sm')]: {
+      padding: 0,
+    },
   },
   total: {
     display: 'none',
     [theme.breakpoints.down('md')]: {
       display: 'block',
+    },
+  },
+  btnTotal: {
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
     },
   },
 }));
@@ -62,7 +70,13 @@ export default function Confirm() {
         <Typography>{cart.formattedTotal}</Typography>
       </Grid>
       <Grid item xs={12} className={classes.action}>
-        <Button onClick={checkout.handleSubmitOrder} size="large" variant="contained" color="primary">
+        <Button
+          onClick={checkout.handleSubmitOrder}
+          className={classes.btnTotal}
+          size="large"
+          variant="contained"
+          color="primary"
+        >
           Confirmar Meu Pedido
         </Button>
       </Grid>
