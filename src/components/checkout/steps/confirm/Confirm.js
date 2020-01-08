@@ -16,19 +16,24 @@ const useStyles = makeStyles(theme => ({
   container: {
     padding: 15,
     [theme.breakpoints.down('sm')]: {
-      padding: 0,
+      padding: 15,
     },
   },
   total: {
-    display: 'none',
-    [theme.breakpoints.down('md')]: {
-      display: 'block',
-    },
+    fontWeight: 300,
   },
   btnTotal: {
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
+  },
+  title: {
+    fontWeight: 400,
+  },
+  link: {
+    cursor: 'pointer',
+    display: 'inline-block',
+    marginTop: 5,
   },
 }));
 
@@ -43,10 +48,14 @@ export default function Confirm() {
     if (!app.isMobile && app.windowWidth >= 960) app.handleCartVisibility(true);
   }, []);
 
+  function handleChangeStep(step) {
+    checkout.handleSetStep(step);
+  }
+
   return (
     <Grid container className={classes.container}>
       <Grid item xs={12} className={classes.orderItemData}>
-        <Typography variant="h5" color="primary">
+        <Typography variant="h5" className={classes.title}>
           Endereço de entrega
         </Typography>
         <Typography>
@@ -55,19 +64,31 @@ export default function Confirm() {
         <Typography color="textSecondary">{order.shipmentAddress.district}</Typography>
         <Typography color="textSecondary">{order.shipmentAddress.address_complement}</Typography>
         <Typography color="textSecondary">{order.shipmentAddress.postal_code}</Typography>
+        <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
+          Alterar
+        </Typography>
       </Grid>
       <Grid item xs={12} className={classes.orderItemData}>
-        <Typography variant="h5" color="primary">
+        <Typography variant="h5" className={classes.title}>
           Forma de pagamento
         </Typography>
         <Typography>{order.paymentMethod.method}</Typography>
-        {order.change > 0 && <Typography>Troco para {moneyFormat(order.change)}</Typography>}
+        {order.change > 0 && (
+          <Typography>
+            Troco para {moneyFormat(order.change)} ({moneyFormat(order.change - cart.total)})
+          </Typography>
+        )}
+        <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(2)}>
+          Alterar
+        </Typography>
       </Grid>
-      <Grid item xs={12} className={classes.total}>
-        <Typography variant="h5" color="primary">
+      <Grid item xs={12} className={classes.orderItemData}>
+        <Typography variant="h5" className={classes.title}>
           Total à pagar
         </Typography>
-        <Typography>{cart.formattedTotal}</Typography>
+        <Typography variant="h6" className={classes.total}>
+          {cart.formattedTotal}
+        </Typography>
       </Grid>
       <Grid item xs={12} className={classes.action}>
         <Button

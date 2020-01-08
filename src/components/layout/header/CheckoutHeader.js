@@ -30,7 +30,6 @@ const useStyles = makeStyles(theme => ({
   },
   logoContent: {
     display: 'flex',
-    flex: '1',
   },
   img: {
     width: 80,
@@ -65,6 +64,7 @@ export default function CheckoutHeader() {
   const restaurant = useSelector(state => state.restaurant);
   const cart = useSelector(state => state.cart);
   const classes = useStyles({ cartItems: cart.products.length > 0 });
+  const user = useSelector(state => state.user);
   const app = useContext(AppContext);
 
   function handleCartClick() {
@@ -76,16 +76,17 @@ export default function CheckoutHeader() {
       <header className={classes.header}>
         <div className={classes.container}>
           <div className={classes.logoContent}>
-            {restaurant ? (
+            {restaurant && (
               <LinkNext href="/">
                 <a style={{ display: 'flex' }}>
                   <img className={classes.img} src={restaurant.image.imageUrl} alt={restaurant.name} />
                 </a>
               </LinkNext>
-            ) : (
-              <span>Carregando...</span>
             )}
           </div>
+          <Typography variant="h6">
+            {user && cart.products.length > 0 && `${user.name}, finalize seu pedido.`}
+          </Typography>
           <div>
             <Typography color="primary" onClick={handleCartClick} className={classes.cartLink}>
               {cart.products.length > 0 && <span className={classes.cartBadge}>{cart.products.length}</span>}

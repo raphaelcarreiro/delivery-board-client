@@ -6,7 +6,7 @@ import Messaging from './components/messaging/Messaging';
 import OnlyMain from './components/layout/OnlyMain';
 import Default from './components/layout/Default';
 import { mobileCheck } from './helpers/MobileCheck';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setRestaurant, setRestaurantIsOpen } from './store/redux/modules/restaurant/actions';
 import PropTypes from 'prop-types';
 import { setUser, removeUser } from './store/redux/modules/user/actions';
@@ -21,6 +21,8 @@ import { createTheme } from 'src/helpers/createTheme';
 import defaultTheme from '../src/theme';
 import io from 'socket.io-client';
 import { LinearProgress } from '@material-ui/core';
+import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
+import { getFirebaseMessaging } from 'src/config/FirebaseConfig';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -59,6 +61,7 @@ function App({ pageProps, component: Component }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const classes = useStyles();
+  const user = useSelector(state => state.user);
 
   const appProviderValue = {
     handleLogout: handleLogout,
@@ -76,6 +79,11 @@ function App({ pageProps, component: Component }) {
   const paths = ['/register', '/login', '/login/email'];
   const checkoutPaths = ['/checkout'];
 
+  useEffect(() => {
+    reactotronInitialize();
+  }, []);
+
+  // load restaurant data from server
   useEffect(() => {
     const payload = verifyToken();
     if (payload)
@@ -108,6 +116,7 @@ function App({ pageProps, component: Component }) {
       });
   }, []);
 
+  // set webscoket connection
   useEffect(() => {
     const socket = io(process.env.URL_NODE_SERVER);
     socket.on('handleRestaurantState', state => {
@@ -115,11 +124,45 @@ function App({ pageProps, component: Component }) {
     });
   }, []);
 
+  // set actions on router changes, to display loading
   useEffect(() => {
     router.events.on('routeChangeStart', handleRouteChangeStart);
     router.events.on('routeChangeComplete', handleRouteChangeComplete);
     router.events.on('routeChangeError', handleRouteChangeError);
   }, []);
+
+  // request permission for push notification
+  useEffect(() => {
+    if (process.browser && user.id) {
+      const firebaseMessaging = getFirebaseMessaging();
+      try {
+        firebaseMessaging
+          .requestPermission()
+          .then(async () => {
+            const token = await firebaseMessaging.getToken();
+
+            const param = {
+              token: token,
+              device: navigator.platform,
+            };
+
+            api()
+              .post('/pushTokens', param)
+              .then(response => {
+                console.log('token saved');
+              })
+              .catch(err => {
+                console.log(err);
+              });
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [user]);
 
   function handleRouteChangeStart() {
     setIsProgressBarVisible(true);

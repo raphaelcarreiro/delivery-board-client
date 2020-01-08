@@ -20,11 +20,11 @@ export default function CheckoutEmptyCart() {
   return (
     <Grid container justify="center" alignItems="center" direction="column" className={classes.container}>
       <Grid item xs={12} className={classes.content}>
-        <Typography variant="h4" color="textSecondary" gutterBottom>
-          Adicione alguns itens na sua Carrinho :)
+        <Typography variant="h5" color="textSecondary" gutterBottom>
+          Você precisa escolher alguns itens para finalizar o pedido.
         </Typography>
-        <Link className={classes.link} href="/menu">
-          Acessar cardápio
+        <Link color="primary" className={classes.link} href="/menu">
+          Ir ao cardápio
         </Link>
       </Grid>
     </Grid>

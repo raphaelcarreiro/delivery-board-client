@@ -80,12 +80,18 @@ const useStyles = makeStyles(theme => ({
     zIndex: 9,
     overflowY: 'auto',
   }),
+  stepDescription: {
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 18,
+    },
+  },
 }));
 
 export const CheckoutContext = React.createContext({
   handleStepNext: () => {},
   handleStepPrior: () => {},
   handleSubmitOrder: () => {},
+  handleSetStep: () => {},
   createdOrder: null,
   step: null,
 });
@@ -112,6 +118,7 @@ export default function Checkout() {
     handleStepNext: handleStepNext,
     handleStepPrior: handleStepPrior,
     handleSubmitOrder: handleSubmitOrder,
+    handleSetStep: handleSetStep,
     createdOrder,
     step,
   };
@@ -186,6 +193,11 @@ export default function Checkout() {
     if (step > 1) setStep(step - 1);
   }
 
+  function handleSetStep(step) {
+    if (step < 1 || step > 4) return;
+    setStep(step);
+  }
+
   function handleSetPaymentMethod(method) {
     dispatch(setPaymentMethod(method));
   }
@@ -223,7 +235,7 @@ export default function Checkout() {
           <CheckoutContext.Provider value={checkoutContextValue}>
             <div>
               <Grid item xs={12} className={classes.title}>
-                <Typography variant="h6">
+                <Typography variant="h6" className={classes.stepDescription}>
                   <span className={classes.step}>{currentStep.order}</span>
                   {currentStep.description}
                 </Typography>

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, IconButton, Menu, MenuItem, Avatar, Typography } from '@material-ui/core';
+import { IconButton, Menu, MenuItem, Avatar, Typography, Tooltip } from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import InputIcon from '@material-ui/icons/Input';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
@@ -10,21 +10,22 @@ import LinkNext from 'next/link';
 import { useRouter } from 'next/router';
 import { AppContext } from '../../../App';
 import { useSelector } from 'react-redux';
+import HeaderWorkingTime from './HeaderWorkingTime';
 
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     maxWidth: 1366,
-    flex: '1 1',
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   header: {
     height: 80,
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',
-    // boxShadow: '1px 1px 7px 1px #d4d4d4',
     borderBottom: '1px solid #eee',
     padding: '0 15px',
     backgroundColor: '#fff',
@@ -32,11 +33,8 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     zIndex: 10,
   },
-  headerCol1: {},
-  headerCol2: {},
-  logoContent: {
+  logo: {
     display: 'flex',
-    flex: '1',
   },
   img: {
     width: 85,
@@ -79,6 +77,7 @@ const useStyles = makeStyles(theme => ({
   status: ({ restaurantIsOpen }) => ({
     display: 'flex',
     alignItems: 'center',
+    cursor: 'pointer',
     '& svg': {
       marginRight: 10,
       color: restaurantIsOpen ? '#28a745' : '#dc3545',
@@ -86,6 +85,16 @@ const useStyles = makeStyles(theme => ({
   }),
   btnAvatar: {
     padding: 0,
+  },
+  headerLinks: {
+    display: 'flex',
+    alignItems: 'center',
+    '&>div': {
+      padding: 7,
+    },
+  },
+  statusIcon: {
+    fontSize: 30,
   },
 }));
 
@@ -100,6 +109,7 @@ export default function Header() {
     cartItems: cart.products.length > 0,
     restaurantIsOpen: restaurant && restaurant.is_open,
   });
+  const [dialogWorkingTime, setDialogWorkingTime] = useState(false);
 
   function handleCloseMenu() {
     setAnchorEl(null);
@@ -124,88 +134,81 @@ export default function Header() {
     appContext.handleCartVisibility();
   }
 
+  function handleClickDialogWorkingTime() {
+    setDialogWorkingTime(!dialogWorkingTime);
+  }
+
   return (
     <>
+      {dialogWorkingTime && <HeaderWorkingTime onExited={() => setDialogWorkingTime(false)} />}
       <header className={classes.header}>
         <div className={classes.container}>
-          <Grid container alignItems="center">
-            <Grid item xs={5} container alignItems="center" className={classes.headerCol1}>
-              <div className={classes.logoContent}>
-                {restaurant.id ? (
-                  <LinkNext href="/">
-                    <a style={{ display: 'flex' }}>
-                      <img className={classes.img} src={restaurant.image.imageUrl} alt={restaurant.name} />
-                    </a>
-                  </LinkNext>
-                ) : (
-                  <span>Carregando...</span>
-                )}
-              </div>
-              <Grid item xs={9}>
-                {!restaurant.is_open ? (
-                  <Typography className={classes.status}>
-                    <StatusIcon /> {restaurant.name} está fechado no momento.
-                  </Typography>
-                ) : (
-                  <Typography className={classes.status}>
-                    <StatusIcon /> {restaurant.name} está aberto.
-                  </Typography>
-                )}
-              </Grid>
-            </Grid>
-            <Grid
-              item
-              xs={7}
-              container
-              alignItems="center"
-              justify="flex-end"
-              className={classes.headerCol2}
-              spacing={3}
-            >
-              <Grid item>
-                <Link href="/menu" className={classes.link}>
-                  <MenuBookIcon color="primary" /> Cardápio
+          <div className={classes.logo}>
+            {restaurant.id ? (
+              <LinkNext href="/">
+                <a style={{ display: 'flex' }}>
+                  <img className={classes.img} src={restaurant.image.imageUrl} alt={restaurant.name} />
+                </a>
+              </LinkNext>
+            ) : (
+              <span>Carregando...</span>
+            )}
+          </div>
+          <div>
+            {!restaurant.is_open ? (
+              <Typography className={classes.status} onClick={handleClickDialogWorkingTime}>
+                <StatusIcon className={classes.statusIcon} /> {restaurant.name} está fechado.
+              </Typography>
+            ) : (
+              <Typography className={classes.status} onClick={handleClickDialogWorkingTime}>
+                <StatusIcon className={classes.statusIcon} /> {restaurant.name} está aberto.
+              </Typography>
+            )}
+          </div>
+          <div className={classes.headerLinks}>
+            <div>
+              <Link href="/menu" className={classes.link}>
+                <MenuBookIcon color="primary" /> Cardápio
+              </Link>
+            </div>
+            <div>
+              <Typography onClick={handleCartClick} className={classes.cartLink}>
+                {cart.products.length > 0 && <span className={classes.cartBadge}>{cart.products.length}</span>}
+                <ShoppingCartIcon color="primary" /> Carrinho
+              </Typography>
+            </div>
+            <div>
+              {!user.id ? (
+                <Link href="/login" className={classes.link}>
+                  <InputIcon color="primary" /> Entrar
                 </Link>
-              </Grid>
-              <Grid item>
-                <Typography onClick={handleCartClick} className={classes.cartLink}>
-                  {cart.products.length > 0 && <span className={classes.cartBadge}>{cart.products.length}</span>}
-                  <ShoppingCartIcon color="primary" /> Carrinho
-                </Typography>
-              </Grid>
-              <Grid item>
-                {!user.id ? (
-                  <Link href="/login" className={classes.link}>
-                    <InputIcon color="primary" /> Entrar
-                  </Link>
-                ) : (
-                  <>
-                    <Menu
-                      anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'center',
-                      }}
-                      transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'center',
-                      }}
-                      getContentAnchorEl={null}
-                      anchorEl={anchorEl}
-                      open={Boolean(anchorEl)}
-                      onClose={handleCloseMenu}
-                    >
-                      <MenuItem onClick={handleMyAccountClick}>Minha conta</MenuItem>
-                      <MenuItem onClick={handleMyOrdersClick}>Meus pedidos</MenuItem>
-                      <MenuItem onClick={handleLogoutClick}>Sair</MenuItem>
-                    </Menu>
-                    <IconButton className={classes.btnAvatar} onClick={event => setAnchorEl(event.currentTarget)}>
-                      {user.image ? <Avatar src={user.image.imageUrl} /> : <Avatar>{user.name[0]}</Avatar>}
-                    </IconButton>
-                  </>
-                )}
-              </Grid>
-            </Grid>
-          </Grid>
+              ) : (
+                <>
+                  <Menu
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'center',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'center',
+                    }}
+                    getContentAnchorEl={null}
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleCloseMenu}
+                  >
+                    <MenuItem onClick={handleMyAccountClick}>Minha conta</MenuItem>
+                    <MenuItem onClick={handleMyOrdersClick}>Meus pedidos</MenuItem>
+                    <MenuItem onClick={handleLogoutClick}>Sair</MenuItem>
+                  </Menu>
+                  <IconButton className={classes.btnAvatar} onClick={event => setAnchorEl(event.currentTarget)}>
+                    {user.image ? <Avatar src={user.image.imageUrl} /> : <Avatar>{user.name[0]}</Avatar>}
+                  </IconButton>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </header>
     </>

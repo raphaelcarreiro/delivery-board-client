@@ -69,6 +69,8 @@ export default function Cart() {
   }
 
   function handleClickUpdateProduct(product) {
+    messaging.handleClose();
+
     setSelectedProduct(product);
 
     if (product.category.has_complement) {
