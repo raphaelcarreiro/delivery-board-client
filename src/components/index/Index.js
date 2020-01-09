@@ -31,19 +31,6 @@ export default function Index() {
   const restaurant = useSelector(state => state.restaurant) || {};
   const classes = useStyles();
 
-  function sendTestMessage() {
-    axios
-      .post('http://localhost:3333/push/send', {
-        token:
-          'fko0U1wum-xC2wkbVOd4oq:APA91bHzsxI5GWrgqrU71c8eQ2OVlM30sJHlQti6knLRWesRQmm5Vh8yd5hgzTB5i-2sacIhRYhC0kCo1CIlu51H5CGQWjDiaRf5isE-2c4eA9O6dCp85OtKTZl8eV1GMWiHZMIvNOfi',
-        message: 'test',
-        title: 'test',
-      })
-      .catch(() => {
-        alert('Error');
-      });
-  }
-
   return (
     <>
       <CustomAppbar title={restaurant.name ? restaurant.name : 'Carregando'} actionComponent={<IndexAppbarActions />} />
@@ -55,9 +42,6 @@ export default function Index() {
             </Typography>
           </div>
         )}
-        <Button variant="contained" color="primary" onClick={sendTestMessage}>
-          Enviar mensagem
-        </Button>
       </div>
     </>
   );
