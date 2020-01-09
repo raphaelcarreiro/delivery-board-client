@@ -1,39 +1,42 @@
-import React from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import Order from '../../../src/components/account/orders/Order';
-import { formatId } from '../../../src/helpers/formatOrderId';
+import { isAuthenticated } from '../../../src/services/auth';
+import { useRouter } from 'next/router';
+import { AppContext } from '../../../src/App';
 
-Category.propTypes = {
-  order: PropTypes.object.isRequired,
+OrderPage.propTypes = {
+  cryptId: PropTypes.string.isRequired,
 };
 
-export default function Category({ order }) {
+export default function OrderPage({ cryptId }) {
+  const [auth, setAuth] = useState(false);
+  const app = useContext(AppContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    const _auth = isAuthenticated();
+    setAuth(_auth);
+
+    if (!_auth) {
+      router.push('/login');
+      app.setRedirect(`/account/orders/${cryptId}`);
+    }
+  }, []);
+
   return (
     <>
       <Head>
-        <title>{order.id}</title>
+        <title>Carregando...</title>
       </Head>
-      <Order order={order} />
+      {auth && <Order cryptId={cryptId} />}
     </>
   );
 }
 
-Category.getInitialProps = async ({ query }) => {
-  const axiosInstance = axios.create({
-    baseURL: process.env.BASEURL_API,
-    headers: {
-      RestaurantId: process.env.RESTAURANT_ID,
-    },
-  });
-
-  const response = await axiosInstance.get(`/order/${query.id}`);
-
+OrderPage.getInitialProps = async ({ query }) => {
   return {
-    order: {
-      ...response.data,
-      formattedId: formatId(response.data.id),
-    },
+    cryptId: query.id,
   };
 };
