@@ -13,7 +13,7 @@ if ('serviceWorker' in navigator) {
 }
 
 const config = {
-  messagingSenderId: '694981717332',
+  messagingSenderId: '372525900715',
 };
 
 firebase.initializeApp(config);

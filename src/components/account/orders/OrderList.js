@@ -6,6 +6,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { parseISO, formatDistanceStrict } from 'date-fns';
 import ptbr from 'date-fns/locale/pt-BR';
 import PropTypes from 'prop-types';
+import Link from 'src/components/link/Link';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -92,7 +93,14 @@ function OrderList({ orders }) {
     <List className={classes.list} disablePadding>
       {formattedOrders.map(order => {
         return (
-          <ListItem key={order.id} className={classes.listItem} button>
+          <ListItem
+            key={order.id}
+            className={classes.listItem}
+            button
+            href={'/account/orders/[id]'}
+            as={`/account/orders/${order.crypt_id}`}
+            component={Link}
+          >
             <span className={`${classes.status} ${classes[order.status]}`}>{orderStatus[order.status]}</span>
             <Typography variant="body2" color="primary">
               Pedido {order.formattedId}

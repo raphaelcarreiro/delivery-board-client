@@ -2,7 +2,6 @@ import React from 'react';
 import { Typography, List, ListItem } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import MenuProduct from '../product/Product';
 import Link from 'src/components/link/Link';
 
 const useStyles = makeStyles(theme => ({

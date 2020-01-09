@@ -144,13 +144,11 @@ function App({ pageProps, component: Component }) {
             const param = {
               token: token,
               device: navigator.platform,
+              type: 'client',
             };
 
             api()
               .post('/pushTokens', param)
-              .then(response => {
-                console.log('token saved');
-              })
               .catch(err => {
                 console.log(err);
               });
