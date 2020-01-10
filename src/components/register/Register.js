@@ -1,4 +1,4 @@
-import React, { useState, useContext, useReducer } from 'react';
+import React, { useState, useContext, useReducer, useEffect } from 'react';
 import { Grid, Button, LinearProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '../link/Link';
@@ -13,6 +13,12 @@ import { useRouter } from 'next/router';
 import { AppContext } from 'src/App';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'src/store/redux/modules/user/actions';
+import PropTypes from 'prop-types';
+
+Register.propTypes = {
+  name: PropTypes.string,
+  email: PropTypes.string,
+};
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -55,7 +61,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export function Register() {
+export function Register({ name, email }) {
   const messaging = useContext(MessagingContext);
   const [user, dispatch] = useReducer(userReducer, userInitiaState);
   const [created, setCreated] = useState(false);
@@ -64,8 +70,12 @@ export function Register() {
   const router = useRouter();
   const app = useContext(AppContext);
   const reduxDispatch = useDispatch();
-
   const classes = useStyles();
+
+  useEffect(() => {
+    if (name) dispatch(userChange('name', name));
+    if (email) dispatch(userChange('email', email));
+  }, []);
 
   function handleChange(index, value) {
     dispatch(userChange(index, value));

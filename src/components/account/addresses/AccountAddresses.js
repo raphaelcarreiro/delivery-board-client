@@ -8,14 +8,13 @@ import AccountAddressesNew from './AccountAddressesNew';
 import AccountAddressesEdit from './AccountAddressesEdit';
 import { api } from '../../../services/api';
 import { useDispatch } from 'react-redux';
-
 import { MessagingContext } from '../../messaging/Messaging';
 import {
   addCustomerAddress,
   updateCustomerAddress,
   setMainCustomerAddress,
 } from '../../../store/redux/modules/user/actions';
-import Loading from '../../loading/Loading';
+import Loading from 'src/components/loading/Loading';
 
 const useStyles = makeStyles(theme => ({
   listItem: {

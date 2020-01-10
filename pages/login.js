@@ -16,10 +16,12 @@ function LoginPage() {
     }
     setAuth(_auth);
   }, []);
+
   return (
     <>
       <Head>
         <title>Login</title>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
       </Head>
       {!auth && <Login />}
     </>

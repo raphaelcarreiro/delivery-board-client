@@ -211,7 +211,7 @@ function App({ pageProps, component: Component }) {
       <AppContext.Provider value={appProviderValue}>
         {initialLoading && <InitialLoading background="#fafafa" />}
 
-        {loading && <Loading background="#fafafa" />}
+        {loading && <Loading background="rgba(250,250,250,0.5)" />}
 
         {isProgressBarVisible && <LinearProgress color="primary" className={classes.progressBar} />}
 

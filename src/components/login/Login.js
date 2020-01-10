@@ -23,6 +23,13 @@ const useStyles = makeStyles({
       backgroundColor: '#4065b4',
     },
   },
+  btnGoogleLogin: {
+    backgroundColor: '#fff',
+    color: '#333',
+    '&:hover': {
+      backgroundColor: '#fff',
+    },
+  },
   buttonContent: {
     marginTop: 20,
     width: '100%',
@@ -39,9 +46,11 @@ export default function Login() {
   const classes = useStyles();
   const router = useRouter();
   const [facebookUser, setFacebookUser] = useState(null);
+  const [googleUser, setGoogleUser] = useState(null);
   const app = useContext(AppContext);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  let googleAuth2;
 
   useEffect(() => {
     FB.init({
@@ -60,13 +69,20 @@ export default function Login() {
     });
   }, []);
 
-  function handleEmailPasswordClick() {
-    router.push('/login/email');
-  }
+  useEffect(() => {
+    gapi.load('auth2', async () => {
+      await gapi.auth2.init({
+        client_id: '372525900715-741lc2vnsuj2gs2o2i063eri0ioaeoov.apps.googleusercontent.com',
+        scope: 'profile',
+      });
 
-  function handleCreateAccountClick() {
-    router.push('/register');
-  }
+      googleAuth2 = gapi.auth2.getAuthInstance();
+      if (googleAuth2.isSignedIn.get()) {
+        const _googleUser = googleAuth2.currentUser.get();
+        setGoogleUser(_googleUser);
+      }
+    });
+  }, []);
 
   function handleFacebookLogin() {
     FB.getLoginStatus(function(response) {
@@ -76,22 +92,22 @@ export default function Login() {
             if (response.status === 'connected') {
               FB.api('/me?locale=pt_BR&fields=name,email', response => {
                 setFacebookUser(response);
-                hanleAppLogin(response);
+                handleAppLoginWithFacebook(response);
               });
             }
           },
           { scope: 'public_profile,email' }
         );
       } else {
-        hanleAppLogin();
+        handleAppLoginWithFacebook();
       }
     });
   }
 
-  function hanleAppLogin(response) {
+  function handleAppLoginWithFacebook(response) {
     setLoading(true);
     api()
-      .post('/login/facebook', response || facebookUser)
+      .post('login/facebook', response || facebookUser)
       .then(response => {
         localStorage.setItem(process.env.TOKEN_NAME, response.data.token);
         dispatch(setUser(response.data.user));
@@ -104,6 +120,48 @@ export default function Login() {
       .catch(() => {
         setLoading(false);
       });
+  }
+
+  async function handleAppLoginWithGoogle(data) {
+    setLoading(true);
+
+    const user = data || googleUser;
+
+    try {
+      await api().get(`user/show/${user.w3.U3}`);
+      api()
+        .post('login/google', user)
+        .then(response => {
+          localStorage.setItem(process.env.TOKEN_NAME, response.data.token);
+          dispatch(setUser(response.data.user));
+          setLoading(false);
+          if (app.redirect) {
+            router.push(app.redirect);
+            app.setRedirect(null);
+          } else router.push('/');
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+    } catch (err) {
+      router.push(`/register?email=${user.w3.U3}&name=${user.w3.ig}`);
+    }
+  }
+
+  function handleGoogleLogin() {
+    if (!googleUser)
+      googleAuth2.signIn({ scope: 'profile email' }).then(googleUser => {
+        handleAppLoginWithGoogle(googleUser);
+      });
+    else handleAppLoginWithGoogle();
+  }
+
+  function handleEmailPasswordClick() {
+    router.push('/login/email');
+  }
+
+  function handleCreateAccountClick() {
+    router.push('/register');
   }
 
   return (
@@ -120,6 +178,17 @@ export default function Login() {
             onClick={handleFacebookLogin}
           >
             {facebookUser ? `Continuar como ${facebookUser.name}` : 'Entrar com Facebook'}
+          </Button>
+        </div>
+        <div className={classes.buttonContent}>
+          <Button
+            className={classes.btnGoogleLogin}
+            variant="contained"
+            fullWidth
+            color="primary"
+            onClick={handleGoogleLogin}
+          >
+            {googleUser ? `Continuar como ${googleUser.w3.ig}` : 'Entrar com Google'}
           </Button>
         </div>
         <div className={classes.buttonContent}>

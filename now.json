@@ -1,11 +1,16 @@
 {
-  "build": {
-    "env": {
-      "BASEURL_API": "http://api.topnfe.com.br/api/client/",
-      "RESTAURANT_ID": "1",
-      "SECRET": "9k6wASnUNQmqAGdbbzqGDybIj4G7OxJ94ozjvdNB6DYvF791jXOCKPL3nDbAJwZs",
-      "TOKEN_NAME": "delivery-client-token",
-      "LOCALSTORAGE_CART": "delivery-client-cart"
-    }
+  "env": {
+    "BASEURL_API": "@baseurl_api",
+    "RESTAURANT_ID": "@restaurant_id",
+    "SECRET": "@secret",
+    "TOKEN_NAME": "@token_name",
+    "LOCALSTORAGE_CART": "@localstorage_cart",
+    "FIREBASE_APIKEY": "AIzaSyDbRzF6wzwN_2T0S43A2H2nATRo4eNTiU8",
+    "FIREBASE_PROJECTID": "delivery-23e5a",
+    "FIREBASE_SENDERID": "372525900715",
+    "FIREBASE_AUTHDOMAIN": "delivery-23e5a.firebaseapp.com",
+    "FIREBASE_DATABASEURL": "https://delivery-23e5a.firebaseio.com",
+    "FIREBASE_STORAGEBUCKET": "delivery-23e5a.appspot.com",
+    "FIREBASE_APP_ID": "1:372525900715:web:11a71cc44f35f47fc1a8ee"
   }
 }

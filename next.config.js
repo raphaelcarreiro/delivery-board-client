@@ -1,25 +1,26 @@
-const path = require('path');
-
+// const path = require('path');
 const isProd = process.env.NODE_ENV === 'production';
+
+require('dotenv').config({ path: isProd ? './.env.production' : './.env.development' });
 
 exports.default = {
   env: {
-    BASEURL_API: isProd ? 'http://api.topnfe.com.br/api/client/' : 'http://localhost:8000/api/client/',
-    URL_NODE_SERVER: isProd ? 'http://api.topnfe.com.br:3333' : 'http://localhost:3333',
-    RESTAURANT_ID: 1, // restaurant id encrypted
-    SECRET: 'KkAUmBJBpKLI6SMjSYSX8vqkwehE6H5a0D6mfnJiIq3UdRvkxwvtsC0cnmZpgG9Y', // secret to jwt
-    TOKEN_NAME: 'delivery-client-token',
-    LOCALSTORAGE_CART: 'delivery-client-cart',
-    FIREBASE_APIKEY: 'AIzaSyDbRzF6wzwN_2T0S43A2H2nATRo4eNTiU8',
-    FIREBASE_PROJECTID: 'delivery-23e5a',
-    FIREBASE_SENDERID: '372525900715',
-    FIREBASE_AUTHDOMAIN: 'delivery-23e5a.firebaseapp.com',
-    FIREBASE_DATABASEURL: 'https://delivery-23e5a.firebaseio.com',
-    FIREBASE_STORAGEBUCKET: 'delivery-23e5a.appspot.com',
-    FIREBASE_APP_ID: '1:372525900715:web:11a71cc44f35f47fc1a8ee',
+    BASEURL_API: process.env.BASEURL_API,
+    URL_NODE_SERVER: process.env.URL_NODE_SERVER,
+    RESTAURANT_ID: process.env.RESTAURANT_ID,
+    SECRET: process.env.SECRET, // secret to jwt
+    TOKEN_NAME: process.env.TOKEN_NAME,
+    LOCALSTORAGE_CART: process.env.LOCALSTORAGE_CART,
+    FIREBASE_APIKEY: process.env.FIREBASE_APIKEY,
+    FIREBASE_PROJECTID: process.env.FIREBASE_PROJECTID,
+    FIREBASE_SENDERID: process.env.FIREBASE_SENDERID,
+    FIREBASE_AUTHDOMAIN: process.env.FIREBASE_AUTHDOMAIN,
+    FIREBASE_DATABASEURL: process.env.FIREBASE_DATABASEURL,
+    FIREBASE_STORAGEBUCKET: process.env.FIREBASE_STORAGEBUCKET,
+    FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
   },
-  webpack: config => {
+  /* webpack: config => {
     config.resolve.alias.src = path.resolve(__dirname, 'src');
     return config;
-  },
+  }, */
 };
