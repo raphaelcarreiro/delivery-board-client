@@ -31,6 +31,8 @@ export default function Index() {
   const restaurant = useSelector(state => state.restaurant) || {};
   const classes = useStyles();
 
+  console.log(process.env.BASEURL_API);
+
   return (
     <>
       <CustomAppbar title={restaurant.name ? restaurant.name : 'Carregando'} actionComponent={<IndexAppbarActions />} />
