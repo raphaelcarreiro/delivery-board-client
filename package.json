@@ -28,7 +28,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start -p $PORT"
   },
   "devDependencies": {
     "eslint": "^6.7.2",
