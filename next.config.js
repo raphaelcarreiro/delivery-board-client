@@ -1,7 +1,6 @@
 // const path = require('path');
 const isProd = process.env.NODE_ENV === 'production';
-//! isProd && require('dotenv').config({ path: isProd ? './.env.production' : './.env.development' });
-!isProd && require('dotenv').config({ path: './.env.development' });
+require('dotenv').config({ path: isProd ? './.env.production' : './.env.development' });
 
 exports.default = {
   env: {
