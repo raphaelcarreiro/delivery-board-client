@@ -110,7 +110,8 @@ export default class MyDocument extends Document {
             defer
             crossOrigin="anonymous"
             src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v5.0&appId=588242751734818&autoLogAppEvents=1"
-          ></script>
+          />
+          <script src="https://apis.google.com/js/platform.js" async defer />
           <Main />
           <NextScript />
         </body>
