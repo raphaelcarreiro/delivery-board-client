@@ -133,7 +133,7 @@ function App({ pageProps, component: Component }) {
 
   // request permission for push notification
   useEffect(() => {
-    if (process.browser && user.id && window.location.protocol === 'https:') {
+    if (process.browser && user.id) {
       const firebaseMessaging = getFirebaseMessaging();
       try {
         firebaseMessaging
