@@ -10,6 +10,8 @@ import ptbr from 'date-fns/locale/pt-BR';
 import { makeStyles } from '@material-ui/core/styles';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { orderStatus } from './orderStatus';
+import CustomAppbar from 'src/components/appbar/CustomAppbar';
+import io from 'socket.io-client';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -58,10 +60,22 @@ const useStyles = makeStyles(theme => ({
     gridTemplateColumns: 'repeat(2, 1fr)',
     gridGap: 6,
     width: '100%',
+    [theme.breakpoints.down('md')]: {
+      gridTemplateColumns: '1fr',
+    },
   },
   historyList: {
     borderLeft: `2px solid ${theme.palette.primary.main}`,
     marginBottom: 20,
+  },
+  historyListItem: {
+    // paddingBottom: 0,
+    // paddingTop: 0,
+  },
+  statusDate: {
+    [theme.breakpoints.down('md')]: {
+      fontSize: 12,
+    },
   },
 }));
 
@@ -73,6 +87,19 @@ export default function Order({ cryptId }) {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const classes = useStyles();
+
+  useEffect(() => {
+    const socket = io.connect(process.env.URL_NODE_SERVER);
+    socket.on('orderStatusChange', status => {
+      const statusOrder = status.reverse().map(status => {
+        const statusDate = parseISO(status.created_at);
+        status.formattedDate = format(statusDate, "PP 'às' p", { locale: ptbr });
+        return status;
+      });
+
+      setOrder(oldOrder => ({ ...oldOrder, order_status: statusOrder }));
+    });
+  }, []);
 
   useEffect(() => {
     api()
@@ -109,15 +136,16 @@ export default function Order({ cryptId }) {
         <Loading />
       ) : (
         <>
+          <CustomAppbar title={`Pedido ${order.formattedId}`} />
           <PageHeader title={`Pedido ${order.formattedId}`} description={`Pedido gerado em ${order.formattedDate}`} />
           <div>
             <List className={classes.historyList}>
               {order.order_status.map(status => (
-                <ListItem key={status.id}>
+                <ListItem key={status.id} className={classes.historyListItem}>
                   <span className={`${classes.historyStatus} ${classes[status.status]}`}>
                     {orderStatus[status.status]}
                   </span>
-                  <Typography variant="body1" color="textSecondary">
+                  <Typography variant="body1" color="textSecondary" className={classes.statusDate}>
                     em {status.formattedDate}
                   </Typography>
                 </ListItem>
@@ -141,7 +169,11 @@ export default function Order({ cryptId }) {
                 Forma de pagamento
               </Typography>
               <Typography>{order.payment_method.method}</Typography>
-              <Typography>{order.change > 0 && 'Troco para ' + order.formattedChange}</Typography>
+              {order.change > 0 && (
+                <Typography>
+                  {`Troco para ${order.formattedChange}`} ({moneyFormat(order.change - order.total)})
+                </Typography>
+              )}
             </div>
             <div className={classes.section}>
               <Typography variant="h5" className={classes.title}>

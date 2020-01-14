@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
   },
   img: {
-    width: 85,
+    width: 70,
   },
   cartBadge: {
     position: 'absolute',

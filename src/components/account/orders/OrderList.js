@@ -98,7 +98,7 @@ function OrderList({ orders }) {
             className={classes.listItem}
             button
             href={'/account/orders/[id]'}
-            as={`/account/orders/${order.crypt_id}`}
+            as={`/account/orders/${order.encrypted_id}`}
             component={Link}
           >
             <span className={`${classes.status} ${classes[order.status]}`}>{orderStatus[order.status]}</span>
