@@ -28,9 +28,8 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    minHeight: 'calc(100vh - 86px)',
-    marginBottom: 15,
-    padding: '0 20px',
+    minHeight: 'calc(100vh - 56px)',
+    padding: '20px 20px 30px',
   },
   wrapper: {
     position: 'absolute',
@@ -44,7 +43,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     marginTop: 80,
     [theme.breakpoints.down('md')]: {
-      marginTop: 71,
+      marginTop: 56,
     },
   },
   cart: ({ isCartVisible }) => ({

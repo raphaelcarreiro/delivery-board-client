@@ -96,8 +96,9 @@ export default function Order({ cryptId }) {
         status.formattedDate = format(statusDate, "PP 'às' p", { locale: ptbr });
         return status;
       });
-
-      setOrder(oldOrder => ({ ...oldOrder, order_status: statusOrder }));
+      setOrder(oldOrder =>
+        oldOrder.id === statusOrder[0].order_id ? { ...oldOrder, order_status: statusOrder } : oldOrder
+      );
     });
   }, []);
 

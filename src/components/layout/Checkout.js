@@ -6,7 +6,7 @@ import { AppContext } from 'src/App';
 
 const cartWidth = 450;
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   container: {
     position: 'relative',
     display: 'flex',
@@ -20,9 +20,8 @@ const useStyles = makeStyles({
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    minHeight: 'calc(100vh - 110px)',
-    marginBottom: 30,
-    padding: '0 20px',
+    minHeight: 'calc(100vh - 56px)',
+    padding: '20px 20px 30px',
   },
   wrapper: {
     position: 'absolute',
@@ -35,6 +34,9 @@ const useStyles = makeStyles({
     overflowY: 'auto',
     position: 'relative',
     marginTop: 80,
+    [theme.breakpoints.down('md')]: {
+      marginTop: 56,
+    },
   },
   cart: ({ isCartVisible }) => ({
     transition: 'transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms',
@@ -49,7 +51,7 @@ const useStyles = makeStyles({
     padding: 20,
     zIndex: 9,
   }),
-});
+}));
 
 export default function Checkout({ pageProps, component: Component, isMobile, windowWidth }) {
   const app = useContext(AppContext);
