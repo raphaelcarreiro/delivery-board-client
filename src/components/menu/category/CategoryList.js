@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('md')]: {
       gridTemplateColumns: 'repeat(2, 1fr)',
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('xs')]: {
       gridTemplateColumns: '1fr',
     },
   },

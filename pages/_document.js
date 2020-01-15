@@ -1,7 +1,7 @@
 import React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
-import theme from '../src/theme';
+import axios from 'axios';
 
 export default class MyDocument extends Document {
   render() {
@@ -11,7 +11,7 @@ export default class MyDocument extends Document {
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
           {/* PWA primary color */}
-          <meta name="theme-color" content={theme.palette.primary.main} />
+          <meta name="theme-color" content={this.props.themeColor} />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
           <style jsx global>{`
             html,
@@ -154,8 +154,17 @@ MyDocument.getInitialProps = async ctx => {
 
   const initialProps = await Document.getInitialProps(ctx);
 
+  const api = axios.create({
+    baseURL: process.env.BASEURL_API,
+    headers: { RestaurantId: process.env.RESTAURANT_ID },
+  });
+
+  const response = await api.get('restaurants');
+  const themeColor = response.data.primary_color;
+
   return {
     ...initialProps,
+    themeColor,
     // Styles fragment is rendered after the app and page rendering finish.
     styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
   };

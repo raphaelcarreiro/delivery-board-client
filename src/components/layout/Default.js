@@ -60,6 +60,9 @@ const useStyles = makeStyles(theme => ({
     zIndex: 9,
     overflowY: 'auto',
   }),
+  cartContent: {
+    marginTop: 15,
+  },
 }));
 
 export default function Default({ pageProps, component: Component, isMobile, windowWidth }) {
@@ -77,7 +80,9 @@ export default function Default({ pageProps, component: Component, isMobile, win
         <>
           {app.isCartVisible && (
             <DialogFullscreen title="Carrinho" handleModalState={() => app.handleCartVisibility(false)}>
-              <Cart />
+              <div className={classes.cartContent}>
+                <Cart />
+              </div>
             </DialogFullscreen>
           )}
         </>

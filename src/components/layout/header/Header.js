@@ -145,11 +145,9 @@ export default function Header() {
         <div className={classes.container}>
           <div className={classes.logo}>
             {restaurant.id ? (
-              <LinkNext href="/">
-                <a style={{ display: 'flex' }}>
-                  <img className={classes.img} src={restaurant.image.imageUrl} alt={restaurant.name} />
-                </a>
-              </LinkNext>
+              <Link href="/">
+                <img className={classes.img} src={restaurant.image.imageUrl} alt={restaurant.name} />
+              </Link>
             ) : (
               <span>Carregando...</span>
             )}

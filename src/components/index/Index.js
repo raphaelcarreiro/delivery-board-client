@@ -3,9 +3,8 @@ import CustomAppbar from '../appbar/CustomAppbar';
 import IndexAppbarActions from './IndexAppbarActions';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import ErrorIcon from '@material-ui/icons/Error';
-import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
   container: {

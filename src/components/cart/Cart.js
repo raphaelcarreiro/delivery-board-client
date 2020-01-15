@@ -60,6 +60,11 @@ export default function Cart() {
       return;
     }
 
+    if (restaurant.minimum_order > cart.total) {
+      messaging.handleOpen(`O valor mínimo do pedido deve ser ${restaurant.formattedMinimumOrder}`);
+      return;
+    }
+
     router.push('/checkout');
   }
 
