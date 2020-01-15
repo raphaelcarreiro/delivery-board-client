@@ -16,7 +16,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, TextField, InputAdornment } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
-import Link from 'src/components/link/Link';
+import { useRouter } from 'next/router';
 
 const useStyles = makeStyles(theme => ({
   pageHeader: {
@@ -65,6 +65,7 @@ export default function Product({ products, categoryName, categoryUrl }) {
   const classes = useStyles();
   const [search, setSearch] = useState('');
   const ref = useRef();
+  const router = useRouter();
 
   function handleProductClick(product) {
     setSelectedProduct(product);
@@ -79,10 +80,9 @@ export default function Product({ products, categoryName, categoryUrl }) {
   }
 
   function handleOpenImagePreview(event, product) {
-    event.stopPropagation();
-
+    // event.stopPropagation();
     setSelectedProduct(product);
-    setImagePreview(true);
+    // setImagePreview(true);
   }
 
   function handlePrepareProduct(product, amount) {
@@ -94,6 +94,7 @@ export default function Product({ products, categoryName, categoryUrl }) {
     messaging.handleOpen('Produto adicionado ao carrinho');
     app.handleCartVisibility(true);
     handleCancelSearch();
+    router.push('/menu');
   }
 
   function handleSearch(searchValue) {

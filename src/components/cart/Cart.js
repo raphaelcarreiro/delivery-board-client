@@ -61,7 +61,7 @@ export default function Cart() {
     }
 
     if (restaurant.minimum_order > cart.total) {
-      messaging.handleOpen(`O valor mínimo do pedido deve ser ${restaurant.formattedMinimumOrder}`);
+      messaging.handleOpen(`O valor mínimo do pedido é ${restaurant.formattedMinimumOrder}`);
       return;
     }
 

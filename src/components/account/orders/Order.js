@@ -68,6 +68,7 @@ const useStyles = makeStyles(theme => ({
   historyList: {
     borderLeft: `2px solid ${theme.palette.primary.main}`,
     marginBottom: 20,
+    padding: 0,
   },
   historyListItem: {
     // paddingBottom: 0,
