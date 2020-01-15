@@ -103,6 +103,7 @@ export default function Checkout() {
   const user = useSelector(state => state.user);
   const cart = useSelector(state => state.cart);
   const order = useSelector(state => state.order);
+  const restaurant = useSelector(state => state.restaurant);
   const [loading, setLoading] = useState(true);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [step, setStep] = useState(1);
@@ -169,6 +170,10 @@ export default function Checkout() {
   }, [cart]);
 
   function handleSubmitOrder() {
+    if (cart.total < restaurant.minimum_order) {
+      messaging.handleOpen(`Valor mínimo do pedido deve ser ${restaurant.formattedMinimumOrder}`);
+      return;
+    }
     setSaving(true);
     api()
       .post('/orders', order)

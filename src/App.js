@@ -48,7 +48,11 @@ export const AppContext = createContext({
 
 export const menuWidth = 240;
 
-function App({ pageProps, component: Component }) {
+function App({ pageProps, component: Component, restaurant }) {
+  const user = useSelector(state => state.user);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const classes = useStyles();
   const [isMobile, setIsMobile] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1500);
@@ -56,12 +60,10 @@ function App({ pageProps, component: Component }) {
   const [initialLoading, setInitialLoading] = useState(true);
   const [isCartVisible, setIsCartVisible] = useState(false);
   const [redirect, setRedirect] = useState(null);
-  const [theme, setTheme] = useState(defaultTheme);
   const [isProgressBarVisible, setIsProgressBarVisible] = useState(false);
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const classes = useStyles();
-  const user = useSelector(state => state.user);
+  const [theme] = useState(
+    restaurant ? createTheme(restaurant.primary_color, restaurant.secondary_color) : defaultTheme
+  );
 
   const appProviderValue = {
     handleLogout: handleLogout,
@@ -102,18 +104,10 @@ function App({ pageProps, component: Component }) {
 
     setIsMobile(mobileCheck());
     setWindowWidth(window.innerWidth);
+    dispatch(setRestaurant(restaurant));
+    setInitialLoading(false);
 
-    api()
-      .get('restaurants')
-      .then(response => {
-        const restaurant = response.data;
-        dispatch(setRestaurant(response.data));
-        setTheme(createTheme(restaurant.primary_color, restaurant.secondary_color));
-      })
-      .finally(() => {
-        setInitialLoading(false);
-        document.body.classList.add('zoom');
-      });
+    document.body.classList.add('zoom');
   }, []);
 
   // set webscoket connection
@@ -234,6 +228,7 @@ function App({ pageProps, component: Component }) {
 App.propTypes = {
   pageProps: PropTypes.object.isRequired,
   component: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
+  restaurant: PropTypes.object,
 };
 
 export default App;

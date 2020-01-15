@@ -8,7 +8,7 @@ import { MuiThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/
 import { useSelector } from 'react-redux';
 import { AppContext } from 'src/App';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   cartBadge: ({ cartItems }) => ({
     position: 'absolute',
     display: 'flex',
@@ -16,14 +16,14 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     top: 3,
     left: 25,
-    backgroundColor: cartItems ? '#dc640f' : '#dc640f',
+    backgroundColor: theme.palette.primary.dark,
     borderRadius: '50%',
     height: 20,
     width: 20,
     fontSize: 12,
     color: '#FFF',
   }),
-});
+}));
 
 ProductAction.propTypes = {
   isSearching: PropTypes.bool.isRequired,

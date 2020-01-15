@@ -24,10 +24,10 @@ const styles = theme => ({
   appbarSpace: {
     marginBottom: 80,
     [theme.breakpoints.down('md')]: {
-      marginBottom: 66,
+      marginBottom: 56,
     },
     [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
-      marginBottom: 70,
+      marginBottom: 51,
     },
   },
   grow: {

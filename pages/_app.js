@@ -3,12 +3,27 @@ import AppNext from 'next/app';
 import { Provider } from 'react-redux';
 import App from '../src/App';
 import { store } from '../src/store/redux';
-import { withRouter } from 'next/router';
+import axios from 'axios';
 
 class _App extends AppNext {
-  state = {
-    isProgressBarVisible: false,
-  };
+  static async getInitialProps(appContext) {
+    const appProps = await AppNext.getInitialProps(appContext);
+
+    if (!process.browser) {
+      const api = axios.create({
+        baseURL: process.env.BASEURL_API,
+        headers: { RestaurantId: process.env.RESTAURANT_ID },
+      });
+
+      const response = await api.get('restaurants');
+      return {
+        ...appProps,
+        restaurant: response.data,
+      };
+    }
+
+    return { ...appProps };
+  }
 
   componentDidMount() {
     // Remove the server-side injected CSS.
@@ -19,16 +34,16 @@ class _App extends AppNext {
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps, restaurant } = this.props;
 
     return (
       <>
         <Provider store={store}>
-          <App pageProps={pageProps} component={Component} />
+          <App pageProps={pageProps} component={Component} restaurant={restaurant} />
         </Provider>
       </>
     );
   }
 }
 
-export default withRouter(_App);
+export default _App;

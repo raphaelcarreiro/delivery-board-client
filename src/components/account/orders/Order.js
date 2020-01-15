@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography, List, ListItem } from '@material-ui/core';
 import PageHeader from 'src/components/pageHeader/PageHeader';
@@ -12,6 +12,7 @@ import { moneyFormat } from 'src/helpers/numberFormat';
 import { orderStatus } from './orderStatus';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import io from 'socket.io-client';
+import { MessagingContext } from 'src/components/messaging/Messaging';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -77,6 +78,13 @@ const useStyles = makeStyles(theme => ({
       fontSize: 12,
     },
   },
+  orderNotFound: {
+    display: 'flex',
+    justifyContent: 'center',
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 }));
 
 Order.propTypes = {
@@ -86,6 +94,7 @@ Order.propTypes = {
 export default function Order({ cryptId }) {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const messaging = useContext(MessagingContext);
   const classes = useStyles();
 
   useEffect(() => {
@@ -96,8 +105,9 @@ export default function Order({ cryptId }) {
         status.formattedDate = format(statusDate, "PP 'às' p", { locale: ptbr });
         return status;
       });
-
-      setOrder(oldOrder => ({ ...oldOrder, order_status: statusOrder }));
+      setOrder(oldOrder =>
+        oldOrder.id === statusOrder[0].order_id ? { ...oldOrder, order_status: statusOrder } : oldOrder
+      );
     });
   }, []);
 
@@ -125,17 +135,21 @@ export default function Order({ cryptId }) {
           }),
         });
       })
+      .catch(() => {
+        messaging.handleOpen('Pedido não encontrado');
+        document.title = 'Pedido não encontrado!';
+      })
       .finally(() => {
         setLoading(false);
       });
   }, []);
 
   return (
-    <Grid container>
+    <>
       {loading ? (
         <Loading />
-      ) : (
-        <>
+      ) : order ? (
+        <Grid container>
           <CustomAppbar title={`Pedido ${order.formattedId}`} />
           <PageHeader title={`Pedido ${order.formattedId}`} description={`Pedido gerado em ${order.formattedDate}`} />
           <div>
@@ -198,8 +212,14 @@ export default function Order({ cryptId }) {
               </Typography>
             </div>
           </div>
-        </>
+        </Grid>
+      ) : (
+        <div className={classes.orderNotFound}>
+          <Typography variant="h6" color="error">
+            Pedido não encontrado!
+          </Typography>
+        </div>
       )}
-    </Grid>
+    </>
   );
 }
