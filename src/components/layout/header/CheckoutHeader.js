@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
   },
   img: {
-    width: 80,
+    width: 70,
   },
   cartLink: ({ cartItems }) => ({
     display: 'flex',

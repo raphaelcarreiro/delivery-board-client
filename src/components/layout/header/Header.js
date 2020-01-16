@@ -155,11 +155,11 @@ export default function Header() {
           <div>
             {!restaurant.is_open ? (
               <Typography className={classes.status} onClick={handleClickDialogWorkingTime}>
-                <StatusIcon className={classes.statusIcon} /> {restaurant.name} está fechado.
+                <StatusIcon className={classes.statusIcon} /> Delivery fechado
               </Typography>
             ) : (
               <Typography className={classes.status} onClick={handleClickDialogWorkingTime}>
-                <StatusIcon className={classes.statusIcon} /> {restaurant.name} está aberto.
+                <StatusIcon className={classes.statusIcon} /> Delivery está aberto
               </Typography>
             )}
           </div>

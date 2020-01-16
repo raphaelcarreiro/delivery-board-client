@@ -3,8 +3,6 @@ import CustomAppbar from '../appbar/CustomAppbar';
 import IndexAppbarActions from './IndexAppbarActions';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
-import ErrorIcon from '@material-ui/icons/Error';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -33,15 +31,7 @@ export default function Index() {
   return (
     <>
       <CustomAppbar title={restaurant.name ? restaurant.name : 'Carregando'} actionComponent={<IndexAppbarActions />} />
-      <div className={classes.container}>
-        {!restaurant.is_open && (
-          <div className={classes.closedRestaurant}>
-            <Typography className={classes.message}>
-              <ErrorIcon /> {restaurant.name} está fechado no momento. Não será possível fazer pedido.
-            </Typography>
-          </div>
-        )}
-      </div>
+      <div className={classes.container}></div>
     </>
   );
 }

@@ -7,6 +7,7 @@ exports.default = {
     BASEURL_API: process.env.BASEURL_API,
     URL_NODE_SERVER: process.env.URL_NODE_SERVER,
     RESTAURANT_ID: process.env.RESTAURANT_ID,
+    PUBLIC_URL: process.env.PUBLIC_URL,
     SECRET: process.env.SECRET,
     TOKEN_NAME: process.env.TOKEN_NAME,
     LOCALSTORAGE_CART: process.env.LOCALSTORAGE_CART,
