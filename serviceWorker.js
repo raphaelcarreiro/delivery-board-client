@@ -11,14 +11,13 @@
 // opt-in, read https://bit.ly/CRA-PWA
 
 export function register(config) {
-  if (process.env.NODE_ENV === 'development' && 'serviceWorker' in navigator) {
+  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
     if (publicUrl.origin !== window.location.origin) {
       // Our service worker won't work if PUBLIC_URL is on a different origin
       // from what our page is served on. This might happen if a CDN is used to
       // serve assets; see https://github.com/facebook/create-react-app/issues/2374
-      console.log('instalação cancelada');
       return;
     }
 
@@ -34,7 +33,6 @@ export function register(config) {
       );
 
       if (isLocalhost) {
-        console.log('instalação progress0 - é localhost');
         // This is running on localhost. Let's check if a service worker still exists or not.
         checkValidServiceWorker(swUrl, config);
 
@@ -55,7 +53,6 @@ export function register(config) {
 }
 
 function registerValidSW(swUrl, config) {
-  console.log('instalando');
   navigator.serviceWorker
     .register(swUrl)
     .then(registration => {
@@ -87,7 +84,6 @@ function registerValidSW(swUrl, config) {
 
               // Execute callback
               if (config && config.onSuccess) {
-                console.log('instalado');
                 config.onSuccess(registration);
               }
             }
@@ -101,7 +97,6 @@ function registerValidSW(swUrl, config) {
 }
 
 function checkValidServiceWorker(swUrl, config) {
-  console.log('verifica se é valido');
   // Check if the service worker can be found. If it can't reload the page.
   fetch(swUrl)
     .then(response => {
@@ -115,7 +110,6 @@ function checkValidServiceWorker(swUrl, config) {
           });
         });
       } else {
-        console.log('vai instalar o sw');
         // Service worker found. Proceed as normal.
         registerValidSW(swUrl, config);
       }

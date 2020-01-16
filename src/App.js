@@ -84,7 +84,6 @@ function App({ pageProps, component: Component, restaurant }) {
 
   useEffect(() => {
     reactotronInitialize();
-    register();
   }, []);
 
   // load restaurant data from server
