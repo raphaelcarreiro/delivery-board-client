@@ -1,16 +1,18 @@
 {
-  "short_name": "Delivery",
-  "name": "Delivery",
-  "description": "Delivery",
+  "short_name": "TopNfe Delivery",
+  "name": "TopNfe Delivery",
+  "description": "Delivery App para todo tipo de comida!",
+  "lang": "pt-BR",
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "sizes": "512x512 264x264 128x128 64x64 32x32 24x24 16x16",
+      "type": "image/png"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
-  "theme_color": "#81259D",
-  "background_color": "#81259D"
+  "theme_color": "#dc3545",
+  "background_color": "#dc3545",
+  "gcm_sender_id": "103953800507"
 }
