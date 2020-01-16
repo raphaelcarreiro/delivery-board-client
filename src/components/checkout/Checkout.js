@@ -171,7 +171,7 @@ export default function Checkout() {
 
   function handleSubmitOrder() {
     if (cart.total < restaurant.minimum_order) {
-      messaging.handleOpen(`Valor mínimo do pedido deve ser ${restaurant.formattedMinimumOrder}`);
+      messaging.handleOpen(`Valor mínimo do pedido é ${restaurant.formattedMinimumOrder}`);
       return;
     }
     setSaving(true);

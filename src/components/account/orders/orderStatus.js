@@ -3,5 +3,5 @@ export const orderStatus = {
   a: 'Aprovado',
   d: 'Saiu para entrega',
   c: 'Completo',
-  x: 'Canceleado',
+  x: 'Cancelado',
 };
