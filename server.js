@@ -13,9 +13,10 @@ app.prepare().then(() => {
   createServer((req, res) => {
     const parsedUrl = parse(req.url, true);
     const { pathname } = parsedUrl;
-
     if (pathname === '/service-worker.js') {
-      const filePath = join(__dirname, 'next', pathname);
+      console.log(pathname);
+      const filePath = join(__dirname, '.next', pathname);
+      console.log(filePath);
       app.serveStatic(req, res, filePath);
     } else {
       handle(req, res, parsedUrl);
