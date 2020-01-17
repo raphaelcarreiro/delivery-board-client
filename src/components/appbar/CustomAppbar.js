@@ -86,7 +86,7 @@ function CustomAppbar({ actionComponent, title, TabComponent, cancel, cancelActi
           </AppBar>
           {TabComponent && (
             <Fragment>
-              <AppBar className={`${classes.appBarTabs} ${classes.appBarShadow}`}>{TabComponent}</AppBar>
+              <AppBar className={`${classes.appBarTabs}`}>{TabComponent}</AppBar>
               <div className={TabComponent && classes.appBarTabsSpace} />
             </Fragment>
           )}

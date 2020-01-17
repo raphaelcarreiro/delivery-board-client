@@ -91,7 +91,7 @@ export default function Product({ products, categoryName, categoryUrl }) {
 
   function handleAddProductToCart() {
     dispatch(addToCart());
-    messaging.handleOpen('Produto adicionado ao carrinho');
+    // messaging.handleOpen('Produto adicionado ao carrinho');
     app.handleCartVisibility(true);
     handleCancelSearch();
     router.push('/menu');

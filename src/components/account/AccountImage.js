@@ -24,6 +24,10 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     cursor: 'pointer',
     marginTop: 15,
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 0,
+      width: '100%',
+    },
   },
   imageWrapper: {
     flexDirection: 'column',

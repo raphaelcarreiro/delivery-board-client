@@ -12,11 +12,14 @@ const useStyles = makeStyles(theme => ({
   },
   action: {
     marginTop: 30,
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 10,
+    },
   },
   container: {
     padding: 15,
     [theme.breakpoints.down('sm')]: {
-      padding: 15,
+      padding: '5px 15px',
     },
   },
   total: {

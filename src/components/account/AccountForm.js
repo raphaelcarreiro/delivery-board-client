@@ -73,8 +73,19 @@ export default function AccountForm({
   }
 
   return (
-    <>
-      <form onSubmit={accountFormHandleSubmit}>
+    <form onSubmit={accountFormHandleSubmit}>
+      <Grid container>
+        <Grid item xl={3} lg={3} md={3} xs={12}>
+          <AccountImage
+            user={user}
+            handleUserChange={handleUserChange}
+            handleImageSelect={handleImageSelect}
+            handleImageDelete={handleImageDelete}
+          />
+          <Typography variant="body2" color="textSecondary">
+            Foto do perfil
+          </Typography>
+        </Grid>
         <Grid item xl={4} lg={4} md={6} xs={12}>
           <TextField
             variant="standard"
@@ -125,23 +136,14 @@ export default function AccountForm({
               inputComponent: CpfInput,
             }}
           />
-          <AccountImage
-            user={user}
-            handleUserChange={handleUserChange}
-            handleImageSelect={handleImageSelect}
-            handleImageDelete={handleImageDelete}
-          />
-          <Typography variant="body2" color="textSecondary">
-            Foto do perfil
-          </Typography>
+          <div className={classes.actions}>
+            <Button type="submit" variant="contained" color="primary" disabled={saving}>
+              Confirmar
+            </Button>
+          </div>
         </Grid>
-        <div className={classes.actions}>
-          <Button type="submit" variant="contained" color="primary" disabled={saving}>
-            Confirmar
-          </Button>
-        </div>
-      </form>
-    </>
+      </Grid>
+    </form>
   );
 }
 

@@ -36,11 +36,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 4,
     fontSize: 12,
   },
-  icon: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-  },
+
   dateDistance: {
     position: 'absolute',
     top: 10,
@@ -122,9 +118,6 @@ function OrderList({ orders }) {
             <Typography className={classes.total} variant="h6" color="secondary">
               {order.formattedTotal}
             </Typography>
-            <IconButton className={classes.icon}>
-              <MoreVertIcon />
-            </IconButton>
           </ListItem>
         );
       })}

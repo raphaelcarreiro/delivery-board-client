@@ -145,7 +145,7 @@ export function Account() {
               <AccountTabs tabIndex={tabIndex} handleTabChange={handleTabChange} />
             </Grid>
           )}
-          <Grid item xs={12} className={classes.container}>
+          <div className={classes.container}>
             {tabIndex === 0 ? (
               <AccountForm
                 user={user}
@@ -161,7 +161,7 @@ export function Account() {
                 <AccountAddresses handleDeleteAddress={handleDeleteAddress} addresses={user.customer.addresses} />
               )
             )}
-          </Grid>
+          </div>
         </Grid>
       )}
     </>

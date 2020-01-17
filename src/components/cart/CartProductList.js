@@ -10,7 +10,6 @@ import { MessagingContext } from 'src/components/messaging/Messaging';
 const useStyles = makeStyles(theme => ({
   list: {
     [theme.breakpoints.down('md')]: {
-      paddingTop: 0,
       paddingBottom: 15,
     },
   },
