@@ -1,8 +1,10 @@
-// const path = require('path');
-const isProd = process.env.NODE_ENV === 'production';
-require('dotenv').config({ path: isProd ? './.env.production' : './.env.development' });
+const dotenv = require('dotenv');
+const withOffline = require('next-offline');
 
-exports.default = {
+const isProd = process.env.NODE_ENV === 'production';
+dotenv.config({ path: isProd ? './.env.production' : './.env.development' });
+
+const nextConfig = {
   env: {
     BASEURL_API: process.env.BASEURL_API,
     URL_NODE_SERVER: process.env.URL_NODE_SERVER,
@@ -19,8 +21,6 @@ exports.default = {
     FIREBASE_STORAGEBUCKET: process.env.FIREBASE_STORAGEBUCKET,
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
   },
-  /* webpack: config => {
-    config.resolve.alias.src = path.resolve(__dirname, 'src');
-    return config;
-  }, */
 };
+
+exports.default = withOffline(nextConfig);

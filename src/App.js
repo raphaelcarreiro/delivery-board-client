@@ -23,7 +23,6 @@ import io from 'socket.io-client';
 import { LinearProgress } from '@material-ui/core';
 import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
 import { getFirebaseMessaging } from 'src/config/FirebaseConfig';
-import { register } from '../serviceWorker';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -84,7 +83,6 @@ function App({ pageProps, component: Component, restaurant }) {
 
   useEffect(() => {
     reactotronInitialize();
-    register();
   }, []);
 
   // load restaurant data from server

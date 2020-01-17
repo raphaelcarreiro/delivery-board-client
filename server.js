@@ -6,17 +6,18 @@ const next = require('next');
 const port = parseInt(process.env.PORT, 10) || 3000;
 
 const dev = process.env.NODE_ENV !== 'production';
-const app = next({ dev });
+const app = next({ dir: '.', dev });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
   createServer((req, res) => {
     const parsedUrl = parse(req.url, true);
     const { pathname } = parsedUrl;
+
+    // handle GET request to /service-worker.js
     if (pathname === '/service-worker.js') {
-      console.log(pathname);
       const filePath = join(__dirname, '.next', pathname);
-      console.log(filePath);
+
       app.serveStatic(req, res, filePath);
     } else {
       handle(req, res, parsedUrl);
