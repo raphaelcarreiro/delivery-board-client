@@ -7,6 +7,7 @@ export default function MenuPage() {
     <>
       <Head>
         <title>Cardápio</title>
+        <meta name="description" content="Cardápio do restaurante" />
       </Head>
       <Menu />
     </>

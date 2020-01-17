@@ -12,6 +12,7 @@ import ProductPizzaComplement from './edit/pizza_complement/ProductPizzaCompleme
 import { updateProductFromCart } from 'src/store/redux/modules/cart/actions';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import CartClosedRestaurant from 'src/components/cart/CartClosedRestaurant';
+import { AppContext } from 'src/App';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -39,6 +40,15 @@ const useStyles = makeStyles(theme => ({
   },
   action: {
     marginTop: 20,
+    '& button': {
+      marginBottom: 10,
+    },
+  },
+  buying: {
+    display: 'none',
+    [theme.breakpoints.down('md')]: {
+      display: 'block',
+    },
   },
 }));
 
@@ -48,6 +58,7 @@ export default function Cart() {
   const router = useRouter();
   const dispatch = useDispatch();
   const messaging = useContext(MessagingContext);
+  const app = useContext(AppContext);
   const [dialogUpdateSimpleProduct, setDialogUpdateSimpleProduct] = useState(false);
   const [dialogUpdateComplementProduct, setDialogUpdateComplementProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -84,6 +95,10 @@ export default function Cart() {
     }
 
     setDialogUpdateSimpleProduct(true);
+  }
+
+  function handleBuyingClick() {
+    app.handleCartVisibility(false);
   }
 
   return (
@@ -124,6 +139,16 @@ export default function Cart() {
           <div className={classes.action}>
             <Button size="large" onClick={handleCheckoutClick} variant="contained" color="primary" fullWidth>
               Fechar pedido
+            </Button>
+            <Button
+              variant="text"
+              color="primary"
+              size="large"
+              fullWidth
+              className={classes.buying}
+              onClick={handleBuyingClick}
+            >
+              Continuar comprando
             </Button>
           </div>
         </div>

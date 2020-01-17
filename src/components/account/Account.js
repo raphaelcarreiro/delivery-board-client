@@ -25,6 +25,8 @@ import AccountActions from 'src/components/account/AccountActions';
 
 const useStyles = makeStyles(theme => ({
   container: {
+    display: 'flex',
+    flex: 1,
     [theme.breakpoints.up('sm')]: {
       paddingTop: 20,
     },
