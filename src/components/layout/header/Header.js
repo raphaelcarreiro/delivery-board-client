@@ -96,6 +96,9 @@ const useStyles = makeStyles(theme => ({
   statusIcon: {
     fontSize: 30,
   },
+  linkHome: {
+    lineHeight: 0,
+  },
 }));
 
 export default function Header() {
@@ -145,7 +148,7 @@ export default function Header() {
         <div className={classes.container}>
           <div className={classes.logo}>
             {restaurant.id ? (
-              <Link href="/">
+              <Link href="/" className={classes.linkHome}>
                 <img className={classes.img} src={restaurant.image.imageUrl} alt={restaurant.name} />
               </Link>
             ) : (

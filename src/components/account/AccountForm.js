@@ -15,6 +15,15 @@ const useStyles = makeStyles(theme => ({
       display: 'none',
     },
   },
+  accountImage: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginRight: 20,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+  },
 }));
 
 export default function AccountForm({
@@ -75,7 +84,7 @@ export default function AccountForm({
   return (
     <form onSubmit={accountFormHandleSubmit}>
       <Grid container>
-        <Grid item xl={3} lg={3} md={3} xs={12}>
+        <div className={classes.accountImage}>
           <AccountImage
             user={user}
             handleUserChange={handleUserChange}
@@ -85,7 +94,7 @@ export default function AccountForm({
           <Typography variant="body2" color="textSecondary">
             Foto do perfil
           </Typography>
-        </Grid>
+        </div>
         <Grid item xl={4} lg={4} md={6} xs={12}>
           <TextField
             variant="standard"

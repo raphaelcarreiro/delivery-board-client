@@ -1,4 +1,4 @@
-import { createHistory } from './actions';
+import { createHistory, setConfigs } from './actions';
 
 const saveCartAtLocalStorage = cart => {
   localStorage.setItem(process.env.LOCALSTORAGE_CART, JSON.stringify(cart));
@@ -10,6 +10,15 @@ export const cartMiddlware = store => next => action => {
   if (action.type === '@cart/REMOVE_PRODUCT') {
     const cart = store.getState().cart;
     store.dispatch(createHistory(cart.products));
+  }
+
+  if (actionsToSaveCart.includes(action.type)) {
+    const { configs } = store.getState().restaurant;
+    store.dispatch(
+      setConfigs({
+        pizza_calculate: configs.pizza_calculate,
+      })
+    );
   }
 
   next(action);

@@ -5,6 +5,7 @@ export const INITIAL_STATE = {
   product: null,
   total: 0,
   history: [],
+  configs: null,
 };
 
 export default function cart(state = INITIAL_STATE, action) {
@@ -219,6 +220,16 @@ export default function cart(state = INITIAL_STATE, action) {
     case '@cart/CLEAR_CART': {
       localStorage.removeItem(process.env.LOCALSTORAGE_CART);
       return INITIAL_STATE;
+    }
+
+    case '@cart/SET_CONFIGS': {
+      return {
+        ...state,
+        configs: {
+          ...state.configs,
+          ...action.configs,
+        },
+      };
     }
 
     default: {

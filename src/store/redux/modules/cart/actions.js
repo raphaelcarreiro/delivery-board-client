@@ -52,3 +52,10 @@ export function clearCart() {
     type: '@cart/CLEAR_CART',
   };
 }
+
+export function setConfigs(configs) {
+  return {
+    type: '@cart/SET_CONFIGS',
+    configs,
+  };
+}

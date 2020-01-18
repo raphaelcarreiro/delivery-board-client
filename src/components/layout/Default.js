@@ -62,6 +62,9 @@ const useStyles = makeStyles(theme => ({
   }),
   cartContent: {
     marginTop: 15,
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
   },
 }));
 
