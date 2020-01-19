@@ -44,9 +44,11 @@ export const AppContext = createContext({
   handleLogout: () => {},
   handleOpenMenu: () => {},
   handleCartVisibility: () => {},
+  socket: null,
 });
 
 export const menuWidth = 240;
+let socket;
 
 function App({ pageProps, component: Component, restaurant }) {
   const user = useSelector(state => state.user);
@@ -75,6 +77,7 @@ function App({ pageProps, component: Component, restaurant }) {
     isOpenMenu,
     isCartVisible,
     redirect,
+    socket,
   };
 
   // paginas que não precisam no cabeçalho e rodapé padrões
@@ -112,10 +115,14 @@ function App({ pageProps, component: Component, restaurant }) {
 
   // set webscoket connection
   useEffect(() => {
-    const socket = io(process.env.URL_NODE_SERVER);
+    socket = io(process.env.URL_NODE_SERVER);
     socket.on('handleRestaurantState', state => {
-      dispatch(setRestaurantIsOpen(state));
+      if (state.restaurantId === restaurant.id) dispatch(setRestaurantIsOpen(state));
     });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   // set actions on router changes, to display loading

@@ -100,17 +100,25 @@ export default function Order({ cryptId }) {
 
   useEffect(() => {
     const socket = io.connect(process.env.URL_NODE_SERVER);
-    socket.on('orderStatusChange', status => {
-      const statusOrder = status.reverse().map(status => {
-        const statusDate = parseISO(status.created_at);
-        status.formattedDate = format(statusDate, "PP 'às' p", { locale: ptbr });
-        return status;
+    if (order) {
+      socket.emit('register', order.id);
+
+      socket.on('orderStatusChange', status => {
+        const statusOrder = status.reverse().map(status => {
+          const statusDate = parseISO(status.created_at);
+          status.formattedDate = format(statusDate, "PP 'às' p", { locale: ptbr });
+          return status;
+        });
+        setOrder(oldOrder =>
+          oldOrder.id === statusOrder[0].order_id ? { ...oldOrder, order_status: statusOrder } : oldOrder
+        );
       });
-      setOrder(oldOrder =>
-        oldOrder.id === statusOrder[0].order_id ? { ...oldOrder, order_status: statusOrder } : oldOrder
-      );
-    });
-  }, []);
+    }
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [order]);
 
   useEffect(() => {
     api()
