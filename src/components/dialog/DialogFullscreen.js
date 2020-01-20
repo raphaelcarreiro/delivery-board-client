@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+// import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -68,7 +69,7 @@ function DialogFullscreen({ handleModalState, title, componentActions, children,
         <AppBar className={classes.appbar}>
           <Toolbar>
             <IconButton color="inherit" onClick={handleClose}>
-              <NavigateBeforeIcon />
+              <ArrowBackIcon />
             </IconButton>
             <Typography variant={'h6'} color="inherit" noWrap>
               {title}

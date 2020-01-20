@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Loading from 'src/components/loading/Loading';
 import AccountAddressesNew from 'src/components/account/addresses/AccountAddressesNew';
 import AccountAddressesEdit from 'src/components/account/addresses/AccountAddressesEdit';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addCustomerAddress, updateCustomerAddress, deleteCustomerAddress } from 'src/store/redux/modules/user/actions';
 import { setShipmentAddress } from 'src/store/redux/modules/order/actions';
 import { MessagingContext } from 'src/components/messaging/Messaging';
@@ -28,6 +28,7 @@ export default function Shipment({ addresses }) {
   const [dialogEditAddress, setDialogEditAddress] = useState(false);
   const [dialogDeleteAddress, setDialogDeleteAddress] = useState(false);
   const app = useContext(AppContext);
+  const user = useSelector(state => state.user);
 
   useEffect(() => {
     app.handleCartVisibility(false);
@@ -36,7 +37,13 @@ export default function Shipment({ addresses }) {
   async function handleAddressSubmit(address) {
     try {
       setSaving(true);
-      const response = await api().post('/customerAddresses', address);
+      // é necessário enviar o customer_id caso o usuário seja do tipo guest
+      const data = {
+        customer_id: user.customer.id,
+        ...address,
+      };
+
+      const response = await api().post('/customerAddresses', data);
       dispatch(setShipmentAddress(response.data));
       dispatch(addCustomerAddress(response.data));
     } catch (err) {

@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { Dialog, Grid, DialogContent, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+// import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppContext } from 'src/App';
 
@@ -77,7 +78,7 @@ export default function CustomDialog({ handleModalState, title, componentActions
         <AppBar className={classes.appbar}>
           <Toolbar>
             <IconButton color="inherit" onClick={handleClose}>
-              <NavigateBeforeIcon />
+              <ArrowBackIcon />
             </IconButton>
             <Typography variant={'h6'} color="inherit" noWrap>
               {title}

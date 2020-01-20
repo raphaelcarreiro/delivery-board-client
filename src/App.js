@@ -81,7 +81,7 @@ function App({ pageProps, component: Component, restaurant }) {
   };
 
   // paginas que não precisam no cabeçalho e rodapé padrões
-  const paths = ['/register', '/login', '/login/email'];
+  const paths = ['/register', '/login', '/login/email', '/guest-register'];
   const checkoutPaths = ['/checkout'];
 
   useEffect(() => {
@@ -135,8 +135,8 @@ function App({ pageProps, component: Component, restaurant }) {
   // request permission for push notification
   useEffect(() => {
     if (process.browser && user.id) {
-      const firebaseMessaging = getFirebaseMessaging();
       try {
+        const firebaseMessaging = getFirebaseMessaging();
         firebaseMessaging
           .requestPermission()
           .then(async () => {

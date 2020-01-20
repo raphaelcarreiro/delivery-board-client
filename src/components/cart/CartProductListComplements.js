@@ -13,6 +13,7 @@ const useStyles = makeStyles({
   },
   categoryName: {
     marginRight: 10,
+    minWidth: 75,
   },
 });
 

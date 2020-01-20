@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import AccountAddressesNew from './AccountAddressesNew';
 import AccountAddressesEdit from './AccountAddressesEdit';
 import { api } from '../../../services/api';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { MessagingContext } from '../../messaging/Messaging';
 import {
   addCustomerAddress,
@@ -89,6 +89,7 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
   async function handleAddressSubmit(address) {
     try {
       setSaving(true);
+
       const response = await api().post('/customerAddresses', address);
       dispatch(addCustomerAddress(response.data));
       messaging.handleOpen('Endereço incluído');

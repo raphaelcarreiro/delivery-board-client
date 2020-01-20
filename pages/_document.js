@@ -161,10 +161,12 @@ MyDocument.getInitialProps = async ctx => {
 
   const response = await api.get('restaurants');
   const themeColor = response.data.primary_color;
+  const manifest = response.data.manifest;
 
   return {
     ...initialProps,
     themeColor,
+    manifest,
     // Styles fragment is rendered after the app and page rendering finish.
     styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
   };

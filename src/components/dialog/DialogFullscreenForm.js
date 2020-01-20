@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Dialog, Grid, DialogContent, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+// import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { withStyles } from '@material-ui/core/styles/index';
 
 const styles = theme => ({
@@ -88,7 +89,7 @@ class DialogFullscreenForm extends Component {
             <AppBar>
               <Toolbar>
                 <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-                  <NavigateBeforeIcon />
+                  <ArrowBackIcon />
                 </IconButton>
                 <Typography variant={'h6'} color={'inherit'} noWrap>
                   {title}
