@@ -52,7 +52,7 @@ export default function ProductPizzaComplement({
       category.product_complement_category_id = category.id;
       category.complements = category.complements.map((complement, index) => {
         complement.product_complement_id = complement.id;
-        complement.selected = false;
+        complement.selected = category.complements.length === 1;
         complement.formattedPrice = complement.price && moneyFormat(complement.price);
 
         complement.prices = complement.prices.map((price, index) => {
@@ -122,10 +122,10 @@ export default function ProductPizzaComplement({
       });
     });
 
-    if (restaurant.configs.pizza_calculate === 'average_value') {
-      sumPrices = counterTaste > 0 ? sumPrices + tastePrice / counterTaste : sumPrices;
-    } else if (restaurant.configs.pizza_calculate === 'higher_value') {
-      sumPrices = counterTaste > 0 ? sumPrices + Math.max.apply(Math, tastePrices) : sumPrices;
+    if (counterTaste > 0) {
+      if (restaurant.configs.pizza_calculate === 'average_value') sumPrices = sumPrices + tastePrice / counterTaste;
+      else if (restaurant.configs.pizza_calculate === 'higher_value')
+        sumPrices = sumPrices + Math.max.apply(Math, tastePrices);
     }
 
     setComplementsPrice(sumPrices + additionalPrice);

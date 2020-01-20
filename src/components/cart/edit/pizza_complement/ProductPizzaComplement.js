@@ -8,6 +8,7 @@ import ProductPizzaComplementAction from './ProductPizzaComplementAction';
 import ProductPizzaComplementAdditional from './ProductPizzaComplementAdditional';
 import ProductPizzaComplementIngredient from './ProductPizzaComplementIngredient';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   header: {
@@ -56,6 +57,7 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
   const [dialogAdditional, setDialogAdditional] = useState(false);
   const [complementIdSelected, setComplementIdSelected] = useState(null);
   const [complementCategoryIdSelected, setComplementCategoryIdSelected] = useState(null);
+  const restaurant = useSelector(state => state.restaurant);
 
   useEffect(() => {
     /*
@@ -66,15 +68,17 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
     let counterTaste = 0;
     let additionalPrice = 0;
     let tastePrice = 0;
+    const tastePrices = [];
 
     product.complement_categories.forEach(category => {
       category.complements.forEach(complement => {
         if (complement.selected) {
           counterTaste = category.is_pizza_taste && complement.selected ? counterTaste + 1 : counterTaste;
           complement.prices.forEach(price => {
-            if (category.is_pizza_taste)
+            if (category.is_pizza_taste) {
               tastePrice = price.selected && price.price ? tastePrice + price.price : tastePrice;
-            else sumPrices = price.selected && price.price ? sumPrices + price.price : sumPrices;
+              if (price.selected) tastePrices.push(price.price);
+            } else sumPrices = price.selected && price.price ? sumPrices + price.price : sumPrices;
           });
           complement.additional.forEach(additional => {
             if (additional.selected)
@@ -86,7 +90,11 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
       });
     });
 
-    sumPrices = counterTaste > 0 ? sumPrices + tastePrice / counterTaste : sumPrices;
+    if (counterTaste > 0) {
+      if (restaurant.configs.pizza_calculate === 'average_value') sumPrices = sumPrices + tastePrice / counterTaste;
+      else if (restaurant.configs.pizza_calculate === 'higher_value')
+        sumPrices = sumPrices + Math.max.apply(Math, tastePrices);
+    }
 
     setComplementsPrice(sumPrices + additionalPrice);
   }, [product]);

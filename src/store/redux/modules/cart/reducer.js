@@ -44,12 +44,11 @@ export default function cart(state = INITIAL_STATE, action) {
           category.complements.forEach(complement => {
             if (complement.selected) {
               counterTaste = category.is_pizza_taste && complement.selected ? counterTaste + 1 : counterTaste;
-              if (category.is_pizza_taste && complement.selected)
-                tastePrices.push(complement.prices.find(price => price.selected).price);
               complement.prices.forEach(price => {
-                if (category.is_pizza_taste)
+                if (category.is_pizza_taste) {
                   tastePrice = price.selected && price.price ? tastePrice + price.price : tastePrice;
-                else
+                  if (price.selected) tastePrices.push(price.price);
+                } else
                   complementsPrice = price.selected && price.price ? complementsPrice + price.price : complementsPrice;
               });
               complement.additional.forEach(additional => {
@@ -144,11 +143,11 @@ export default function cart(state = INITIAL_STATE, action) {
           category.complements.forEach(complement => {
             if (complement.selected) {
               counterTaste = category.is_pizza_taste && complement.selected ? counterTaste + 1 : counterTaste;
-              if (category.is_pizza_taste && complement.selected) tastePrices.push(complement.price);
               complement.prices.forEach(price => {
-                if (category.is_pizza_taste)
+                if (category.is_pizza_taste) {
                   tastePrice = price.selected && price.price ? tastePrice + price.price : tastePrice;
-                else
+                  if (price.selected) tastePrices.push(price.price);
+                } else
                   complementsPrice = price.selected && price.price ? complementsPrice + price.price : complementsPrice;
               });
               complement.additional.forEach(additional => {
@@ -173,9 +172,9 @@ export default function cart(state = INITIAL_STATE, action) {
 
       // calcula do valor das pizzas
       if (counterTaste > 0) {
-        if (state.configs.calculate_pizza === 'average_value') {
+        if (state.configs.pizza_calculate === 'average_value') {
           tastePrice = tastePrice / counterTaste;
-        } else if (state.configs.calculate_pizza === 'higher_value') {
+        } else if (state.configs.pizza_calculate === 'higher_value') {
           tastePrice = Math.max.apply(Math, tastePrices);
         }
 
