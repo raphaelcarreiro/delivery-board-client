@@ -28,7 +28,6 @@ export default function Shipment({ addresses }) {
   const [dialogEditAddress, setDialogEditAddress] = useState(false);
   const [dialogDeleteAddress, setDialogDeleteAddress] = useState(false);
   const app = useContext(AppContext);
-  const user = useSelector(state => state.user);
 
   useEffect(() => {
     app.handleCartVisibility(false);
@@ -37,18 +36,13 @@ export default function Shipment({ addresses }) {
   async function handleAddressSubmit(address) {
     try {
       setSaving(true);
-      // é necessário enviar o customer_id caso o usuário seja do tipo guest
-      const data = {
-        customer_id: user.customer.id,
-        ...address,
-      };
-
-      const response = await api().post('/customerAddresses', data);
+      const response = await api().post('/customerAddresses', address);
       dispatch(setShipmentAddress(response.data));
       dispatch(addCustomerAddress(response.data));
+      // setSaving(false);
+      checkout.handleStepNext();
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
-    } finally {
       setSaving(false);
     }
   }
@@ -107,7 +101,7 @@ export default function Shipment({ addresses }) {
       {dialogNewAddress && (
         <AccountAddressesNew
           handleAddressSubmit={handleAddressSubmit}
-          handleModalState={handleDialogNewAddress}
+          handleModalState={saving ? () => {} : handleDialogNewAddress}
           saving={saving}
         />
       )}

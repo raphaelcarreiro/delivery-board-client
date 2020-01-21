@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export function Account() {
+export default function Account() {
   const user = useSelector(state => state.user);
   const dispatch = useDispatch();
   const messaging = useContext(MessagingContext);
@@ -138,7 +138,7 @@ export function Account() {
       {saving && <Loading background="rgba(250,250,250, 0.5)" />}
 
       {loading ? (
-        <Loading background="rgba(250,250,250, 0.5)" />
+        <Loading />
       ) : (
         <Grid container>
           <PageHeader title="Minha conta" description="Gerencie os dados e endereços da sua conta" />

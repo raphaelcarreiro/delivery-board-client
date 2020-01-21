@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: 15,
     [theme.breakpoints.down('sm')]: {
       marginTop: 0,
-      width: '100%',
+      minWidth: '100%',
     },
   },
   imageWrapper: {

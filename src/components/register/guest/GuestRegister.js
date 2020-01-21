@@ -99,14 +99,8 @@ export default function GuestRegister() {
           .post('/guestUsers', user)
           .then(response => {
             setLoading(false);
-            const _user = {
-              ...response.data,
-              customer: {
-                ...response.data,
-                addresses: [],
-              },
-            };
-            reduxDispatch(setUser(_user));
+            localStorage.setItem(process.env.TOKEN_NAME, response.data.token);
+            reduxDispatch(setUser(response.data.user));
             if (app.redirect) {
               router.push(app.redirect);
               app.setRedirect(null);
