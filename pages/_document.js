@@ -4,13 +4,65 @@ import { ServerStyleSheets } from '@material-ui/core/styles';
 import axios from 'axios';
 
 export default class MyDocument extends Document {
+  setGoogleTags() {
+    return {
+      __html: `
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', '${this.props.gaId}', 'auto');
+        ga('send', 'pageview');
+      `,
+    };
+  }
+
+  setFacebookPixel() {
+    return {
+      __html: `
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '${this.props.pixelId}');
+      fbq('track', 'PageView');
+      `,
+    };
+  }
+
+  setFacebokScript() {
+    return {
+      __html: `
+      <noscript>
+      <img
+        height="1"
+        width="1"
+        style={{ display: 'none' }}
+        src='https://www.facebook.com/tr?id=${this.props.pixelId}&ev=PageView&noscript=1'
+      />
+      </noscript>
+      `,
+    };
+  }
+
   render() {
+    const { themeColor, gaId, pixelId } = this.props;
     return (
       <html lang="pt-BR">
         <Head>
+          {pixelId && (
+            <>
+              <script dangerouslySetInnerHTML={this.setFacebookPixel()} />
+              <noscript dangerouslySetInnerHTML={this.setFacebokScript()} />
+            </>
+          )}
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
-          <meta name="theme-color" content={this.props.themeColor} />
+          <meta name="theme-color" content={themeColor} />
           <link rel="manifest" href="/manifest.json" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
           <style jsx global>{`
@@ -160,14 +212,14 @@ MyDocument.getInitialProps = async ctx => {
   });
 
   const response = await api.get('restaurants');
-  const themeColor = response.data.primary_color;
-  const manifest = response.data.manifest;
+  const { configs } = response.data;
 
   return {
     ...initialProps,
-    themeColor,
-    manifest,
-    // Styles fragment is rendered after the app and page rendering finish.
+    themeColor: response.data.primary_color,
+    manifest: response.data.manifest,
+    gaId: configs.google_analytics_id,
+    pixelId: configs.facebook_pixel_id,
     styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
   };
 };

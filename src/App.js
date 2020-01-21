@@ -23,6 +23,7 @@ import io from 'socket.io-client';
 import { LinearProgress } from '@material-ui/core';
 import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
 import { getFirebaseMessaging } from 'src/config/FirebaseConfig';
+import reactGA from 'react-ga';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -66,6 +67,8 @@ function App({ pageProps, component: Component, restaurant }) {
   const [theme] = useState(
     restaurant ? createTheme(restaurant.primary_color, restaurant.secondary_color) : defaultTheme
   );
+  // restaurante state from redux. Restaurant param available only in ssr
+  const [_restaurant] = useState(restaurant);
 
   const appProviderValue = {
     handleLogout: handleLogout,
@@ -109,13 +112,18 @@ function App({ pageProps, component: Component, restaurant }) {
     setWindowWidth(window.innerWidth);
     dispatch(setRestaurant(restaurant));
     setInitialLoading(false);
-
+    console.log(restaurant);
+    if (restaurant.configs.google_analytics_id) {
+      reactGA.initialize(restaurant.configs.google_analytics_id);
+      reactGA.set({ page: window.location.pathname });
+      reactGA.pageview(window.location.pathname);
+    }
     document.body.classList.add('zoom');
   }, []);
 
   // set webscoket connection
   useEffect(() => {
-    socket = io(process.env.URL_NODE_SERVER);
+    socket = io(process.env.URL_NODE_SERVER, { reconnectionAttempts: 5 });
     socket.on('handleRestaurantState', state => {
       if (state.restaurantId === restaurant.id) dispatch(setRestaurantIsOpen(state));
     });
@@ -169,6 +177,10 @@ function App({ pageProps, component: Component, restaurant }) {
 
   function handleRouteChangeComplete() {
     setIsProgressBarVisible(false);
+    if (_restaurant.configs.google_analytics_id) {
+      reactGA.set({ page: window.location.pathname });
+      reactGA.pageview(window.location.pathname);
+    }
   }
 
   function handleRouteChangeError() {

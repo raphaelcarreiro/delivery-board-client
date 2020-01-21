@@ -13,6 +13,7 @@ import { updateProductFromCart } from 'src/store/redux/modules/cart/actions';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import CartClosedRestaurant from 'src/components/cart/CartClosedRestaurant';
 import { AppContext } from 'src/App';
+import { isAuthenticated } from 'src/services/auth';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -59,10 +60,11 @@ export default function Cart() {
   const dispatch = useDispatch();
   const messaging = useContext(MessagingContext);
   const app = useContext(AppContext);
+  const restaurant = useSelector(state => state.restaurant);
+  const user = useSelector(state => state.user);
   const [dialogUpdateSimpleProduct, setDialogUpdateSimpleProduct] = useState(false);
   const [dialogUpdateComplementProduct, setDialogUpdateComplementProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const restaurant = useSelector(state => state.restaurant);
   const [dialogClosedRestaurant, setDialogClosedRestaurant] = useState(false);
 
   function handleCheckoutClick() {
@@ -74,6 +76,20 @@ export default function Cart() {
     if (restaurant.minimum_order > cart.total) {
       messaging.handleOpen(`O valor mínimo do pedido é ${restaurant.formattedMinimumOrder}`);
       return;
+    }
+
+    if (restaurant.configs.require_login) {
+      const auth = isAuthenticated();
+      if (!auth) {
+        router.push('/login');
+        app.setRedirect('/checkout');
+        return;
+      }
+    } else {
+      if (!user.id) {
+        router.push('/guest-register');
+        app.setRedirect('/checkout');
+      }
     }
 
     router.push('/checkout');

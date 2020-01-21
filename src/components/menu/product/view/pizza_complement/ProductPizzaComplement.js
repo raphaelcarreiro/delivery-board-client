@@ -52,8 +52,11 @@ export default function ProductPizzaComplement({
       category.product_complement_category_id = category.id;
       category.complements = category.complements.map((complement, index) => {
         complement.product_complement_id = complement.id;
-        complement.selected = category.complements.length === 1;
         complement.formattedPrice = complement.price && moneyFormat(complement.price);
+        if (category.is_pizza_size && category.complements.length === 1) {
+          complement.selected = true;
+          setComplementSizeSelected(complement);
+        }
 
         complement.prices = complement.prices.map((price, index) => {
           price.product_complement_price_id = price.id;

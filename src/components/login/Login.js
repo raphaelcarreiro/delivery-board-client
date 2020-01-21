@@ -39,12 +39,16 @@ const useStyles = makeStyles({
     width: '100%',
     borderTop: '1px solid #ddd',
     paddingTop: 20,
+    '& button': {
+      marginBottom: 20,
+    },
   },
 });
 
 export default function Login() {
   const classes = useStyles();
   const router = useRouter();
+  const restaurant = useSelector(state => state.restaurant || {});
   const [facebookUser, setFacebookUser] = useState(null);
   const [googleUser, setGoogleUser] = useState(null);
   const app = useContext(AppContext);
@@ -164,33 +168,41 @@ export default function Login() {
     router.push('/register');
   }
 
+  function handleBack() {
+    router.push('/menu');
+  }
+
   return (
     <div className={classes.container}>
       {loading && <Loading background="rgba(250,250,250,0.5)" />}
       <Grid item xl={2} xs={12} md={4} lg={3} sm={5} container alignItems="center" direction="column">
-        <Typography>Como deseja continuar?</Typography>
-        <div className={classes.buttonContent}>
-          <Button
-            className={classes.btnFacebookLogin}
-            variant="contained"
-            fullWidth
-            color="primary"
-            onClick={handleFacebookLogin}
-          >
-            {facebookUser ? `Continuar como ${facebookUser.name}` : 'Entrar com Facebook'}
-          </Button>
-        </div>
-        <div className={classes.buttonContent}>
-          <Button
-            className={classes.btnGoogleLogin}
-            variant="contained"
-            fullWidth
-            color="primary"
-            onClick={handleGoogleLogin}
-          >
-            {googleUser ? `Continuar como ${googleUser.w3.ig}` : 'Entrar com Google'}
-          </Button>
-        </div>
+        <Typography variant="h6">Como deseja continuar?</Typography>
+        {restaurant.configs.facebook_login && (
+          <div className={classes.buttonContent}>
+            <Button
+              className={classes.btnFacebookLogin}
+              variant="contained"
+              fullWidth
+              color="primary"
+              onClick={handleFacebookLogin}
+            >
+              {facebookUser ? `Continuar como ${facebookUser.name}` : 'Entrar com Facebook'}
+            </Button>
+          </div>
+        )}
+        {restaurant.configs.google_login && (
+          <div className={classes.buttonContent}>
+            <Button
+              className={classes.btnGoogleLogin}
+              variant="contained"
+              fullWidth
+              color="primary"
+              onClick={handleGoogleLogin}
+            >
+              {googleUser ? `Continuar como ${googleUser.w3.ig}` : 'Entrar com Google'}
+            </Button>
+          </div>
+        )}
         <div className={classes.buttonContent}>
           <Button color="primary" variant="contained" fullWidth onClick={handleEmailPasswordClick}>
             Entrar com E-mail ou Telefone
@@ -199,6 +211,9 @@ export default function Login() {
         <div className={classes.btnCreateAccount}>
           <Button color="primary" variant="contained" fullWidth onClick={handleCreateAccountClick}>
             Criar conta
+          </Button>
+          <Button color="primary" variant="text" size="large" fullWidth onClick={handleBack}>
+            Voltar
           </Button>
         </div>
       </Grid>
