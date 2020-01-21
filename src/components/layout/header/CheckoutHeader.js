@@ -78,7 +78,7 @@ export default function CheckoutHeader() {
           <div className={classes.logoContent}>
             {restaurant && (
               <LinkNext href="/">
-                <a style={{ display: 'flex' }}>
+                <a style={{ lineHeight: 0 }}>
                   <img className={classes.img} src={restaurant.image.imageUrl} alt={restaurant.name} />
                 </a>
               </LinkNext>
