@@ -19,9 +19,10 @@ CheckoutButtons.propTypes = {
   handleStepPrior: PropTypes.func.isRequired,
   handleStepNext: PropTypes.func.isRequired,
   currentStep: PropTypes.object.isRequired,
+  quantitySteps: PropTypes.number.isRequired,
 };
 
-export default function CheckoutButtons({ handleStepPrior, handleStepNext, currentStep }) {
+export default function CheckoutButtons({ handleStepPrior, handleStepNext, currentStep, quantitySteps }) {
   const classes = useStyles({ step: currentStep.order });
 
   return (
@@ -31,7 +32,7 @@ export default function CheckoutButtons({ handleStepPrior, handleStepNext, curre
           Voltar
         </Button>
       )}
-      {currentStep.order < 3 && (
+      {currentStep.order < quantitySteps - 1 && (
         <Button size="large" color="primary" variant="contained" onClick={handleStepNext}>
           Próximo
         </Button>

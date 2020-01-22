@@ -6,7 +6,7 @@ import { setUser } from 'src/store/redux/modules/user/actions';
 import { MessagingContext } from '../messaging/Messaging';
 import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
-import { steps } from './steps/steps';
+import { steps as _steps } from './steps/steps';
 import { Grid, Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Payment from 'src/components/checkout/steps/payment/Payment';
@@ -116,6 +116,7 @@ export default function Checkout() {
   const [saving, setSaving] = useState(false);
   const [createdOrder, setCreatedOrder] = useState(null);
   const classes = useStyles({ step, isCartVisible: app.isCartVisible });
+  const [steps, setSteps] = useState(_steps);
 
   const currentStep = useMemo(() => {
     return steps.find(item => item.order === step);
@@ -129,6 +130,27 @@ export default function Checkout() {
     createdOrder,
     step,
   };
+
+  useEffect(() => {
+    if (restaurant.id) {
+      const { configs } = restaurant;
+
+      let order = 0;
+      let newSteps = steps.slice();
+
+      if (!configs.customer_collect) {
+        newSteps = newSteps.filter(step => step.id !== 'STEP_DELIVERY_WAY');
+      }
+
+      setSteps(
+        newSteps.map(step => {
+          order++;
+          step.order = order;
+          return step;
+        })
+      );
+    }
+  }, [restaurant]);
 
   useEffect(() => {
     app.handleCartVisibility(false);
@@ -270,11 +292,13 @@ export default function Checkout() {
               handleStepNext={handleStepNext}
               handleStepPrior={handleStepPrior}
               currentStep={currentStep}
+              quantitySteps={steps.length}
             />
             <CheckoutMobileButtons
               handleStepNext={handleStepNext}
               handleStepPrior={handleStepPrior}
               currentStep={currentStep}
+              quantitySteps={steps.length}
             />
           </CheckoutContext.Provider>
         </Grid>

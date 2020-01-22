@@ -45,6 +45,7 @@ export default function GuestRegisterForm({ user, validation, handleChange }) {
         value={user.phone}
         onChange={event => handleChange('phone', event.target.value)}
       />
+      {/*
       <TextField
         error={!!validation.email}
         helperText={validation.email ? validation.email : 'Opcional, caso deseje acompanhar o andamento do pedido'}
@@ -55,6 +56,7 @@ export default function GuestRegisterForm({ user, validation, handleChange }) {
         value={user.email}
         onChange={event => handleChange('email', event.target.value)}
       />
+      */}
     </div>
   );
 }

@@ -49,9 +49,10 @@ CheckoutMobileButtons.propTypes = {
   handleStepPrior: PropTypes.func.isRequired,
   handleStepNext: PropTypes.func.isRequired,
   currentStep: PropTypes.object.isRequired,
+  quantitySteps: PropTypes.number.isRequired,
 };
 
-export default function CheckoutMobileButtons({ handleStepPrior, handleStepNext, currentStep }) {
+export default function CheckoutMobileButtons({ handleStepPrior, handleStepNext, currentStep, quantitySteps }) {
   const classes = useStyles();
 
   return (
@@ -61,7 +62,7 @@ export default function CheckoutMobileButtons({ handleStepPrior, handleStepNext,
           <span>VOLTAR</span>
         </div>
       )}
-      {currentStep.order < 3 && (
+      {currentStep.order < quantitySteps - 1 && (
         <div className={classes.mobileButtonNext} onClick={handleStepNext}>
           <span>PRÓXIMO</span>
         </div>

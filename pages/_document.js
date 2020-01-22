@@ -50,7 +50,7 @@ export default class MyDocument extends Document {
   }
 
   render() {
-    const { themeColor, gaId, pixelId } = this.props;
+    const { themeColor, gaId, pixelId, manifest } = this.props;
     return (
       <html lang="pt-BR">
         <Head>
@@ -69,7 +69,6 @@ export default class MyDocument extends Document {
           <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
           {themeColor && <meta name="theme-color" content={themeColor} />}
           <link rel="manifest" href="/manifest.json" />
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
           <style jsx global>{`
             html,
             body,
@@ -178,29 +177,6 @@ export default class MyDocument extends Document {
 }
 
 MyDocument.getInitialProps = async ctx => {
-  // Resolution order
-  //
-  // On the server:
-  // 1. app.getInitialProps
-  // 2. page.getInitialProps
-  // 3. document.getInitialProps
-  // 4. app.render
-  // 5. page.render
-  // 6. document.render
-  //
-  // On the server with error:
-  // 1. document.getInitialProps
-  // 2. app.render
-  // 3. page.render
-  // 4. document.render
-  //
-  // On the client
-  // 1. app.getInitialProps
-  // 2. page.getInitialProps
-  // 3. app.render
-  // 4. page.render
-
-  // Render app and page and get the context of the page with collected side effects.
   const sheets = new ServerStyleSheets();
   const originalRenderPage = ctx.renderPage;
 
@@ -211,20 +187,20 @@ MyDocument.getInitialProps = async ctx => {
 
   const initialProps = await Document.getInitialProps(ctx);
 
-  /* const api = axios.create({
+  const api = axios.create({
     baseURL: process.env.BASEURL_API,
     headers: { RestaurantId: process.env.RESTAURANT_ID },
   });
 
   const response = await api.get('restaurants');
-  const { configs } = response.data; */
+  const { configs } = response.data;
 
   return {
     ...initialProps,
-    /* themeColor: response.data.primary_color,
+    themeColor: response.data.primary_color,
     manifest: response.data.manifest,
     gaId: configs.google_analytics_id,
-    pixelId: configs.facebook_pixel_id, */
+    pixelId: configs.facebook_pixel_id,
     styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
   };
 };

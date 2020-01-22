@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: '35px',
     borderRadius: 4,
-    height: 600,
+    height: 450,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
