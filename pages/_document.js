@@ -54,6 +54,11 @@ export default class MyDocument extends Document {
     return (
       <html lang="pt-BR">
         <Head>
+          {gaId && (
+            <>
+              <script dangerouslySetInnerHTML={this.setGoogleTags()} />
+            </>
+          )}
           {pixelId && (
             <>
               <script dangerouslySetInnerHTML={this.setFacebookPixel()} />
@@ -62,7 +67,7 @@ export default class MyDocument extends Document {
           )}
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
-          <meta name="theme-color" content={themeColor} />
+          {themeColor && <meta name="theme-color" content={themeColor} />}
           <link rel="manifest" href="/manifest.json" />
           <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
           <style jsx global>{`
@@ -206,20 +211,20 @@ MyDocument.getInitialProps = async ctx => {
 
   const initialProps = await Document.getInitialProps(ctx);
 
-  const api = axios.create({
+  /* const api = axios.create({
     baseURL: process.env.BASEURL_API,
     headers: { RestaurantId: process.env.RESTAURANT_ID },
   });
 
   const response = await api.get('restaurants');
-  const { configs } = response.data;
+  const { configs } = response.data; */
 
   return {
     ...initialProps,
-    themeColor: response.data.primary_color,
+    /* themeColor: response.data.primary_color,
     manifest: response.data.manifest,
     gaId: configs.google_analytics_id,
-    pixelId: configs.facebook_pixel_id,
+    pixelId: configs.facebook_pixel_id, */
     styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
   };
 };
