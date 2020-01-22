@@ -56,6 +56,8 @@ export default function ProductPizzaComplement({
         if (category.is_pizza_size && category.complements.length === 1) {
           complement.selected = true;
           setComplementSizeSelected(complement);
+        } else {
+          complement.selected = false;
         }
 
         complement.prices = complement.prices.map((price, index) => {
