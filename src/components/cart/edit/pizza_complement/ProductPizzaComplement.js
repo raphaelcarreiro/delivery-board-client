@@ -277,6 +277,7 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
         </Grid>
         <Grid item xs={12} className={classes.annotationContainer}>
           <TextField
+            variant="outlined"
             multiline
             rows={4}
             label="Tem alguma observação?"

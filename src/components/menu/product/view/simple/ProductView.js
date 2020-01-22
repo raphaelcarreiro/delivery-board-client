@@ -40,6 +40,7 @@ const useStyles = makeStyles(theme => ({
   },
   productData: {
     marginBottom: 15,
+    marginTop: 10,
   },
   annotationContainer: {
     marginTop: 15,
@@ -179,6 +180,7 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
           </Grid>
           <Grid item xs={12} className={classes.annotationContainer}>
             <TextField
+              variant="outlined"
               multiline
               rows={4}
               label="Tem alguma observação?"

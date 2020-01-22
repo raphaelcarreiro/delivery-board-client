@@ -1,10 +1,52 @@
 import React, { useState, useContext } from 'react';
-import { TextField, Grid } from '@material-ui/core';
+import { TextField, Grid, Button, CircularProgress } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import AccountAddressesAction from './AccountAddressesAction';
 import { MessagingContext } from '../../messaging/Messaging';
-import DialogFullscreenForm from '../../dialog/DialogFullscreenForm';
 import PostalCodeInput from '../../masked-input/PostalCodeInput';
+import CustomDialogForm from 'src/components/dialog/CustomDialogForm';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+  actions: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    display: 'flex',
+    backgroundColor: '#fff',
+    boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)',
+    justifyContent: 'center',
+    padding: 15,
+    [theme.breakpoints.down('md')]: {
+      position: 'fixed',
+    },
+  },
+  form: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'column',
+    [theme.breakpoints.down('md')]: {
+      marginBottom: 72,
+    },
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 20,
+    backgroundColor: 'rgba(250, 250, 250, 0.6)',
+  },
+}));
 
 function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, saving, selectedAddress }) {
   const [postalCode] = useState(selectedAddress.postal_code || '');
@@ -17,6 +59,7 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
   const [city] = useState(selectedAddress.city);
   const [region] = useState(selectedAddress.region);
   const messaging = useContext(MessagingContext);
+  const classes = useStyles();
 
   async function handleSubmit() {
     const data = {
@@ -40,7 +83,7 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
   }
 
   return (
-    <DialogFullscreenForm
+    <CustomDialogForm
       title="Atualizar endereço"
       handleModalState={handleModalState}
       handleSubmit={handleSubmit}
@@ -48,7 +91,12 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
       async
       componentActions={<AccountAddressesAction saving={saving} />}
     >
-      <Grid item xs={12} xl={3} md={5} lg={4}>
+      {saving && (
+        <div className={classes.loading}>
+          <CircularProgress color="primary" />
+        </div>
+      )}
+      <Grid item xs={12} xl={3} md={5} lg={3}>
         <TextField
           label="CEP"
           placeholder="Digite o CEP"
@@ -61,6 +109,8 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
           required
           disabled
         />
+      </Grid>
+      <Grid item xs={12} xl={6} lg={6} md={8}>
         <TextField
           label="Endereço"
           placeholder="Digite o endereço"
@@ -115,8 +165,13 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
           disabled
           required
         />
+        <div className={classes.actions}>
+          <Button disabled={saving} type="submit" variant="contained" color="primary">
+            Confirmar endereço
+          </Button>
+        </div>
       </Grid>
-    </DialogFullscreenForm>
+    </CustomDialogForm>
   );
 }
 

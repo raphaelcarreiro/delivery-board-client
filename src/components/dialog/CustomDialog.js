@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   appbarSpace: {
-    marginBottom: 80,
+    marginBottom: 64,
     [theme.breakpoints.down('md')]: {
       marginBottom: 56,
     },
@@ -80,7 +80,7 @@ export default function CustomDialog({ handleModalState, title, componentActions
             <IconButton color="inherit" onClick={handleClose}>
               <ArrowBackIcon />
             </IconButton>
-            <Typography variant={'h6'} color="inherit" noWrap>
+            <Typography variant="h6" color="inherit" noWrap>
               {title}
             </Typography>
             <div className={classes.grow} />

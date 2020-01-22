@@ -61,7 +61,7 @@ const useStyles = makeStyles(theme => ({
     overflowY: 'auto',
   }),
   cartContent: {
-    marginTop: 15,
+    marginTop: 10,
     display: 'flex',
     flexDirection: 'column',
     height: '100%',

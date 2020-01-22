@@ -12,9 +12,10 @@ const useStyles = makeStyles({
     justifyContent: 'space-evenly',
   },
   container: {
+    flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    height: 200,
+    height: 250,
     justifyContent: 'space-between',
   },
   total: {
@@ -22,6 +23,12 @@ const useStyles = makeStyles({
   },
   btnConfirm: {
     marginTop: 30,
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    flex: 1,
   },
 });
 
@@ -77,11 +84,11 @@ export default function PaymentChange({ onExited }) {
               </div>
             ) : (
               <div className={classes.container}>
-                <Typography>
-                  Troco para quanto? Seu pedido deu
-                  <span className={classes.total}>{' ' + cart.formattedTotal}</span>
-                </Typography>
-                <form onSubmit={event => handleSubmit(event, handleCloseDialog)}>
+                <form onSubmit={event => handleSubmit(event, handleCloseDialog)} className={classes.form}>
+                  <Typography>
+                    Troco para quanto? Seu pedido deu
+                    <span className={classes.total}>{' ' + cart.formattedTotal}</span>
+                  </Typography>
                   <TextField
                     label="Dinheiro R$"
                     placeholder="Digite o valor que você vair pagar ao entregador"

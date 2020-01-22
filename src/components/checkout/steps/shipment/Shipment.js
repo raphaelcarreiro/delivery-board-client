@@ -21,6 +21,7 @@ Shipment.propTypes = {
 export default function Shipment({ addresses }) {
   const dispatch = useDispatch();
   const [saving, setSaving] = useState(false);
+  const [savingAddress, setSavingAddress] = useState(false);
   const messaging = useContext(MessagingContext);
   const checkout = useContext(CheckoutContext);
   const [selectedAddress, setSelectedAddress] = useState(false);
@@ -28,35 +29,39 @@ export default function Shipment({ addresses }) {
   const [dialogEditAddress, setDialogEditAddress] = useState(false);
   const [dialogDeleteAddress, setDialogDeleteAddress] = useState(false);
   const app = useContext(AppContext);
+  const { customer } = useSelector(state => state.user);
 
   useEffect(() => {
     app.handleCartVisibility(false);
   }, []);
 
+  useEffect(() => {
+    if (customer) if (customer.addresses.length === 0) setDialogNewAddress(true);
+  }, [customer.addresses]);
+
   async function handleAddressSubmit(address) {
     try {
-      setSaving(true);
+      setSavingAddress(true);
       const response = await api().post('/customerAddresses', address);
       dispatch(setShipmentAddress(response.data));
       dispatch(addCustomerAddress(response.data));
-      // setSaving(false);
       checkout.handleStepNext();
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
-      setSaving(false);
+      setSavingAddress(false);
     }
   }
 
   async function handleAddressUpdateSubmit(address) {
     try {
-      setSaving(true);
+      setSavingAddress(true);
       const response = await api().put(`/customerAddresses/${selectedAddress.id}`, address);
       dispatch(updateCustomerAddress(response.data));
       dispatch(setShipmentAddress(response.data));
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
     } finally {
-      setSaving(false);
+      setSavingAddress(false);
     }
   }
 
@@ -101,8 +106,8 @@ export default function Shipment({ addresses }) {
       {dialogNewAddress && (
         <AccountAddressesNew
           handleAddressSubmit={handleAddressSubmit}
-          handleModalState={saving ? () => {} : handleDialogNewAddress}
-          saving={saving}
+          handleModalState={savingAddress ? () => {} : handleDialogNewAddress}
+          saving={savingAddress}
         />
       )}
       {dialogEditAddress && (
@@ -110,7 +115,7 @@ export default function Shipment({ addresses }) {
           handleAddressUpdateSubmit={handleAddressUpdateSubmit}
           selectedAddress={selectedAddress}
           handleModalState={() => setDialogEditAddress(false)}
-          saving={saving}
+          saving={savingAddress}
         />
       )}
       {dialogDeleteAddress && (

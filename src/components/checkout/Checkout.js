@@ -56,9 +56,9 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     flex: 1,
-    // border: '1px solid #ddd',
-    // padding: 20,
-    // borderRadius: 4,
+    [theme.breakpoints.down('md')]: {
+      marginBottom: 20,
+    },
   },
   actions: ({ step }) => ({
     display: 'flex',

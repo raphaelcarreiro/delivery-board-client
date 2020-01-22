@@ -112,12 +112,13 @@ function App({ pageProps, component: Component, restaurant }) {
     setWindowWidth(window.innerWidth);
     dispatch(setRestaurant(restaurant));
     setInitialLoading(false);
-    console.log(restaurant);
+
     if (restaurant.configs.google_analytics_id) {
       reactGA.initialize(restaurant.configs.google_analytics_id);
       reactGA.set({ page: window.location.pathname });
       reactGA.pageview(window.location.pathname);
     }
+
     document.body.classList.add('zoom');
   }, []);
 

@@ -67,6 +67,7 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
   const [dialogNewAddress, setDialogNewAddress] = useState(false);
   const [dialogEditAddress, setDialogEditAddress] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [savingAddress, setSavingAddress] = useState(false);
   const messaging = useContext(MessagingContext);
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -88,28 +89,27 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
 
   async function handleAddressSubmit(address) {
     try {
-      setSaving(true);
-
+      setSavingAddress(true);
       const response = await api().post('/customerAddresses', address);
       dispatch(addCustomerAddress(response.data));
       messaging.handleOpen('Endereço incluído');
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
     } finally {
-      setSaving(false);
+      setSavingAddress(false);
     }
   }
 
   async function handleAddressUpdateSubmit(address) {
     try {
-      setSaving(true);
+      setSavingAddress(true);
       const response = await api().put(`/customerAddresses/${selectedAddress.id}`, address);
       dispatch(updateCustomerAddress(response.data));
       messaging.handleOpen('Endereço incluído');
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
     } finally {
-      setSaving(false);
+      setSavingAddress(false);
     }
   }
 
@@ -137,7 +137,7 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
         <AccountAddressesNew
           handleAddressSubmit={handleAddressSubmit}
           handleModalState={handleDialogNewAddress}
-          saving={saving}
+          saving={savingAddress}
         />
       )}
       {dialogEditAddress && (
@@ -145,7 +145,7 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
           handleAddressUpdateSubmit={handleAddressUpdateSubmit}
           selectedAddress={selectedAddress}
           handleModalState={() => setDialogEditAddress(false)}
-          saving={saving}
+          saving={savingAddress}
         />
       )}
       <Menu onClose={() => setAnchorEl(null)} anchorEl={anchorEl} open={Boolean(anchorEl)}>

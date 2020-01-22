@@ -156,6 +156,7 @@ export default function ProductSimple({ onExited, selectedProduct, handleUpdateC
           </Grid>
           <Grid item xs={12} className={classes.annotationContainer}>
             <TextField
+              variant="outlined"
               multiline
               rows={4}
               label="Tem alguma observação?"

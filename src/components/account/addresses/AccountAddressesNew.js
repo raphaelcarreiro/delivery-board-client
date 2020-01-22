@@ -1,12 +1,54 @@
 import React, { useState, Fragment, useContext } from 'react';
-import { TextField, Grid } from '@material-ui/core';
+import { TextField, Grid, Button, CircularProgress } from '@material-ui/core';
 import PostalCodeInput from '../../masked-input/PostalCodeInput';
 import Loading from '../../loading/Loading';
-import DialogFullscreenForm from '../../dialog/DialogFullscreenForm';
 import { MessagingContext } from '../../messaging/Messaging';
 import PropTypes from 'prop-types';
 import AccountAddressesAction from './AccountAddressesAction';
 import { postalCodeSearch } from 'src/services/postalCodeSearch';
+import CustomDialogForm from 'src/components/dialog/CustomDialogForm';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles(theme => ({
+  actions: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    display: 'flex',
+    backgroundColor: '#fff',
+    boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)',
+    justifyContent: 'center',
+    padding: 15,
+    [theme.breakpoints.down('md')]: {
+      position: 'fixed',
+    },
+  },
+  form: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexDirection: 'column',
+    [theme.breakpoints.down('md')]: {
+      marginBottom: 72,
+    },
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 20,
+    backgroundColor: 'rgba(250, 250, 250, 0.6)',
+  },
+}));
 
 const interval = 500;
 let timer = null;
@@ -23,6 +65,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
   const [cepValidation, setCepValidation] = useState(false);
   const [cepValidationText, setCepValidationText] = useState('');
   const messaging = useContext(MessagingContext);
+  const classes = useStyles();
 
   function handleChangeCep(value) {
     setPostalCode(value);
@@ -97,7 +140,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
   }
 
   return (
-    <DialogFullscreenForm
+    <CustomDialogForm
       title="Adicionar endereço"
       handleModalState={handleModalState}
       handleSubmit={handleSubmit}
@@ -105,7 +148,12 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
       async
       componentActions={<AccountAddressesAction saving={saving} />}
     >
-      <Grid item xs={12} xl={3} md={5} lg={4}>
+      {saving && (
+        <div className={classes.loading}>
+          <CircularProgress color="primary" />
+        </div>
+      )}
+      <Grid item xs={12} xl={3} md={5} lg={3}>
         {loading && <Loading />}
         <TextField
           label="CEP"
@@ -122,65 +170,74 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
           required
           autoFocus
         />
+      </Grid>
+      <Grid item xs={12} xl={6} lg={6} md={8}>
         {cepValidation && (
-          <Fragment>
-            <TextField
-              label="Endereço"
-              placeholder="Digite o endereço"
-              margin="normal"
-              fullWidth
-              value={address}
-              onChange={event => setAddress(event.target.value)}
-              required
-            />
-            <TextField
-              label="Número"
-              placeholder="Digite o número"
-              margin="normal"
-              fullWidth
-              value={number}
-              onChange={event => setNumber(event.target.value)}
-              required
-            />
-            <TextField
-              label="Bairro"
-              placeholder="Digite o bairro"
-              margin="normal"
-              fullWidth
-              value={district}
-              onChange={event => setDistrict(event.target.value)}
-              required
-            />
-            <TextField
-              label="Complemento"
-              placeholder="Digite o complemento"
-              margin="normal"
-              fullWidth
-              value={complement}
-              onChange={event => setComplement(event.target.value)}
-            />
-            <TextField
-              label="Cidade"
-              placeholder="Digite a cidade"
-              margin="normal"
-              fullWidth
-              value={city}
-              disabled
-              required
-            />
-            <TextField
-              label="Estado"
-              placeholder="Digite o estado"
-              margin="normal"
-              fullWidth
-              value={region}
-              disabled
-              required
-            />
-          </Fragment>
+          <div className={classes.form}>
+            <div>
+              <TextField
+                label="Endereço"
+                placeholder="Digite o endereço"
+                margin="normal"
+                fullWidth
+                value={address}
+                onChange={event => setAddress(event.target.value)}
+                required
+              />
+              <TextField
+                label="Número"
+                placeholder="Digite o número"
+                margin="normal"
+                fullWidth
+                value={number}
+                onChange={event => setNumber(event.target.value)}
+                required
+              />
+              <TextField
+                label="Bairro"
+                placeholder="Digite o bairro"
+                margin="normal"
+                fullWidth
+                value={district}
+                onChange={event => setDistrict(event.target.value)}
+                required
+              />
+              <TextField
+                label="Complemento"
+                placeholder="Digite o complemento"
+                margin="normal"
+                fullWidth
+                value={complement}
+                onChange={event => setComplement(event.target.value)}
+              />
+              <TextField
+                label="Cidade"
+                placeholder="Digite a cidade"
+                margin="normal"
+                fullWidth
+                value={city}
+                disabled
+                required
+              />
+              <TextField
+                label="Estado"
+                placeholder="Digite o estado"
+                margin="normal"
+                fullWidth
+                value={region}
+                disabled
+                required
+              />
+            </div>
+            <div className={classes.actions}>
+              <Button size="large" disabled={saving} type="submit" variant="contained" color="primary">
+                Confirmar endereço
+              </Button>
+            </div>
+          </div>
         )}
       </Grid>
-    </DialogFullscreenForm>
+    </CustomDialogForm>
   );
 }
 
