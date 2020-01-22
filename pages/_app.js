@@ -3,10 +3,10 @@ import AppNext from 'next/app';
 import { Provider } from 'react-redux';
 import App from '../src/App';
 import { store } from '../src/store/redux';
-import axios from 'axios';
+// import axios from 'axios';
 
 class _App extends AppNext {
-  static async getInitialProps(appContext) {
+  /* static async getInitialProps(appContext) {
     const appProps = await AppNext.getInitialProps(appContext);
 
     if (!process.browser) {
@@ -23,7 +23,7 @@ class _App extends AppNext {
     }
 
     return { ...appProps };
-  }
+  } */
 
   componentDidMount() {
     // Remove the server-side injected CSS.
@@ -34,12 +34,12 @@ class _App extends AppNext {
   }
 
   render() {
-    const { Component, pageProps, restaurant } = this.props;
+    const { Component, pageProps } = this.props;
 
     return (
       <>
         <Provider store={store}>
-          <App pageProps={pageProps} component={Component} restaurant={restaurant} />
+          <App pageProps={pageProps} component={Component} />
         </Provider>
       </>
     );

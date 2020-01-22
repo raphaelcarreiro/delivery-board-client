@@ -24,7 +24,6 @@ import { LinearProgress } from '@material-ui/core';
 import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
 import { getFirebaseMessaging } from 'src/config/FirebaseConfig';
 import reactGA from 'react-ga';
-import { routes } from 'routes';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -52,7 +51,7 @@ export const AppContext = createContext({
 export const menuWidth = 240;
 let socket;
 
-function App({ pageProps, component: Component, restaurant }) {
+function App({ pageProps, component: Component }) {
   const user = useSelector(state => state.user);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -65,11 +64,8 @@ function App({ pageProps, component: Component, restaurant }) {
   const [isCartVisible, setIsCartVisible] = useState(false);
   const [redirect, setRedirect] = useState(null);
   const [isProgressBarVisible, setIsProgressBarVisible] = useState(false);
-  const [theme] = useState(
-    restaurant ? createTheme(restaurant.primary_color, restaurant.secondary_color) : defaultTheme
-  );
-  // restaurante state from redux. Restaurant param available only in ssr
-  const [_restaurant] = useState(restaurant);
+  const [theme, setTheme] = useState(defaultTheme);
+  const restaurant = useSelector(state => state.restaurant);
 
   const appProviderValue = {
     handleLogout: handleLogout,
@@ -88,6 +84,32 @@ function App({ pageProps, component: Component, restaurant }) {
   const paths = ['/register', '/login', '/login/email', '/guest-register'];
   const checkoutPaths = ['/checkout'];
 
+  // load restaurant data from server
+  useEffect(() => {
+    api()
+      .get('/restaurants')
+      .then(response => {
+        const _restaurant = response.data;
+        const { configs } = _restaurant;
+
+        dispatch(setRestaurant(_restaurant));
+        setTheme(createTheme(_restaurant.primary_color, _restaurant.secondary_color));
+
+        if (configs.google_analytics_id) {
+          reactGA.initialize(restaurant.configs.google_analytics_id);
+          reactGA.set({ page: window.location.pathname });
+          reactGA.pageview(window.location.pathname);
+        }
+      })
+      .catch(() => {
+        console.log('Erro ao carregar os dados do restaurante');
+      })
+      .finally(() => {
+        setInitialLoading(false);
+        document.body.classList.add('zoom');
+      });
+  }, []);
+
   useEffect(() => {
     setInitialLoading(true);
   }, []);
@@ -96,7 +118,6 @@ function App({ pageProps, component: Component, restaurant }) {
     reactotronInitialize();
   }, []);
 
-  // load restaurant data from server
   useEffect(() => {
     const payload = verifyToken();
     if (payload)
@@ -112,19 +133,8 @@ function App({ pageProps, component: Component, restaurant }) {
     if (cart) dispatch(setCart(cart));
 
     window.addEventListener('resize', handleResize);
-
     setIsMobile(mobileCheck());
     setWindowWidth(window.innerWidth);
-    dispatch(setRestaurant(restaurant));
-    setInitialLoading(false);
-
-    if (restaurant.configs.google_analytics_id) {
-      reactGA.initialize(restaurant.configs.google_analytics_id);
-      reactGA.set({ page: window.location.pathname });
-      reactGA.pageview(window.location.pathname);
-    }
-
-    document.body.classList.add('zoom');
   }, []);
 
   // set webscoket connection
@@ -183,10 +193,11 @@ function App({ pageProps, component: Component, restaurant }) {
 
   function handleRouteChangeComplete() {
     setIsProgressBarVisible(false);
-    if (_restaurant.configs.google_analytics_id) {
+
+    /* if (restaurant.configs.google_analytics_id) {
       reactGA.set({ page: window.location.pathname });
       reactGA.pageview(window.location.pathname);
-    }
+    } */
   }
 
   function handleRouteChangeError() {
