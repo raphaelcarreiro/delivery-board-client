@@ -1,5 +1,5 @@
 import React, { useState, useContext, useReducer } from 'react';
-import { Grid, LinearProgress, Button } from '@material-ui/core';
+import { Grid, LinearProgress, Button, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import GuestRegisterForm from './GuestRegisterForm';
 import * as yup from 'yup';
@@ -52,6 +52,9 @@ const useStyles = makeStyles(theme => ({
     zIndex: 10,
     display: 'flex',
     justifyContent: 'center',
+    [theme.breakpoints.down('md')]: {
+      alignItems: 'center',
+    },
   },
   linearProgress: {
     width: '99%',
@@ -104,7 +107,7 @@ export default function GuestRegister() {
             if (app.redirect) {
               router.push(app.redirect);
               app.setRedirect(null);
-            }
+            } else router.push('/menu');
           })
           .catch(err => {
             if (err.response) messaging.handleOpen(err.response.data.error);
@@ -125,7 +128,11 @@ export default function GuestRegister() {
           <div className={classes.paper}>
             {loading && (
               <div className={classes.loading}>
-                <LinearProgress className={classes.linearProgress} color="primary" />
+                {!app.isMobile || app.windowWidth >= 960 ? (
+                  <LinearProgress className={classes.linearProgress} color="primary" />
+                ) : (
+                  <CircularProgress color="primary" />
+                )}
               </div>
             )}
             <GuestRegisterForm user={user} handleChange={handleChange} validation={validation} />

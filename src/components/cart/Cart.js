@@ -78,18 +78,15 @@ export default function Cart() {
       return;
     }
 
-    if (restaurant.configs.require_login) {
-      const auth = isAuthenticated();
-      if (!auth) {
+    if (!isAuthenticated()) {
+      if (restaurant.configs.require_login) {
         router.push('/login');
         app.setRedirect('/checkout');
         return;
       }
-    } else {
-      if (!user.id) {
-        router.push('/guest-register');
-        app.setRedirect('/checkout');
-      }
+      router.push('/guest-register');
+      app.setRedirect('/checkout');
+      return;
     }
 
     router.push('/checkout');

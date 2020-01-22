@@ -1,5 +1,5 @@
 import React, { useState, useContext, useReducer, useEffect } from 'react';
-import { Grid, Button, LinearProgress } from '@material-ui/core';
+import { Grid, Button, LinearProgress, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '../link/Link';
 import { api } from '../../services/api';
@@ -53,6 +53,9 @@ const useStyles = makeStyles(theme => ({
     zIndex: 10,
     display: 'flex',
     justifyContent: 'center',
+    [theme.breakpoints.down('md')]: {
+      alignItems: 'center',
+    },
   },
   linearProgress: {
     width: '99%',
@@ -144,7 +147,11 @@ export function Register({ name, email }) {
           <div className={classes.paper}>
             {loading && (
               <div className={classes.loading}>
-                <LinearProgress className={classes.linearProgress} color="primary" />
+                {app.isMobile || app.windowWidth >= 960 ? (
+                  <LinearProgress className={classes.linearProgress} color="primary" />
+                ) : (
+                  <CircularProgress color="primary" />
+                )}
               </div>
             )}
             {!created ? (

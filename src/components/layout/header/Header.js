@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, Menu, MenuItem, Avatar, Typography, Tooltip } from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
@@ -180,9 +180,16 @@ export default function Header() {
             </div>
             <div>
               {!user.id ? (
-                <Link href="/login" className={classes.link}>
-                  <InputIcon color="primary" /> Entrar
-                </Link>
+                <>
+                  {restaurant.configs && (
+                    <Link
+                      href={restaurant.configs.require_login ? '/login' : '/guest-register'}
+                      className={classes.link}
+                    >
+                      <InputIcon color="primary" /> Entrar
+                    </Link>
+                  )}
+                </>
               ) : (
                 <>
                   <Menu

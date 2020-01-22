@@ -85,6 +85,12 @@ const useStyles = makeStyles(theme => ({
       fontSize: 18,
     },
   },
+  cartContent: {
+    marginTop: 10,
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+  },
 }));
 
 export const CheckoutContext = React.createContext({
@@ -217,7 +223,9 @@ export default function Checkout() {
         <>
           {app.isCartVisible && (
             <DialogFullscreen title="Carrinho" handleModalState={() => app.handleCartVisibility(false)}>
-              <Cart />
+              <div className={classes.cartContent}>
+                <Cart />
+              </div>
             </DialogFullscreen>
           )}
         </>

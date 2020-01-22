@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { setChange } from 'src/store/redux/modules/order/actions';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   actions: {
     display: 'flex',
     justifyContent: 'space-evenly',
@@ -17,6 +17,9 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     height: 250,
     justifyContent: 'space-between',
+    [theme.breakpoints.down('sm')]: {
+      height: 200,
+    },
   },
   total: {
     fontWeight: 500,
@@ -30,7 +33,7 @@ const useStyles = makeStyles({
     justifyContent: 'space-between',
     flex: 1,
   },
-});
+}));
 
 PaymentChange.propTypes = {
   onExited: PropTypes.func.isRequired,

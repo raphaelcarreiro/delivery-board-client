@@ -16,20 +16,19 @@ function CheckoutPage() {
 
   useEffect(() => {
     if (restaurant.is_open) {
-      if (restaurant.configs.require_login) {
-        const _auth = isAuthenticated();
-        if (!_auth) {
+      const _auth = isAuthenticated();
+      if (!_auth) {
+        setAuth(_auth);
+        if (restaurant.configs.require_login) {
           router.push('/login');
           app.setRedirect('/checkout');
           return;
         }
-        setAuth(_auth);
-      } else {
-        if (!user.id) {
-          router.push('/guest-register');
-          app.setRedirect('/checkout');
-        } else setAuth(true);
+        router.push('/guest-register');
+        app.setRedirect('/checkout');
+        return;
       }
+      setAuth(_auth);
     }
   }, [user, restaurant]);
 

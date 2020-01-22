@@ -24,6 +24,7 @@ import { LinearProgress } from '@material-ui/core';
 import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
 import { getFirebaseMessaging } from 'src/config/FirebaseConfig';
 import reactGA from 'react-ga';
+import { routes } from 'routes';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -86,6 +87,10 @@ function App({ pageProps, component: Component, restaurant }) {
   // paginas que não precisam no cabeçalho e rodapé padrões
   const paths = ['/register', '/login', '/login/email', '/guest-register'];
   const checkoutPaths = ['/checkout'];
+
+  useEffect(() => {
+    setInitialLoading(true);
+  }, []);
 
   useEffect(() => {
     reactotronInitialize();
@@ -172,7 +177,7 @@ function App({ pageProps, component: Component, restaurant }) {
     }
   }, [user]);
 
-  function handleRouteChangeStart() {
+  function handleRouteChangeStart(url) {
     setIsProgressBarVisible(true);
   }
 
@@ -194,9 +199,8 @@ function App({ pageProps, component: Component, restaurant }) {
     api()
       .post('/logout')
       .then(response => {
-        // router.push('/');
-        dispatch(removeUser());
         localStorage.removeItem(process.env.TOKEN_NAME);
+        dispatch(removeUser());
       })
       .finally(() => {
         setLoading(false);
