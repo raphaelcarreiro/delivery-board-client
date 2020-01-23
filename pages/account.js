@@ -19,7 +19,7 @@ function AccountPage() {
       router.push('/login');
       app.setRedirect('/account');
     }
-  }, [user]);
+  }, [user.id]);
 
   return (
     <>

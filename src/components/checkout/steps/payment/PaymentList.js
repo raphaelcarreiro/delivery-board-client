@@ -1,15 +1,15 @@
-import React, { useContext, useState } from 'react';
-import { List, ListItem } from '@material-ui/core';
+import React, { useContext, useState, useEffect } from 'react';
+import { List, ListItem, Typography } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import { CheckoutContext } from 'src/components/checkout/Checkout';
 import PropTypes from 'prop-types';
-import CustomDialog from 'src/components/dialog/CustomDialog';
 import PaymentChange from 'src/components/checkout/steps/payment/PaymentChange';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setChange } from 'src/store/redux/modules/order/actions';
+import { moneyFormat } from 'src/helpers/numberFormat';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -69,6 +69,10 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  method: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
 }));
 
 PaymentList.propTypes = {
@@ -82,6 +86,7 @@ export default function PaymentList({ paymentMethods, handleSetPaymentMethod, pa
   const checkout = useContext(CheckoutContext);
   const [dialogChange, setDialogChange] = useState(false);
   const dispatch = useDispatch();
+  const order = useSelector(state => state.order);
 
   function handleClick(paymentMethod) {
     handleSetPaymentMethod(paymentMethod);
@@ -102,23 +107,37 @@ export default function PaymentList({ paymentMethods, handleSetPaymentMethod, pa
     <>
       {dialogChange && <PaymentChange onExited={handleCloseDialog} />}
       <List className={classes.list}>
-        {paymentMethods.map(paymentMethod => (
-          <ListItem
-            onClick={() => handleClick(paymentMethod)}
-            button
-            className={paymentMethod.id === paymentMethodId ? classes.selected : classes.listItem}
-            key={paymentMethod.id}
-          >
-            <div className={classes.iconContainer}>
-              <div className={classes.icon}>
-                {paymentMethod.kind === 'paymentCard' && <CreditCardIcon color="primary" />}
-                {paymentMethod.kind === 'money' && <AttachMoneyIcon color="primary" />}
-              </div>
-            </div>
-            <div>{paymentMethod.method}</div>
-            {paymentMethod.id === paymentMethodId && <CheckCircleIcon color="primary" className={classes.checkIcon} />}
-          </ListItem>
-        ))}
+        {paymentMethods.map(
+          paymentMethod =>
+            paymentMethod.kind !== 'online_payment' && (
+              <ListItem
+                onClick={() => handleClick(paymentMethod)}
+                button
+                className={paymentMethod.id === paymentMethodId ? classes.selected : classes.listItem}
+                key={paymentMethod.id}
+              >
+                <div className={classes.iconContainer}>
+                  <div className={classes.icon}>
+                    {paymentMethod.kind === 'payment_card' && <CreditCardIcon color="primary" />}
+                    {paymentMethod.kind === 'money' && <AttachMoneyIcon color="primary" />}
+                  </div>
+                </div>
+                <div className={classes.method}>
+                  <Typography>{paymentMethod.method}</Typography>
+                  {order.paymentMethod && (
+                    <>
+                      {order.change > 0 && paymentMethod.kind === 'money' && (
+                        <Typography color="textSecondary">Troco para {moneyFormat(order.change)}</Typography>
+                      )}
+                    </>
+                  )}
+                </div>
+                {paymentMethod.id === paymentMethodId && (
+                  <CheckCircleIcon color="primary" className={classes.checkIcon} />
+                )}
+              </ListItem>
+            )
+        )}
       </List>
     </>
   );

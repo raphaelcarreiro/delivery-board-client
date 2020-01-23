@@ -282,7 +282,7 @@ export default function Checkout() {
                 <Payment
                   handleSetPaymentMethod={handleSetPaymentMethod}
                   paymentMethods={paymentMethods}
-                  paymentMethodId={order.paymentMethod.id}
+                  paymentMethodId={order.paymentMethod && order.paymentMethod.id}
                 />
               ) : (
                 currentStep.id === 'STEP_CONFIRM' && <Confirm />

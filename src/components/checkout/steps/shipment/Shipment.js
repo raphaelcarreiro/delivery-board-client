@@ -30,13 +30,17 @@ export default function Shipment({ addresses }) {
   const [dialogDeleteAddress, setDialogDeleteAddress] = useState(false);
   const app = useContext(AppContext);
   const { customer } = useSelector(state => state.user);
+  const order = useSelector(state => state.order);
 
   useEffect(() => {
     app.handleCartVisibility(false);
   }, []);
 
   useEffect(() => {
-    if (customer) if (customer.addresses.length === 0) setDialogNewAddress(true);
+    if (customer) {
+      if (customer.addresses.length === 0) setDialogNewAddress(true);
+      if (customer.addresses.length === 0) dispatch(setShipmentAddress({}));
+    }
   }, [customer.addresses]);
 
   async function handleAddressSubmit(address) {
@@ -77,6 +81,7 @@ export default function Shipment({ addresses }) {
       .then(() => {
         messaging.handleOpen('Excluído');
         dispatch(deleteCustomerAddress(selectedAddress.id));
+        if (order.shipmentAddress.id === selectedAddress.id) dispatch(setShipmentAddress({}));
       })
       .catch(err => {
         if (err.response) messaging.handleOpen(err.response.data.error);

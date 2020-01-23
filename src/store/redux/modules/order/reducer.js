@@ -4,9 +4,9 @@ const INITIAL_STATE = {
   paymentMethod: null,
   products: [],
   step: 'shipment',
-  shipment_method: 'd',
+  shipment_method: 'delivery',
   change: 0,
-  paymentType: 'delivery',
+  payment_type: 'delivery',
   creditCard: {
     card_number: '',
     card_holder_name: '',

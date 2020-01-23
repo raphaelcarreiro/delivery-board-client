@@ -21,12 +21,12 @@ export default function PaymentCreditCard() {
 
   return (
     <Grid container className={classes.container}>
-      <Grid item xs={4}>
+      <Grid item xl={4} xs={12}>
         <TextField
           label="Número do cartão"
           margin="normal"
           placeholder="Digite o número do cartão de crédito"
-          value={order.creditCard.number}
+          value={order.creditCard.card_number}
           onChange={e => handleChange('card_number', e.target.value)}
           fullWidth
           autoFocus

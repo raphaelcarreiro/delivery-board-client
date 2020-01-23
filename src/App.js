@@ -139,15 +139,17 @@ function App({ pageProps, component: Component }) {
 
   // set webscoket connection
   useEffect(() => {
-    socket = io(process.env.URL_NODE_SERVER, { reconnectionAttempts: 5 });
-    socket.on('handleRestaurantState', state => {
-      if (state.restaurantId === restaurant.id) dispatch(setRestaurantIsOpen(state));
-    });
+    if (restaurant) {
+      socket = io(process.env.URL_NODE_SERVER, { reconnectionAttempts: 5 });
+      socket.on('handleRestaurantState', state => {
+        if (state.restaurantId === restaurant.id) dispatch(setRestaurantIsOpen(state));
+      });
+    }
 
     return () => {
-      socket.disconnect();
+      if (socket) socket.disconnect();
     };
-  }, []);
+  }, [restaurant]);
 
   // set actions on router changes, to display loading
   useEffect(() => {
@@ -185,7 +187,7 @@ function App({ pageProps, component: Component }) {
         console.error(error);
       }
     }
-  }, [user]);
+  }, [user.id]);
 
   function handleRouteChangeStart(url) {
     setIsProgressBarVisible(true);

@@ -8,7 +8,7 @@ import { AppContext } from 'src/App';
 
 const useStyles = makeStyles(theme => ({
   orderItemData: {
-    marginBottom: 15,
+    marginBottom: 12,
   },
   action: {
     marginTop: 30,
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   container: {
     padding: 15,
     [theme.breakpoints.down('sm')]: {
-      padding: '5px 15px',
+      padding: 0,
     },
   },
   total: {
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   link: {
     cursor: 'pointer',
     display: 'inline-block',
-    marginTop: 5,
+    marginTop: 1,
   },
 }));
 
@@ -64,9 +64,9 @@ export default function Confirm() {
         <Typography>
           {order.shipmentAddress.address}, {order.shipmentAddress.number}
         </Typography>
-        <Typography color="textSecondary">{order.shipmentAddress.district}</Typography>
-        <Typography color="textSecondary">{order.shipmentAddress.address_complement}</Typography>
-        <Typography color="textSecondary">{order.shipmentAddress.postal_code}</Typography>
+        <Typography>{order.shipmentAddress.district}</Typography>
+        <Typography>{order.shipmentAddress.address_complement}</Typography>
+        <Typography>{order.shipmentAddress.postal_code}</Typography>
         <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
           Alterar
         </Typography>
@@ -75,11 +75,22 @@ export default function Confirm() {
         <Typography variant="h5" className={classes.title}>
           Forma de pagamento
         </Typography>
-        <Typography>{order.paymentMethod.method}</Typography>
-        {order.change > 0 && (
-          <Typography>
-            Troco para {moneyFormat(order.change)} ({moneyFormat(order.change - cart.total)})
-          </Typography>
+        {order.paymentMethod.kind === 'online_payment' ? (
+          <>
+            <Typography>On-line</Typography>
+            <Typography color="textSecondary">Cartão de crédito</Typography>
+            <Typography color="textSecondary">**** **** **** {order.creditCard.card_number.substr(-4)}</Typography>
+          </>
+        ) : (
+          <>
+            <Typography>Na entrega</Typography>
+            <Typography>{order.paymentMethod.method}</Typography>
+            {order.change > 0 && (
+              <Typography color="textSecondary">
+                Troco para {moneyFormat(order.change)} ({moneyFormat(order.change - cart.total)})
+              </Typography>
+            )}
+          </>
         )}
         <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(2)}>
           Alterar
