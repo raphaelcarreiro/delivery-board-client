@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import { Tab, Tabs } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppContext } from 'src/App';
+import PaymentCreditCard from './PaymentCreditCard';
+import { useDispatch } from 'react-redux';
+import { orderChange } from 'src/store/redux/modules/order/actions';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -21,6 +24,7 @@ export default function Payment({ handleSetPaymentMethod, paymentMethods, paymen
   const [tab, setTab] = useState(0);
   const classes = useStyles();
   const app = useContext(AppContext);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!app.isMobile && app.windowWidth >= 960) app.handleCartVisibility(true);
@@ -28,6 +32,12 @@ export default function Payment({ handleSetPaymentMethod, paymentMethods, paymen
 
   function handleTabChange(event, value) {
     setTab(value);
+    if (value === 0) {
+      dispatch(orderChange('paymentType', 'delivery'));
+    } else {
+      dispatch(orderChange('paymentType', 'online'));
+      app.handleCartVisibility(false);
+    }
   }
 
   return (
@@ -44,6 +54,7 @@ export default function Payment({ handleSetPaymentMethod, paymentMethods, paymen
             handleSetPaymentMethod={handleSetPaymentMethod}
           />
         )}
+        {tab === 1 && <PaymentCreditCard />}
       </div>
     </>
   );

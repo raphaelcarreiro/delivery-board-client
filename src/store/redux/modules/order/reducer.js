@@ -6,6 +6,15 @@ const INITIAL_STATE = {
   step: 'shipment',
   shipment_method: 'd',
   change: 0,
+  paymentType: 'delivery',
+  creditCard: {
+    card_number: '',
+    card_holder_name: '',
+    card_id: '',
+    card_expiration_date: '',
+    card_cvv: '',
+    card_owner_cpf: '',
+  },
 };
 
 export default function order(state = INITIAL_STATE, action) {
@@ -42,6 +51,23 @@ export default function order(state = INITIAL_STATE, action) {
       return {
         ...state,
         change: action.value,
+      };
+    }
+
+    case '@order/CHANGE_CREDITCARD': {
+      return {
+        ...state,
+        creditCard: {
+          ...state.creditCard,
+          [action.index]: action.value,
+        },
+      };
+    }
+
+    case '@order/CHANGE': {
+      return {
+        ...state,
+        [action.index]: action.value,
       };
     }
 

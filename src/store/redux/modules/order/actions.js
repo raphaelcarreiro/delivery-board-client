@@ -32,3 +32,19 @@ export function setChange(value) {
     value,
   };
 }
+
+export function changeCreditCard(index, value) {
+  return {
+    type: '@order/CHANGE_CREDITCARD',
+    index,
+    value,
+  };
+}
+
+export function orderChange(index, value) {
+  return {
+    type: '@order/CHANGE',
+    index,
+    value,
+  };
+}
