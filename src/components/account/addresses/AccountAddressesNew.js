@@ -8,6 +8,7 @@ import AccountAddressesAction from './AccountAddressesAction';
 import { postalCodeSearch } from 'src/services/postalCodeSearch';
 import CustomDialogForm from 'src/components/dialog/CustomDialogForm';
 import { makeStyles } from '@material-ui/core/styles';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -54,15 +55,18 @@ const interval = 500;
 let timer = null;
 
 function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) {
+  const restaurant = useSelector(state => state.restaurant);
+  const mainAddress = restaurant.addresses.find(address => address.is_main);
+
   const [loading, setLoading] = useState(false);
   const [postalCode, setPostalCode] = useState('');
   const [address, setAddress] = useState('');
   const [number, setNumber] = useState('');
   const [complement, setComplement] = useState('');
   const [district, setDistrict] = useState('');
-  const [city, setCity] = useState('');
-  const [region, setRegion] = useState('');
-  const [cepValidation, setCepValidation] = useState(false);
+  const [city, setCity] = useState(mainAddress.city);
+  const [region, setRegion] = useState(mainAddress.region);
+  const [cepValidation, setCepValidation] = useState(!restaurant.configs.use_postalcode);
   const [cepValidationText, setCepValidationText] = useState('');
   const messaging = useContext(MessagingContext);
   const classes = useStyles();
@@ -126,7 +130,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
       district,
       region,
       city,
-      postal_code: postalCode,
+      postal_code: restaurant.configs.use_postalcode ? postalCode : '00000-000',
     };
 
     try {
@@ -153,24 +157,26 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
           <CircularProgress color="primary" />
         </div>
       )}
-      <Grid item xs={12} xl={3} md={5} lg={3}>
-        {loading && <Loading />}
-        <TextField
-          label="CEP"
-          placeholder="Digite o CEP"
-          margin="normal"
-          fullWidth
-          value={postalCode}
-          onChange={event => handleChangeCep(event.target.value)}
-          helperText={cepValidationText}
-          error={!cepValidation && cepValidationText !== ''}
-          InputProps={{
-            inputComponent: PostalCodeInput,
-          }}
-          required
-          autoFocus
-        />
-      </Grid>
+      {restaurant.configs.use_postalcode && (
+        <Grid item xs={12} xl={3} md={5} lg={3}>
+          {loading && <Loading />}
+          <TextField
+            label="CEP"
+            placeholder="Digite o CEP"
+            margin="normal"
+            fullWidth
+            value={postalCode}
+            onChange={event => handleChangeCep(event.target.value)}
+            helperText={cepValidationText}
+            error={!cepValidation && cepValidationText !== ''}
+            InputProps={{
+              inputComponent: PostalCodeInput,
+            }}
+            required
+            autoFocus
+          />
+        </Grid>
+      )}
       <Grid item xs={12} xl={6} lg={6} md={8}>
         {cepValidation && (
           <div className={classes.form}>

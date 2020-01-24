@@ -141,7 +141,7 @@ CustomDialogForm.propTypes = {
   componentActions: PropTypes.element,
   handleSubmit: PropTypes.func.isRequired,
   closeOnSubmit: PropTypes.bool,
-  children: PropTypes.object,
+  children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   async: PropTypes.bool,
   backgroundColor: PropTypes.string,
 };

@@ -48,3 +48,9 @@ export function orderChange(index, value) {
     value,
   };
 }
+
+export function setCustomerCollect() {
+  return {
+    type: '@order/SET_CUSTOMER_COLLECT',
+  };
+}

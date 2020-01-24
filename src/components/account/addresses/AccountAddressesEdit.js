@@ -6,6 +6,7 @@ import { MessagingContext } from '../../messaging/Messaging';
 import PostalCodeInput from '../../masked-input/PostalCodeInput';
 import CustomDialogForm from 'src/components/dialog/CustomDialogForm';
 import { makeStyles } from '@material-ui/core/styles';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -60,6 +61,7 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
   const [region] = useState(selectedAddress.region);
   const messaging = useContext(MessagingContext);
   const classes = useStyles();
+  const restaurant = useSelector(state => state.restaurant);
 
   async function handleSubmit() {
     const data = {
@@ -96,20 +98,22 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
           <CircularProgress color="primary" />
         </div>
       )}
-      <Grid item xs={12} xl={3} md={5} lg={3}>
-        <TextField
-          label="CEP"
-          placeholder="Digite o CEP"
-          margin="normal"
-          fullWidth
-          value={postalCode}
-          InputProps={{
-            inputComponent: PostalCodeInput,
-          }}
-          required
-          disabled
-        />
-      </Grid>
+      {restaurant.configs.use_postalcode && (
+        <Grid item xs={12} xl={3} md={5} lg={3}>
+          <TextField
+            label="CEP"
+            placeholder="Digite o CEP"
+            margin="normal"
+            fullWidth
+            value={postalCode}
+            InputProps={{
+              inputComponent: PostalCodeInput,
+            }}
+            required
+            disabled
+          />
+        </Grid>
+      )}
       <Grid item xs={12} xl={6} lg={6} md={8}>
         <TextField
           label="Endereço"

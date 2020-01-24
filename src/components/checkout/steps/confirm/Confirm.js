@@ -44,6 +44,7 @@ export default function Confirm() {
   const order = useSelector(state => state.order);
   const cart = useSelector(state => state.cart);
   const checkout = useContext(CheckoutContext);
+  const mainRestaurantAddress = useSelector(state => state.restaurant).addresses.find(address => address.is_main);
   const app = useContext(AppContext);
   const classes = useStyles();
 
@@ -57,33 +58,50 @@ export default function Confirm() {
 
   return (
     <Grid container className={classes.container}>
-      <Grid item xs={12} className={classes.orderItemData}>
-        <Typography variant="h5" className={classes.title}>
-          Endereço de entrega
-        </Typography>
-        <Typography>
-          {order.shipmentAddress.address}, {order.shipmentAddress.number}
-        </Typography>
-        <Typography>{order.shipmentAddress.district}</Typography>
-        <Typography>{order.shipmentAddress.address_complement}</Typography>
-        <Typography>{order.shipmentAddress.postal_code}</Typography>
-        <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
-          Alterar
-        </Typography>
-      </Grid>
+      {order.shipment_method === 'delivery' ? (
+        <Grid item xs={12} className={classes.orderItemData}>
+          <Typography variant="h5" className={classes.title}>
+            Endereço de entrega
+          </Typography>
+          <Typography>
+            {order.shipmentAddress.address}, {order.shipmentAddress.number}
+          </Typography>
+          <Typography>{order.shipmentAddress.district}</Typography>
+          <Typography>{order.shipmentAddress.address_complement}</Typography>
+          <Typography>{order.shipmentAddress.postal_code}</Typography>
+          <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
+            Alterar
+          </Typography>
+        </Grid>
+      ) : (
+        <Grid item xs={12} className={classes.orderItemData}>
+          <Typography variant="h5" className={classes.title}>
+            Cliente retira em
+          </Typography>
+          <Typography>
+            {mainRestaurantAddress.address}, {mainRestaurantAddress.number}
+          </Typography>
+          <Typography>{mainRestaurantAddress.district}</Typography>
+          <Typography>{mainRestaurantAddress.address_complement}</Typography>
+          <Typography>{mainRestaurantAddress.postal_code}</Typography>
+          <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
+            Alterar
+          </Typography>
+        </Grid>
+      )}
       <Grid item xs={12} className={classes.orderItemData}>
         <Typography variant="h5" className={classes.title}>
           Forma de pagamento
         </Typography>
         {order.paymentMethod.kind === 'online_payment' ? (
           <>
-            <Typography>On-line</Typography>
+            <Typography>Pagamento on-line</Typography>
             <Typography color="textSecondary">Cartão de crédito</Typography>
             <Typography color="textSecondary">**** **** **** {order.creditCard.card_number.substr(-4)}</Typography>
           </>
         ) : (
           <>
-            <Typography>Na entrega</Typography>
+            <Typography>Pagamento na entrega</Typography>
             <Typography>{order.paymentMethod.method}</Typography>
             {order.change > 0 && (
               <Typography color="textSecondary">

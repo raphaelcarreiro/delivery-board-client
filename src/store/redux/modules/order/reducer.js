@@ -29,6 +29,7 @@ export default function order(state = INITIAL_STATE, action) {
     case '@order/SET_SHIPMENT_ADDRESS': {
       return {
         ...state,
+        shipment_method: 'delivery',
         shipmentAddress: action.address,
       };
     }
@@ -68,6 +69,14 @@ export default function order(state = INITIAL_STATE, action) {
       return {
         ...state,
         [action.index]: action.value,
+      };
+    }
+
+    case '@order/SET_CUSTOMER_COLLECT': {
+      return {
+        ...state,
+        shipment_method: 'customer_collect',
+        shipmentAddress: {},
       };
     }
 

@@ -6,11 +6,11 @@ import AccountAddressesNew from 'src/components/account/addresses/AccountAddress
 import AccountAddressesEdit from 'src/components/account/addresses/AccountAddressesEdit';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCustomerAddress, updateCustomerAddress, deleteCustomerAddress } from 'src/store/redux/modules/user/actions';
-import { setShipmentAddress } from 'src/store/redux/modules/order/actions';
+import { setShipmentAddress, setCustomerCollect } from 'src/store/redux/modules/order/actions';
 import { MessagingContext } from 'src/components/messaging/Messaging';
 import { api } from 'src/services/api';
 import DialogDelete from 'src/components/dialog/delete/DialogDelete';
-import { Grid } from '@material-ui/core';
+import { Grid, Button } from '@material-ui/core';
 import { CheckoutContext } from '../../Checkout';
 import { AppContext } from 'src/App';
 
@@ -47,9 +47,10 @@ export default function Shipment({ addresses }) {
     try {
       setSavingAddress(true);
       const response = await api().post('/customerAddresses', address);
+      setSavingAddress(false);
       dispatch(setShipmentAddress(response.data));
       dispatch(addCustomerAddress(response.data));
-      checkout.handleStepNext();
+      checkout.handleSetStep(2);
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
       setSavingAddress(false);
@@ -60,12 +61,12 @@ export default function Shipment({ addresses }) {
     try {
       setSavingAddress(true);
       const response = await api().put(`/customerAddresses/${selectedAddress.id}`, address);
+      setSavingAddress(false);
       dispatch(updateCustomerAddress(response.data));
       dispatch(setShipmentAddress(response.data));
     } catch (err) {
-      if (err.response) messaging.handleOpen(err.response.data.error);
-    } finally {
       setSavingAddress(false);
+      if (err.response) messaging.handleOpen(err.response.data.error);
     }
   }
 
@@ -105,6 +106,11 @@ export default function Shipment({ addresses }) {
     checkout.handleStepNext();
   }
 
+  function handleSetCustomerCollect() {
+    dispatch(setCustomerCollect());
+    checkout.handleSetStep(2);
+  }
+
   return (
     <>
       {saving && <Loading background="rgba(255, 255, 255, 0.5)" />}
@@ -141,6 +147,9 @@ export default function Shipment({ addresses }) {
             handleDeleteAddress={handleDeleteAddress}
             handleSelectAddress={handleSelectAddress}
           />
+          <Button variant="contained" color="primary" onClick={handleSetCustomerCollect}>
+            Quero Retirar
+          </Button>
         </Grid>
       </Grid>
     </>

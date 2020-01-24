@@ -177,15 +177,19 @@ export default function Order({ cryptId }) {
           </div>
           <div className={classes.containderGrid2}>
             <div className={classes.section}>
-              <Typography variant="h5" className={classes.title}>
-                Endereço de entrega
-              </Typography>
-              <Typography>
-                {order.address}, {order.address_number}
-              </Typography>
-              <Typography>{order.district}</Typography>
-              <Typography>{order.address_complement}</Typography>
-              <Typography>{order.address_postal_code}</Typography>
+              {order.shipment_method === 'delivery' && (
+                <>
+                  <Typography variant="h5" className={classes.title}>
+                    Endereço de entrega
+                  </Typography>
+                  <Typography>
+                    {order.address}, {order.address_number}
+                  </Typography>
+                  <Typography>{order.district}</Typography>
+                  <Typography>{order.address_complement}</Typography>
+                  <Typography>{order.address_postal_code}</Typography>
+                </>
+              )}
             </div>
             <div className={classes.section}>
               <Typography variant="h5" className={classes.title}>
