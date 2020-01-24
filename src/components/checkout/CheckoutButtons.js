@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     justifyContent: step > 1 ? 'space-between' : 'flex-end',
     marginTop: 20,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'none',
     },
   }),

@@ -25,6 +25,7 @@ export default function Payment({ handleSetPaymentMethod, paymentMethods, paymen
   const [onlinePayment, setOnlinePayment] = useState(false);
   const classes = useStyles();
   const app = useContext(AppContext);
+  const order = useSelector(state => state.order);
 
   useEffect(() => {
     if (!app.isMobile && app.windowWidth >= 960) app.handleCartVisibility(true);
@@ -37,7 +38,8 @@ export default function Payment({ handleSetPaymentMethod, paymentMethods, paymen
     setTab(value);
     app.handleCartVisibility(false);
     if (value === 0) {
-      handleSetPaymentMethod(paymentMethods[0]);
+      if (order.change > 0) handleSetPaymentMethod(paymentMethods.find(method => method.kind === 'money'));
+      else handleSetPaymentMethod(paymentMethods[0]);
     }
     if (value === 1) {
       handleSetPaymentMethod(paymentMethods.find(method => method.kind === 'online_payment'));

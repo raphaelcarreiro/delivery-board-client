@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const useStyles = makeStyles(theme => ({
   mobileActions: {
     display: 'none',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'flex',
       position: 'fixed',
       bottom: 0,

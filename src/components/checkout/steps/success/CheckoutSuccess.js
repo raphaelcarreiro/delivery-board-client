@@ -7,20 +7,28 @@ import { makeStyles } from '@material-ui/core/styles';
 import { AppContext } from 'src/App';
 import Link from 'src/components/link/Link';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start',
+    },
   },
   actions: {
     marginTop: 20,
+    fontSize: 16,
     '& a': {
-      display: 'inline-block',
+      display: 'block',
       marginRight: 10,
+      marginBottom: 15,
     },
   },
-});
+}));
 
 export default function CheckoutSuccess() {
   const checkout = useContext(CheckoutContext);
@@ -38,7 +46,7 @@ export default function CheckoutSuccess() {
       <Typography gutterBottom variant="h4">
         {user.name}, recebemos seu pedido!
       </Typography>
-      <Typography>O número do pedido é {formatId(order.id)}</Typography>
+      <Typography variant="h6">O número do pedido é {formatId(order.id)}</Typography>
       <Typography>Vamos te notificar sobre o andamento.</Typography>
       <div className={classes.actions}>
         <Link href="account/orders/[id]" as={`account/orders/${order.encrypted_id}`} color="primary">

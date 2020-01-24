@@ -7,7 +7,7 @@ import { MessagingContext } from '../messaging/Messaging';
 import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
 import { steps as _steps } from './steps/steps';
-import { Grid, Typography, Button } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Payment from 'src/components/checkout/steps/payment/Payment';
 import Confirm from 'src/components/checkout/steps/confirm/Confirm';
@@ -21,6 +21,8 @@ import IndexAppbarActions from 'src/components/index/IndexAppbarActions';
 import DialogFullscreen from 'src/components/dialog/DialogFullscreen';
 import CheckoutButtons from 'src/components/checkout/CheckoutButtons';
 import CheckoutMobileButtons from 'src/components/checkout/CheckoutMobileButtons';
+import * as yup from 'yup';
+import { cpfValidation } from 'src/helpers/cpfValidation';
 
 const cartWidth = 450;
 
@@ -117,6 +119,7 @@ export default function Checkout() {
   const [createdOrder, setCreatedOrder] = useState(null);
   const classes = useStyles({ step, isCartVisible: app.isCartVisible });
   const [steps, setSteps] = useState(_steps);
+  const [cardValidation, setCardValidation] = useState({});
 
   const currentStep = useMemo(() => {
     return steps.find(item => item.order === step);
@@ -129,6 +132,7 @@ export default function Checkout() {
     handleSetStep: handleSetStep,
     createdOrder,
     step,
+    cardValidation,
   };
 
   useEffect(() => {
@@ -218,7 +222,18 @@ export default function Checkout() {
       });
   }
 
-  function handleStepNext() {
+  async function handleStepNext() {
+    if (currentStep.id === 'STEP_SHIPMENT') {
+      if (!order.shipmentAddress.id) {
+        messaging.handleOpen('Informe o endereço');
+        return;
+      }
+    } else if (currentStep.id === 'STEP_PAYMENT') {
+      if (order.paymentMethod.kind === 'online_payment') {
+        const validation = await handleCardValidation(order.creditCard);
+        if (!validation) return;
+      }
+    }
     setStep(step + 1);
   }
 
@@ -233,6 +248,50 @@ export default function Checkout() {
 
   function handleSetPaymentMethod(method) {
     dispatch(setPaymentMethod(method));
+  }
+
+  async function handleCardValidation(card) {
+    const schema = yup.object().shape({
+      card_owner_cpf: yup
+        .string()
+        .transform((value, originalValue) => {
+          return originalValue ? originalValue.replace(/\D/g, '') : '';
+        })
+        .test('cpfValidation', 'CPF inválido', value => {
+          return cpfValidation(value);
+        })
+        .required('CPF é obrigatório'),
+      card_cvv: yup
+        .string()
+        .min(3, 'O código de segurança deve ter 3 digitos')
+        .required('O código de segurança é obrigatório'),
+      card_expiration_date: yup
+        .string()
+        .transform((value, originalValue) => {
+          return originalValue.replace(/\D/g, '');
+        })
+        .min(4, 'Data de validade inválida')
+        .required('A data de validade do cartão é obrigatória'),
+      card_holder_name: yup.string().required('O nome e sobrenome são obrigatórios'),
+      card_number: yup
+        .string()
+        .transform((value, originalValue) => {
+          return originalValue.replace(/\D/g, '');
+        })
+        .min(12, 'Número do cartão inválido')
+        .required('O número do cartão é obrigatório'),
+    });
+
+    try {
+      await schema.validate(card);
+      return true;
+    } catch (err) {
+      setCardValidation({
+        [err.path]: err.message,
+      });
+      messaging.handleOpen(err.message);
+      return false;
+    }
   }
 
   return (

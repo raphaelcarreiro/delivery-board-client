@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   imageWrapper: {
-    maxWidth: 1200,
+    maxWidth: '100vh',
     textAlign: 'center',
   },
 }));
