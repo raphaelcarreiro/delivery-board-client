@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
       marginBottom: 56,
     },
     [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
-      marginBottom: 51,
+      marginBottom: 48,
     },
   },
   grow: {
@@ -43,6 +43,13 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: props.backgroundColor ? props.backgroundColor : '#fff',
     height: '100vh',
   }),
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+    padding: 15,
+    position: 'relative',
+  },
 }));
 
 export const CustomDialogContext = React.createContext({
@@ -89,13 +96,11 @@ export default function CustomDialog({ handleModalState, title, componentActions
         </AppBar>
       )}
       <div className={classes.appbarSpace} />
-      <DialogContent>
-        <Grid item xs={12}>
-          <CustomDialogContext.Provider value={{ handleCloseDialog: handleClose }}>
-            {children}
-          </CustomDialogContext.Provider>
-        </Grid>
-      </DialogContent>
+      <div className={classes.content}>
+        <CustomDialogContext.Provider value={{ handleCloseDialog: handleClose }}>
+          {children}
+        </CustomDialogContext.Provider>
+      </div>
     </Dialog>
   );
 }

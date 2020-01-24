@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Dialog, DialogContent, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
+import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { makeStyles } from '@material-ui/core/styles/index';
@@ -48,6 +48,10 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
   },
   content: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+    padding: 15,
     position: 'relative',
   },
 }));
@@ -121,7 +125,7 @@ export default function CustomDialogForm({
           </AppBar>
         )}
         <div className={classes.appbarSpace} />
-        <DialogContent className={classes.content}>
+        <div className={classes.content}>
           <CustomDialogContext.Provider
             value={{
               handleCloseDialog: handleClose,
@@ -129,7 +133,7 @@ export default function CustomDialogForm({
           >
             {children}
           </CustomDialogContext.Provider>
-        </DialogContent>
+        </div>
       </form>
     </Dialog>
   );

@@ -13,6 +13,7 @@ import { orderStatus } from './orderStatus';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import io from 'socket.io-client';
 import { MessagingContext } from 'src/components/messaging/Messaging';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -97,6 +98,14 @@ export default function Order({ cryptId }) {
   const [loading, setLoading] = useState(true);
   const messaging = useContext(MessagingContext);
   const classes = useStyles();
+  const [mainAddress, setMainAddress] = useState(null);
+  const restaurant = useSelector(state => state.restaurant);
+
+  useEffect(() => {
+    if (restaurant) {
+      setMainAddress(restaurant.addresses.find(address => address.is_main));
+    }
+  }, [restaurant]);
 
   useEffect(() => {
     const socket = io.connect(process.env.URL_NODE_SERVER);
@@ -177,7 +186,7 @@ export default function Order({ cryptId }) {
           </div>
           <div className={classes.containderGrid2}>
             <div className={classes.section}>
-              {order.shipment_method === 'delivery' && (
+              {order.shipment_method === 'delivery' ? (
                 <>
                   <Typography variant="h5" className={classes.title}>
                     Endereço de entrega
@@ -189,13 +198,35 @@ export default function Order({ cryptId }) {
                   <Typography>{order.address_complement}</Typography>
                   <Typography>{order.address_postal_code}</Typography>
                 </>
+              ) : (
+                <>
+                  <Typography variant="h5" className={classes.title}>
+                    Cliente retira em
+                  </Typography>
+                  <Typography>
+                    {mainAddress.address}, {mainAddress.number}
+                  </Typography>
+                  <Typography>{mainAddress.district}</Typography>
+                  <Typography>{mainAddress.complement}</Typography>
+                  <Typography>{mainAddress.postal_code}</Typography>
+                </>
               )}
             </div>
             <div className={classes.section}>
               <Typography variant="h5" className={classes.title}>
                 Forma de pagamento
               </Typography>
-              <Typography>{order.payment_method.method}</Typography>
+              {order.payment_method.kind === 'online_payment' ? (
+                <>
+                  <Typography>{order.payment_method.method}</Typography>
+                  <Typography color="textSecondary">Cartão ****</Typography>
+                </>
+              ) : (
+                <>
+                  <Typography>Pagamento na entrega</Typography>
+                  <Typography>{order.payment_method.method}</Typography>
+                </>
+              )}
               {order.change > 0 && (
                 <Typography>
                   {`Troco para ${order.formattedChange}`} ({moneyFormat(order.change - order.total)})

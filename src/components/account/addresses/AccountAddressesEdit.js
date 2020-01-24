@@ -99,7 +99,7 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
         </div>
       )}
       {restaurant.configs.use_postalcode && (
-        <Grid item xs={12} xl={3} md={5} lg={3}>
+        <Grid item xs={12} xl={3} md={5} lg={3} style={{ flexBasis: 0 }}>
           <TextField
             label="CEP"
             placeholder="Digite o CEP"

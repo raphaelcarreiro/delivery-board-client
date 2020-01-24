@@ -158,7 +158,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
         </div>
       )}
       {restaurant.configs.use_postalcode && (
-        <Grid item xs={12} xl={3} md={5} lg={3}>
+        <Grid item xs={12} xl={3} md={5} lg={3} style={{ flexBasis: 0 }}>
           {loading && <Loading />}
           <TextField
             label="CEP"
