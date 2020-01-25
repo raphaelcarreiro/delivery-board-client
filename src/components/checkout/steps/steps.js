@@ -1,6 +1,6 @@
 const steps = [
   {
-    id: 'STEP_DELIVERY_WAY',
+    id: 'STEP_SHIPMENT_METHOD',
     order: 1,
     title: 'Método de entrega',
     description: 'Qual é o método de entrega?',

@@ -51,7 +51,7 @@ export default function ProductPizzaComplementAdditional({
   }
 
   return (
-    <CustomDialog handleModalState={onExited} title={`${complement.name} - adicionais`}>
+    <CustomDialog handleModalState={onExited} title={`${complement.name} - adicionais`} hideBackdrop>
       <Fragment>
         {complement.additional.map(additional => (
           <FormControlLabel

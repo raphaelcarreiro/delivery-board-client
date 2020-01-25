@@ -1,18 +1,1 @@
-{
-  "short_name": "Delivery App",
-  "name": "Delivery App",
-  "description": "Delivery App para todo tipo de comida!",
-  "lang": "pt-BR",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "512x512 264x264 128x128 64x64 32x32 24x24 16x16",
-      "type": "image/png"
-    }
-  ],
-  "start_url": "/",
-  "display": "standalone",
-  "theme_color": "#dc3545",
-  "background_color": "#dc3545",
-  "gcm_sender_id": "103953800507"
-}
+{"short_name":"TESTE","name":"TESTE","description":"Topezeira o Melhor Restaurante do Mundo","lang":"pt-BR","icons":[{"src":"favicon.ico","sizes":"512x512 264x264 128x128 64x64 32x32 24x24 16x16","type":"image/png"}],"start_url":"/","display":"standalone","theme_color":"#f0592a","background_color":"#f0592a","gcm_sender_id":"103953800507"}

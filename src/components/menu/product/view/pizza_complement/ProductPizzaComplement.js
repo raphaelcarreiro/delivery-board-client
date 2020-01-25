@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
     margin: '10px 0',
   },
   container: {
-    marginBottom: 150,
+    marginBottom: 80,
   },
 }));
 
@@ -48,6 +48,8 @@ export default function ProductPizzaComplement({
   const restaurant = useSelector(state => state.restaurant);
 
   useEffect(() => {
+    let sizeSelected;
+
     const categories = product.complement_categories.map(category => {
       category.product_complement_category_id = category.id;
       category.complements = category.complements.map((complement, index) => {
@@ -55,6 +57,7 @@ export default function ProductPizzaComplement({
         complement.formattedPrice = complement.price && moneyFormat(complement.price);
         if (category.is_pizza_size && category.complements.length === 1) {
           complement.selected = true;
+          sizeSelected = complement;
           setComplementSizeSelected(complement);
         } else {
           complement.selected = false;
@@ -76,7 +79,7 @@ export default function ProductPizzaComplement({
           additional.product_complement_additional_id = additional.id;
           additional.prices = additional.prices.map((price, index) => {
             price.product_complement_additional_price_id = price.id;
-            // price.selected = index === 0;
+            price.selected = price.product_complement_size_id === sizeSelected.id;
             price.formattedPrice = price.price && moneyFormat(price.price);
             return price;
           });

@@ -52,7 +52,7 @@ export default function ProductPizzaComplementIngredient({
   }
 
   return (
-    <CustomDialog handleModalState={onExited} title={`${complement.name} - ingredientes`}>
+    <CustomDialog handleModalState={onExited} title={`${complement.name} - ingredientes`} hideBackdrop>
       <Fragment>
         {complement.ingredients.map(ingredient => (
           <FormControlLabel

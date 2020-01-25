@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     flex: 1,
     padding: 15,
-    position: 'relative',
+    overflowY: 'auto',
   },
 }));
 
@@ -56,7 +56,14 @@ export const CustomDialogContext = React.createContext({
   handleCloseDialog: () => {},
 });
 
-export default function CustomDialog({ handleModalState, title, componentActions, children, backgroundColor }) {
+export default function CustomDialog({
+  handleModalState,
+  title,
+  componentActions,
+  children,
+  backgroundColor,
+  hideBackdrop,
+}) {
   const [open, setOpen] = useState(true);
   const app = useContext(AppContext);
   const styleProps = { backgroundColor };
@@ -74,6 +81,7 @@ export default function CustomDialog({ handleModalState, title, componentActions
           paper: classes.paper,
         })
       }
+      hideBackdrop={hideBackdrop}
       open={open}
       onClose={handleClose}
       fullWidth
@@ -105,12 +113,17 @@ export default function CustomDialog({ handleModalState, title, componentActions
   );
 }
 
+CustomDialog.defaultProps = {
+  hideBackdrop: false,
+};
+
 CustomDialog.propTypes = {
   handleModalState: PropTypes.func.isRequired,
   title: PropTypes.string,
   componentActions: PropTypes.element,
   children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   backgroundColor: PropTypes.string,
+  hideBackdrop: PropTypes.bool,
 };
 
 export const DialogConsumer = CustomDialogContext.Consumer;

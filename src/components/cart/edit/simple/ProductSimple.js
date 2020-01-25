@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     cursor: 'zoom-in',
   },
   container: {
-    marginBottom: 150,
+    marginBottom: 80,
   },
   icon: {
     backgroundColor: '#fff',

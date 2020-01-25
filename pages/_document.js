@@ -2,6 +2,7 @@ import React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import axios from 'axios';
+import fs from 'fs';
 
 export default class MyDocument extends Document {
   setGoogleTags() {
@@ -194,6 +195,34 @@ MyDocument.getInitialProps = async ctx => {
 
   const response = await api.get('restaurants');
   const { configs } = response.data;
+  const restaurant = response.data;
+
+  // manifest.json for PWA
+  const manifest = JSON.stringify({
+    short_name: restaurant.name,
+    name: restaurant.name,
+    description: restaurant.description,
+    lang: 'pt-BR',
+    icons: [
+      {
+        src: 'favicon.ico',
+        sizes: '512x512 264x264 128x128 64x64 32x32 24x24 16x16',
+        type: 'image/png',
+      },
+    ],
+    start_url: '/',
+    display: 'standalone',
+    theme_color: restaurant.primary_color,
+    background_color: restaurant.primary_color,
+    gcm_sender_id: '103953800507',
+  });
+
+  // writing file manifest.json for PWA
+  fs.writeFile(`public/manifest.json`, manifest, 'utf8', err => {
+    if (err) {
+      console.log(err);
+    }
+  });
 
   return {
     ...initialProps,

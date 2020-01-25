@@ -6,11 +6,11 @@ import AccountAddressesNew from 'src/components/account/addresses/AccountAddress
 import AccountAddressesEdit from 'src/components/account/addresses/AccountAddressesEdit';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCustomerAddress, updateCustomerAddress, deleteCustomerAddress } from 'src/store/redux/modules/user/actions';
-import { setShipmentAddress, setCustomerCollect } from 'src/store/redux/modules/order/actions';
+import { setShipmentAddress } from 'src/store/redux/modules/order/actions';
 import { MessagingContext } from 'src/components/messaging/Messaging';
 import { api } from 'src/services/api';
 import DialogDelete from 'src/components/dialog/delete/DialogDelete';
-import { Grid, Button } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { CheckoutContext } from '../../Checkout';
 import { AppContext } from 'src/App';
 
@@ -34,6 +34,10 @@ export default function Shipment({ addresses }) {
 
   useEffect(() => {
     app.handleCartVisibility(false);
+    if (!order.shipmentAddress.id)
+      if (customer.addresses.length > 0) {
+        dispatch(setShipmentAddress(customer.addresses.find(address => address.is_main)));
+      }
   }, []);
 
   useEffect(() => {
@@ -50,7 +54,7 @@ export default function Shipment({ addresses }) {
       setSavingAddress(false);
       dispatch(setShipmentAddress(response.data));
       dispatch(addCustomerAddress(response.data));
-      checkout.handleSetStep(2);
+      checkout.handleSetStep(3);
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
       setSavingAddress(false);
@@ -103,12 +107,7 @@ export default function Shipment({ addresses }) {
 
   function handleSelectAddress(address) {
     dispatch(setShipmentAddress(address));
-    checkout.handleStepNext();
-  }
-
-  function handleSetCustomerCollect() {
-    dispatch(setCustomerCollect());
-    checkout.handleSetStep(2);
+    checkout.handleSetStep(3);
   }
 
   return (
@@ -147,9 +146,6 @@ export default function Shipment({ addresses }) {
             handleDeleteAddress={handleDeleteAddress}
             handleSelectAddress={handleSelectAddress}
           />
-          <Button variant="contained" color="primary" onClick={handleSetCustomerCollect}>
-            Quero Retirar
-          </Button>
         </Grid>
       </Grid>
     </>

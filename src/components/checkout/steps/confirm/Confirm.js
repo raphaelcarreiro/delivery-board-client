@@ -76,7 +76,10 @@ export default function Confirm() {
       ) : (
         <Grid item xs={12} className={classes.orderItemData}>
           <Typography variant="h5" className={classes.title}>
-            Cliente retira em
+            Cliente retira
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            Endereço para retirada
           </Typography>
           <Typography>
             {mainRestaurantAddress.address}, {mainRestaurantAddress.number}
@@ -96,15 +99,15 @@ export default function Confirm() {
         {order.paymentMethod.kind === 'online_payment' ? (
           <>
             <Typography>Pagamento on-line</Typography>
-            <Typography color="textSecondary">Cartão de crédito</Typography>
-            <Typography color="textSecondary">**** **** **** {order.creditCard.card_number.substr(-4)}</Typography>
+            <Typography variant="body2">Cartão de crédito</Typography>
+            <Typography>**** **** **** {order.creditCard.card_number.substr(-4)}</Typography>
           </>
         ) : (
           <>
             <Typography>Pagamento na entrega</Typography>
             <Typography>{order.paymentMethod.method}</Typography>
             {order.change > 0 && (
-              <Typography color="textSecondary">
+              <Typography>
                 Troco para {moneyFormat(order.change)} ({moneyFormat(order.change - cart.total)})
               </Typography>
             )}

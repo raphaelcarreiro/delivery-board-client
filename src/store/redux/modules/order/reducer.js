@@ -3,10 +3,8 @@ const INITIAL_STATE = {
   customer: null,
   paymentMethod: null,
   products: [],
-  step: 'shipment',
   shipment_method: 'delivery',
   change: 0,
-  payment_type: 'delivery',
   creditCard: {
     card_number: '',
     card_holder_name: '',
@@ -29,7 +27,7 @@ export default function order(state = INITIAL_STATE, action) {
     case '@order/SET_SHIPMENT_ADDRESS': {
       return {
         ...state,
-        shipment_method: 'delivery',
+        // shipment_method: 'delivery',
         shipmentAddress: action.address,
       };
     }
@@ -78,6 +76,10 @@ export default function order(state = INITIAL_STATE, action) {
         shipment_method: 'customer_collect',
         shipmentAddress: {},
       };
+    }
+
+    case '@order/SET_INITIAL_STATE': {
+      return INITIAL_STATE;
     }
 
     default: {

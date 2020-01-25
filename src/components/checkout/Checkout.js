@@ -1,12 +1,18 @@
 import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCustomer, setPaymentMethod, setProducts, setShipmentAddress } from 'src/store/redux/modules/order/actions';
+import {
+  setCustomer,
+  setPaymentMethod,
+  setProducts,
+  setShipmentAddress,
+  setChange,
+} from 'src/store/redux/modules/order/actions';
 import Shipment from './steps/shipment/Shipment';
 import { setUser } from 'src/store/redux/modules/user/actions';
 import { MessagingContext } from '../messaging/Messaging';
 import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
-import { steps as _steps } from './steps/steps';
+import { steps as defaultSteps } from './steps/steps';
 import { Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Payment from 'src/components/checkout/steps/payment/Payment';
@@ -23,6 +29,7 @@ import CheckoutButtons from 'src/components/checkout/CheckoutButtons';
 import CheckoutMobileButtons from 'src/components/checkout/CheckoutMobileButtons';
 import * as yup from 'yup';
 import { cpfValidation } from 'src/helpers/cpfValidation';
+import ShipmentMethod from './steps/shipment-method/ShipmentMethod';
 
 const cartWidth = 450;
 
@@ -93,6 +100,11 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     height: '100%',
   },
+  content: {
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+  },
 }));
 
 export const CheckoutContext = React.createContext({
@@ -118,7 +130,7 @@ export default function Checkout() {
   const [saving, setSaving] = useState(false);
   const [createdOrder, setCreatedOrder] = useState(null);
   const classes = useStyles({ step, isCartVisible: app.isCartVisible });
-  const [steps, setSteps] = useState(_steps);
+  const [steps, setSteps] = useState(defaultSteps);
   const [cardValidation, setCardValidation] = useState({});
 
   const currentStep = useMemo(() => {
@@ -139,22 +151,26 @@ export default function Checkout() {
     if (restaurant.id) {
       const { configs } = restaurant;
 
-      let order = 0;
-      let newSteps = steps.slice();
+      let stepId = 0;
+      let newSteps = defaultSteps.slice();
 
       if (!configs.customer_collect) {
-        newSteps = newSteps.filter(step => step.id !== 'STEP_DELIVERY_WAY');
+        newSteps = newSteps.filter(s => s.id !== 'STEP_DELIVERY_WAY');
+      }
+
+      if (order.shipment_method === 'customer_collect') {
+        newSteps = newSteps.filter(s => s.id !== 'STEP_SHIPMENT');
       }
 
       setSteps(
         newSteps.map(step => {
-          order++;
-          step.order = order;
+          stepId++;
+          step.order = stepId;
           return step;
         })
       );
     }
-  }, [restaurant]);
+  }, [restaurant, order.shipment_method]);
 
   useEffect(() => {
     app.handleCartVisibility(false);
@@ -212,6 +228,7 @@ export default function Checkout() {
       .then(response => {
         setCreatedOrder(response.data);
         dispatch(clearCart());
+        dispatch(setChange(0));
         handleStepNext();
       })
       .catch(err => {
@@ -327,15 +344,16 @@ export default function Checkout() {
       ) : (
         <Grid container direction="column" justify="space-between" className={classes.container}>
           <CheckoutContext.Provider value={checkoutContextValue}>
-            <div>
+            <div className={classes.content}>
               <Grid item xs={12} className={classes.title}>
                 <Typography variant="h6" className={classes.stepDescription}>
                   <span className={classes.step}>{currentStep.order}</span>
                   {currentStep.description}
                 </Typography>
               </Grid>
-
-              {currentStep.id === 'STEP_SHIPMENT' ? (
+              {currentStep.id === 'STEP_SHIPMENT_METHOD' ? (
+                <ShipmentMethod />
+              ) : currentStep.id === 'STEP_SHIPMENT' ? (
                 <Shipment shipment addresses={user.customer ? user.customer.addresses : []} />
               ) : currentStep.id === 'STEP_PAYMENT' ? (
                 <Payment
@@ -347,18 +365,22 @@ export default function Checkout() {
                 currentStep.id === 'STEP_CONFIRM' && <Confirm />
               )}
             </div>
-            <CheckoutButtons
-              handleStepNext={handleStepNext}
-              handleStepPrior={handleStepPrior}
-              currentStep={currentStep}
-              quantitySteps={steps.length}
-            />
-            <CheckoutMobileButtons
-              handleStepNext={handleStepNext}
-              handleStepPrior={handleStepPrior}
-              currentStep={currentStep}
-              quantitySteps={steps.length}
-            />
+            {currentStep.id !== 'STEP_SHIPMENT_METHOD' && (
+              <>
+                <CheckoutButtons
+                  handleStepNext={handleStepNext}
+                  handleStepPrior={handleStepPrior}
+                  currentStep={currentStep}
+                  quantitySteps={steps.length}
+                />
+                <CheckoutMobileButtons
+                  handleStepNext={handleStepNext}
+                  handleStepPrior={handleStepPrior}
+                  currentStep={currentStep}
+                  quantitySteps={steps.length}
+                />
+              </>
+            )}
           </CheckoutContext.Provider>
         </Grid>
       )}

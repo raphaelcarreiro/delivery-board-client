@@ -5,8 +5,7 @@ import { Tab, Tabs } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppContext } from 'src/App';
 import PaymentCreditCard from './PaymentCreditCard';
-import { useDispatch, useSelector } from 'react-redux';
-import { orderChange, setChange } from 'src/store/redux/modules/order/actions';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   container: {
