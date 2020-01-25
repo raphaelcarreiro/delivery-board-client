@@ -28,12 +28,12 @@ const useStyles = makeStyles(theme => ({
     },
   },
   appbarSpace: {
-    marginBottom: 64,
+    height: 64,
     [theme.breakpoints.down('md')]: {
-      marginBottom: 56,
+      height: 56,
     },
     [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
-      marginBottom: 48,
+      height: 48,
     },
   },
   grow: {
