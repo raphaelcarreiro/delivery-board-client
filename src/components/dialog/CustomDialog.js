@@ -28,12 +28,12 @@ const useStyles = makeStyles(theme => ({
     },
   },
   appbarSpace: {
-    height: 64,
+    height: 79,
     [theme.breakpoints.down('md')]: {
-      height: 56,
+      height: 71,
     },
     [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
-      height: 48,
+      height: 63,
     },
   },
   grow: {
@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-    padding: 15,
+    padding: '0 15px',
     overflowY: 'auto',
   },
 }));
