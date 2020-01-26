@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
       display: 'grid',
       gridTemplateColumns: '1fr',
       gridGap: 10,
-      '& buttons': {
+      '& button': {
         margin: 0,
       },
     },

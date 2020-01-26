@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { Dialog, Grid, DialogContent, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
+import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-// import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppContext } from 'src/App';
@@ -28,12 +27,12 @@ const useStyles = makeStyles(theme => ({
     },
   },
   appbarSpace: {
-    height: 79,
+    height: 64,
     [theme.breakpoints.down('md')]: {
-      height: 71,
+      height: 56,
     },
     [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
-      height: 63,
+      height: 48,
     },
   },
   grow: {
@@ -47,8 +46,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-    padding: '0 15px',
-    overflowY: 'auto',
+    padding: 15,
+    overflowY: 'scroll',
   },
 }));
 
