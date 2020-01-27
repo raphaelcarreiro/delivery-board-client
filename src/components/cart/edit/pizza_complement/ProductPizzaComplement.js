@@ -221,7 +221,7 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
           setProduct={setProduct}
         />
       )}
-      <Grid container className={classes.container} direction="column">
+      <Grid container className={classes.container}>
         <Grid item xs={12}>
           {product.complement_categories.map(category => (
             <section className={classes.category} key={category.id}>

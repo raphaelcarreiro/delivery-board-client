@@ -54,3 +54,9 @@ export function setCustomerCollect() {
     type: '@order/SET_CUSTOMER_COLLECT',
   };
 }
+
+export function setInitialState() {
+  return {
+    type: '@order/SET_INITIAL_STATE',
+  };
+}

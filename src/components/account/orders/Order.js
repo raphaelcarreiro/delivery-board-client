@@ -201,7 +201,7 @@ export default function Order({ cryptId }) {
               ) : (
                 <>
                   <Typography variant="h5" className={classes.title}>
-                    Cliente retira em
+                    Cliente retira
                   </Typography>
                   <Typography>
                     {mainAddress.address}, {mainAddress.number}

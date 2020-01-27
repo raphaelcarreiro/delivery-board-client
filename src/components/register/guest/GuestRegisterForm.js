@@ -31,6 +31,7 @@ export default function GuestRegisterForm({ user, validation, handleChange }) {
         value={user.name}
         onChange={event => handleChange('name', event.target.value)}
         autoFocus
+        autoComplete="name"
       />
       <TextField
         error={!!validation.phone}
@@ -44,6 +45,7 @@ export default function GuestRegisterForm({ user, validation, handleChange }) {
         }}
         value={user.phone}
         onChange={event => handleChange('phone', event.target.value)}
+        autoComplete="tel"
       />
       {/*
       <TextField
