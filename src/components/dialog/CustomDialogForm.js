@@ -47,12 +47,24 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     flexDirection: 'column',
   },
+  contentWrapper: ({ title }) => ({
+    paddingTop: title ? 79 : 15,
+    paddingBottom: 87,
+    paddingLeft: 15,
+    paddingRight: 15,
+    [theme.breakpoints.down('md')]: {
+      paddingTop: title ? 71 : 15,
+    },
+    [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
+      paddingTop: title ? 63 : 15,
+    },
+    overflowY: 'auto',
+  }),
   content: {
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-    padding: 15,
-    overflowY: 'auto',
+    margin: '15px 0',
   },
 }));
 
@@ -71,7 +83,7 @@ export default function CustomDialogForm({
   backgroundColor,
 }) {
   const [open, setOpen] = useState(true);
-  const classes = useStyles({ backgroundColor });
+  const classes = useStyles({ backgroundColor, title: !!title });
   const app = useContext(AppContext);
 
   function handleClose() {
@@ -124,15 +136,16 @@ export default function CustomDialogForm({
             </Toolbar>
           </AppBar>
         )}
-        <div className={classes.appbarSpace} />
-        <div className={classes.content}>
-          <CustomDialogContext.Provider
-            value={{
-              handleCloseDialog: handleClose,
-            }}
-          >
-            {children}
-          </CustomDialogContext.Provider>
+        <div className={classes.contentWrapper}>
+          <div className={classes.content}>
+            <CustomDialogContext.Provider
+              value={{
+                handleCloseDialog: handleClose,
+              }}
+            >
+              {children}
+            </CustomDialogContext.Provider>
+          </div>
         </div>
       </form>
     </Dialog>

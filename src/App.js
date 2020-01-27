@@ -46,10 +46,13 @@ export const AppContext = createContext({
   handleOpenMenu: () => {},
   handleCartVisibility: () => {},
   socket: null,
+  readyToInstall: false,
+  handleInstallApp: () => {},
 });
 
 export const menuWidth = 240;
 let socket;
+let defferedPromptPwa;
 
 function App({ pageProps, component: Component }) {
   const user = useSelector(state => state.user);
@@ -65,6 +68,7 @@ function App({ pageProps, component: Component }) {
   const [redirect, setRedirect] = useState(null);
   const [isProgressBarVisible, setIsProgressBarVisible] = useState(false);
   const [theme, setTheme] = useState(defaultTheme);
+  const [readyToInstall, setReadyToInstall] = useState(false);
   const restaurant = useSelector(state => state.restaurant);
 
   const appProviderValue = {
@@ -78,6 +82,8 @@ function App({ pageProps, component: Component }) {
     isCartVisible,
     redirect,
     socket,
+    readyToInstall,
+    handleInstallApp: handleInstallApp,
   };
 
   // paginas que não precisam no cabeçalho e rodapé padrões
@@ -188,6 +194,26 @@ function App({ pageProps, component: Component }) {
       }
     }
   }, [user.id]);
+
+  useEffect(() => {
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      defferedPromptPwa = e;
+      setReadyToInstall(true);
+    });
+  }, []);
+
+  function handleInstallApp() {
+    defferedPromptPwa.prompt();
+    defferedPromptPwa.userChoice.then(choiceResult => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted the A2HS prompt');
+      } else {
+        console.log('User dismissed the A2HS prompt');
+      }
+      defferedPromptPwa = null;
+    });
+  }
 
   function handleRouteChangeStart(url) {
     setIsProgressBarVisible(true);

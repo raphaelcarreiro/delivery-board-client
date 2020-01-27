@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ListItem, ListItemIcon, ListItemText, Typography, Avatar } from '@material-ui/core';
+import { ListItem, ListItemIcon, ListItemText, Typography, Avatar, Button } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import InputIcon from '@material-ui/icons/Input';
@@ -80,6 +80,14 @@ const useStyles = makeStyles(theme => ({
       color: restaurantIsOpen ? '#28a745' : '#dc3545',
     },
   }),
+  installApp: {
+    position: 'absolute',
+    bottom: 20,
+    padding: 20,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+  },
 }));
 
 Sidebar.propTypes = {
@@ -185,6 +193,13 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
           </ListItemIcon>
           <ListItemText classes={{ primary: classes.listItemText }} primary="Entrar" />
         </ListItem>
+      )}
+      {app.readyToInstall && (
+        <div className={classes.installApp}>
+          <Button color="primary" size="small" variant="contained" onClick={app.handleInstallApp}>
+            Instalar aplicativo
+          </Button>
+        </div>
       )}
     </Drawer>
   );

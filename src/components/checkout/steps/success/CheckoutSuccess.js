@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { CheckoutContext } from 'src/components/checkout/Checkout';
-import { Typography } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { formatId } from 'src/helpers/formatOrderId';
 import { makeStyles } from '@material-ui/core/styles';
@@ -24,8 +24,10 @@ const useStyles = makeStyles(theme => ({
     fontSize: 16,
     '& a': {
       display: 'block',
-      marginRight: 10,
       marginBottom: 15,
+      [theme.breakpoints.down('sm')]: {
+        textAlign: 'center',
+      },
     },
   },
 }));
@@ -52,9 +54,11 @@ export default function CheckoutSuccess() {
         <Link href="account/orders/[id]" as={`account/orders/${order.encrypted_id}`} color="primary">
           Acompanhar pedido
         </Link>
-        <Link href="/menu" color="primary">
-          Fazer novo pedido
-        </Link>
+        {app.readyToInstall && (
+          <Button color="primary" onClick={app.handleInstallApp} variant="contained" size="large">
+            Instalar aplicativo
+          </Button>
+        )}
       </div>
     </div>
   );
