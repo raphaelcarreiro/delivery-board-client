@@ -155,7 +155,7 @@ export default function Checkout() {
       let newSteps = defaultSteps.slice();
 
       if (!configs.customer_collect) {
-        newSteps = newSteps.filter(s => s.id !== 'STEP_DELIVERY_WAY');
+        newSteps = newSteps.filter(s => s.id !== 'STEP_SHIPMENT_METHOD');
       }
 
       if (order.shipment_method === 'customer_collect') {
