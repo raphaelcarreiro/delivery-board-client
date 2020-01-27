@@ -33,22 +33,25 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: props.backgroundColor ? props.backgroundColor : '#fff',
     height: '100vh',
   }),
-  content: ({ title }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
+  contentWrapper: ({ title }) => ({
     paddingTop: title ? 79 : 15,
     paddingBottom: 87,
     paddingLeft: 15,
     paddingRight: 15,
-    overflowY: 'auto',
     [theme.breakpoints.down('md')]: {
       paddingTop: title ? 71 : 15,
     },
     [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
       paddingTop: title ? 63 : 15,
     },
+    overflowY: 'auto',
   }),
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+    margin: '15px 0',
+  },
 }));
 
 export const CustomDialogContext = React.createContext({
@@ -102,10 +105,12 @@ export default function CustomDialog({
           </Toolbar>
         </AppBar>
       )}
-      <div className={classes.content}>
-        <CustomDialogContext.Provider value={{ handleCloseDialog: handleClose }}>
-          {children}
-        </CustomDialogContext.Provider>
+      <div className={classes.contentWrapper}>
+        <div className={classes.content}>
+          <CustomDialogContext.Provider value={{ handleCloseDialog: handleClose }}>
+            {children}
+          </CustomDialogContext.Provider>
+        </div>
       </div>
     </Dialog>
   );

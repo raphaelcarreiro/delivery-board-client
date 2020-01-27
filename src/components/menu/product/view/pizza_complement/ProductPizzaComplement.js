@@ -48,7 +48,7 @@ export default function ProductPizzaComplement({
   const restaurant = useSelector(state => state.restaurant);
 
   useEffect(() => {
-    let sizeSelected;
+    let sizeSelected = {};
 
     const categories = product.complement_categories.map(category => {
       category.product_complement_category_id = category.id;
