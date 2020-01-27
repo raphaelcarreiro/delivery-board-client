@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 400,
   },
   container: {
-    marginBottom: 100,
+    marginBottom: 0,
   },
   actionContent: {
     display: 'flex',

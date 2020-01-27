@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { Dialog, Grid, DialogContent, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
+import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-// import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppContext } from 'src/App';
@@ -27,15 +26,6 @@ const useStyles = makeStyles(theme => ({
       display: 'none',
     },
   },
-  appbarSpace: {
-    marginBottom: 64,
-    [theme.breakpoints.down('md')]: {
-      marginBottom: 56,
-    },
-    [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
-      marginBottom: 48,
-    },
-  },
   grow: {
     flexGrow: 1,
   },
@@ -43,13 +33,22 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: props.backgroundColor ? props.backgroundColor : '#fff',
     height: '100vh',
   }),
-  content: {
+  content: ({ title }) => ({
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-    padding: 15,
-    position: 'relative',
-  },
+    paddingTop: title ? 79 : 15,
+    paddingBottom: 87,
+    paddingLeft: 15,
+    paddingRight: 15,
+    overflowY: 'auto',
+    [theme.breakpoints.down('md')]: {
+      paddingTop: title ? 71 : 15,
+    },
+    [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
+      paddingTop: title ? 63 : 15,
+    },
+  }),
 }));
 
 export const CustomDialogContext = React.createContext({
@@ -59,7 +58,7 @@ export const CustomDialogContext = React.createContext({
 export default function CustomDialog({ handleModalState, title, componentActions, children, backgroundColor }) {
   const [open, setOpen] = useState(true);
   const app = useContext(AppContext);
-  const styleProps = { backgroundColor };
+  const styleProps = { backgroundColor, title: !!title };
   const classes = useStyles(styleProps);
 
   function handleClose() {
@@ -95,7 +94,6 @@ export default function CustomDialog({ handleModalState, title, componentActions
           </Toolbar>
         </AppBar>
       )}
-      <div className={classes.appbarSpace} />
       <div className={classes.content}>
         <CustomDialogContext.Provider value={{ handleCloseDialog: handleClose }}>
           {children}

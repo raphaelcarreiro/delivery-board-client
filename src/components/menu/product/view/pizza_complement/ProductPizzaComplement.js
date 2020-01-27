@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
     margin: '10px 0',
   },
   container: {
-    marginBottom: 150,
+    marginBottom: 0,
   },
 }));
 

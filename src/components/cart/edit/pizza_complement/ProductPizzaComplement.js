@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 400,
   },
   container: {
-    marginBottom: 150,
+    marginBottom: 0,
   },
 }));
 
