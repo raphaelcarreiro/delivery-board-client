@@ -220,7 +220,7 @@ function App({ pageProps, component: Component }) {
         .requestPermission()
         .then(async () => {
           const token = await firebaseMessaging.getToken();
-
+          setFmHasToken(true);
           const param = {
             token: token,
             device: navigator.platform,

@@ -249,7 +249,7 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
           </Button>
         </div>
       )}
-      {!app.fmHasToken && firebaseMessagingIsSupported && (
+      {!app.fmHasToken && firebaseMessagingIsSupported && user.id && (
         <div className={classes.activeNotifications}>
           <Typography variant="caption" align="center">
             Ative notificações para receber informações sobre o andamento dos seus pedidos
