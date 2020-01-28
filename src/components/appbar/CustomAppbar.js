@@ -12,7 +12,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
-    zIndex: 10,
+    zIndex: '1101!important',
     '@media print': {
       display: 'none',
     },

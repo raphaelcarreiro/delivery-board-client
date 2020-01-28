@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 const useStyles = makeStyles(theme => ({
   category: {
     display: 'block',
-    margin: '10px 0',
+    marginBottom: 10,
   },
   container: {
     marginBottom: 0,

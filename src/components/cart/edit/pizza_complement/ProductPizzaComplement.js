@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   },
   category: {
     display: 'block',
-    margin: '10px 0',
+    marginBottom: 10,
   },
   categoryName: {
     fontWeight: 400,
