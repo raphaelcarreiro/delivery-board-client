@@ -31,6 +31,9 @@ const useStyles = makeStyles(theme => ({
   },
   paper: props => ({
     backgroundColor: props.backgroundColor ? props.backgroundColor : '#fff',
+    [theme.breakpoints.up('md')]: {
+      height: '100vh',
+    },
   }),
   content: ({ title }) => ({
     display: 'flex',

@@ -16,23 +16,15 @@ const useStyles = makeStyles(theme => ({
   },
   root: {
     paddingRight: '0!important',
+    position: 'relative',
   },
   appbar: {
     position: 'absolute',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       position: 'fixed',
     },
     '@media print': {
       display: 'none',
-    },
-  },
-  appbarSpace: {
-    height: 64,
-    [theme.breakpoints.down('md')]: {
-      height: 56,
-    },
-    [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
-      height: 51,
     },
   },
   grow: {
@@ -40,32 +32,27 @@ const useStyles = makeStyles(theme => ({
   },
   paper: props => ({
     backgroundColor: props.backgroundColor ? props.backgroundColor : '#fff',
-    height: '100vh',
+    [theme.breakpoints.up('md')]: {
+      height: '100vh',
+    },
   }),
-  form: {
+  content: ({ title }) => ({
     display: 'flex',
-    flex: 1,
     flexDirection: 'column',
-  },
-  contentWrapper: ({ title }) => ({
-    paddingTop: title ? 79 : 15,
-    paddingBottom: 87,
+    flex: 1,
+    marginTop: title ? 64 : 15,
+    marginBottom: 87,
+    paddingTop: 15,
     paddingLeft: 15,
     paddingRight: 15,
+    overflowY: 'auto',
     [theme.breakpoints.down('md')]: {
-      paddingTop: title ? 71 : 15,
+      marginTop: title ? 56 : 15,
     },
     [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
-      paddingTop: title ? 63 : 15,
+      marginTop: title ? 48 : 15,
     },
-    overflowY: 'auto',
   }),
-  content: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
-    margin: '15px 0',
-  },
 }));
 
 export const DialogFullscreenFormContext = React.createContext({
@@ -136,16 +123,14 @@ export default function CustomDialogForm({
             </Toolbar>
           </AppBar>
         )}
-        <div className={classes.contentWrapper}>
-          <div className={classes.content}>
-            <CustomDialogContext.Provider
-              value={{
-                handleCloseDialog: handleClose,
-              }}
-            >
-              {children}
-            </CustomDialogContext.Provider>
-          </div>
+        <div className={classes.content}>
+          <CustomDialogContext.Provider
+            value={{
+              handleCloseDialog: handleClose,
+            }}
+          >
+            {children}
+          </CustomDialogContext.Provider>
         </div>
       </form>
     </Dialog>
