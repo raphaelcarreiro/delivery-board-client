@@ -22,7 +22,7 @@ import defaultTheme from '../src/theme';
 import io from 'socket.io-client';
 import { LinearProgress } from '@material-ui/core';
 import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
-import { getFirebaseMessaging } from 'src/config/FirebaseConfig';
+import { getFirebaseMessaging, firebaseMessagingIsSupported } from 'src/config/FirebaseConfig';
 import reactGA from 'react-ga';
 
 const useStyles = makeStyles({
@@ -41,13 +41,15 @@ export const AppContext = createContext({
   isOpenMenu: false,
   isCartVisible: false,
   redirect: null,
+  socket: null,
+  readyToInstall: false,
+  fmHasToken: false,
   setRedirect: () => {},
   handleLogout: () => {},
   handleOpenMenu: () => {},
   handleCartVisibility: () => {},
-  socket: null,
-  readyToInstall: false,
   handleInstallApp: () => {},
+  handleRequestPermissionMessaging: () => {},
 });
 
 export const menuWidth = 240;
@@ -70,12 +72,9 @@ function App({ pageProps, component: Component }) {
   const [theme, setTheme] = useState(defaultTheme);
   const [readyToInstall, setReadyToInstall] = useState(false);
   const restaurant = useSelector(state => state.restaurant);
+  const [fmHasToken, setFmHasToken] = useState(false);
 
   const appProviderValue = {
-    handleLogout: handleLogout,
-    handleOpenMenu: handleOpenMenu,
-    handleCartVisibility: handleCartVisibility,
-    setRedirect: setRedirect,
     isMobile,
     windowWidth,
     isOpenMenu,
@@ -83,7 +82,13 @@ function App({ pageProps, component: Component }) {
     redirect,
     socket,
     readyToInstall,
+    fmHasToken,
+    handleLogout: handleLogout,
+    handleOpenMenu: handleOpenMenu,
+    handleCartVisibility: handleCartVisibility,
+    setRedirect: setRedirect,
     handleInstallApp: handleInstallApp,
+    handleRequestPermissionMessaging: handleRequestPermissionMessaging,
   };
 
   // paginas que não precisam no cabeçalho e rodapé padrões
@@ -164,34 +169,13 @@ function App({ pageProps, component: Component }) {
     router.events.on('routeChangeError', handleRouteChangeError);
   }, []);
 
-  // request permission for push notification
+  /*
+  handle request permission for firebase messaging if is not server,
+  user has been loaded and firebase messaging is supported.
+  */
   useEffect(() => {
-    if (process.browser && user.id) {
-      try {
-        const firebaseMessaging = getFirebaseMessaging();
-        firebaseMessaging
-          .requestPermission()
-          .then(async () => {
-            const token = await firebaseMessaging.getToken();
-
-            const param = {
-              token: token,
-              device: navigator.platform,
-              type: 'client',
-            };
-
-            api()
-              .post('/pushTokens', param)
-              .catch(err => {
-                console.log(err);
-              });
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      } catch (error) {
-        console.error(error);
-      }
+    if (process.browser && user.id && firebaseMessagingIsSupported) {
+      handleGetTokenFirebaseMessaging();
     }
   }, [user.id]);
 
@@ -202,6 +186,60 @@ function App({ pageProps, component: Component }) {
       setReadyToInstall(true);
     });
   }, []);
+
+  function handleGetTokenFirebaseMessaging() {
+    try {
+      const firebaseMessaging = getFirebaseMessaging();
+      firebaseMessaging.getToken().then(token => {
+        if (token) {
+          setFmHasToken(true);
+
+          const param = {
+            token: token,
+            device: navigator.platform,
+            type: 'client',
+          };
+
+          api()
+            .post('/pushTokens', param)
+            .catch(err => {
+              console.log(err);
+            });
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  // request permission for push notification
+  function handleRequestPermissionMessaging() {
+    try {
+      const firebaseMessaging = getFirebaseMessaging();
+      firebaseMessaging
+        .requestPermission()
+        .then(async () => {
+          const token = await firebaseMessaging.getToken();
+
+          const param = {
+            token: token,
+            device: navigator.platform,
+            type: 'client',
+          };
+
+          api()
+            .post('/pushTokens', param)
+            .catch(err => {
+              console.log(err);
+            });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   function handleInstallApp() {
     defferedPromptPwa.prompt();

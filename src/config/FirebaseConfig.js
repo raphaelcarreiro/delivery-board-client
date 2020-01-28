@@ -19,4 +19,6 @@ function getFirebaseMessaging() {
   return firebase.messaging();
 }
 
+export const firebaseMessagingIsSupported = firebase.messaging.isSupported;
+
 export { getFirebaseMessaging };

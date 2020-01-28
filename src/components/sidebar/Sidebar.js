@@ -7,13 +7,16 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import HomeIcon from '@material-ui/icons/Home';
 import Drawer from '@material-ui/core/Drawer';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, fade } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 import { menuWidth, AppContext } from '../../App';
 import Link from '../link/Link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import StatusIcon from '@material-ui/icons/FiberManualRecord';
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import { firebaseMessagingIsSupported } from 'src/config/FirebaseConfig';
 
 const useStyles = makeStyles(theme => ({
   drawerPaper: {
@@ -34,9 +37,9 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.primary.contrastText,
     height: 55,
     display: 'flex',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    padding: '0 16px',
+    justifyContent: 'space-between',
+    padding: '0 0 0 16px',
+    position: 'relative',
   },
   drawerHeaderTitle: {
     color: theme.palette.primary.contrastText,
@@ -75,19 +78,52 @@ const useStyles = makeStyles(theme => ({
   restaurantName: ({ restaurantIsOpen }) => ({
     display: 'flex',
     alignItems: 'center',
-    '& svg': {
-      marginLeft: 20,
-      color: restaurantIsOpen ? '#28a745' : '#dc3545',
-    },
   }),
   installApp: {
     position: 'absolute',
-    bottom: 20,
-    padding: 20,
-    width: '100%',
+    bottom: 0,
+    borderRadius: 4,
+    padding: '10px 15px',
+    width: 'calc(100% - 20px)',
     display: 'flex',
-    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
+    flexDirection: 'column',
+    color: theme.palette.secondary.contrastText,
+    backgroundColor: fade(theme.palette.primary.main, 0.5),
+    border: `1px dashed ${theme.palette.primary.dark}`,
+    '& button': {
+      marginTop: 10,
+    },
   },
+  activeNotifications: {
+    position: 'absolute',
+    bottom: 100,
+    borderRadius: 4,
+    padding: '10px 15px',
+    width: 'calc(100% - 20px)',
+    display: 'flex',
+    alignItems: 'center',
+    margin: 10,
+    flexDirection: 'column',
+    color: theme.palette.secondary.contrastText,
+    backgroundColor: fade(theme.palette.primary.main, 0.5),
+    border: `1px dashed ${theme.palette.primary.dark}`,
+    '& button': {
+      marginTop: 10,
+    },
+  },
+  restaurantStatus: ({ restaurantIsOpen }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0 5px',
+    backgroundColor: theme.palette.primary.dark,
+    borderRadius: '4px 0 0 4px',
+    margin: '10px 0',
+    '& svg': {
+      color: restaurantIsOpen ? '#28a745' : '#dc3545',
+    },
+  }),
 }));
 
 Sidebar.propTypes = {
@@ -141,9 +177,14 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
     >
       <div className={classes.drawerHeader}>
         {restaurant && (
-          <Typography color="inherit" variant="body2" className={classes.restaurantName}>
-            {restaurant.name} <StatusIcon />
-          </Typography>
+          <>
+            <Typography color="inherit" variant="body2" className={classes.restaurantName}>
+              {restaurant.name}
+            </Typography>
+            <div className={classes.restaurantStatus}>
+              <StatusIcon /> <Typography variant="body2">{restaurant.is_open ? 'Aberto' : 'Fechado'}</Typography>
+            </div>
+          </>
         )}
       </div>
       <ListItem component={Link} href="/" onClick={handleClick} button>
@@ -196,8 +237,31 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
       )}
       {app.readyToInstall && (
         <div className={classes.installApp}>
-          <Button color="primary" size="small" variant="contained" onClick={app.handleInstallApp}>
-            Instalar aplicativo
+          <Typography variant="caption">Que tal instalar esse aplicativo?</Typography>
+          <Button
+            color="primary"
+            size="small"
+            variant="contained"
+            onClick={app.handleInstallApp}
+            startIcon={<GetAppIcon />}
+          >
+            Instalar
+          </Button>
+        </div>
+      )}
+      {!app.fmHasToken && firebaseMessagingIsSupported && (
+        <div className={classes.activeNotifications}>
+          <Typography variant="caption" align="center">
+            Ative notificações para receber informações sobre o andamento dos seus pedidos
+          </Typography>
+          <Button
+            size="small"
+            variant="contained"
+            color="primary"
+            onClick={app.handleRequestPermissionMessaging}
+            startIcon={<NotificationsActiveIcon />}
+          >
+            Ativar
           </Button>
         </div>
       )}
