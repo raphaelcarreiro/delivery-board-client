@@ -8,8 +8,8 @@ import { api } from '../../services/api';
 
 const useStyles = makeStyles(theme => ({
   image: {
-    width: 195,
-    height: 195,
+    width: '100%',
+    // height: 195,
     borderRadius: 4,
     backgroundColor: '#eee',
   },
@@ -24,6 +24,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     cursor: 'pointer',
     marginTop: 15,
+    overflow: 'hidden',
     [theme.breakpoints.down('sm')]: {
       marginTop: 0,
       minWidth: '100%',
