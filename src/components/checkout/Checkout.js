@@ -114,6 +114,8 @@ export const CheckoutContext = React.createContext({
   handleSetStep: () => {},
   createdOrder: null,
   step: null,
+  cardValidation: {},
+  saving: false,
 });
 
 export default function Checkout() {
@@ -142,6 +144,7 @@ export default function Checkout() {
     handleStepPrior: handleStepPrior,
     handleSubmitOrder: handleSubmitOrder,
     handleSetStep: handleSetStep,
+    saving,
     createdOrder,
     step,
     cardValidation,
@@ -269,7 +272,7 @@ export default function Checkout() {
 
   async function handleCardValidation(card) {
     const schema = yup.object().shape({
-      card_owner_cpf: yup
+      cpf: yup
         .string()
         .transform((value, originalValue) => {
           return originalValue ? originalValue.replace(/\D/g, '') : '';
@@ -278,19 +281,19 @@ export default function Checkout() {
           return cpfValidation(value);
         })
         .required('CPF é obrigatório'),
-      card_cvv: yup
+      cvv: yup
         .string()
         .min(3, 'O código de segurança deve ter 3 digitos')
         .required('O código de segurança é obrigatório'),
-      card_expiration_date: yup
+      expiration_date: yup
         .string()
         .transform((value, originalValue) => {
           return originalValue.replace(/\D/g, '');
         })
         .min(4, 'Data de validade inválida')
         .required('A data de validade do cartão é obrigatória'),
-      card_holder_name: yup.string().required('O nome e sobrenome são obrigatórios'),
-      card_number: yup
+      name: yup.string().required('O nome e sobrenome são obrigatórios'),
+      number: yup
         .string()
         .transform((value, originalValue) => {
           return originalValue.replace(/\D/g, '');

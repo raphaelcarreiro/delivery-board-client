@@ -100,7 +100,7 @@ export default function Confirm() {
           <>
             <Typography>Pagamento on-line</Typography>
             <Typography variant="body2">Cartão de crédito</Typography>
-            <Typography>**** **** **** {order.creditCard.card_number.substr(-4)}</Typography>
+            <Typography>**** **** **** {order.creditCard.number.substr(-4)}</Typography>
           </>
         ) : (
           <>
@@ -132,6 +132,7 @@ export default function Confirm() {
           size="large"
           variant="contained"
           color="primary"
+          disabled={checkout.saving}
         >
           Confirmar Meu Pedido
         </Button>

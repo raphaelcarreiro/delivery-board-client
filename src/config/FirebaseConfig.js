@@ -11,17 +11,21 @@ export const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID,
 };
 
-function getFirebaseMessaging() {
+function initialize() {
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
-    firebase
-      .messaging()
-      .usePublicVapidKey('BEA06PbQN63--qVU1JyNfDqq0k7jgzI3qBgu0aEp8_E1fWawS1ZvJvguxlHL40vc5lftIav27HQ6kALDyivZAFw');
   }
+}
 
+function getFirebaseMessaging() {
+  initialize();
   return firebase.messaging();
 }
 
-export const firebaseMessagingIsSupported = firebase.messaging.isSupported;
+function isSupported() {
+  initialize();
+  return firebase.messaging.isSupported();
+}
 
+export { isSupported as firebaseMessagingIsSupported };
 export { getFirebaseMessaging };

@@ -175,7 +175,7 @@ function App({ pageProps, component: Component }) {
   */
   useEffect(() => {
     if (process.browser && user.id && firebaseMessagingIsSupported) {
-      // handleGetTokenFirebaseMessaging();
+      handleGetTokenFirebaseMessaging();
     }
   }, [user.id]);
 

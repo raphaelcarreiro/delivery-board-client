@@ -29,13 +29,13 @@ export default function PaymentCreditCard() {
     <Grid container className={classes.container}>
       <Grid item xl={4} lg={4} md={6} xs={12}>
         <TextField
-          error={!!checkout.cardValidation.card_number}
-          helperText={checkout.cardValidation.card_number}
+          error={!!checkout.cardValidation.number}
+          helperText={checkout.cardValidation.number}
           label="Número do cartão"
           margin="normal"
           placeholder="Número do cartão"
-          value={order.creditCard.card_number}
-          onChange={e => handleChange('card_number', e.target.value)}
+          value={order.creditCard.number}
+          onChange={e => handleChange('number', e.target.value)}
           fullWidth
           autoFocus
           autoComplete="cc-number"
@@ -45,31 +45,25 @@ export default function PaymentCreditCard() {
         />
         <TextField
           label="Nome e sobrenome"
-          error={!!checkout.cardValidation.card_holder_name}
-          helperText={
-            checkout.cardValidation.card_holder_name
-              ? checkout.cardValidation.card_holder_name
-              : 'Assim como está escrito no cartão'
-          }
+          error={!!checkout.cardValidation.name}
+          helperText={checkout.cardValidation.name ? checkout.cardValidation.name : 'Assim como está escrito no cartão'}
           margin="normal"
           placeholder="Nome e sobrenome"
-          value={order.creditCard.card_holder_name}
-          onChange={e => handleChange('card_holder_name', e.target.value)}
+          value={order.creditCard.name}
+          onChange={e => handleChange('name', e.target.value)}
           fullWidth
           autoComplete="cc-name"
         />
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
-              error={!!checkout.cardValidation.card_expiration_date}
-              helperText={
-                checkout.cardValidation.card_expiration_date ? checkout.cardValidation.card_expiration_date : 'MM/AA'
-              }
+              error={!!checkout.cardValidation.expiration_date}
+              helperText={checkout.cardValidation.expiration_date ? checkout.cardValidation.expiration_date : 'MM/AA'}
               label="Data de vencimento"
               margin="normal"
               placeholder="Data de vencimento do cartão"
-              value={order.creditCard.card_expiration_date}
-              onChange={e => handleChange('card_expiration_date', e.target.value)}
+              value={order.creditCard.expiration_date}
+              onChange={e => handleChange('expiration_date', e.target.value)}
               fullWidth
               autoComplete="cc-exp"
               InputProps={{
@@ -80,16 +74,14 @@ export default function PaymentCreditCard() {
           <Grid item xs={6}>
             <TextField
               label="Código de segurança"
-              error={!!checkout.cardValidation.card_cvv}
+              error={!!checkout.cardValidation.cvv}
               helperText={
-                checkout.cardValidation.card_cvv
-                  ? checkout.cardValidation.card_cvv
-                  : 'Últimos três número do verso do seu cartão'
+                checkout.cardValidation.cvv ? checkout.cardValidation.cvv : 'Últimos três número do verso do seu cartão'
               }
               margin="normal"
               placeholder="Código de segurança"
-              value={order.creditCard.card_cvv}
-              onChange={e => handleChange('card_cvv', e.target.value)}
+              value={order.creditCard.cvv}
+              onChange={e => handleChange('cvv', e.target.value)}
               autoComplete="cc-csc"
               fullWidth
               InputProps={{
@@ -99,13 +91,13 @@ export default function PaymentCreditCard() {
           </Grid>
         </Grid>
         <TextField
-          error={!!checkout.cardValidation.card_owner_cpf}
-          helperText={checkout.cardValidation.card_owner_cpf}
+          error={!!checkout.cardValidation.cpf}
+          helperText={checkout.cardValidation.cpf}
           label="CPF do titular do cartão"
           margin="normal"
           placeholder="CPF do titular do cartão"
-          value={order.creditCard.card_owner_cpf}
-          onChange={e => handleChange('card_owner_cpf', e.target.value)}
+          value={order.creditCard.cpf}
+          onChange={e => handleChange('cpf', e.target.value)}
           fullWidth
           InputProps={{
             inputComponent: CpfInput,

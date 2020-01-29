@@ -6,12 +6,12 @@ const INITIAL_STATE = {
   shipment_method: 'delivery',
   change: 0,
   creditCard: {
-    card_number: '',
-    card_holder_name: '',
+    number: '',
+    name: '',
     card_id: '',
-    card_expiration_date: '',
-    card_cvv: '',
-    card_owner_cpf: '',
+    expiration_date: '',
+    cvv: '',
+    cpf: '',
   },
 };
 

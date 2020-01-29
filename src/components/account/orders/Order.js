@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography, List, ListItem } from '@material-ui/core';
+import { Grid, Typography, List, ListItem, Button } from '@material-ui/core';
 import PageHeader from 'src/components/pageHeader/PageHeader';
 import { formatId } from 'src/helpers/formatOrderId';
 import { api } from 'src/services/api';
@@ -14,6 +14,10 @@ import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import io from 'socket.io-client';
 import { MessagingContext } from 'src/components/messaging/Messaging';
 import { useSelector } from 'react-redux';
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import { AppContext } from 'src/App';
+import { firebaseMessagingIsSupported } from 'src/config/FirebaseConfig';
+import OrderAction from './OrderAction';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -87,6 +91,23 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  activeNotifications: {
+    position: 'absolute',
+    right: 0,
+    width: 200,
+    display: 'flex',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    padding: 10,
+    border: '1px solid #ddd',
+    borderRadius: 4,
+    '& button': {
+      marginTop: 10,
+    },
+    [theme.breakpoints.down('md')]: {
+      display: 'none',
+    },
+  },
 }));
 
 Order.propTypes = {
@@ -96,10 +117,12 @@ Order.propTypes = {
 export default function Order({ cryptId }) {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [mainAddress, setMainAddress] = useState(null);
+  const user = useSelector(state => state.user);
+  const app = useContext(AppContext);
+  const restaurant = useSelector(state => state.restaurant);
   const messaging = useContext(MessagingContext);
   const classes = useStyles();
-  const [mainAddress, setMainAddress] = useState(null);
-  const restaurant = useSelector(state => state.restaurant);
 
   useEffect(() => {
     if (restaurant) {
@@ -108,7 +131,7 @@ export default function Order({ cryptId }) {
   }, [restaurant]);
 
   useEffect(() => {
-    const socket = io.connect(process.env.URL_NODE_SERVER);
+    const socket = io.connect(process.env.URL_NODE_SERVER, { reconnectionAttempts: 5 });
     if (order) {
       socket.emit('register', order.id);
 
@@ -164,11 +187,32 @@ export default function Order({ cryptId }) {
 
   return (
     <>
+      <CustomAppbar
+        title={order ? `Pedido ${order.formattedId}` : 'Carregando...'}
+        actionComponent={
+          <OrderAction hasToken={app.fmHasToken} isSupported={firebaseMessagingIsSupported} user={!!user.id} />
+        }
+      />
       {loading ? (
         <Loading />
       ) : order ? (
         <Grid container>
-          <CustomAppbar title={`Pedido ${order.formattedId}`} />
+          {!app.fmHasToken && firebaseMessagingIsSupported && user.id && (
+            <div className={classes.activeNotifications}>
+              <Typography variant="body2" color="textSecondary" align="center">
+                Ative notificações para acompanhar esse pedido
+              </Typography>
+              <Button
+                color="primary"
+                onClick={app.handleRequestPermissionMessaging}
+                variant="contained"
+                size="small"
+                startIcon={<NotificationsActiveIcon />}
+              >
+                Ativar
+              </Button>
+            </div>
+          )}
           <PageHeader title={`Pedido ${order.formattedId}`} description={`Pedido gerado em ${order.formattedDate}`} />
           <div>
             <List className={classes.historyList}>
