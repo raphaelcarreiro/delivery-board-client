@@ -212,7 +212,7 @@ export default function Checkout() {
         dispatch(setPaymentMethod(response.data[0]));
       })
       .catch(err => {
-        if (err.response) messaging.handleOpen(err.response.data.error);
+        if (err.response) messaging.handleOpen(err.response.data.error, null, { marginBottom: 47 });
       });
   }, []);
 
@@ -222,7 +222,7 @@ export default function Checkout() {
 
   function handleSubmitOrder() {
     if (cart.total < restaurant.minimum_order) {
-      messaging.handleOpen(`Valor mínimo do pedido é ${restaurant.formattedMinimumOrder}`);
+      messaging.handleOpen(`Valor mínimo do pedido é ${restaurant.formattedMinimumOrder}`, null, { marginBottom: 47 });
       return;
     }
     setSaving(true);
@@ -235,7 +235,7 @@ export default function Checkout() {
         handleStepNext();
       })
       .catch(err => {
-        if (err.response) messaging.handleOpen(err.response.data.error);
+        if (err.response) messaging.handleOpen(err.response.data.error, null, { marginBottom: 47 });
       })
       .finally(() => {
         setSaving(false);
@@ -245,7 +245,7 @@ export default function Checkout() {
   async function handleStepNext() {
     if (currentStep.id === 'STEP_SHIPMENT') {
       if (!order.shipmentAddress.id) {
-        messaging.handleOpen('Informe o endereço');
+        messaging.handleOpen('Informe o endereço', null, { marginBottom: 47 });
         return;
       }
     } else if (currentStep.id === 'STEP_PAYMENT') {
@@ -309,7 +309,7 @@ export default function Checkout() {
       setCardValidation({
         [err.path]: err.message,
       });
-      messaging.handleOpen(err.message);
+      messaging.handleOpen(err.message, null, { marginBottom: 47 });
       return false;
     }
   }

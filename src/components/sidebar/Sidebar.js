@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ListItem, ListItemIcon, ListItemText, Typography, Avatar, Button } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
@@ -96,9 +96,9 @@ const useStyles = makeStyles(theme => ({
       marginTop: 10,
     },
   },
-  activeNotifications: {
+  activeNotifications: ({ readyToInstall }) => ({
     position: 'absolute',
-    bottom: 100,
+    bottom: readyToInstall ? 100 : 10,
     borderRadius: 4,
     padding: '10px 15px',
     width: 'calc(100% - 20px)',
@@ -112,7 +112,7 @@ const useStyles = makeStyles(theme => ({
     '& button': {
       marginTop: 10,
     },
-  },
+  }),
   restaurantStatus: ({ restaurantIsOpen }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -137,11 +137,17 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
   const user = useSelector(state => state.user);
   const restaurant = useSelector(state => state.restaurant);
   const cart = useSelector(state => state.cart);
+  const app = useContext(AppContext);
+  const [isSupported, setIsSupported] = useState(false);
   const classes = useStyles({
     cartItems: cart.products.length > 0,
     restaurantIsOpen: restaurant && restaurant.is_open,
+    readyToInstall: app.readyToInstall,
   });
-  const app = useContext(AppContext);
+
+  useEffect(() => {
+    setIsSupported(firebaseMessagingIsSupported());
+  }, []);
 
   function handleClick() {
     handleOpenMenu();
@@ -249,7 +255,7 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
           </Button>
         </div>
       )}
-      {!app.fmHasToken && firebaseMessagingIsSupported && user.id && (
+      {!app.fmHasToken && isSupported && user.id && (
         <div className={classes.activeNotifications}>
           <Typography variant="caption" align="center">
             Ativar notificações do seus pedidos

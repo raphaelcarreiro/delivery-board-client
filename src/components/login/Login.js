@@ -57,36 +57,42 @@ export default function Login() {
   let googleAuth2;
 
   useEffect(() => {
-    FB.init({
-      appId: '588242751734818',
-      cookie: true,
-      xfbml: true,
-      version: 'v5.0',
-    });
+    if (restaurant.id)
+      if (restaurant.configs.facebook_login) {
+        FB.init({
+          appId: '588242751734818',
+          cookie: true,
+          xfbml: true,
+          version: 'v5.0',
+        });
 
-    FB.getLoginStatus(response => {
-      if (response.status === 'connected') {
-        FB.api('/me?locale=pt_BR&fields=name,email', response => {
-          setFacebookUser(response);
+        FB.getLoginStatus(response => {
+          if (response.status === 'connected') {
+            FB.api('/me?locale=pt_BR&fields=name,email', response => {
+              setFacebookUser(response);
+            });
+          }
         });
       }
-    });
-  }, []);
+  }, [restaurant]);
 
   useEffect(() => {
-    gapi.load('auth2', async () => {
-      await gapi.auth2.init({
-        client_id: '372525900715-741lc2vnsuj2gs2o2i063eri0ioaeoov.apps.googleusercontent.com',
-        scope: 'profile',
-      });
+    if (restaurant)
+      if (restaurant.configs.google_login) {
+        gapi.load('auth2', async () => {
+          await gapi.auth2.init({
+            client_id: '372525900715-741lc2vnsuj2gs2o2i063eri0ioaeoov.apps.googleusercontent.com',
+            scope: 'profile',
+          });
 
-      googleAuth2 = gapi.auth2.getAuthInstance();
-      if (googleAuth2.isSignedIn.get()) {
-        const _googleUser = googleAuth2.currentUser.get();
-        setGoogleUser(_googleUser);
+          googleAuth2 = gapi.auth2.getAuthInstance();
+          if (googleAuth2.isSignedIn.get()) {
+            const _googleUser = googleAuth2.currentUser.get();
+            setGoogleUser(_googleUser);
+          }
+        });
       }
-    });
-  }, []);
+  }, [restaurant]);
 
   function handleFacebookLogin() {
     FB.getLoginStatus(function(response) {

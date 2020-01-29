@@ -59,9 +59,9 @@ export default function PaymentCreditCard() {
             <TextField
               error={!!checkout.cardValidation.expiration_date}
               helperText={checkout.cardValidation.expiration_date ? checkout.cardValidation.expiration_date : 'MM/AA'}
-              label="Data de vencimento"
+              label="Vencimento"
               margin="normal"
-              placeholder="Data de vencimento do cartão"
+              placeholder="Vencimento do cartão"
               value={order.creditCard.expiration_date}
               onChange={e => handleChange('expiration_date', e.target.value)}
               fullWidth
@@ -73,7 +73,7 @@ export default function PaymentCreditCard() {
           </Grid>
           <Grid item xs={6}>
             <TextField
-              label="Código de segurança"
+              label="Código"
               error={!!checkout.cardValidation.cvv}
               helperText={
                 checkout.cardValidation.cvv ? checkout.cardValidation.cvv : 'Últimos três número do verso do seu cartão'

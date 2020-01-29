@@ -16,7 +16,7 @@ import { MessagingContext } from 'src/components/messaging/Messaging';
 import { useSelector } from 'react-redux';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import { AppContext } from 'src/App';
-import { firebaseMessagingIsSupported } from 'src/config/FirebaseConfig';
+import { firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
 import OrderAction from './OrderAction';
 
 const useStyles = makeStyles(theme => ({
@@ -189,15 +189,13 @@ export default function Order({ cryptId }) {
     <>
       <CustomAppbar
         title={order ? `Pedido ${order.formattedId}` : 'Carregando...'}
-        actionComponent={
-          <OrderAction hasToken={app.fmHasToken} isSupported={firebaseMessagingIsSupported} user={!!user.id} />
-        }
+        actionComponent={<OrderAction hasToken={app.fmHasToken} isSupported={isSupported()} user={!!user.id} />}
       />
       {loading ? (
         <Loading />
       ) : order ? (
         <Grid container>
-          {!app.fmHasToken && firebaseMessagingIsSupported && user.id && (
+          {!app.fmHasToken && isSupported() && user.id && (
             <div className={classes.activeNotifications}>
               <Typography variant="body2" color="textSecondary" align="center">
                 Ative notificações para acompanhar esse pedido

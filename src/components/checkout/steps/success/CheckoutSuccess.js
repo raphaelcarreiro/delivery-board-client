@@ -3,12 +3,12 @@ import { CheckoutContext } from 'src/components/checkout/Checkout';
 import { Typography, Button } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { formatId } from 'src/helpers/formatOrderId';
-import { makeStyles, fade } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { AppContext } from 'src/App';
 import Link from 'src/components/link/Link';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import { firebaseMessagingIsSupported } from 'src/config/FirebaseConfig';
+import { firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -24,6 +24,8 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     marginTop: 20,
+    display: 'flex',
+    flexDirection: 'column',
     '& a': {
       display: 'block',
       marginBottom: 15,
@@ -80,7 +82,7 @@ export default function CheckoutSuccess() {
             </Button>
           </div>
         )}
-        {!app.fmHasToken && firebaseMessagingIsSupported && user.id && (
+        {!app.fmHasToken && isSupported && user.id && (
           <div className={classes.contentAction}>
             <Typography>Ativar notificações para acompanhar esse pedido</Typography>
             <Button

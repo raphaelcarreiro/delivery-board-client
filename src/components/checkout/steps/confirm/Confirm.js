@@ -8,7 +8,17 @@ import { AppContext } from 'src/App';
 
 const useStyles = makeStyles(theme => ({
   orderItemData: {
+    position: 'relative',
+    maxWidth: 300,
     marginBottom: 12,
+    marginRight: 10,
+    padding: 10,
+    borderRadius: 4,
+    border: '1px solid #ddd',
+    [theme.breakpoints.down('md')]: {
+      marginRight: 0,
+      maxWidth: '100%',
+    },
   },
   action: {
     marginTop: 30,
@@ -31,12 +41,16 @@ const useStyles = makeStyles(theme => ({
     },
   },
   title: {
-    fontWeight: 400,
+    fontWeight: 600,
+    fontSize: 18,
+    marginBottom: 7,
   },
   link: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
     cursor: 'pointer',
     display: 'inline-block',
-    marginTop: 1,
   },
 }));
 

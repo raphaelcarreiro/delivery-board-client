@@ -22,7 +22,7 @@ import defaultTheme from '../src/theme';
 import io from 'socket.io-client';
 import { LinearProgress } from '@material-ui/core';
 import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
-import { getFirebaseMessaging, firebaseMessagingIsSupported } from 'src/config/FirebaseConfig';
+import { getFirebaseMessaging, firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
 import reactGA from 'react-ga';
 
 const useStyles = makeStyles({
@@ -174,9 +174,10 @@ function App({ pageProps, component: Component }) {
   user has been loaded and firebase messaging is supported.
   */
   useEffect(() => {
-    if (process.browser && user.id && firebaseMessagingIsSupported) {
-      handleGetTokenFirebaseMessaging();
-    }
+    if (process.browser)
+      if (user.id && isSupported()) {
+        // handleGetTokenFirebaseMessaging();
+      }
   }, [user.id]);
 
   useEffect(() => {

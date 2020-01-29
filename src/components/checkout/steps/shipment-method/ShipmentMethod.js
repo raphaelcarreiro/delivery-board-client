@@ -25,6 +25,7 @@ const useStyles = makeStyles(theme => ({
       gridGap: 10,
       '& button': {
         margin: 0,
+        width: 280,
       },
     },
   },
