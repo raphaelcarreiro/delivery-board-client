@@ -233,7 +233,7 @@ MyDocument.getInitialProps = async ctx => {
     gaId: configs.google_analytics_id,
     pixelId: configs.facebook_pixel_id,
     googleLogin: configs.google_login,
-    facebookLogin: configs.facebookLogin,
+    facebookLogin: configs.facebook_login,
     styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
   };
 };
