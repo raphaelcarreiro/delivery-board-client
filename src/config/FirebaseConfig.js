@@ -14,6 +14,9 @@ export const firebaseConfig = {
 function getFirebaseMessaging() {
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
+    firebase
+      .messaging()
+      .usePublicVapidKey('BEA06PbQN63--qVU1JyNfDqq0k7jgzI3qBgu0aEp8_E1fWawS1ZvJvguxlHL40vc5lftIav27HQ6kALDyivZAFw');
   }
 
   return firebase.messaging();

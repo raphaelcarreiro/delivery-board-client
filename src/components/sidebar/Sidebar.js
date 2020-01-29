@@ -104,7 +104,7 @@ const useStyles = makeStyles(theme => ({
     width: 'calc(100% - 20px)',
     display: 'flex',
     alignItems: 'center',
-    margin: 10,
+    margin: '0 10px',
     flexDirection: 'column',
     color: theme.palette.secondary.contrastText,
     backgroundColor: fade(theme.palette.primary.main, 0.5),
@@ -118,8 +118,8 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     padding: '0 5px',
     backgroundColor: theme.palette.primary.dark,
-    borderRadius: '4px 0 0 4px',
-    margin: '10px 0',
+    borderRadius: 4,
+    margin: 10,
     '& svg': {
       color: restaurantIsOpen ? '#28a745' : '#dc3545',
     },
@@ -252,7 +252,7 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
       {!app.fmHasToken && firebaseMessagingIsSupported && user.id && (
         <div className={classes.activeNotifications}>
           <Typography variant="caption" align="center">
-            Ative notificações para receber informações sobre o andamento dos seus pedidos
+            Ativar notificações do seus pedidos
           </Typography>
           <Button
             size="small"

@@ -51,7 +51,7 @@ export default class MyDocument extends Document {
   }
 
   render() {
-    const { themeColor, gaId, pixelId, manifest } = this.props;
+    const { themeColor, gaId, pixelId, googleLogin, facebookLogin } = this.props;
     return (
       <html lang="pt-BR">
         <Head>
@@ -162,13 +162,15 @@ export default class MyDocument extends Document {
           `}</style>
         </Head>
         <body>
-          <script
-            async
-            defer
-            crossOrigin="anonymous"
-            src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v5.0&appId=588242751734818&autoLogAppEvents=1"
-          />
-          <script src="https://apis.google.com/js/platform.js" async defer />
+          {facebookLogin && (
+            <script
+              async
+              defer
+              crossOrigin="anonymous"
+              src="https://connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v5.0&appId=588242751734818&autoLogAppEvents=1"
+            />
+          )}
+          {googleLogin && <script src="https://apis.google.com/js/platform.js" async defer />}
           <Main />
           <NextScript />
         </body>
@@ -230,6 +232,8 @@ MyDocument.getInitialProps = async ctx => {
     manifest: response.data.manifest,
     gaId: configs.google_analytics_id,
     pixelId: configs.facebook_pixel_id,
+    googleLogin: configs.google_login,
+    facebookLogin: configs.facebookLogin,
     styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
   };
 };
