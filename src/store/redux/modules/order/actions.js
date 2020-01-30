@@ -60,3 +60,9 @@ export function setInitialState() {
     type: '@order/SET_INITIAL_STATE',
   };
 }
+
+export function clearCard() {
+  return {
+    type: '@order/CLEAR_CARD',
+  };
+}

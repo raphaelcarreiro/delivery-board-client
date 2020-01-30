@@ -6,7 +6,7 @@ import {
   setProducts,
   setShipmentAddress,
   setChange,
-  setInitialState,
+  clearCard,
 } from 'src/store/redux/modules/order/actions';
 import Shipment from './steps/shipment/Shipment';
 import { setUser } from 'src/store/redux/modules/user/actions';
@@ -233,8 +233,9 @@ export default function Checkout() {
       .post('/orders', order)
       .then(response => {
         setCreatedOrder(response.data);
+        dispatch(setChange(0));
+        dispatch(clearCard());
         dispatch(clearCart());
-        dispatch(setInitialState());
         handleStepNext();
       })
       .catch(err => {

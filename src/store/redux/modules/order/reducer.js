@@ -27,7 +27,6 @@ export default function order(state = INITIAL_STATE, action) {
     case '@order/SET_SHIPMENT_ADDRESS': {
       return {
         ...state,
-        // shipment_method: 'delivery',
         shipmentAddress: action.address,
       };
     }
@@ -79,9 +78,20 @@ export default function order(state = INITIAL_STATE, action) {
     }
 
     case '@order/SET_INITIAL_STATE': {
+      return INITIAL_STATE;
+    }
+
+    case '@order/CLEAR_CARD': {
       return {
-        ...INITIAL_STATE,
-        products: state.products,
+        ...state,
+        creditCard: {
+          number: '',
+          name: '',
+          card_id: '',
+          expiration_date: '',
+          cvv: '',
+          cpf: '',
+        },
       };
     }
 
