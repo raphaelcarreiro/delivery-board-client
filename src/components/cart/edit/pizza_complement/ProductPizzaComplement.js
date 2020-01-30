@@ -101,7 +101,7 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
 
   function handleAmountUp() {
     if (!product.ready) {
-      messaging.handleOpen('Você precisa selecionar os itens obrigatório');
+      messaging.handleOpen('Você precisa selecionar os itens obrigatórios');
       return;
     }
     setAmount(amount + 1);
@@ -109,7 +109,7 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
 
   function handleAmountDown() {
     if (!product.ready) {
-      messaging.handleOpen('Você precisa selecionar os itens obrigatório');
+      messaging.handleOpen('Você precisa selecionar os itens obrigatórios');
       return;
     }
     if (amount > 1) {
@@ -137,6 +137,12 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
               if (complement.id === complementId) {
                 if (complement.selected) complement.selected = !complement.selected;
                 else if (sizeSelected.taste_amount > selectedAmount) complement.selected = !complement.selected;
+                else if (sizeSelected.taste_amount === selectedAmount)
+                  messaging.handleOpen(
+                    `Apenas ${sizeSelected.taste_amount} ${
+                      sizeSelected.taste_amount > 1 ? 'sabores' : 'sabor'
+                    } você pode selecionar`
+                  );
               }
             }
           } else if (category.max_quantity === 1) {

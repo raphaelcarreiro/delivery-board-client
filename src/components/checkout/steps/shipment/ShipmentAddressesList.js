@@ -168,7 +168,9 @@ export default function ShipmentAddressesList({
               <Typography color="textSecondary">
                 {address.city}, {address.region}
               </Typography>
-              <Typography color="textSecondary">{address.postal_code}</Typography>
+              {address.postal_code !== '00000000' && (
+                <Typography color="textSecondary">{address.postal_code}</Typography>
+              )}
             </div>
             {address.id === order.shipmentAddress.id && (
               <CheckCircleIcon color="primary" className={classes.checkIcon} />

@@ -1,33 +1,43 @@
 import React, { useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Typography, Grid, Button } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { CheckoutContext } from 'src/components/checkout/Checkout';
 import { AppContext } from 'src/App';
+import DoneIcon from '@material-ui/icons/Done';
 
 const useStyles = makeStyles(theme => ({
-  orderItemData: {
+  data: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  item: {
     position: 'relative',
-    maxWidth: 300,
-    marginBottom: 12,
+    flexGrow: 1,
+    flexBasis: 300,
+    flexShrink: 1,
+    marginBottom: 8,
     marginRight: 10,
     padding: 10,
     borderRadius: 4,
     border: '1px solid #ddd',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('xs')]: {
       marginRight: 0,
-      maxWidth: '100%',
     },
   },
   action: {
     marginTop: 30,
+    display: 'flex',
+    justifyContent: 'center',
     [theme.breakpoints.down('sm')]: {
       marginTop: 10,
     },
   },
   container: {
+    display: 'flex',
     padding: 15,
+    flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
       padding: 0,
     },
@@ -43,7 +53,7 @@ const useStyles = makeStyles(theme => ({
   title: {
     fontWeight: 600,
     fontSize: 18,
-    marginBottom: 7,
+    marginBottom: 5,
   },
   link: {
     position: 'absolute',
@@ -63,83 +73,95 @@ export default function Confirm() {
   const classes = useStyles();
 
   useEffect(() => {
-    if (!app.isMobile && app.windowWidth >= 960) app.handleCartVisibility(true);
+    // if (!app.isMobile && app.windowWidth >= 960) app.handleCartVisibility(true);
   }, []);
 
   function handleChangeStep(step) {
     checkout.handleSetStep(step);
   }
 
+  function handleChangeStepById(id) {
+    checkout.handleSetStepById(id);
+  }
+
   return (
-    <Grid container className={classes.container}>
-      {order.shipment_method === 'delivery' ? (
-        <Grid item xs={12} className={classes.orderItemData}>
-          <Typography variant="h5" className={classes.title}>
-            Endereço de entrega
-          </Typography>
-          <Typography>
-            {order.shipmentAddress.address}, {order.shipmentAddress.number}
-          </Typography>
-          <Typography>{order.shipmentAddress.district}</Typography>
-          <Typography>{order.shipmentAddress.address_complement}</Typography>
-          <Typography>{order.shipmentAddress.postal_code}</Typography>
-          <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
-            Alterar
-          </Typography>
-        </Grid>
-      ) : (
-        <Grid item xs={12} className={classes.orderItemData}>
-          <Typography variant="h5" className={classes.title}>
-            Cliente retira
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            Endereço para retirada
-          </Typography>
-          <Typography>
-            {mainRestaurantAddress.address}, {mainRestaurantAddress.number}
-          </Typography>
-          <Typography>{mainRestaurantAddress.district}</Typography>
-          <Typography>{mainRestaurantAddress.address_complement}</Typography>
-          <Typography>{mainRestaurantAddress.postal_code}</Typography>
-          <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
-            Alterar
-          </Typography>
-        </Grid>
-      )}
-      <Grid item xs={12} className={classes.orderItemData}>
-        <Typography variant="h5" className={classes.title}>
-          Forma de pagamento
-        </Typography>
-        {order.paymentMethod.kind === 'online_payment' ? (
-          <>
-            <Typography>Pagamento on-line</Typography>
-            <Typography variant="body2">Cartão de crédito</Typography>
-            <Typography>**** **** **** {order.creditCard.number.substr(-4)}</Typography>
-          </>
-        ) : (
-          <>
-            <Typography>Pagamento na entrega</Typography>
-            <Typography>{order.paymentMethod.method}</Typography>
-            {order.change > 0 && (
-              <Typography>
-                Troco para {moneyFormat(order.change)} ({moneyFormat(order.change - cart.total)})
-              </Typography>
+    <div className={classes.container}>
+      <div className={classes.data}>
+        {order.shipment_method === 'delivery' ? (
+          <div className={classes.item}>
+            <Typography variant="h5" className={classes.title}>
+              Endereço de entrega
+            </Typography>
+            <Typography>
+              {order.shipmentAddress.address}, {order.shipmentAddress.number}
+            </Typography>
+            <Typography>{order.shipmentAddress.district}</Typography>
+            <Typography>{order.shipmentAddress.address_complement}</Typography>
+            {order.shipmentAddress.postal_code !== '00000000' && (
+              <Typography>{order.shipmentAddress.postal_code}</Typography>
             )}
-          </>
+            <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
+              Alterar
+            </Typography>
+          </div>
+        ) : (
+          <div className={classes.item}>
+            <Typography variant="h5" className={classes.title}>
+              Cliente retira
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              Endereço para retirada
+            </Typography>
+            <Typography>
+              {mainRestaurantAddress.address}, {mainRestaurantAddress.number}
+            </Typography>
+            <Typography>{mainRestaurantAddress.district}</Typography>
+            <Typography>{mainRestaurantAddress.address_complement}</Typography>
+            <Typography>{mainRestaurantAddress.postal_code}</Typography>
+            <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
+              Alterar
+            </Typography>
+          </div>
         )}
-        <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(2)}>
-          Alterar
-        </Typography>
-      </Grid>
-      <Grid item xs={12} className={classes.orderItemData}>
-        <Typography variant="h5" className={classes.title}>
-          Total à pagar
-        </Typography>
-        <Typography variant="h6" className={classes.total}>
-          {cart.formattedTotal}
-        </Typography>
-      </Grid>
-      <Grid item xs={12} className={classes.action}>
+        <div className={classes.item}>
+          <Typography variant="h5" className={classes.title}>
+            Forma de pagamento
+          </Typography>
+          {order.paymentMethod.kind === 'online_payment' ? (
+            <>
+              <Typography>Pagamento on-line</Typography>
+              <Typography variant="body2">Cartão de crédito</Typography>
+              <Typography>**** **** **** {order.creditCard.number.substr(-4)}</Typography>
+            </>
+          ) : (
+            <>
+              <Typography>Pagamento na entrega</Typography>
+              <Typography>
+                <>
+                  {order.paymentMethod.method}
+                  {order.change > 0 && (
+                    <Typography display="inline" variant="body2" color="textSecondary">
+                      {' - '}Troco para {moneyFormat(order.change)}
+                    </Typography>
+                  )}
+                </>
+              </Typography>
+            </>
+          )}
+          <Typography color="primary" className={classes.link} onClick={() => handleChangeStepById('STEP_PAYMENT')}>
+            Alterar
+          </Typography>
+        </div>
+        <div className={classes.item}>
+          <Typography variant="h5" className={classes.title}>
+            Total à pagar
+          </Typography>
+          <Typography variant="h6" className={classes.total}>
+            {cart.formattedTotal}
+          </Typography>
+        </div>
+      </div>
+      <div className={classes.action}>
         <Button
           onClick={checkout.handleSubmitOrder}
           className={classes.btnTotal}
@@ -147,10 +169,11 @@ export default function Confirm() {
           variant="contained"
           color="primary"
           disabled={checkout.saving}
+          startIcon={<DoneIcon />}
         >
           Confirmar Meu Pedido
         </Button>
-      </Grid>
-    </Grid>
+      </div>
+    </div>
   );
 }

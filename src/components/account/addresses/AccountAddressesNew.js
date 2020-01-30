@@ -130,7 +130,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
       district,
       region,
       city,
-      postal_code: restaurant.configs.use_postalcode ? postalCode : '00000-000',
+      postal_code: restaurant.configs.use_postalcode ? postalCode : '00000000',
     };
 
     try {

@@ -6,6 +6,7 @@ import {
   setProducts,
   setShipmentAddress,
   setChange,
+  setInitialState,
 } from 'src/store/redux/modules/order/actions';
 import Shipment from './steps/shipment/Shipment';
 import { setUser } from 'src/store/redux/modules/user/actions';
@@ -112,6 +113,7 @@ export const CheckoutContext = React.createContext({
   handleStepPrior: () => {},
   handleSubmitOrder: () => {},
   handleSetStep: () => {},
+  handleSetStepById: () => {},
   createdOrder: null,
   step: null,
   cardValidation: {},
@@ -144,6 +146,7 @@ export default function Checkout() {
     handleStepPrior: handleStepPrior,
     handleSubmitOrder: handleSubmitOrder,
     handleSetStep: handleSetStep,
+    handleSetStepById: handleSetStepById,
     saving,
     createdOrder,
     step,
@@ -231,7 +234,7 @@ export default function Checkout() {
       .then(response => {
         setCreatedOrder(response.data);
         dispatch(clearCart());
-        dispatch(setChange(0));
+        dispatch(setInitialState());
         handleStepNext();
       })
       .catch(err => {
@@ -264,6 +267,11 @@ export default function Checkout() {
   function handleSetStep(step) {
     if (step < 1 || step > 4) return;
     setStep(step);
+  }
+
+  function handleSetStepById(id) {
+    const order = steps.find(s => s.id === id).order;
+    if (order) setStep(order);
   }
 
   function handleSetPaymentMethod(method) {

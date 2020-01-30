@@ -1,12 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { IconButton, Menu, MenuItem, Avatar, Typography, Tooltip } from '@material-ui/core';
+import { IconButton, Menu, MenuItem, Avatar, Typography } from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import InputIcon from '@material-ui/icons/Input';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import StatusIcon from '@material-ui/icons/FiberManualRecord';
 import Link from '../../link/Link';
-import LinkNext from 'next/link';
 import { useRouter } from 'next/router';
 import { AppContext } from '../../../App';
 import { useSelector } from 'react-redux';
@@ -99,6 +98,21 @@ const useStyles = makeStyles(theme => ({
   linkHome: {
     lineHeight: 0,
   },
+  statusContent: ({ restaurantIsOpen }) => ({
+    padding: 5,
+    backgroundColor: restaurantIsOpen ? '#28a745' : '#dc3545',
+    borderRadius: 4,
+    color: '#fff',
+    width: 120,
+    '& div': {
+      border: '1px solid #fff',
+      width: '100%',
+      textTransform: 'uppercase',
+      fontWeight: 600,
+      letterSpacing: 3,
+      borderRadius: 4,
+    },
+  }),
 }));
 
 export default function Header() {
@@ -155,17 +169,13 @@ export default function Header() {
               <span>Carregando...</span>
             )}
           </div>
-          <div>
-            {!restaurant.is_open ? (
-              <Typography className={classes.status} onClick={handleClickDialogWorkingTime}>
-                <StatusIcon className={classes.statusIcon} /> Delivery fechado
+          {!restaurant.is_open && (
+            <div className={classes.statusContent}>
+              <Typography className={classes.status} onClick={handleClickDialogWorkingTime} align="center">
+                <div>{/* <StatusIcon className={classes.statusIcon} /> */} Fechado</div>
               </Typography>
-            ) : (
-              <Typography className={classes.status} onClick={handleClickDialogWorkingTime}>
-                <StatusIcon className={classes.statusIcon} /> Delivery está aberto
-              </Typography>
-            )}
-          </div>
+            </div>
+          )}
           <div className={classes.headerLinks}>
             <div>
               <Link href="/menu" className={classes.link}>

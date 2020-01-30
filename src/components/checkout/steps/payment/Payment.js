@@ -27,7 +27,7 @@ export default function Payment({ handleSetPaymentMethod, paymentMethods, paymen
   const order = useSelector(state => state.order);
 
   useEffect(() => {
-    if (!app.isMobile && app.windowWidth >= 960) app.handleCartVisibility(true);
+    // if (!app.isMobile && app.windowWidth >= 960) app.handleCartVisibility(true);
     const online = paymentMethods.find(method => method.kind === 'online_payment');
     setOnlinePayment(!!online);
     if (online) if (online.id === paymentMethodId) setTab(1);

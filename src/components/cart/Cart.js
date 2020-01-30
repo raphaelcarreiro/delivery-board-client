@@ -61,7 +61,6 @@ export default function Cart() {
   const messaging = useContext(MessagingContext);
   const app = useContext(AppContext);
   const restaurant = useSelector(state => state.restaurant);
-  const user = useSelector(state => state.user);
   const [dialogUpdateSimpleProduct, setDialogUpdateSimpleProduct] = useState(false);
   const [dialogUpdateComplementProduct, setDialogUpdateComplementProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -159,7 +158,9 @@ export default function Cart() {
               size="large"
               fullWidth
               className={classes.buying}
-              onClick={handleBuyingClick}
+              onClick={() => {
+                router.route === '/cart' ? router.push('/menu') : handleBuyingClick();
+              }}
             >
               Continuar comprando
             </Button>

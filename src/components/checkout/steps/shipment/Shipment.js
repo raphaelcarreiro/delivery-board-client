@@ -54,7 +54,7 @@ export default function Shipment({ addresses }) {
       setSavingAddress(false);
       dispatch(setShipmentAddress(response.data));
       dispatch(addCustomerAddress(response.data));
-      checkout.handleSetStep(3);
+      checkout.handleSetStepById('STEP_PAYMENT');
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
       setSavingAddress(false);
@@ -107,7 +107,7 @@ export default function Shipment({ addresses }) {
 
   function handleSelectAddress(address) {
     dispatch(setShipmentAddress(address));
-    checkout.handleSetStep(3);
+    checkout.handleSetStepById('STEP_PAYMENT');
   }
 
   return (

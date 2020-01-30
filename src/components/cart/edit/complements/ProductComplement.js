@@ -159,7 +159,7 @@ export default function ProductComplement({ onExited, selectedProduct, handleUpd
   return (
     <CustomDialog backgroundColor="#fafafa" handleModalState={onExited} title={`${product.name} - Complementos`}>
       <Fragment>
-        <Grid container className={classes.container} direction="column">
+        <Grid container className={classes.container}>
           <Grid item xs={12}>
             {product.complement_categories.map(item => (
               <section className={classes.category} key={item.id}>
