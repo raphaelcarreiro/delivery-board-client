@@ -17,6 +17,7 @@ const useStyles = makeStyles(theme => ({
     paddingRight: '0!important',
   },
   appbar: {
+    zIndex: '1102!important',
     '@media print': {
       display: 'none',
     },

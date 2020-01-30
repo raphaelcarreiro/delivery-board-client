@@ -115,7 +115,7 @@ export default function Cart() {
 
   return (
     <>
-      <CustomAppbar title="Carrinho" />
+      {router.route === '/cart' && <CustomAppbar title="Carrinho" />}
       {dialogClosedRestaurant && <CartClosedRestaurant onExited={() => setDialogClosedRestaurant(false)} />}
       {dialogUpdateSimpleProduct && (
         <ProductSimple
@@ -158,7 +158,9 @@ export default function Cart() {
               size="large"
               fullWidth
               className={classes.buying}
-              onClick={handleBuyingClick}
+              onClick={() => {
+                router.route === '/cart' ? router.push('/menu') : handleBuyingClick();
+              }}
             >
               Continuar comprando
             </Button>

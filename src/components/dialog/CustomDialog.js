@@ -19,6 +19,7 @@ const useStyles = makeStyles(theme => ({
   },
   appbar: {
     position: 'absolute',
+    zIndex: '1102!important',
     [theme.breakpoints.down('md')]: {
       position: 'fixed',
     },
