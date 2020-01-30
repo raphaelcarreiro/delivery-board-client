@@ -31,6 +31,7 @@ import CheckoutMobileButtons from 'src/components/checkout/CheckoutMobileButtons
 import * as yup from 'yup';
 import { cpfValidation } from 'src/helpers/cpfValidation';
 import ShipmentMethod from './steps/shipment-method/ShipmentMethod';
+import { useRouter } from 'next/router';
 
 const cartWidth = 450;
 
@@ -128,6 +129,7 @@ export default function Checkout() {
   const cart = useSelector(state => state.cart);
   const order = useSelector(state => state.order);
   const restaurant = useSelector(state => state.restaurant);
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [step, setStep] = useState(1);
@@ -152,6 +154,15 @@ export default function Checkout() {
     step,
     cardValidation,
   };
+
+  useEffect(() => {
+    if (restaurant.id) {
+      if (cart.total < restaurant.minimum_order) {
+        messaging.handleOpen(`Valor mínimo do pedido deve ser ${restaurant.formattedMinimumOrder}`);
+        router.push('/menu');
+      }
+    }
+  }, [cart.total, restaurant]);
 
   useEffect(() => {
     if (restaurant.id) {
