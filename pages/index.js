@@ -13,16 +13,16 @@ function IndexPage({ restaurant }) {
   return (
     <>
       <Head>
-        <title>Cardápio</title>
-        {/* <meta name="keywords" content={restaurant.keywords} />
-        <meta name="description" content={restaurant.description} /> */}
+        <title>{restaurant.name}</title>
+        <meta name="keywords" content={restaurant.keywords} />
+        <meta name="description" content={restaurant.description} />
       </Head>
       <Menu />
     </>
   );
 }
 
-/* IndexPage.getInitialProps = async ctx => {
+IndexPage.getInitialProps = async ctx => {
   const axiosInstance = axios.create({
     baseURL: process.env.BASEURL_API,
     headers: {
@@ -32,6 +32,6 @@ function IndexPage({ restaurant }) {
 
   const response = await axiosInstance.get('/restaurants');
   return { restaurant: response.data };
-}; */
+};
 
 export default IndexPage;
