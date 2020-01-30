@@ -79,7 +79,10 @@ export default function order(state = INITIAL_STATE, action) {
     }
 
     case '@order/SET_INITIAL_STATE': {
-      return INITIAL_STATE;
+      return {
+        ...INITIAL_STATE,
+        products: state.products,
+      };
     }
 
     default: {
