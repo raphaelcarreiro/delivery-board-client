@@ -158,9 +158,7 @@ export default function Cart() {
               size="large"
               fullWidth
               className={classes.buying}
-              onClick={() => {
-                router.route === '/cart' ? router.push('/menu') : handleBuyingClick();
-              }}
+              onClick={handleBuyingClick}
             >
               Continuar comprando
             </Button>
