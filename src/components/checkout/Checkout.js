@@ -157,15 +157,6 @@ export default function Checkout() {
 
   useEffect(() => {
     if (restaurant.id) {
-      if (cart.total < restaurant.minimum_order) {
-        messaging.handleOpen(`Valor mínimo do pedido deve ser ${restaurant.formattedMinimumOrder}`);
-        router.push('/menu');
-      }
-    }
-  }, [cart.total, restaurant]);
-
-  useEffect(() => {
-    if (restaurant.id) {
       const { configs } = restaurant;
 
       let stepId = 0;
@@ -188,6 +179,15 @@ export default function Checkout() {
       );
     }
   }, [restaurant, order.shipment_method]);
+
+  useEffect(() => {
+    if (restaurant.id) {
+      if (cart.total < restaurant.minimum_order && currentStep.id !== 'STEP_SUCCESS' && cart.products.length > 0) {
+        messaging.handleOpen(`Valor mínimo do pedido deve ser ${restaurant.formattedMinimumOrder}`);
+        router.push('/menu');
+      }
+    }
+  }, [cart.total, restaurant]);
 
   useEffect(() => {
     app.handleCartVisibility(false);
