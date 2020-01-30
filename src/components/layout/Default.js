@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
     transform: isCartVisible ? 'none' : `translateX(${cartWidth}px)`,
     position: 'fixed',
     top: 80,
-    minWidth: cartWidth,
+    width: cartWidth,
     bottom: 0,
     right: 0,
     backgroundColor: '#fff',

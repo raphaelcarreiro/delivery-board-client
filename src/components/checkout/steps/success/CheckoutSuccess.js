@@ -17,9 +17,9 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('xs')]: {
       justifyContent: 'flex-start',
-      alignItems: 'flex-start',
+      // alignItems: 'flex-start',
     },
   },
   actions: {
@@ -31,6 +31,9 @@ const useStyles = makeStyles(theme => ({
       marginBottom: 15,
       textAlign: 'center',
       fontSize: 18,
+    },
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
     },
   },
   contentAction: {
