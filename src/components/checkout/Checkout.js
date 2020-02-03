@@ -166,7 +166,7 @@ export default function Checkout() {
         newSteps = newSteps.filter(s => s.id !== 'STEP_SHIPMENT_METHOD');
       }
 
-      if (order.shipment_method === 'customer_collect') {
+      if (order.shipment.shipment_method === 'customer_collect') {
         newSteps = newSteps.filter(s => s.id !== 'STEP_SHIPMENT');
       }
 
@@ -178,7 +178,7 @@ export default function Checkout() {
         })
       );
     }
-  }, [restaurant, order.shipment_method]);
+  }, [restaurant, order.shipment.shipment_method]);
 
   useEffect(() => {
     if (restaurant.id) {
@@ -247,6 +247,7 @@ export default function Checkout() {
         dispatch(setChange(0));
         dispatch(clearCard());
         dispatch(clearCart());
+        dispatch(setShipmentAddress({}));
         handleStepNext();
       })
       .catch(err => {
@@ -259,7 +260,7 @@ export default function Checkout() {
 
   async function handleStepNext() {
     if (currentStep.id === 'STEP_SHIPMENT') {
-      if (!order.shipmentAddress.id) {
+      if (!order.shipment.id) {
         messaging.handleOpen('Informe o endereço', null, { marginBottom: 47 });
         return;
       }
@@ -377,7 +378,7 @@ export default function Checkout() {
               {currentStep.id === 'STEP_SHIPMENT_METHOD' ? (
                 <ShipmentMethod />
               ) : currentStep.id === 'STEP_SHIPMENT' ? (
-                <Shipment shipment addresses={user.customer ? user.customer.addresses : []} />
+                <Shipment addresses={user.customer ? user.customer.addresses : []} />
               ) : currentStep.id === 'STEP_PAYMENT' ? (
                 <Payment
                   handleSetPaymentMethod={handleSetPaymentMethod}

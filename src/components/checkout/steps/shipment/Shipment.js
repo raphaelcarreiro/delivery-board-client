@@ -34,8 +34,8 @@ export default function Shipment({ addresses }) {
 
   useEffect(() => {
     app.handleCartVisibility(false);
-    if (order.shipmentAddress)
-      if (!order.shipmentAddress.id)
+    if (order.shipment)
+      if (!order.shipment.id)
         if (customer.addresses.length > 0) {
           dispatch(setShipmentAddress(customer.addresses.find(address => address.is_main)));
         }

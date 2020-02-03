@@ -12,6 +12,13 @@ export function setShipmentAddress(address) {
   };
 }
 
+export function setShipmentMethod(shipmentMethod) {
+  return {
+    type: '@order/SET_SHIPMENT_METHOD',
+    shipmentMethod,
+  };
+}
+
 export function setPaymentMethod(paymentMethod) {
   return {
     type: '@order/SET_PAYMENT_METHOD',
@@ -46,12 +53,6 @@ export function orderChange(index, value) {
     type: '@order/CHANGE',
     index,
     value,
-  };
-}
-
-export function setCustomerCollect() {
-  return {
-    type: '@order/SET_CUSTOMER_COLLECT',
   };
 }
 

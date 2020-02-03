@@ -26,9 +26,9 @@ const useStyles = makeStyles(theme => ({
   section: {
     marginBottom: 15,
     padding: 10,
-    border: '1px solid #ddd',
+    border: '1px solid #eee',
     borderRadius: 4,
-    backgroundColor: '#eee',
+    backgroundColor: '#f5f5f5',
   },
   o: { backgroundColor: '#ffc107' },
   a: { backgroundColor: '#8BC34A', color: '#fff' },
@@ -99,7 +99,6 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     flexWrap: 'wrap',
     padding: 10,
-    border: '1px solid #ddd',
     borderRadius: 4,
     '& button': {
       marginTop: 10,
@@ -117,18 +116,11 @@ Order.propTypes = {
 export default function Order({ cryptId }) {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [mainAddress, setMainAddress] = useState(null);
   const user = useSelector(state => state.user);
   const app = useContext(AppContext);
   const restaurant = useSelector(state => state.restaurant);
   const messaging = useContext(MessagingContext);
   const classes = useStyles();
-
-  useEffect(() => {
-    if (restaurant) {
-      setMainAddress(restaurant.addresses.find(address => address.is_main));
-    }
-  }, [restaurant]);
 
   useEffect(() => {
     const socket = io.connect(process.env.URL_NODE_SERVER, { reconnectionAttempts: 5 });
@@ -228,31 +220,15 @@ export default function Order({ cryptId }) {
           </div>
           <div className={classes.containderGrid2}>
             <div className={classes.section}>
-              {order.shipment_method === 'delivery' ? (
-                <>
-                  <Typography variant="h5" className={classes.title}>
-                    Endereço de entrega
-                  </Typography>
-                  <Typography>
-                    {order.address}, {order.address_number}
-                  </Typography>
-                  <Typography>{order.district}</Typography>
-                  <Typography>{order.address_complement}</Typography>
-                  <Typography>{order.address_postal_code}</Typography>
-                </>
-              ) : (
-                <>
-                  <Typography variant="h5" className={classes.title}>
-                    Cliente retira
-                  </Typography>
-                  <Typography>
-                    {mainAddress.address}, {mainAddress.number}
-                  </Typography>
-                  <Typography>{mainAddress.district}</Typography>
-                  <Typography>{mainAddress.complement}</Typography>
-                  <Typography>{mainAddress.postal_code}</Typography>
-                </>
-              )}
+              <Typography variant="h5" className={classes.title}>
+                {order.shipment.shipment_method === 'delivery' ? 'Endereço de entrega' : 'Cliente retira'}
+              </Typography>
+              <Typography>
+                {order.shipment.address}, {order.shipment.number}
+              </Typography>
+              <Typography>{order.shipment.district}</Typography>
+              <Typography>{order.shipment.complement}</Typography>
+              <Typography>{order.shipment.postal_code}</Typography>
             </div>
             <div className={classes.section}>
               <Typography variant="h5" className={classes.title}>
@@ -266,13 +242,17 @@ export default function Order({ cryptId }) {
               ) : (
                 <>
                   <Typography>Pagamento na entrega</Typography>
-                  <Typography>{order.payment_method.method}</Typography>
+                  <Typography>
+                    {order.payment_method.method}
+                    {order.change > 0 && (
+                      <Typography
+                        color="textSecondary"
+                        display="inline"
+                        variant="body1"
+                      >{`, troco para ${order.formattedChange}`}</Typography>
+                    )}
+                  </Typography>
                 </>
-              )}
-              {order.change > 0 && (
-                <Typography>
-                  {`Troco para ${order.formattedChange}`} ({moneyFormat(order.change - order.total)})
-                </Typography>
               )}
             </div>
             <div className={classes.section}>

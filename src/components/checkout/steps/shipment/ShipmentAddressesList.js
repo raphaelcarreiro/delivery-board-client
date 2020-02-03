@@ -149,7 +149,7 @@ export default function ShipmentAddressesList({
           <ListItem
             onClick={() => handleSelectAddress(address)}
             button
-            className={address.id === order.shipmentAddress.id ? classes.selected : classes.listItem}
+            className={address.id === order.shipment.id ? classes.selected : classes.listItem}
             key={address.id}
           >
             <IconButton className={classes.iconButton} onClick={event => handleMoreClick(event, address)}>
@@ -172,9 +172,7 @@ export default function ShipmentAddressesList({
                 <Typography color="textSecondary">{address.postal_code}</Typography>
               )}
             </div>
-            {address.id === order.shipmentAddress.id && (
-              <CheckCircleIcon color="primary" className={classes.checkIcon} />
-            )}
+            {address.id === order.shipment.id && <CheckCircleIcon color="primary" className={classes.checkIcon} />}
           </ListItem>
         ))}
         <ListItem button className={classes.listItemNewAddress} onClick={handleDialogNewAddress}>

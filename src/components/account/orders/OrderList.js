@@ -98,7 +98,7 @@ function OrderList({ orders }) {
             component={Link}
           >
             <span className={`${classes.status} ${classes[order.status]}`}>{orderStatus[order.status]}</span>
-            <Typography variant="body2" color="primary">
+            <Typography variant="body1" color="primary">
               Pedido {order.formattedId}
             </Typography>
             <Typography className={classes.customerName}>{order.customer.name}</Typography>
@@ -112,10 +112,16 @@ function OrderList({ orders }) {
                 </Typography>
               )}
             </div>
-            <Typography className={classes.address} variant="body2" color="textSecondary">
-              {order.address}, {order.address_number}, {order.district}
-            </Typography>
-            <Typography className={classes.total} variant="h6" color="secondary">
+            {order.shipment.shipment_method === 'customer_collect' ? (
+              <Typography variant="body2" color="textSecondary">
+                Cliente retira
+              </Typography>
+            ) : (
+              <Typography className={classes.address} variant="body2" color="textSecondary">
+                {order.shipment.address}, {order.shipment.number}, {order.shipment.district}
+              </Typography>
+            )}
+            <Typography className={classes.total} variant="h6">
               {order.formattedTotal}
             </Typography>
           </ListItem>

@@ -87,19 +87,17 @@ export default function Confirm() {
   return (
     <div className={classes.container}>
       <div className={classes.data}>
-        {order.shipment_method === 'delivery' ? (
+        {order.shipment.shipment_method === 'delivery' ? (
           <div className={classes.item}>
             <Typography variant="h5" className={classes.title}>
               Endereço de entrega
             </Typography>
             <Typography>
-              {order.shipmentAddress.address}, {order.shipmentAddress.number}
+              {order.shipment.address}, {order.shipment.number}
             </Typography>
-            <Typography>{order.shipmentAddress.district}</Typography>
-            <Typography>{order.shipmentAddress.address_complement}</Typography>
-            {order.shipmentAddress.postal_code !== '00000000' && (
-              <Typography>{order.shipmentAddress.postal_code}</Typography>
-            )}
+            <Typography>{order.shipment.district}</Typography>
+            <Typography>{order.shipment.address_complement}</Typography>
+            {order.shipment.postal_code !== '00000000' && <Typography>{order.shipment.postal_code}</Typography>}
             <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
               Alterar
             </Typography>

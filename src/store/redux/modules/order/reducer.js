@@ -1,9 +1,8 @@
 const INITIAL_STATE = {
-  shipmentAddress: {},
+  shipment: {},
   customer: null,
   paymentMethod: null,
   products: [],
-  shipment_method: 'delivery',
   change: 0,
   creditCard: {
     number: '',
@@ -27,7 +26,20 @@ export default function order(state = INITIAL_STATE, action) {
     case '@order/SET_SHIPMENT_ADDRESS': {
       return {
         ...state,
-        shipmentAddress: action.address,
+        shipment: {
+          ...state.shipment,
+          ...action.address,
+        },
+      };
+    }
+
+    case '@order/SET_SHIPMENT_METHOD': {
+      return {
+        ...state,
+        shipment: {
+          ...state.shipment,
+          shipment_method: action.shipmentMethod,
+        },
       };
     }
 
@@ -66,14 +78,6 @@ export default function order(state = INITIAL_STATE, action) {
       return {
         ...state,
         [action.index]: action.value,
-      };
-    }
-
-    case '@order/SET_CUSTOMER_COLLECT': {
-      return {
-        ...state,
-        shipment_method: 'customer_collect',
-        shipmentAddress: {},
       };
     }
 
