@@ -228,7 +228,10 @@ export default function Order({ cryptId }) {
               </Typography>
               <Typography>{order.shipment.district}</Typography>
               <Typography>{order.shipment.complement}</Typography>
-              <Typography>{order.shipment.postal_code}</Typography>
+              <Typography>
+                {order.shipment.city} - {order.shipment.region}
+              </Typography>
+              {order.shipment.postal_code !== '00000000' && <Typography>{order.shipment.postal_code}</Typography>}
             </div>
             <div className={classes.section}>
               <Typography variant="h5" className={classes.title}>
@@ -237,7 +240,6 @@ export default function Order({ cryptId }) {
               {order.payment_method.kind === 'online_payment' ? (
                 <>
                   <Typography>{order.payment_method.method}</Typography>
-                  <Typography color="textSecondary">Cartão ****</Typography>
                 </>
               ) : (
                 <>

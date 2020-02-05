@@ -42,11 +42,13 @@ export default function Shipment({ addresses }) {
   }, [order]);
 
   useEffect(() => {
-    if (customer) {
-      if (customer.addresses.length === 0) setDialogNewAddress(true);
-      if (customer.addresses.length === 0) dispatch(setShipmentAddress({}));
-    }
-  }, [customer.addresses]);
+    if (customer)
+      if (customer.addresses)
+        if (customer.addresses.length === 0) {
+          setDialogNewAddress(true);
+          dispatch(setShipmentAddress({}));
+        }
+  }, [customer]);
 
   async function handleAddressSubmit(address) {
     try {

@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { CheckoutContext } from 'src/components/checkout/Checkout';
 import { AppContext } from 'src/App';
-import DoneIcon from '@material-ui/icons/Done';
 
 const useStyles = makeStyles(theme => ({
   data: {
@@ -167,7 +166,6 @@ export default function Confirm() {
           variant="contained"
           color="primary"
           disabled={checkout.saving}
-          startIcon={<DoneIcon />}
         >
           Confirmar Meu Pedido
         </Button>
