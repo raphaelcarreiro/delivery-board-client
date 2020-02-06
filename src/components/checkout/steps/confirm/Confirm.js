@@ -9,13 +9,11 @@ import { AppContext } from 'src/App';
 const useStyles = makeStyles(theme => ({
   data: {
     display: 'flex',
-    flexWrap: 'wrap',
+    flexDirection: 'column',
   },
   item: {
     position: 'relative',
-    flexGrow: 1,
-    flexBasis: 300,
-    flexShrink: 1,
+    maxWidth: 600,
     marginBottom: 8,
     marginRight: 10,
     padding: 10,
@@ -28,7 +26,6 @@ const useStyles = makeStyles(theme => ({
   action: {
     marginTop: 30,
     display: 'flex',
-    justifyContent: 'center',
     [theme.breakpoints.down('sm')]: {
       marginTop: 10,
     },
