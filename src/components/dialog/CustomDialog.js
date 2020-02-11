@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     flex: 1,
     marginTop: title ? 64 : 15,
-    marginBottom: 87,
+    marginBottom: 72,
     paddingTop: 15,
     paddingLeft: 15,
     paddingRight: 15,
