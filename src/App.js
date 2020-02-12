@@ -152,6 +152,7 @@ function App({ pageProps, component: Component }) {
   useEffect(() => {
     if (restaurant) {
       socket = io(process.env.URL_NODE_SERVER, { reconnectionAttempts: 5 });
+      // socket = io(process.env.URL_NODE_SERVER, { reconnectionAttempts: 5 });
       socket.on('handleRestaurantState', state => {
         if (state.restaurantId === restaurant.id) dispatch(setRestaurantIsOpen(state));
       });

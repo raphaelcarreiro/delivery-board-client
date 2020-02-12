@@ -10,22 +10,28 @@ const useStyles = makeStyles(theme => ({
   data: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
   },
   item: {
     position: 'relative',
-    maxWidth: 600,
+    maxWidth: 900,
+    width: '100%',
     marginBottom: 8,
     marginRight: 10,
     padding: 10,
     borderRadius: 4,
-    border: '1px solid #ddd',
+    borderBottom: '1px solid #eee',
     [theme.breakpoints.down('xs')]: {
       marginRight: 0,
+    },
+    '&:last-child': {
+      border: 'none',
     },
   },
   action: {
     marginTop: 30,
     display: 'flex',
+    justifyContent: 'center',
     [theme.breakpoints.down('sm')]: {
       marginTop: 10,
     },
@@ -48,7 +54,7 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     fontWeight: 600,
-    fontSize: 18,
+    fontSize: 20,
     marginBottom: 5,
   },
   link: {

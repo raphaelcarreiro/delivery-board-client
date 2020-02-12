@@ -14,6 +14,13 @@ export default function Category({ category }) {
     <>
       <Head>
         <title>{category.name}</title>
+        <meta name="description" content={category.name} />
+        <meta property="og:locale" content="pt_BR" />
+        <meta property="og:url" content={process.env.PUBLIC_URL + '/menu/' + category.url} />
+        <meta property="og:title" content={category.name} />
+        <meta property="og:site_name" content={category.restaurant.name} />
+        <meta property="og:description" content="Categoria do cardápio" />
+        <meta property="og:image" content={category.image.imageUrl} />
       </Head>
       <Product products={category.products} categoryName={category.name} categoryUrl={category.url} />
     </>

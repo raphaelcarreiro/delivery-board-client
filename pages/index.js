@@ -15,6 +15,13 @@ function IndexPage({ restaurant }) {
         <title>{restaurant.name}</title>
         <meta name="keywords" content={restaurant.keywords} />
         <meta name="description" content={restaurant.description} />
+
+        <meta property="og:locale" content="pt_BR" />
+        <meta property="og:url" content={process.env.PUBLIC_URL} />
+        <meta property="og:title" content={restaurant.title} />
+        <meta property="og:site_name" content={restaurant.name} />
+        <meta property="og:description" content={restaurant.description} />
+        <meta property="og:image" content={restaurant.image.imageUrl} />
       </Head>
       <Index />
     </>

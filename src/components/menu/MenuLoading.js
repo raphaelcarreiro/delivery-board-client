@@ -21,12 +21,12 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 4,
     position: 'relative',
     alignItems: 'center',
-    height: 100,
+    height: 110,
   },
   img: {
-    width: 60,
-    height: 60,
-    borderRadius: '50%',
+    width: 100,
+    height: 90,
+    borderRadius: 4,
   },
   productData: {
     marginLeft: 20,
@@ -37,12 +37,12 @@ const useStyles = makeStyles(theme => ({
   },
   name: {
     height: 20,
-    width: '50%',
+    width: '30%',
     marginBottom: 6,
   },
   description: {
     height: 20,
-    width: '85%',
+    width: '20%',
     marginBottom: 6,
   },
   price: {
@@ -67,11 +67,11 @@ export default function MenuLoading() {
       <List className={classes.list}>
         {products.map((product, index) => (
           <ListItem key={index} className={classes.listItem}>
-            <div className={`animated-background ${classes.img}`} />
             <div className={classes.productData}>
               <div className={`animated-background ${classes.name}`} />
               <div className={`animated-background ${classes.description}`} />
             </div>
+            <div className={`animated-background ${classes.img}`} />
           </ListItem>
         ))}
       </List>

@@ -21,23 +21,26 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#fff',
     boxShadow: '1px 1px 9px 1px #eee',
     borderRadius: 4,
-    height: 80,
+    height: 110,
   },
   content: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    flex: 1,
   },
   categoryIcon: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 20,
+    width: 100,
+    height: 90,
+    overflow: 'hidden',
   },
   image: {
-    borderRadius: '50%',
+    borderRadius: 4,
     border: `2px solid #fff`,
-    width: 60,
-    height: 60,
+    width: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -66,9 +69,6 @@ export default function CategoryList({ categories }) {
               component={Link}
             >
               <div className={classes.content}>
-                <div className={classes.categoryIcon}>
-                  <img className={classes.image} src={item.image && item.image.imageUrl} alt={item.name} />
-                </div>
                 <div>
                   <Typography variant="h6">{item.name}</Typography>
                   <Typography variant="body2" color="textSecondary">
@@ -76,6 +76,9 @@ export default function CategoryList({ categories }) {
                   </Typography>
                   <Typography color="textSecondary">{item.price}</Typography>
                   {item.factor && <Typography color="textSecondary">Até {item.factor} sabores</Typography>}
+                </div>
+                <div className={classes.categoryIcon}>
+                  <img className={classes.image} src={item.image && item.image.imageUrl} alt={item.name} />
                 </div>
               </div>
             </ListItem>

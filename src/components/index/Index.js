@@ -3,13 +3,13 @@ import CustomAppbar from '../appbar/CustomAppbar';
 import IndexAppbarActions from './IndexAppbarActions';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import Link from '../link/Link';
 
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
-    flex: 1,
+    flex: 0.8,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -56,7 +56,7 @@ export default function Index() {
 
   return (
     <>
-      <CustomAppbar title={restaurant.name ? restaurant.name : 'Carregando'} actionComponent={<IndexAppbarActions />} />
+      <CustomAppbar title="Início" actionComponent={<IndexAppbarActions />} />
       <div className={classes.container}>
         <div className={classes.restaurant}>
           <Typography variant="h6">{restaurant.name}</Typography>
