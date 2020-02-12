@@ -8,9 +8,9 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles({
   container: {
     display: 'flex',
-    height: '20vh',
+    height: 250,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     flexDirection: 'column',
     '&>div': {
       textAlign: 'center',

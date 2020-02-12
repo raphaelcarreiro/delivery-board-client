@@ -104,13 +104,13 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 4,
     color: '#fff',
     width: 120,
+    cursor: 'pointer',
     '& div': {
-      border: '1px solid #fff',
       width: '100%',
       textTransform: 'uppercase',
       fontWeight: 600,
       letterSpacing: 3,
-      borderRadius: 4,
+      textAlign: 'center',
     },
   }),
 }));
@@ -171,9 +171,7 @@ export default function Header() {
           </div>
           {!restaurant.is_open && (
             <div className={classes.statusContent}>
-              <Typography className={classes.status} onClick={handleClickDialogWorkingTime} align="center">
-                <div>{/* <StatusIcon className={classes.statusIcon} /> */} Fechado</div>
-              </Typography>
+              <div onClick={handleClickDialogWorkingTime}> Fechado</div>
             </div>
           )}
           <div className={classes.headerLinks}>
