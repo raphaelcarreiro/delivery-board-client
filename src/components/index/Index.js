@@ -3,7 +3,7 @@ import CustomAppbar from '../appbar/CustomAppbar';
 import IndexAppbarActions from './IndexAppbarActions';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import Link from '../link/Link';
 
 const useStyles = makeStyles(theme => ({
@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flex: 0.8,
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     '& div': {
       textAlign: 'center',
@@ -31,7 +31,9 @@ const useStyles = makeStyles(theme => ({
       marginRight: 10,
     },
   },
-  restaurant: {},
+  restaurant: {
+    marginTop: 20,
+  },
   user: {
     margin: '20px 0',
     '& a': {
@@ -47,6 +49,15 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 4,
     marginBottom: 15,
   },
+  logo: {
+    maxWidth: 150,
+  },
+  logoContainer: {
+    display: 'none',
+    [theme.breakpoints.down('md')]: {
+      display: 'block',
+    },
+  },
 }));
 
 export default function Index() {
@@ -58,15 +69,20 @@ export default function Index() {
     <>
       <CustomAppbar title="Início" actionComponent={<IndexAppbarActions />} />
       <div className={classes.container}>
+        {restaurant.image && (
+          <div className={classes.logoContainer}>
+            <img src={restaurant.image.imageUrl} alt={restaurant.name} className={classes.logo} />
+          </div>
+        )}
         <div className={classes.restaurant}>
           <Typography variant="h6">{restaurant.name}</Typography>
           <Typography variant="body1">{restaurant.description}</Typography>
         </div>
         <div className={classes.user}>
-          <Typography>Seja bem-vindo{user.name && <span>{`, ${user.name}`}</span>}</Typography>
-          <Link href="/menu" color="primary">
+          {/*   <Typography>Seja bem-vindo{user.name && <span>{`, ${user.name}`}</span>}</Typography> */}
+          <Button variant="contained" color="primary" size="large" component={Link} href="/menu">
             Acessar cardápio
-          </Link>
+          </Button>
         </div>
         <div>
           {!restaurant.is_open && (

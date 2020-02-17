@@ -37,12 +37,12 @@ const useStyles = makeStyles(theme => ({
   },
   name: {
     height: 20,
-    width: '30%',
+    width: '50%',
     marginBottom: 6,
   },
   description: {
     height: 20,
-    width: '20%',
+    width: '35%',
     marginBottom: 6,
   },
   price: {
