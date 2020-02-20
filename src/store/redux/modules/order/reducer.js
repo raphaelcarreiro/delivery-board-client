@@ -12,6 +12,7 @@ const INITIAL_STATE = {
     cvv: '',
     cpf: '',
   },
+  coupon: null,
 };
 
 export default function order(state = INITIAL_STATE, action) {
@@ -96,6 +97,13 @@ export default function order(state = INITIAL_STATE, action) {
           cvv: '',
           cpf: '',
         },
+      };
+    }
+
+    case '@order/SET_COUPON': {
+      return {
+        ...state,
+        coupon: action.coupon,
       };
     }
 

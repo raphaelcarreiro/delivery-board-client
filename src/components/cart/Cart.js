@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import CartProductList from './CartProductList';
 import CartTotal from './CartTotal';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button } from '@material-ui/core';
+import { Typography, Button, Chip } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import ProductSimple from './edit/simple/ProductSimple';
 import { MessagingContext } from '../messaging/Messaging';
@@ -14,6 +14,8 @@ import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import CartClosedRestaurant from 'src/components/cart/CartClosedRestaurant';
 import { AppContext } from 'src/App';
 import { isAuthenticated } from 'src/services/auth';
+import Coupon from './coupon/Coupon';
+import CartCouponButton from './CartCouponButton';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -51,6 +53,10 @@ const useStyles = makeStyles(theme => ({
       display: 'block',
     },
   },
+  coupon: {
+    textAlign: 'right',
+    marginBottom: 15,
+  },
 }));
 
 export default function Cart() {
@@ -65,6 +71,7 @@ export default function Cart() {
   const [dialogUpdateComplementProduct, setDialogUpdateComplementProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [dialogClosedRestaurant, setDialogClosedRestaurant] = useState(false);
+  const [couponView, setCouponView] = useState(false);
 
   function handleCheckoutClick() {
     if (!restaurant.is_open) {
@@ -141,12 +148,17 @@ export default function Cart() {
           )}
         </>
       )}
-      {cart.products.length > 0 ? (
+      {couponView ? (
+        <>
+          <Coupon setClosedCouponView={() => setCouponView(false)} />
+        </>
+      ) : cart.products.length > 0 ? (
         <div className={classes.cart}>
           <Typography className={classes.title} variant="h5" color="primary">
             Carrinho
           </Typography>
           <CartProductList handleClickUpdateProduct={handleClickUpdateProduct} products={cart.products} />
+          <CartCouponButton setCouponView={setCouponView} />
           <CartTotal />
           <div className={classes.action}>
             <Button size="large" onClick={handleCheckoutClick} variant="contained" color="primary" fullWidth>

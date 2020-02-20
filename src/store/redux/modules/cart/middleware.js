@@ -5,7 +5,14 @@ const saveCartAtLocalStorage = cart => {
 };
 
 export const cartMiddlware = store => next => action => {
-  const actionsToSaveCart = ['@cart/ADD_PRODUCT', '@cart/REMOVE_PRODUCT', '@cart/UPDATE_PRODUCT', '@cart/RESTORE_CART'];
+  const actionsToSaveCart = [
+    '@cart/ADD_PRODUCT',
+    '@cart/REMOVE_PRODUCT',
+    '@cart/UPDATE_PRODUCT',
+    '@cart/RESTORE_CART',
+    '@cart/SET_COUPON',
+    '@cart/REMOVE_COUPON',
+  ];
 
   if (action.type === '@cart/REMOVE_PRODUCT') {
     const cart = store.getState().cart;

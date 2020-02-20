@@ -6,6 +6,10 @@ export const INITIAL_STATE = {
   total: 0,
   history: [],
   configs: null,
+  coupon: null,
+  discount: 0,
+  discountPercent: 0,
+  subtotal: 0,
 };
 
 export default function cart(state = INITIAL_STATE, action) {
@@ -100,26 +104,39 @@ export default function cart(state = INITIAL_STATE, action) {
         },
       ];
 
-      const total = products.reduce((sum, value) => sum + value.final_price, 0);
+      const subtotal = products.reduce((sum, value) => sum + value.final_price, 0);
+      const discount = subtotal * (state.discountPercent / 100);
+      const total = subtotal - discount;
 
       return {
         ...state,
         product: null,
         products,
+        subtotal,
         total,
+        discount,
         formattedTotal: moneyFormat(total),
+        formattedDiscount: moneyFormat(discount),
+        formattedSubtotal: moneyFormat(subtotal),
       };
     }
 
     case '@cart/REMOVE_PRODUCT': {
       const products = state.products.filter(product => product.uid !== action.productUid);
-      const total = products.reduce((sum, value) => sum + value.final_price, 0);
+
+      const subtotal = products.reduce((sum, value) => sum + value.final_price, 0);
+      const discount = subtotal * (state.discountPercent / 100);
+      const total = subtotal - discount;
 
       return {
         ...state,
         products,
+        subtotal,
         total,
+        discount,
         formattedTotal: moneyFormat(total),
+        formattedDiscount: moneyFormat(discount),
+        formattedSubtotal: moneyFormat(subtotal),
       };
     }
 
@@ -203,24 +220,36 @@ export default function cart(state = INITIAL_STATE, action) {
         return product;
       });
 
-      const total = products.reduce((sum, value) => sum + value.final_price, 0);
+      const subtotal = products.reduce((sum, value) => sum + value.final_price, 0);
+      const discount = subtotal * (state.discountPercent / 100);
+      const total = subtotal - discount;
 
       return {
         ...state,
         products,
+        subtotal,
         total,
+        discount,
         formattedTotal: moneyFormat(total),
+        formattedDiscount: moneyFormat(discount),
+        formattedSubtotal: moneyFormat(subtotal),
       };
     }
 
     case '@cart/RESTORE_CART': {
-      const total = state.history.reduce((sum, value) => sum + value.final_price, 0);
+      const subtotal = state.history.reduce((sum, value) => sum + value.final_price, 0);
+      const discount = subtotal * (state.discountPercent / 100);
+      const total = subtotal - discount;
 
       return {
         ...state,
         products: state.history,
+        subtotal,
         total,
+        discount,
         formattedTotal: moneyFormat(total),
+        formattedDiscount: moneyFormat(discount),
+        formattedSubtotal: moneyFormat(subtotal),
       };
     }
 
@@ -243,6 +272,39 @@ export default function cart(state = INITIAL_STATE, action) {
           ...state.configs,
           ...action.configs,
         },
+      };
+    }
+
+    case '@cart/SET_COUPON': {
+      const subtotal = state.products.reduce((sum, value) => sum + value.final_price, 0);
+      const discount = subtotal * (action.coupon.discount / 100);
+      const total = subtotal - discount;
+
+      return {
+        ...state,
+        coupon: action.coupon.name,
+        subtotal,
+        total,
+        discount,
+        discountPercent: action.coupon.discount,
+        formattedTotal: moneyFormat(total),
+        formattedDiscount: moneyFormat(discount),
+        formattedSubtotal: moneyFormat(subtotal),
+      };
+    }
+
+    case '@cart/REMOVE_COUPON': {
+      const total = state.products.reduce((sum, value) => sum + value.final_price, 0);
+
+      return {
+        ...state,
+        coupon: null,
+        subtotal: total,
+        total,
+        discount: 0,
+        discountPercent: 0,
+        formattedTotal: moneyFormat(total),
+        formattedDiscount: moneyFormat(0),
       };
     }
 

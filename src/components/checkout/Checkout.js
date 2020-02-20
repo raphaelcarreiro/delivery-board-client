@@ -7,6 +7,7 @@ import {
   setShipmentAddress,
   setChange,
   clearCard,
+  setCoupon,
 } from 'src/store/redux/modules/order/actions';
 import Shipment from './steps/shipment/Shipment';
 import { setUser } from 'src/store/redux/modules/user/actions';
@@ -232,6 +233,7 @@ export default function Checkout() {
 
   useEffect(() => {
     dispatch(setProducts(cart.products));
+    dispatch(setCoupon(cart.coupon));
   }, [cart]);
 
   function handleSubmitOrder() {

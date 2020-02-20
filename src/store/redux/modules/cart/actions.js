@@ -59,3 +59,16 @@ export function setConfigs(configs) {
     configs,
   };
 }
+
+export function setCoupon(coupon) {
+  return {
+    type: '@cart/SET_COUPON',
+    coupon,
+  };
+}
+
+export function removeCoupon() {
+  return {
+    type: '@cart/REMOVE_COUPON',
+  };
+}

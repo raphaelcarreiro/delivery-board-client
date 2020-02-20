@@ -9,6 +9,8 @@ import { updateProductFromCart } from 'src/store/redux/modules/cart/actions';
 import { MessagingContext } from 'src/components/messaging/Messaging';
 import CartProductList from 'src/components/cart/CartProductList';
 import { Typography } from '@material-ui/core';
+import Coupon from 'src/components/cart/coupon/Coupon';
+import CartCouponButton from 'src/components/cart/CartCouponButton';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -43,6 +45,7 @@ export default function Cart() {
   const [dialogUpdateSimpleProduct, setDialogUpdateSimpleProduct] = useState(false);
   const [dialogUpdateComplementProduct, setDialogUpdateComplementProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [couponView, setCouponView] = useState(false);
 
   function handleUpdateCartProduct(product, amount) {
     dispatch(updateProductFromCart(product, amount));
@@ -86,12 +89,15 @@ export default function Cart() {
           )}
         </>
       )}
-      {cart.products.length > 0 ? (
+      {couponView ? (
+        <Coupon setClosedCouponView={() => setCouponView(false)} />
+      ) : cart.products.length > 0 ? (
         <div className={classes.cart}>
           <Typography className={classes.title} variant="h5" color="primary">
             Carrinho
           </Typography>
           <CartProductList handleClickUpdateProduct={handleClickUpdateProduct} products={cart.products} />
+          <CartCouponButton setCouponView={setCouponView} />
           <CartTotal />
         </div>
       ) : (

@@ -29,6 +29,8 @@ const useStyles = makeStyles(theme => ({
     border: '1px solid #eee',
     borderRadius: 4,
     backgroundColor: '#f5f5f5',
+    maxWidth: 900,
+    width: '100%',
   },
   o: { backgroundColor: '#ffc107' },
   a: { backgroundColor: '#8BC34A', color: '#fff' },
@@ -42,12 +44,20 @@ const useStyles = makeStyles(theme => ({
     display: 'inline-flex',
   },
   historyStatus: {
-    padding: '2px 10px',
-    borderRadius: 3,
+    borderRadius: '50%',
     display: 'inline-flex',
-    minWidth: 150,
-    marginRight: 15,
-    fontSize: 16,
+    width: 30,
+    height: 30,
+    '&::after': {
+      content: '" "',
+      height: 29,
+      backgroundColor: '#ccc',
+      display: 'block',
+      position: 'absolute',
+      width: 3,
+      bottom: -16,
+      left: 14,
+    },
   },
   listItem: {
     display: 'flex',
@@ -63,7 +73,7 @@ const useStyles = makeStyles(theme => ({
   },
   containderGrid2: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
+    gridTemplateColumns: 'repeat(1, 1fr)',
     gridGap: 6,
     width: '100%',
     [theme.breakpoints.down('md')]: {
@@ -71,13 +81,16 @@ const useStyles = makeStyles(theme => ({
     },
   },
   historyList: {
-    borderLeft: `2px solid ${theme.palette.primary.main}`,
+    // borderLeft: `2px solid ${theme.palette.primary.main}`,
     marginBottom: 20,
     padding: 0,
   },
   historyListItem: {
     // paddingBottom: 0,
     // paddingTop: 0,
+    '&:last-child span::after': {
+      display: 'none',
+    },
   },
   statusDate: {
     [theme.breakpoints.down('md')]: {
@@ -106,6 +119,22 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('md')]: {
       display: 'none',
     },
+  },
+  totalsLabel: {
+    display: 'inline-block',
+    width: 100,
+    textAlign: 'left',
+  },
+  totals: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gridGap: 6,
+    '& p, h5': {
+      textAlign: 'right',
+    },
+  },
+  historyContent: {
+    padding: '0 10px',
   },
 }));
 
@@ -150,17 +179,21 @@ export default function Order({ cryptId }) {
       .then(response => {
         const formattedId = formatId(response.data.id);
         document.title = `Pedido ${formattedId}`;
+
         const date = parseISO(response.data.created_at);
+
         setOrder({
           ...response.data,
           formattedId,
           formattedDate: format(date, "PP 'às' p", { locale: ptbr }),
           formattedChange: moneyFormat(response.data.change),
-          formattedTotal: moneyFormat(response.data.total),
           products: response.data.products.map(product => {
             product.formattedFinalPrice = moneyFormat(product.final_price);
             return product;
           }),
+          formattedSubtotal: moneyFormat(response.data.subtotal),
+          formattedDiscount: moneyFormat(response.data.discount),
+          formattedTotal: moneyFormat(response.data.total),
           order_status: response.data.order_status.reverse().map(status => {
             const statusDate = parseISO(status.created_at);
             status.formattedDate = format(statusDate, "PP 'às' p", { locale: ptbr });
@@ -207,13 +240,14 @@ export default function Order({ cryptId }) {
           <div>
             <List className={classes.historyList}>
               {order.order_status.map(status => (
-                <ListItem key={status.id} className={classes.historyListItem}>
-                  <span className={`${classes.historyStatus} ${classes[status.status]}`}>
-                    {orderStatus[status.status]}
-                  </span>
-                  <Typography variant="body1" color="textSecondary" className={classes.statusDate}>
-                    em {status.formattedDate}
-                  </Typography>
+                <ListItem key={status.id} className={classes.historyListItem} disableGutters>
+                  <span className={`${classes.historyStatus} ${classes[status.status]}`} />
+                  <div className={classes.historyContent}>
+                    <Typography>{orderStatus[status.status]}</Typography>
+                    <Typography variant="body2" color="textSecondary" className={classes.statusDate}>
+                      {status.formattedDate}
+                    </Typography>
+                  </div>
                 </ListItem>
               ))}
             </List>
@@ -275,9 +309,26 @@ export default function Order({ cryptId }) {
                   </ListItem>
                 ))}
               </List>
-              <Typography variant="h5" align="right">
-                <strong>{order.formattedTotal}</strong>
-              </Typography>
+              <div className={classes.totals}>
+                <div>
+                  <Typography>Subtotal</Typography>
+                </div>
+                <div>
+                  <Typography>{order.formattedSubtotal}</Typography>
+                </div>
+                <div>
+                  <Typography>Desconto</Typography>
+                </div>
+                <div>
+                  <Typography>{order.formattedDiscount}</Typography>
+                </div>
+                <div>
+                  <Typography>Total</Typography>
+                </div>
+                <Typography variant="h5">
+                  <strong>{order.formattedTotal}</strong>
+                </Typography>
+              </div>
             </div>
           </div>
         </Grid>

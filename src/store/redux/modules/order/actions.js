@@ -67,3 +67,10 @@ export function clearCard() {
     type: '@order/CLEAR_CARD',
   };
 }
+
+export function setCoupon(coupon) {
+  return {
+    type: '@order/SET_COUPON',
+    coupon,
+  };
+}

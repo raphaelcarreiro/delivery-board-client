@@ -7,6 +7,15 @@ const useStyles = makeStyles({
   total: {
     fontWeight: 500,
   },
+  discount: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
 });
 
 export default function CartTotal() {
@@ -15,14 +24,26 @@ export default function CartTotal() {
 
   return (
     <>
-      <Grid container>
+      <div className={classes.container}>
+        {cart.coupon && (
+          <>
+            <div className={classes.discount}>
+              <Typography>Subtotal</Typography>
+              <Typography>{cart.formattedSubtotal}</Typography>
+            </div>
+            <div className={classes.discount}>
+              <Typography>Desconto</Typography>
+              <Typography>{cart.formattedDiscount}</Typography>
+            </div>
+          </>
+        )}
         <Grid item xs={12} container justify="space-between">
           <Typography variant="h6">Total</Typography>
           <Typography variant="h5" className={classes.total}>
             {cart.formattedTotal}
           </Typography>
         </Grid>
-      </Grid>
+      </div>
     </>
   );
 }

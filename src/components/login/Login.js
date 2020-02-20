@@ -87,7 +87,7 @@ export default function Login() {
 
           googleAuth2 = gapi.auth2.getAuthInstance();
           if (googleAuth2.isSignedIn.get()) {
-            const _googleUser = googleAuth2.currentUser.get();
+            const _googleUser = googleAuth2.currentUser.get().getBasicProfile();
             setGoogleUser(_googleUser);
           }
         });
@@ -154,7 +154,7 @@ export default function Login() {
           setLoading(false);
         });
     } catch (err) {
-      router.push(`/register?email=${user.w3.U3}&name=${user.w3.ig}`);
+      router.push(`/register?email=${user.getEmail()}&name=${user.getName()}`);
     }
   }
 
@@ -205,7 +205,7 @@ export default function Login() {
               color="primary"
               onClick={handleGoogleLogin}
             >
-              {googleUser ? `Continuar como ${googleUser.w3.ig}` : 'Entrar com Google'}
+              {googleUser ? `Continuar como ${googleUser.getName()}` : 'Entrar com Google'}
             </Button>
           </div>
         )}
