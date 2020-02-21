@@ -303,9 +303,7 @@ export default function Order({ cryptId }) {
                         {product.amount}x {product.name}
                       </Typography>
                     </div>
-                    <Typography variant="h6" color="textSecondary">
-                      {product.formattedFinalPrice}
-                    </Typography>
+                    <Typography variant="h6">{product.formattedFinalPrice}</Typography>
                   </ListItem>
                 ))}
               </List>
