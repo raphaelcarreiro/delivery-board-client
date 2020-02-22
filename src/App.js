@@ -71,8 +71,8 @@ function App({ pageProps, component: Component }) {
   const [isProgressBarVisible, setIsProgressBarVisible] = useState(false);
   const [theme, setTheme] = useState(defaultTheme);
   const [readyToInstall, setReadyToInstall] = useState(false);
-  const restaurant = useSelector(state => state.restaurant);
   const [fmHasToken, setFmHasToken] = useState(false);
+  const restaurant = useSelector(state => state.restaurant);
 
   const appProviderValue = {
     isMobile,
@@ -107,7 +107,7 @@ function App({ pageProps, component: Component }) {
         setTheme(createTheme(_restaurant.primary_color, _restaurant.secondary_color));
 
         if (configs.google_analytics_id) {
-          reactGA.initialize(restaurant.configs.google_analytics_id);
+          reactGA.initialize(_restaurant.configs.google_analytics_id);
           reactGA.set({ page: window.location.pathname });
           reactGA.pageview(window.location.pathname);
         }
@@ -151,7 +151,7 @@ function App({ pageProps, component: Component }) {
   // set webscoket connection
   useEffect(() => {
     if (restaurant) {
-      socket = io(process.env.URL_NODE_SERVER, { reconnectionAttempts: 5 });
+      socket = io(process.env.URL_NODE_SERVER);
       // socket = io(process.env.URL_NODE_SERVER, { reconnectionAttempts: 5 });
       socket.on('handleRestaurantState', state => {
         if (state.restaurantId === restaurant.id) dispatch(setRestaurantIsOpen(state));
@@ -168,7 +168,7 @@ function App({ pageProps, component: Component }) {
     router.events.on('routeChangeStart', handleRouteChangeStart);
     router.events.on('routeChangeComplete', handleRouteChangeComplete);
     router.events.on('routeChangeError', handleRouteChangeError);
-  }, []);
+  }, [restaurant]);
 
   /*
   handle request permission for firebase messaging if is not server,
@@ -262,10 +262,11 @@ function App({ pageProps, component: Component }) {
   function handleRouteChangeComplete() {
     setIsProgressBarVisible(false);
 
-    /* if (restaurant.configs.google_analytics_id) {
-      reactGA.set({ page: window.location.pathname });
-      reactGA.pageview(window.location.pathname);
-    } */
+    if (restaurant)
+      if (restaurant.configs.google_analytics_id) {
+        reactGA.set({ page: window.location.pathname });
+        reactGA.pageview(window.location.pathname);
+      }
   }
 
   function handleRouteChangeError() {
@@ -331,7 +332,6 @@ function App({ pageProps, component: Component }) {
 App.propTypes = {
   pageProps: PropTypes.object.isRequired,
   component: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
-  restaurant: PropTypes.object,
 };
 
 export default App;
