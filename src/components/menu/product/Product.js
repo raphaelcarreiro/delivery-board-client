@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import ImagePreview from '../../image-preview/ImagePreview';
 import PropTypes from 'prop-types';
 import ProductView from './view/simple/ProductView';
@@ -67,6 +67,13 @@ export default function Product({ products, categoryName, categoryUrl }) {
   const ref = useRef();
   const router = useRouter();
 
+  useEffect(() => {
+    if (products.length === 1) {
+      const product = products[0];
+      if (product.category.is_pizza) handleProductClick(product);
+    }
+  }, []);
+
   function handleProductClick(product) {
     setSelectedProduct(product);
     messaging.handleClose();
@@ -121,9 +128,15 @@ export default function Product({ products, categoryName, categoryUrl }) {
           <Typography variant="h6" color="primary">
             {categoryName}
           </Typography>
-          <Typography variant="body1" color="textSecondary">
-            Exibindo {filteredProducts.length} {filteredProducts.length > 1 ? 'produtos' : 'produto'}
-          </Typography>
+          {filteredProducts.length > 0 ? (
+            <Typography variant="body1" color="textSecondary">
+              Exibindo {filteredProducts.length} {filteredProducts.length > 1 ? 'produtos' : 'produto'}
+            </Typography>
+          ) : (
+            <Typography variant="body1" color="textSecondary">
+              Sem produtos
+            </Typography>
+          )}
         </div>
 
         <TextField

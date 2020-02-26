@@ -59,7 +59,8 @@ export default function CategoryList({ categories }) {
     <List className={classes.list}>
       {categories.map(
         item =>
-          item.productsAmount > 0 && (
+          item.productsAmount > 0 &&
+          item.activated && (
             <ListItem
               href={'/menu/[url]'}
               key={item.name + item.description + item.id}

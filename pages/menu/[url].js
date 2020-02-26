@@ -37,10 +37,25 @@ Category.getInitialProps = async ({ query }) => {
 
   const response = await axiosInstance.get(`/categories/${query.url}`);
 
-  const products = response.data.products.map(product => {
-    product.formattedPrice = moneyFormat(product.price);
-    return product;
-  });
+  if (!response.data.activated) {
+    const category = {
+      ...response.data,
+      products: [],
+    };
+
+    return {
+      category,
+    };
+  }
+
+  const products = response.data.products
+    .filter(product => product.activated)
+    .map(product => {
+      product.formattedPrice = moneyFormat(product.price);
+      return product;
+    });
+
+  console.log(products);
 
   const category = {
     ...response.data,
@@ -48,6 +63,6 @@ Category.getInitialProps = async ({ query }) => {
   };
 
   return {
-    category: category,
+    category,
   };
 };
