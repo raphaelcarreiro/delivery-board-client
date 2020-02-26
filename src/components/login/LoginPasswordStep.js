@@ -22,7 +22,7 @@ export default function LoginPasswordStep({ password, setPassword, name }) {
   return (
     <div>
       <Typography align="center">
-        Olá <span className={classes.name}>{name}</span>! Agora, sua senha.
+        Olá <span className={classes.name}>{name}</span>!
       </Typography>
       <TextField
         variant="outlined"

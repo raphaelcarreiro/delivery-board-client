@@ -37,6 +37,13 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'space-evenly',
   },
+  actionPassword: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    height: 100,
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
   loading: {
     top: 0,
     bottom: 0,
@@ -173,14 +180,14 @@ function LoginEmail() {
                   <LoginPasswordStep name={name} password={password} setPassword={setPassword} />
                 )}
               </div>
-              <div className={classes.action}>
+              <div className={step === 'email' ? classes.action : classes.actionPassword}>
                 {step === 'email' && (
                   <Button component={Link} href="/login" color="primary" variant="text">
                     Voltar
                   </Button>
                 )}
                 {step === 'password' && (
-                  <Link color="primary" href="/password-reset">
+                  <Link color="primary" href="/password-request">
                     Esqueci minha senha
                   </Link>
                 )}

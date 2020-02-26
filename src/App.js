@@ -92,7 +92,14 @@ function App({ pageProps, component: Component }) {
   };
 
   // paginas que não precisam no cabeçalho e rodapé padrões
-  const paths = ['/register', '/login', '/login/email', '/guest-register', '/password-reset'];
+  const paths = [
+    '/register',
+    '/login',
+    '/login/email',
+    '/guest-register',
+    '/password-request',
+    '/password-reset/[token]',
+  ];
   const checkoutPaths = ['/checkout'];
 
   // load restaurant data from server

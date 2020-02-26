@@ -92,6 +92,7 @@ export default class MyDocument extends Document {
             }
             a,
             a:hover {
+              font-size: 16px;
               text-decoration: none;
             }
             form {

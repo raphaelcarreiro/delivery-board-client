@@ -1,15 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  CircularProgress,
-  Grid,
-  Typography,
-  TextField,
-  InputAdornment,
-  IconButton,
-  Button,
-  LinearProgress,
-} from '@material-ui/core';
+import { Grid, Typography, TextField, Button, LinearProgress } from '@material-ui/core';
 import { MessagingContext } from '../messaging/Messaging';
 import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
@@ -39,12 +30,6 @@ const useStyles = makeStyles(theme => ({
   action: {
     display: 'flex',
     justifyContent: 'space-around',
-  },
-  actionPassword: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    flexDirection: 'column',
   },
   loading: {
     top: 0,
@@ -81,7 +66,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function EmailPassword() {
+function PasswordRequest() {
   const [email, setEmail] = useState('');
   const [validation, setValidation] = useState({ email: [] });
   const [loading, setLoading] = useState(false);
@@ -97,7 +82,7 @@ function EmailPassword() {
     setLoading(true);
 
     api()
-      .post('password/email', email)
+      .post('password/email', { email })
       .then(response => {
         return response.data;
       })
@@ -145,8 +130,8 @@ function EmailPassword() {
                 <Typography align="center" variant="h6">
                   Esqueci minha senha
                 </Typography>
-                <Typography variant="body2">
-                  Você receberá informações de como criar uma nova senha no e-mail informado
+                <Typography variant="body2" align="center">
+                  Você receberá informações de como criar uma nova senha no e-mail informado.
                 </Typography>
                 <div>
                   <TextField
@@ -162,7 +147,7 @@ function EmailPassword() {
                   />
                 </div>
               </div>
-              <div className={step === 'email' ? classes.action : classes.actionPassword}>
+              <div className={classes.action}>
                 <Button variant="text" color="primary" component={Link} href="/login/email">
                   Voltar
                 </Button>
@@ -178,4 +163,4 @@ function EmailPassword() {
   );
 }
 
-export default EmailPassword;
+export default PasswordRequest;
