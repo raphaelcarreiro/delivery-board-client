@@ -77,6 +77,9 @@ const useStyles = makeStyles(theme => ({
   logo: {
     width: 70,
   },
+  forgot: {
+    fontSize: 16,
+  },
 }));
 
 function LoginEmail() {
@@ -187,7 +190,7 @@ function LoginEmail() {
                   </Button>
                 )}
                 {step === 'password' && (
-                  <Link color="primary" href="/password-request">
+                  <Link color="primary" href="/password-request" className={classes.forgot}>
                     Esqueci minha senha
                   </Link>
                 )}
