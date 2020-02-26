@@ -179,6 +179,11 @@ function LoginEmail() {
                     Voltar
                   </Button>
                 )}
+                {step === 'password' && (
+                  <Link color="primary" href="/password-reset">
+                    Esqueci minha senha
+                  </Link>
+                )}
                 <Button type="submit" variant="contained" color="primary" disabled={loading}>
                   {step === 'email' ? 'Próximo' : 'Entrar'}
                 </Button>
