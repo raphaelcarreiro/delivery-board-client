@@ -36,12 +36,12 @@ const useStyles = makeStyles(theme => ({
       height: '100vh',
     },
   }),
-  content: ({ title }) => ({
+  content: ({ title, displayBottomActions }) => ({
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
     marginTop: title ? 64 : 15,
-    marginBottom: 72,
+    marginBottom: displayBottomActions ? 72 : 0,
     paddingTop: 15,
     paddingLeft: 15,
     paddingRight: 15,
@@ -66,10 +66,11 @@ export default function CustomDialog({
   children,
   backgroundColor,
   hideBackdrop,
+  displayBottomActions,
 }) {
   const [open, setOpen] = useState(true);
   const app = useContext(AppContext);
-  const styleProps = { backgroundColor, title: !!title };
+  const styleProps = { backgroundColor, title: !!title, displayBottomActions };
   const classes = useStyles(styleProps);
 
   function handleClose() {
@@ -117,6 +118,7 @@ export default function CustomDialog({
 
 CustomDialog.defaultProps = {
   hideBackdrop: false,
+  displayBottomActions: false,
 };
 
 CustomDialog.propTypes = {
@@ -126,6 +128,7 @@ CustomDialog.propTypes = {
   children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   backgroundColor: PropTypes.string,
   hideBackdrop: PropTypes.bool,
+  displayBottomActions: PropTypes.bool,
 };
 
 export const DialogConsumer = CustomDialogContext.Consumer;

@@ -207,9 +207,10 @@ MyDocument.getInitialProps = async ctx => {
     lang: 'pt-BR',
     icons: [
       {
-        src: 'favicon.ico',
-        sizes: '512x512 264x264 128x128 64x64 32x32 24x24 16x16',
+        src: restaurant.image.imageUrl,
+        sizes: '256x256',
         type: 'image/png',
+        purpose: 'any maskable',
       },
     ],
     start_url: '/',

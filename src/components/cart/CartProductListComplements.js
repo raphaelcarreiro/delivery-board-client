@@ -1,8 +1,9 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { ListItem, List, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import CartProductComplementAdditional from './CartProductComplementAdditional';
+import CartProductComplementIngredient from './CartProductComplementIngredient';
 
 const useStyles = makeStyles({
   list: {
@@ -14,6 +15,20 @@ const useStyles = makeStyles({
   categoryName: {
     marginRight: 10,
     minWidth: 75,
+  },
+  additional: {
+    color: '#4CAF50',
+    marginRight: 6,
+    display: 'inline-block',
+  },
+  ingredient: {
+    color: '#c53328',
+    marginRight: 6,
+    display: 'inline-block',
+  },
+  complementName: {
+    display: 'inline',
+    marginRight: 6,
   },
 });
 
@@ -38,15 +53,21 @@ export default function CartProductListComplements({ categories }) {
                 </Typography>
                 <div>
                   {category.complements.map((complement, index) => {
-                    if (complement.selected) {
-                      count += 1;
-                      return (
-                        <Typography key={complement.id} display="inline" variant="body2">
-                          {complement.name}
-                          {amount > 1 && amount !== count && <span>, </span>}
-                        </Typography>
-                      );
-                    }
+                    count = complement.selected ? count + 1 : count;
+                    return (
+                      complement.selected && (
+                        <div key={complement.id} style={{ display: 'inline-flex' }}>
+                          <Typography className={classes.complementName} key={complement.id} variant="body2">
+                            {complement.name}
+                            {amount > 1 && amount !== count && <span>, </span>}
+                          </Typography>
+                          <div>
+                            <CartProductComplementAdditional additional={complement.additional} />
+                            <CartProductComplementIngredient ingredients={complement.ingredients} />
+                          </div>
+                        </div>
+                      )
+                    );
                   })}
                 </div>
               </>

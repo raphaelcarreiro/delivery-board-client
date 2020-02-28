@@ -18,10 +18,12 @@ import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import { AppContext } from 'src/App';
 import { firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
 import OrderAction from './OrderAction';
+import CartProductListComplements from 'src/components/cart/CartProductListComplements';
+import OrderProductList from './OrderProductList';
 
 const useStyles = makeStyles(theme => ({
   title: {
-    fontWeight: 400,
+    fontWeight: 300,
   },
   section: {
     marginBottom: 15,
@@ -58,18 +60,6 @@ const useStyles = makeStyles(theme => ({
       bottom: -16,
       left: 14,
     },
-  },
-  listItem: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    paddingLeft: 0,
-    paddingRight: 0,
-    paddingBottom: 3,
-    borderBottom: '1px dashed #ddd',
-  },
-  list: {
-    paddingTop: 0,
-    paddingBottom: 20,
   },
   containderGrid2: {
     display: 'grid',
@@ -147,7 +137,6 @@ export default function Order({ cryptId }) {
   const [loading, setLoading] = useState(true);
   const user = useSelector(state => state.user);
   const app = useContext(AppContext);
-  const restaurant = useSelector(state => state.restaurant);
   const messaging = useContext(MessagingContext);
   const classes = useStyles();
 
@@ -189,6 +178,23 @@ export default function Order({ cryptId }) {
           formattedChange: moneyFormat(response.data.change),
           products: response.data.products.map(product => {
             product.formattedFinalPrice = moneyFormat(product.final_price);
+            product.formattedPrice = moneyFormat(product.price);
+            product.formattedProductPrice = moneyFormat(product.product_price);
+            product.complement_categories = product.complement_categories.map(category => {
+              category.complements = category.complements.map(complement => {
+                complement.formattedPrice = moneyFormat(complement.price);
+                complement.additional = complement.additional.map(additional => {
+                  additional.formttedPrice = moneyFormat(additional.price);
+                  return additional;
+                });
+                return complement;
+              });
+              return category;
+            });
+            product.additional = product.additional.map(additional => {
+              additional.formattedPrice = moneyFormat(additional.price);
+              return additional;
+            });
             return product;
           }),
           formattedSubtotal: moneyFormat(response.data.subtotal),
@@ -254,7 +260,7 @@ export default function Order({ cryptId }) {
           </div>
           <div className={classes.containderGrid2}>
             <div className={classes.section}>
-              <Typography variant="h5" className={classes.title}>
+              <Typography variant="h5" className={classes.title} gutterBottom>
                 {order.shipment.shipment_method === 'delivery' ? 'Endereço de entrega' : 'Cliente retira'}
               </Typography>
               <Typography>
@@ -268,7 +274,7 @@ export default function Order({ cryptId }) {
               {order.shipment.postal_code !== '00000000' && <Typography>{order.shipment.postal_code}</Typography>}
             </div>
             <div className={classes.section}>
-              <Typography variant="h5" className={classes.title}>
+              <Typography variant="h5" className={classes.title} gutterBottom>
                 Forma de pagamento
               </Typography>
               {order.payment_method.kind === 'online_payment' ? (
@@ -292,21 +298,10 @@ export default function Order({ cryptId }) {
               )}
             </div>
             <div className={classes.section}>
-              <Typography variant="h5" className={classes.title}>
+              <Typography variant="h5" className={classes.title} gutterBottom>
                 Itens
               </Typography>
-              <List className={classes.list}>
-                {order.products.map(product => (
-                  <ListItem key={product.id} className={classes.listItem}>
-                    <div>
-                      <Typography variant="subtitle1">
-                        {product.amount}x {product.name}
-                      </Typography>
-                    </div>
-                    <Typography variant="h6">{product.formattedFinalPrice}</Typography>
-                  </ListItem>
-                ))}
-              </List>
+              <OrderProductList products={order.products} />
               <div className={classes.totals}>
                 <div>
                   <Typography>Subtotal</Typography>
