@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import { Typography, Grid, TextField } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import ProductPizzaComplementItem from './ProductPizzaComplementItem';
-import { MessagingContext } from 'src/components/messaging/Messaging';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   header: {
@@ -39,10 +37,9 @@ const useStyles = makeStyles(theme => ({
 ProductPizzaComplement.propTypes = {
   selectedProduct: PropTypes.object.isRequired,
   onExited: PropTypes.func.isRequired,
-  handleUpdateCartProduct: PropTypes.func.isRequired,
 };
 
-export default function ProductPizzaComplement({ selectedProduct, onExited, handleUpdateCartProduct }) {
+export default function ProductPizzaComplement({ selectedProduct, onExited }) {
   const [product, setProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
   const classes = useStyles();
   const categoryComplementSize = product.complement_categories.find(category => category.is_pizza_size);

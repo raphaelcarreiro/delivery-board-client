@@ -1,7 +1,6 @@
-import React, { useState, useContext, Fragment, useEffect } from 'react';
+import React, { useState, Fragment } from 'react';
 import { Typography, Grid, TextField } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
-import { MessagingContext } from 'src/components/messaging/Messaging';
 import ProductComplementItem from './ProductComplementItem';
 import PropTypes from 'prop-types';
 import CustomDialog from 'src/components/dialog/CustomDialog';
@@ -75,7 +74,6 @@ const useStyles = makeStyles(theme => ({
 ProductComplement.propTypes = {
   onExited: PropTypes.func.isRequired,
   selectedProduct: PropTypes.object.isRequired,
-  handleUpdateCartProduct: PropTypes.func.isRequired,
 };
 
 export default function ProductComplement({ onExited, selectedProduct }) {

@@ -50,10 +50,9 @@ const useStyles = makeStyles(theme => ({
 
 ProductSimpleIngredients.propTypes = {
   ingredients: PropTypes.array.isRequired,
-  handleClickIngredient: PropTypes.func.isRequired,
 };
 
-export default function ProductSimpleIngredients({ ingredients, handleClickIngredient }) {
+export default function ProductSimpleIngredients({ ingredients }) {
   const classes = useStyles();
 
   return (
@@ -63,12 +62,7 @@ export default function ProductSimpleIngredients({ ingredients, handleClickIngre
       </div>
       <List className={classes.list}>
         {ingredients.map(additional => (
-          <ListItem
-            onClick={() => handleClickIngredient(additional.id)}
-            button
-            className={additional.selected ? classes.selected : classes.listItem}
-            key={additional.id}
-          >
+          <ListItem button className={additional.selected ? classes.selected : classes.listItem} key={additional.id}>
             <div>
               <Typography>{additional.name}</Typography>
             </div>

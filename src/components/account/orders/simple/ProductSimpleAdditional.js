@@ -53,10 +53,9 @@ const useStyles = makeStyles(theme => ({
 
 ProductSimpleAdditional.propTypes = {
   additional: PropTypes.array.isRequired,
-  handleClickAdditional: PropTypes.func.isRequired,
 };
 
-export default function ProductSimpleAdditional({ additional, handleClickAdditional }) {
+export default function ProductSimpleAdditional({ additional }) {
   const classes = useStyles();
 
   return (
@@ -66,12 +65,7 @@ export default function ProductSimpleAdditional({ additional, handleClickAdditio
       </div>
       <List className={classes.list}>
         {additional.map(item => (
-          <ListItem
-            onClick={() => handleClickAdditional(item.id)}
-            button
-            className={item.selected ? classes.selected : classes.listItem}
-            key={item.id}
-          >
+          <ListItem button className={item.selected ? classes.selected : classes.listItem} key={item.id}>
             <div>
               <Typography>{item.name}</Typography>
               <Typography color="primary" className={classes.price}>

@@ -58,56 +58,13 @@ const useStyles = makeStyles(theme => ({
 ProductSimple.propTypes = {
   onExited: PropTypes.func.isRequired,
   selectedProduct: PropTypes.object.isRequired,
-  handleUpdateCartProduct: PropTypes.func.isRequired,
 };
 
-export default function ProductSimple({ onExited, selectedProduct, handleUpdateCartProduct }) {
+export default function ProductSimple({ onExited, selectedProduct }) {
   const [amount, setAmount] = useState(selectedProduct.amount);
   const [product, setProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
-  const [additionalPrice, setAdditionalPrice] = useState(0);
   const [imagePreview, setImagePreview] = useState(false);
   const classes = useStyles();
-
-  useEffect(() => {
-    setAdditionalPrice(
-      product.additional.reduce((value, additional) => (additional.selected ? value + additional.price : value), 0)
-    );
-    // eslint-disable-next-line
-  }, [product.additional]);
-
-  function handleAmountUp() {
-    setAmount(amount + 1);
-  }
-
-  function handleAmountDown() {
-    if (amount > 1) {
-      setAmount(amount - 1);
-    }
-  }
-
-  function handleClickIngredient(ingredientId) {
-    setProduct({
-      ...product,
-      ingredient: product.ingredients.map(ingredient => {
-        if (ingredient.id === ingredientId) ingredient.selected = !ingredient.selected;
-        return ingredient;
-      }),
-    });
-  }
-
-  function handleClickAdditional(additionalId) {
-    setProduct({
-      ...product,
-      additional: product.additional.map(additional => {
-        if (additional.id === additionalId) additional.selected = !additional.selected;
-        return additional;
-      }),
-    });
-  }
-
-  function handleUpdateClick() {
-    handleUpdateCartProduct(product, amount);
-  }
 
   function handleImagePreview() {
     setImagePreview(!imagePreview);
@@ -141,17 +98,10 @@ export default function ProductSimple({ onExited, selectedProduct, handleUpdateC
             </div>
           </Grid>
           <Grid item xs={12}>
-            {product.additional.length > 0 && (
-              <ProductSimpleAdditional additional={product.additional} handleClickAdditional={handleClickAdditional} />
-            )}
+            {product.additional.length > 0 && <ProductSimpleAdditional additional={product.additional} />}
           </Grid>
           <Grid item xs={12}>
-            {product.ingredients.length > 0 && (
-              <ProductSimpleIngredients
-                ingredients={product.ingredients}
-                handleClickIngredient={handleClickIngredient}
-              />
-            )}
+            {product.ingredients.length > 0 && <ProductSimpleIngredients ingredients={product.ingredients} />}
           </Grid>
           <Grid item xs={12} className={classes.annotationContainer}>
             <TextField

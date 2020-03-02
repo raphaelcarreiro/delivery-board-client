@@ -61,10 +61,7 @@ export default function CartProductListComplements({ categories }) {
                             {complement.name}
                             {amount > 1 && amount !== count && <span>, </span>}
                           </Typography>
-                          <div>
-                            <CartProductComplementAdditional additional={complement.additional} />
-                            <CartProductComplementIngredient ingredients={complement.ingredients} />
-                          </div>
+                          <div></div>
                         </div>
                       )
                     );
