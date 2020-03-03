@@ -157,7 +157,12 @@ export default function ProductComplement({ onExited, selectedProduct, handleUpd
   }
 
   return (
-    <CustomDialog backgroundColor="#fafafa" handleModalState={onExited} title={`${product.name} - Complementos`}>
+    <CustomDialog
+      backgroundColor="#fafafa"
+      handleModalState={onExited}
+      title={`${product.name} - Complementos`}
+      displayBottomActions
+    >
       <Fragment>
         <Grid container className={classes.container}>
           <Grid item xs={12}>

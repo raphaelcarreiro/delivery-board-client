@@ -221,7 +221,12 @@ function ProductComplement({ onExited, selectedProduct, handleAddProductToCart, 
   }
 
   return (
-    <CustomDialog backgroundColor="#fafafa" handleModalState={onExited} title={`${product.name} - Complementos`}>
+    <CustomDialog
+      backgroundColor="#fafafa"
+      handleModalState={onExited}
+      title={`${product.name} - Complementos`}
+      displayBottomActions
+    >
       <Grid container className={classes.container}>
         <Grid item xs={12}>
           {product.complement_categories.map(category => (

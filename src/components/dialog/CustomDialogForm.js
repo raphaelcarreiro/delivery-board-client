@@ -20,6 +20,7 @@ const useStyles = makeStyles(theme => ({
   },
   appbar: {
     position: 'absolute',
+    zIndex: '1102!important',
     [theme.breakpoints.down('md')]: {
       position: 'fixed',
     },
@@ -36,12 +37,12 @@ const useStyles = makeStyles(theme => ({
       height: '100vh',
     },
   }),
-  content: ({ title }) => ({
+  content: ({ title, displayBottomActions }) => ({
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
     marginTop: title ? 64 : 15,
-    marginBottom: 87,
+    marginBottom: displayBottomActions ? 72 : 0,
     paddingTop: 15,
     paddingLeft: 15,
     paddingRight: 15,
@@ -53,6 +54,9 @@ const useStyles = makeStyles(theme => ({
       marginTop: title ? 48 : 15,
     },
   }),
+  form: {
+    overflowY: 'auto',
+  },
 }));
 
 export const DialogFullscreenFormContext = React.createContext({
@@ -68,9 +72,10 @@ export default function CustomDialogForm({
   componentActions,
   children,
   backgroundColor,
+  displayBottomActions,
 }) {
   const [open, setOpen] = useState(true);
-  const classes = useStyles({ backgroundColor, title: !!title });
+  const classes = useStyles({ backgroundColor, title: !!title, displayBottomActions });
   const app = useContext(AppContext);
 
   function handleClose() {
@@ -146,4 +151,5 @@ CustomDialogForm.propTypes = {
   children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   async: PropTypes.bool,
   backgroundColor: PropTypes.string,
+  displayBottomActions: PropTypes.bool,
 };

@@ -92,6 +92,7 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
       closeOnSubmit
       async
       componentActions={<AccountAddressesAction saving={saving} />}
+      displayBottomActions
     >
       {saving && (
         <div className={classes.loading}>

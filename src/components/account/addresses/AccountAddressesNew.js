@@ -151,6 +151,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
       closeOnSubmit
       async
       componentActions={<AccountAddressesAction saving={saving} />}
+      displayBottomActions
     >
       {saving && (
         <div className={classes.loading}>

@@ -55,8 +55,6 @@ Category.getInitialProps = async ({ query }) => {
       return product;
     });
 
-  console.log(products);
-
   const category = {
     ...response.data,
     products,

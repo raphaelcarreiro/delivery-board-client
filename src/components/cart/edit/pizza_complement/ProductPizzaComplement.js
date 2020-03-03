@@ -208,7 +208,12 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
   }
 
   return (
-    <CustomDialog backgroundColor="#fafafa" handleModalState={onExited} title={`${product.name} - Complementos`}>
+    <CustomDialog
+      backgroundColor="#fafafa"
+      handleModalState={onExited}
+      title={`${product.name} - Complementos`}
+      displayBottomActions
+    >
       {dialogAdditional && (
         <ProductPizzaComplementAdditional
           onExited={() => setDialogAdditional(false)}

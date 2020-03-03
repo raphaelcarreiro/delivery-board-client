@@ -22,20 +22,27 @@ const useStyles = makeStyles(theme => ({
       display: 'none',
     },
   },
-  appbarSpace: {
-    height: 80,
-    [theme.breakpoints.down('md')]: {
-      height: 56,
-    },
-    [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
-      height: 51,
-    },
-  },
   grow: {
     flexGrow: 1,
   },
   background: props => ({
     backgroundColor: props.backgroundColor ? props.backgroundColor : '#fff',
+  }),
+  content: ({ title }) => ({
+    display: 'flex',
+    flex: 1,
+    marginTop: title ? 64 : 15,
+    marginBottom: 0,
+    paddingTop: 15,
+    paddingLeft: 15,
+    paddingRight: 15,
+    overflowY: 'auto',
+    [theme.breakpoints.down('md')]: {
+      marginTop: title ? 56 : 15,
+    },
+    [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
+      marginTop: title ? 48 : 15,
+    },
   }),
 }));
 
@@ -45,7 +52,7 @@ export const DialogFullscreenContext = React.createContext({
 
 function DialogFullscreen({ handleModalState, title, componentActions, children, backgroundColor }) {
   const [open, setOpen] = useState(true);
-  const styleProps = { backgroundColor };
+  const styleProps = { backgroundColor, title };
   const classes = useStyles(styleProps);
 
   function handleClose() {
@@ -80,12 +87,11 @@ function DialogFullscreen({ handleModalState, title, componentActions, children,
           </Toolbar>
         </AppBar>
       )}
-      <div className={classes.appbarSpace} />
-      <DialogContent>
+      <div className={classes.content}>
         <DialogFullscreenContext.Provider value={{ handleCloseDialog: handleClose }}>
           {children}
         </DialogFullscreenContext.Provider>
-      </DialogContent>
+      </div>
     </Dialog>
   );
 }
