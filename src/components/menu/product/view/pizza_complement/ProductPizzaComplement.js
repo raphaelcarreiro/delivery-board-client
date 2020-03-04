@@ -98,6 +98,12 @@ export default function ProductPizzaComplement({
       ready: false,
       complement_categories: categories,
     });
+
+    setFilteredProduct({
+      ...product,
+      ready: false,
+      complement_categories: categories,
+    });
   }, []);
 
   useEffect(() => {
