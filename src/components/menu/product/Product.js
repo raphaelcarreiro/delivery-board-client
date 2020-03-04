@@ -107,7 +107,10 @@ export default function Product({ products, categoryName, categoryUrl }) {
   function handleSearch(searchValue) {
     setSearch(searchValue);
     const _products = products.filter(product => {
-      const productName = product.name.toLowerCase();
+      const productName = product.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
       return productName.indexOf(searchValue.toLowerCase()) !== -1;
     });
 

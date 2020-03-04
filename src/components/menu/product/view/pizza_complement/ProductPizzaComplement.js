@@ -38,6 +38,7 @@ export default function ProductPizzaComplement({
   const classes = useStyles();
   const [amount, setAmount] = useState(1);
   const [product, setProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
+  const [filteredProduct, setFilteredProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
   const [complementsPrice, setComplementsPrice] = useState(0);
   const [dialogIngredients, setDialogIngredients] = useState(false);
   const [dialogAdditional, setDialogAdditional] = useState(false);
@@ -46,6 +47,8 @@ export default function ProductPizzaComplement({
   const [complementSizeSelected, setComplementSizeSelected] = useState({});
   const messaging = useContext(MessagingContext);
   const restaurant = useSelector(state => state.restaurant);
+  const [searchedCategoryId, setSearchedCategoryId] = useState(null);
+  const [searchedValue, setSearchedValue] = useState('');
 
   useEffect(() => {
     let sizeSelected = {};
@@ -260,9 +263,47 @@ export default function ProductPizzaComplement({
     };
 
     setProduct(newProduct);
+    setFilteredProduct(newProduct);
+    handleSearch(searchedCategoryId, searchedValue);
     setComplementSizeSelected(sizeSelected);
 
     if (ready) handlePrepareProduct(newProduct);
+  }
+
+  function handleSearch(categoryId, searchValue) {
+    setSearchedValue(searchValue);
+
+    if (searchValue === '') {
+      setFilteredProduct(product);
+      setSearchedCategoryId(null);
+      return;
+    }
+
+    setSearchedCategoryId(categoryId);
+
+    const productCopy = JSON.parse(JSON.stringify(product));
+
+    const newCategory = productCopy.complement_categories.find(c => c.id === categoryId);
+
+    newCategory.complements = newCategory.complements.filter(complement => {
+      const complementName = complement.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+      return complementName.indexOf(searchValue.toLowerCase()) !== -1;
+    });
+
+    const newProduct = {
+      ...product,
+      complement_categories: product.complement_categories.map(category => {
+        if (category.id === categoryId) {
+          return newCategory;
+        }
+        return category;
+      }),
+    };
+
+    setFilteredProduct(newProduct);
   }
 
   return (
@@ -292,9 +333,13 @@ export default function ProductPizzaComplement({
       )}
       <Grid container className={classes.container} justify="center">
         <Grid item xs={12}>
-          {product.complement_categories.map(category => (
+          {filteredProduct.complement_categories.map(category => (
             <section className={classes.category} key={category.id}>
-              <ProductPizzaComplementHeader category={category} complementSizeSelected={complementSizeSelected} />
+              <ProductPizzaComplementHeader
+                category={category}
+                complementSizeSelected={complementSizeSelected}
+                handleSearch={handleSearch}
+              />
               {(category.is_pizza_size || complementSizeSelected.id) && (
                 <ProductPizzaComplementItem
                   category={category}

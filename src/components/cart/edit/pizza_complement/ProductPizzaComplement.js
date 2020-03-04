@@ -9,6 +9,7 @@ import ProductPizzaComplementAdditional from './ProductPizzaComplementAdditional
 import ProductPizzaComplementIngredient from './ProductPizzaComplementIngredient';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import ProductPizzaComplementHeader from './ProductPizzaComplementHeader';
 
 const useStyles = makeStyles(theme => ({
   header: {
@@ -48,6 +49,7 @@ ProductPizzaComplement.propTypes = {
 export default function ProductPizzaComplement({ selectedProduct, onExited, handleUpdateCartProduct }) {
   const [amount, setAmount] = useState(selectedProduct.amount);
   const [product, setProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
+  const [filteredProduct, setFilteredProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
   const messaging = useContext(MessagingContext);
   const classes = useStyles();
   const [complementsPrice, setComplementsPrice] = useState(0);
@@ -58,6 +60,8 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
   const [complementIdSelected, setComplementIdSelected] = useState(null);
   const [complementCategoryIdSelected, setComplementCategoryIdSelected] = useState(null);
   const restaurant = useSelector(state => state.restaurant);
+  const [searchedCategoryId, setSearchedCategoryId] = useState(null);
+  const [searchedValue, setSearchedValue] = useState('');
 
   useEffect(() => {
     /*
@@ -205,6 +209,44 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
     };
 
     setProduct(newProduct);
+    setFilteredProduct(newProduct);
+    handleSearch(searchedCategoryId, searchedValue);
+  }
+
+  function handleSearch(categoryId, searchValue) {
+    setSearchedValue(searchValue);
+
+    if (searchValue === '') {
+      setFilteredProduct(product);
+      setSearchedCategoryId(null);
+      return;
+    }
+
+    setSearchedCategoryId(categoryId);
+
+    const productCopy = JSON.parse(JSON.stringify(product));
+
+    const newCategory = productCopy.complement_categories.find(c => c.id === categoryId);
+
+    newCategory.complements = newCategory.complements.filter(complement => {
+      const complementName = complement.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+      return complementName.indexOf(searchValue.toLowerCase()) !== -1;
+    });
+
+    const newProduct = {
+      ...product,
+      complement_categories: product.complement_categories.map(category => {
+        if (category.id === categoryId) {
+          return newCategory;
+        }
+        return category;
+      }),
+    };
+
+    setFilteredProduct(newProduct);
   }
 
   return (
@@ -234,45 +276,13 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
       )}
       <Grid container className={classes.container}>
         <Grid item xs={12}>
-          {product.complement_categories.map(category => (
+          {filteredProduct.complement_categories.map(category => (
             <section className={classes.category} key={category.id}>
-              {category.is_pizza_taste ? (
-                <div className={classes.header}>
-                  <div>
-                    <Typography className={classes.categoryName} variant="h6">
-                      {category.name}
-                    </Typography>
-                    {complementSizeSelected.taste_amount === 1 ? (
-                      <Typography color="textSecondary" variant="body2">
-                        Escolha 1 opção.
-                      </Typography>
-                    ) : (
-                      <Typography color="textSecondary" variant="body2">
-                        Escolha até {complementSizeSelected.taste_amount} opções.
-                      </Typography>
-                    )}
-                  </div>
-                  <div>{category.is_required && <span className={classes.chip}>Obrigatório</span>}</div>
-                </div>
-              ) : (
-                <div className={classes.header}>
-                  <div>
-                    <Typography className={classes.categoryName} variant="h6">
-                      {category.name}
-                    </Typography>
-                    {category.max_quantity === 1 ? (
-                      <Typography color="textSecondary" variant="body2">
-                        Escolha 1 opção.
-                      </Typography>
-                    ) : (
-                      <Typography color="textSecondary" variant="body2">
-                        Escolha até {category.max_quantity} opções.
-                      </Typography>
-                    )}
-                  </div>
-                  <div>{category.is_required && <span className={classes.chip}>Obrigatório</span>}</div>
-                </div>
-              )}
+              <ProductPizzaComplementHeader
+                handleSearch={handleSearch}
+                complementSizeSelected={complementSizeSelected}
+                category={category}
+              />
               <ProductPizzaComplementItem
                 category={category}
                 productId={product.id}
