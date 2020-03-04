@@ -41,12 +41,14 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-    marginTop: title ? 64 : 15,
-    marginBottom: displayBottomActions ? 72 : 0,
     paddingTop: 15,
     paddingLeft: 15,
     paddingRight: 15,
+  }),
+  form: ({ title, displayBottomActions }) => ({
     overflowY: 'auto',
+    marginTop: title ? 64 : 15,
+    marginBottom: displayBottomActions ? 72 : 0,
     [theme.breakpoints.down('md')]: {
       marginTop: title ? 56 : 15,
     },
@@ -54,9 +56,6 @@ const useStyles = makeStyles(theme => ({
       marginTop: title ? 48 : 15,
     },
   }),
-  form: {
-    overflowY: 'auto',
-  },
 }));
 
 export const DialogFullscreenFormContext = React.createContext({
