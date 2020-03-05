@@ -7,6 +7,8 @@ import { api } from 'src/services/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from 'src/store/redux/modules/user/actions';
 import Loading from '../loading/Loading';
+import GoogleIcon from '../icons/GoogleIcon';
+import FacebookIcon from '../icons/FacebookIcon';
 
 const useStyles = makeStyles({
   container: {
@@ -17,10 +19,10 @@ const useStyles = makeStyles({
     margin: '0 15px',
   },
   btnFacebookLogin: {
-    backgroundColor: '#4065b4',
+    backgroundColor: '#3a559f',
     color: '#fff',
     '&:hover': {
-      backgroundColor: '#4065b4',
+      backgroundColor: '#3a559f',
     },
   },
   btnGoogleLogin: {
@@ -43,7 +45,12 @@ const useStyles = makeStyles({
       marginBottom: 20,
     },
   },
+  startIcon: {
+    marginRight: 10,
+  },
 });
+
+let googleAuth2;
 
 export default function Login() {
   const classes = useStyles();
@@ -54,7 +61,6 @@ export default function Login() {
   const app = useContext(AppContext);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  let googleAuth2;
 
   useEffect(() => {
     if (restaurant.id)
@@ -137,10 +143,15 @@ export default function Login() {
 
     const user = data || googleUser;
 
+    const userData = {
+      name: user.getName(),
+      email: user.getEmail(),
+    };
+
     try {
-      await api().get(`user/show/${user.w3.U3}`);
+      await api().get(`user/show/${userData.email}`);
       api()
-        .post('login/google', user)
+        .post('login/google', userData)
         .then(response => {
           localStorage.setItem(process.env.TOKEN_NAME, response.data.token);
           dispatch(setUser(response.data.user));
@@ -186,11 +197,15 @@ export default function Login() {
         {restaurant.configs.facebook_login && (
           <div className={classes.buttonContent}>
             <Button
+              classes={{
+                startIcon: classes.startIcon,
+              }}
               className={classes.btnFacebookLogin}
               variant="contained"
               fullWidth
               color="primary"
               onClick={handleFacebookLogin}
+              startIcon={<FacebookIcon />}
             >
               {facebookUser ? `Continuar como ${facebookUser.name}` : 'Entrar com Facebook'}
             </Button>
@@ -199,11 +214,15 @@ export default function Login() {
         {restaurant.configs.google_login && (
           <div className={classes.buttonContent}>
             <Button
+              classes={{
+                startIcon: classes.startIcon,
+              }}
               className={classes.btnGoogleLogin}
               variant="contained"
               fullWidth
               color="primary"
               onClick={handleGoogleLogin}
+              startIcon={<GoogleIcon />}
             >
               {googleUser ? `Continuar como ${googleUser.getName()}` : 'Entrar com Google'}
             </Button>

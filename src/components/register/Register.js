@@ -100,25 +100,30 @@ export function Register({ name, email }) {
         .required('Senha é obrigatória'),
       email: yup
         .string()
+        .transform(value => {
+          return value.replace(' ', '');
+        })
         .email('Você deve informar um email válido')
         .required('O e-mail é obrigatório'),
       phone: yup
         .string()
-        .transform((value, originalValue) => {
-          return originalValue.replace(/\D/g, '');
-        })
         .min(10, 'Telefone inválido')
         .required('O telefone é obrigatório'),
       name: yup.string().required('O nome é obrigatório'),
     });
 
+    const userData = {
+      ...user,
+      email: user.email.replace(' ', ''),
+    };
+
     schema
-      .validate(user)
+      .validate(userData)
       .then(() => {
         setLoading(true);
 
         api()
-          .post('/users', user)
+          .post('/users', userData)
           .then(response => {
             setLoading(false);
             localStorage.setItem(process.env.TOKEN_NAME, response.data.token);

@@ -51,6 +51,7 @@ const useStyles = makeStyles(theme => ({
   },
   logo: {
     maxWidth: 150,
+    borderRadius: 4,
   },
   logoContainer: {
     display: 'none',
@@ -62,7 +63,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function Index() {
   const restaurant = useSelector(state => state.restaurant) || {};
-  const user = useSelector(state => state.user);
   const classes = useStyles();
 
   return (
@@ -76,11 +76,12 @@ export default function Index() {
         )}
         <div className={classes.restaurant}>
           <Typography variant="h6">{restaurant.name}</Typography>
-          <Typography variant="body1">{restaurant.description}</Typography>
+          <Typography variant="body1" color="textSecondary">
+            {restaurant.description}
+          </Typography>
         </div>
         <div className={classes.user}>
-          {/*   <Typography>Seja bem-vindo{user.name && <span>{`, ${user.name}`}</span>}</Typography> */}
-          <Button variant="contained" color="primary" size="large" component={Link} href="/menu">
+          <Button variant="contained" color="primary" component={Link} href="/menu">
             Acessar cardápio
           </Button>
         </div>
