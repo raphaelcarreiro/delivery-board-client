@@ -6,6 +6,7 @@ const useStyles = makeStyles({
     backgroundColor: '#fff',
     width: 25,
     height: 25,
+    display: 'flex',
   },
 });
 
