@@ -41,12 +41,16 @@ const useStyles = makeStyles(theme => ({
   productData: {
     marginBottom: 15,
     marginTop: 10,
+    display: 'flex',
+    [theme.breakpoints.down('sm')]: {
+      flexWrap: 'wrap',
+    },
   },
   annotationContainer: {
     marginTop: 15,
   },
   imageWrapper: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'flex',
       justifyContent: 'center',
       width: '100%',
@@ -146,7 +150,7 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
       )}
       <Grid container className={classes.container} justify="center">
         <Grid item xs={12}>
-          <Grid item xs={12} container direction="row" className={classes.productData}>
+          <div className={classes.productData}>
             <div className={classes.imageWrapper}>
               <div className={classes.imageContainer}>
                 <img
@@ -167,7 +171,7 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
                 {product.formattedPrice}
               </Typography>
             </div>
-          </Grid>
+          </div>
           <Grid item xs={12}>
             {product.additional.length > 0 && (
               <ProductViewAdditional additional={product.additional} handleClickAdditional={handleClickAdditional} />
