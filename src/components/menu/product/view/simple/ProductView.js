@@ -12,18 +12,17 @@ import ImagePreview from 'src/components/image-preview/ImagePreview';
 const useStyles = makeStyles(theme => ({
   imageContainer: {
     width: 200,
-    maxHeight: 300,
+    height: 300,
     marginRight: 20,
     marginBottom: 10,
     borderRadius: 4,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   image: {
-    width: 195,
-    backgroundColor: '#eee',
-    borderRadius: 4,
+    width: '100%',
     cursor: 'zoom-in',
   },
   container: {

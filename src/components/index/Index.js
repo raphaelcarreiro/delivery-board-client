@@ -86,13 +86,13 @@ export default function Index() {
           </Button>
         </div>
         <div>
-          {!restaurant.is_open && (
+          {/*! restaurant.is_open && (
             <div className={classes.closed}>
               <Typography variant="body1">
                 Restaurante fechado, mas fique à vontade para navegar em nosso cardápio.
               </Typography>
             </div>
-          )}
+          ) */}
           <Typography variant="body1" color="textSecondary">
             {restaurant.working_hours}
           </Typography>

@@ -83,7 +83,7 @@ export default function Login() {
   }, [restaurant]);
 
   useEffect(() => {
-    if (restaurant)
+    if (restaurant.id)
       if (restaurant.configs.google_login) {
         gapi.load('auth2', async () => {
           await gapi.auth2.init({
@@ -194,39 +194,47 @@ export default function Login() {
       {loading && <Loading background="rgba(250,250,250,0.5)" />}
       <Grid item xl={2} xs={12} md={4} lg={3} sm={5} container alignItems="center" direction="column">
         <Typography variant="h6">Como deseja continuar?</Typography>
-        {restaurant.configs.facebook_login && (
-          <div className={classes.buttonContent}>
-            <Button
-              classes={{
-                startIcon: classes.startIcon,
-              }}
-              className={classes.btnFacebookLogin}
-              variant="contained"
-              fullWidth
-              color="primary"
-              onClick={handleFacebookLogin}
-              startIcon={<FacebookIcon />}
-            >
-              {facebookUser ? `Continuar como ${facebookUser.name}` : 'Entrar com Facebook'}
-            </Button>
-          </div>
+        {restaurant.id && (
+          <>
+            {restaurant.configs.facebook_login && (
+              <div className={classes.buttonContent}>
+                <Button
+                  classes={{
+                    startIcon: classes.startIcon,
+                  }}
+                  className={classes.btnFacebookLogin}
+                  variant="contained"
+                  fullWidth
+                  color="primary"
+                  onClick={handleFacebookLogin}
+                  startIcon={<FacebookIcon />}
+                >
+                  {facebookUser ? `Continuar como ${facebookUser.name}` : 'Entrar com Facebook'}
+                </Button>
+              </div>
+            )}
+          </>
         )}
-        {restaurant.configs.google_login && (
-          <div className={classes.buttonContent}>
-            <Button
-              classes={{
-                startIcon: classes.startIcon,
-              }}
-              className={classes.btnGoogleLogin}
-              variant="contained"
-              fullWidth
-              color="primary"
-              onClick={handleGoogleLogin}
-              startIcon={<GoogleIcon />}
-            >
-              {googleUser ? `Continuar como ${googleUser.getName()}` : 'Entrar com Google'}
-            </Button>
-          </div>
+        {restaurant.id && (
+          <>
+            {restaurant.configs.google_login && (
+              <div className={classes.buttonContent}>
+                <Button
+                  classes={{
+                    startIcon: classes.startIcon,
+                  }}
+                  className={classes.btnGoogleLogin}
+                  variant="contained"
+                  fullWidth
+                  color="primary"
+                  onClick={handleGoogleLogin}
+                  startIcon={<GoogleIcon />}
+                >
+                  {googleUser ? `Continuar como ${googleUser.getName()}` : 'Entrar com Google'}
+                </Button>
+              </div>
+            )}
+          </>
         )}
         <div className={classes.buttonContent}>
           <Button color="primary" variant="contained" fullWidth onClick={handleEmailPasswordClick}>

@@ -28,7 +28,6 @@ const useStyles = makeStyles(theme => ({
   img: {
     width: 100,
     borderRadius: 4,
-    backgroundColor: '#ccc',
     cursor: 'zoom-in',
   },
   productData: {

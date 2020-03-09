@@ -14,10 +14,15 @@ const useStyles = makeStyles({
     left: 0,
     backgroundColor: '#fafafa',
     zIndex: 1500,
+    flexDirection: 'column',
   },
   progress: {
     width: 250,
     textAlign: 'center',
+  },
+  text: {
+    position: 'absolute',
+    bottom: 25,
   },
 });
 
@@ -27,8 +32,10 @@ export default function InitialLoading() {
     <div className={classes.container}>
       <div className={classes.progress}>
         <LinearProgress />
-        <Typography variant="h6" color="textSecondary" />
       </div>
+      <Typography className={classes.text} variant="body1" color="textSecondary">
+        Delivery
+      </Typography>
     </div>
   );
 }
