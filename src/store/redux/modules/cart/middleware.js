@@ -5,6 +5,7 @@ const saveCartAtLocalStorage = cart => {
 };
 
 export const cartMiddlware = store => next => action => {
+  // actions para atualizar total e salvar carrinho em local storage
   const actionsToSaveCart = [
     '@cart/ADD_PRODUCT',
     '@cart/REMOVE_PRODUCT',
@@ -12,14 +13,19 @@ export const cartMiddlware = store => next => action => {
     '@cart/RESTORE_CART',
     '@cart/SET_COUPON',
     '@cart/REMOVE_COUPON',
+    '@cart/SET_CART',
   ];
 
+  // cria histórico para recuperar item excluído do carrinho
   if (action.type === '@cart/REMOVE_PRODUCT') {
     const cart = store.getState().cart;
     store.dispatch(createHistory(cart.products));
   }
 
-  if (actionsToSaveCart.includes(action.type)) {
+  next(action);
+
+  // atualiza as configurações do restaurante no carrinho para calculos
+  if (action.type === '@restaurant/SET_RESTAURANT' || action.type === '@cart/SET_CART') {
     const { configs } = store.getState().restaurant;
     store.dispatch(
       setConfigs({
@@ -31,15 +37,15 @@ export const cartMiddlware = store => next => action => {
     );
   }
 
-  next(action);
-
+  // atualiza total do carrinho de acordo com a action emitida
   if (actionsToSaveCart.includes(action.type)) {
     const cart = store.getState().cart;
     const order = store.getState().order;
-    store.dispatch(updateTotal(order.shipment.shipment_method));
+    store.dispatch(updateTotal(order.shipment.shipment_method || 'delivery'));
     saveCartAtLocalStorage(cart);
   }
 
+  // salva o carrinho em local storage
   if (actionsToSaveCart.includes(action.type)) {
     const cart = store.getState().cart;
     saveCartAtLocalStorage(cart);

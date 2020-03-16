@@ -17,6 +17,7 @@ const useStyles = makeStyles(theme => ({
     background: `url(${src}) no-repeat`,
     filter: 'blur(20px)',
     backgroundSize: 'cover',
+    backgroundPosition: 'center',
   }),
   imageContainer: {
     display: 'flex',

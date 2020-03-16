@@ -112,18 +112,13 @@ export function Register({ name, email }) {
       name: yup.string().required('O nome é obrigatório'),
     });
 
-    const userData = {
-      ...user,
-      email: user.email.replace(' ', ''),
-    };
-
     schema
-      .validate(userData)
+      .validate(user)
       .then(() => {
         setLoading(true);
 
         api()
-          .post('/users', userData)
+          .post('/users', user)
           .then(response => {
             setLoading(false);
             localStorage.setItem(process.env.TOKEN_NAME, response.data.token);

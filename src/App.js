@@ -115,12 +115,18 @@ function App({ pageProps, component: Component }) {
           setRestaurant({
             ..._restaurant,
             configs: {
-              ...restaurant.configs,
-              formattedTax: moneyFormat(restaurant.configs.tax_value),
-              formattedOrderMinimumValue: moneyFormat(restaurant.configs.order_minimum_value),
+              ..._restaurant.configs,
+              formattedTax: moneyFormat(_restaurant.configs.tax_value),
+              formattedOrderMinimumValue: moneyFormat(_restaurant.configs.order_minimum_value),
             },
           })
         );
+
+        const cart = JSON.parse(localStorage.getItem(process.env.LOCALSTORAGE_CART));
+        if (cart) {
+          dispatch(setCart(cart));
+        }
+
         setTheme(createTheme(_restaurant.primary_color, _restaurant.secondary_color));
 
         if (configs.google_analytics_id) {
@@ -155,13 +161,6 @@ function App({ pageProps, component: Component }) {
           ...payload,
         })
       );
-
-    const cart = JSON.parse(localStorage.getItem(process.env.LOCALSTORAGE_CART));
-
-    if (cart) {
-      dispatch(setCart(cart));
-      dispatch(updateTotal('delivery'));
-    }
 
     window.addEventListener('resize', handleResize);
     setIsMobile(mobileCheck());

@@ -80,7 +80,7 @@ export default function Cart() {
     }
 
     if (restaurant.configs.order_minimum_value > cart.subtotal && restaurant.configs.tax_mode !== 'order_value') {
-      messaging.handleOpen(`O valor mínimo do pedido é ${restaurant.formattedMinimumOrder}`);
+      messaging.handleOpen(`O valor mínimo do pedido é ${restaurant.configs.formattedOrderMinimumValue}`);
       return;
     }
 

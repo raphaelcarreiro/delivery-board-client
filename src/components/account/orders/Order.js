@@ -110,17 +110,20 @@ const useStyles = makeStyles(theme => ({
       display: 'none',
     },
   },
-  totalsLabel: {
-    display: 'inline-block',
-    width: 100,
-    textAlign: 'left',
+  total: {
+    marginTop: 5,
   },
   totals: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gridGap: 6,
-    '& p, h5': {
-      textAlign: 'right',
+    '& p': {
+      lineHeight: '15px',
+    },
+    '& div': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
     },
   },
   historyContent: {
@@ -176,6 +179,7 @@ export default function Order({ cryptId }) {
           formattedId,
           formattedDate: format(date, "PP 'às' p", { locale: ptbr }),
           formattedChange: moneyFormat(response.data.change),
+          formattedTax: moneyFormat(response.data.tax),
           products: response.data.products.map(product => {
             product.formattedFinalPrice = moneyFormat(product.final_price);
             product.formattedPrice = moneyFormat(product.price);
@@ -316,11 +320,19 @@ export default function Order({ cryptId }) {
                   <Typography>{order.formattedDiscount}</Typography>
                 </div>
                 <div>
+                  <Typography>Taxa de entrega</Typography>
+                </div>
+                <div>
+                  <Typography>{order.formattedTax}</Typography>
+                </div>
+                <div className={classes.total}>
                   <Typography>Total</Typography>
                 </div>
-                <Typography variant="h5">
-                  <strong>{order.formattedTotal}</strong>
-                </Typography>
+                <div className={classes.total}>
+                  <Typography variant="h5">
+                    <strong>{order.formattedTotal}</strong>
+                  </Typography>
+                </div>
               </div>
             </div>
           </div>
