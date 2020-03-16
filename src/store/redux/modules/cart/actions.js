@@ -72,3 +72,10 @@ export function removeCoupon() {
     type: '@cart/REMOVE_COUPON',
   };
 }
+
+export function updateTotal(shipmentMethod) {
+  return {
+    type: '@cart/UPDATE_TOTAL',
+    shipmentMethod,
+  };
+}

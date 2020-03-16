@@ -1,4 +1,4 @@
-import { createHistory, setConfigs } from './actions';
+import { createHistory, setConfigs, updateTotal } from './actions';
 
 const saveCartAtLocalStorage = cart => {
   localStorage.setItem(process.env.LOCALSTORAGE_CART, JSON.stringify(cart));
@@ -24,11 +24,21 @@ export const cartMiddlware = store => next => action => {
     store.dispatch(
       setConfigs({
         pizza_calculate: configs.pizza_calculate,
+        tax_mode: configs.tax_mode,
+        tax_value: configs.tax_value,
+        order_minimum_value: configs.order_minimum_value,
       })
     );
   }
 
   next(action);
+
+  if (actionsToSaveCart.includes(action.type)) {
+    const cart = store.getState().cart;
+    const order = store.getState().order;
+    store.dispatch(updateTotal(order.shipment.shipment_method));
+    saveCartAtLocalStorage(cart);
+  }
 
   if (actionsToSaveCart.includes(action.type)) {
     const cart = store.getState().cart;

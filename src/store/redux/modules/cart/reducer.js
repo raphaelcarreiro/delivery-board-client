@@ -10,6 +10,7 @@ export const INITIAL_STATE = {
   discount: 0,
   discountPercent: 0,
   subtotal: 0,
+  tax: 0,
 };
 
 export default function cart(state = INITIAL_STATE, action) {
@@ -104,39 +105,19 @@ export default function cart(state = INITIAL_STATE, action) {
         },
       ];
 
-      const subtotal = products.reduce((sum, value) => sum + value.final_price, 0);
-      const discount = subtotal * (state.discountPercent / 100);
-      const total = subtotal - discount;
-
       return {
         ...state,
         product: null,
         products,
-        subtotal,
-        total,
-        discount,
-        formattedTotal: moneyFormat(total),
-        formattedDiscount: moneyFormat(discount),
-        formattedSubtotal: moneyFormat(subtotal),
       };
     }
 
     case '@cart/REMOVE_PRODUCT': {
       const products = state.products.filter(product => product.uid !== action.productUid);
 
-      const subtotal = products.reduce((sum, value) => sum + value.final_price, 0);
-      const discount = subtotal * (state.discountPercent / 100);
-      const total = subtotal - discount;
-
       return {
         ...state,
         products,
-        subtotal,
-        total,
-        discount,
-        formattedTotal: moneyFormat(total),
-        formattedDiscount: moneyFormat(discount),
-        formattedSubtotal: moneyFormat(subtotal),
       };
     }
 
@@ -220,36 +201,16 @@ export default function cart(state = INITIAL_STATE, action) {
         return product;
       });
 
-      const subtotal = products.reduce((sum, value) => sum + value.final_price, 0);
-      const discount = subtotal * (state.discountPercent / 100);
-      const total = subtotal - discount;
-
       return {
         ...state,
         products,
-        subtotal,
-        total,
-        discount,
-        formattedTotal: moneyFormat(total),
-        formattedDiscount: moneyFormat(discount),
-        formattedSubtotal: moneyFormat(subtotal),
       };
     }
 
     case '@cart/RESTORE_CART': {
-      const subtotal = state.history.reduce((sum, value) => sum + value.final_price, 0);
-      const discount = subtotal * (state.discountPercent / 100);
-      const total = subtotal - discount;
-
       return {
         ...state,
         products: state.history,
-        subtotal,
-        total,
-        discount,
-        formattedTotal: moneyFormat(total),
-        formattedDiscount: moneyFormat(discount),
-        formattedSubtotal: moneyFormat(subtotal),
       };
     }
 
@@ -276,35 +237,47 @@ export default function cart(state = INITIAL_STATE, action) {
     }
 
     case '@cart/SET_COUPON': {
-      const subtotal = state.products.reduce((sum, value) => sum + value.final_price, 0);
-      const discount = subtotal * (action.coupon.discount / 100);
-      const total = subtotal - discount;
-
       return {
         ...state,
-        coupon: action.coupon.name,
-        subtotal,
-        total,
-        discount,
-        discountPercent: action.coupon.discount,
-        formattedTotal: moneyFormat(total),
-        formattedDiscount: moneyFormat(discount),
-        formattedSubtotal: moneyFormat(subtotal),
+        coupon: action.coupon,
       };
     }
 
     case '@cart/REMOVE_COUPON': {
-      const total = state.products.reduce((sum, value) => sum + value.final_price, 0);
-
       return {
         ...state,
         coupon: null,
-        subtotal: total,
+      };
+    }
+
+    case '@cart/UPDATE_TOTAL': {
+      const { configs } = state;
+      const { coupon } = state;
+      let tax = 0;
+      let total = 0;
+      const subtotal = state.products.reduce((sum, value) => sum + value.final_price, 0);
+      const discount = coupon ? subtotal * (coupon.discount / 100) : 0;
+      if (configs.tax_mode === 'order_value') {
+        if (action.shipmentMethod === 'delivery') {
+          tax = configs.tax_value > 0 && subtotal < configs.order_minimum_value ? configs.tax_value : 0;
+          total = subtotal < configs.order_minimum_value ? subtotal - discount + tax : subtotal - discount;
+        } else {
+          total = subtotal - discount;
+        }
+      } else {
+        total = subtotal - discount;
+      }
+
+      return {
+        ...state,
+        tax,
+        subtotal,
         total,
-        discount: 0,
-        discountPercent: 0,
+        discount,
+        formattedSubtotal: moneyFormat(subtotal),
+        formattedDiscount: moneyFormat(discount),
+        formattedTax: moneyFormat(tax),
         formattedTotal: moneyFormat(total),
-        formattedDiscount: moneyFormat(0),
       };
     }
 

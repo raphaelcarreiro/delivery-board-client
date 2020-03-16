@@ -14,7 +14,7 @@ import { verifyToken } from './helpers/verifyToken';
 import Sidebar from './components/sidebar/Sidebar';
 import InitialLoading from './components/loading/InitialLoading';
 import Checkout from './components/layout/Checkout';
-import { setCart } from 'src/store/redux/modules/cart/actions';
+import { setCart, updateTotal } from 'src/store/redux/modules/cart/actions';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import { createTheme } from 'src/helpers/createTheme';
@@ -24,6 +24,7 @@ import { LinearProgress } from '@material-ui/core';
 import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
 import { getFirebaseMessaging, firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
 import reactGA from 'react-ga';
+import { moneyFormat } from './helpers/numberFormat';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -110,7 +111,16 @@ function App({ pageProps, component: Component }) {
         const _restaurant = response.data;
         const { configs } = _restaurant;
 
-        dispatch(setRestaurant(_restaurant));
+        dispatch(
+          setRestaurant({
+            ..._restaurant,
+            configs: {
+              ...restaurant.configs,
+              formattedTax: moneyFormat(restaurant.configs.tax_value),
+              formattedOrderMinimumValue: moneyFormat(restaurant.configs.order_minimum_value),
+            },
+          })
+        );
         setTheme(createTheme(_restaurant.primary_color, _restaurant.secondary_color));
 
         if (configs.google_analytics_id) {
@@ -148,7 +158,10 @@ function App({ pageProps, component: Component }) {
 
     const cart = JSON.parse(localStorage.getItem(process.env.LOCALSTORAGE_CART));
 
-    if (cart) dispatch(setCart(cart));
+    if (cart) {
+      dispatch(setCart(cart));
+      dispatch(updateTotal('delivery'));
+    }
 
     window.addEventListener('resize', handleResize);
     setIsMobile(mobileCheck());

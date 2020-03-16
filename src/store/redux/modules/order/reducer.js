@@ -13,6 +13,7 @@ const INITIAL_STATE = {
     cpf: '',
   },
   coupon: null,
+  tax: 0,
 };
 
 export default function order(state = INITIAL_STATE, action) {
@@ -104,6 +105,13 @@ export default function order(state = INITIAL_STATE, action) {
       return {
         ...state,
         coupon: action.coupon,
+      };
+    }
+
+    case '@order/SET_TAX': {
+      return {
+        ...state,
+        tax: action.tax,
       };
     }
 

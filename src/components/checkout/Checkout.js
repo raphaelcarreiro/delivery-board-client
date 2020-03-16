@@ -8,6 +8,7 @@ import {
   setChange,
   clearCard,
   setCoupon,
+  setTax,
 } from 'src/store/redux/modules/order/actions';
 import Shipment from './steps/shipment/Shipment';
 import { setUser } from 'src/store/redux/modules/user/actions';
@@ -183,7 +184,13 @@ export default function Checkout() {
 
   useEffect(() => {
     if (restaurant.id) {
-      if (cart.total < restaurant.minimum_order && currentStep.id !== 'STEP_SUCCESS' && cart.products.length > 0) {
+      dispatch(setTax(cart.tax));
+      if (
+        cart.subtotal < restaurant.configs.order_minimum_value &&
+        restaurant.configs.tax_mode !== 'order_value' &&
+        currentStep.id !== 'STEP_SUCCESS' &&
+        cart.products.length > 0
+      ) {
         messaging.handleOpen(`Valor mínimo do pedido deve ser ${restaurant.formattedMinimumOrder}`);
         router.push('/menu');
       }
@@ -237,7 +244,7 @@ export default function Checkout() {
   }, [cart]);
 
   function handleSubmitOrder() {
-    if (cart.total < restaurant.minimum_order) {
+    if (cart.subtotal < restaurant.configs.order_minimum_value && restaurant.configs.tax_mode !== 'order_value') {
       messaging.handleOpen(`Valor mínimo do pedido é ${restaurant.formattedMinimumOrder}`, null, { marginBottom: 47 });
       return;
     }

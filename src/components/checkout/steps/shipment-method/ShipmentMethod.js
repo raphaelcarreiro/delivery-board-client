@@ -4,6 +4,7 @@ import { Button } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import { CheckoutContext } from '../../Checkout';
 import { setCustomerCollect, orderChange, setShipmentMethod } from 'src/store/redux/modules/order/actions';
+import { updateTotal } from 'src/store/redux/modules/cart/actions';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -38,11 +39,13 @@ export default function ShipmentMethod() {
 
   function handleSetCustomerCollect() {
     dispatch(setShipmentMethod('customer_collect'));
+    dispatch(updateTotal('customer_collect')); // update cart total
     checkout.handleStepNext();
   }
 
   function handleSetDelivery() {
     dispatch(setShipmentMethod('delivery'));
+    dispatch(updateTotal('delivery')); // update cart total
     checkout.handleStepNext();
   }
 

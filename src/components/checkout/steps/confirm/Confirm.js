@@ -159,6 +159,11 @@ export default function Confirm() {
           <Typography variant="h6" className={classes.total}>
             {cart.formattedTotal}
           </Typography>
+          {cart.tax > 0 && (
+            <Typography color="textSecondary" variant="body2">
+              *Este valor inclui a taxa de {cart.formattedTax} para a entrega
+            </Typography>
+          )}
         </div>
       </div>
       <div className={classes.action}>

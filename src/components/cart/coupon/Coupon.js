@@ -31,7 +31,7 @@ export default function Coupon({ setClosedCouponView }) {
   const classes = useStyles();
   const cart = useSelector(state => state.cart);
   const dispatch = useDispatch();
-  const [cartCoupon, setCartCoupon] = useState(cart.coupon || '');
+  const [cartCoupon, setCartCoupon] = useState(cart.coupon ? cart.coupon.name : '');
   const messaging = useContext(MessagingContext);
   const [loading, setLoading] = useState(false);
 

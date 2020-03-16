@@ -74,3 +74,10 @@ export function setCoupon(coupon) {
     coupon,
   };
 }
+
+export function setTax(tax) {
+  return {
+    type: '@order/SET_TAX',
+    tax,
+  };
+}

@@ -29,12 +29,7 @@ export default function CartCouponButton({ setCouponView }) {
   return (
     <div className={classes.coupon}>
       {cart.coupon ? (
-        <Chip
-          avatar={<MoneyOffIcon />}
-          label={`Cupom ${cart.coupon}`}
-          onDelete={handleRemoveCoupon}
-          variant="outlined"
-        />
+        <Chip label={`Cupom ${cart.coupon.name}`} onDelete={handleRemoveCoupon} variant="default" color="secondary" />
       ) : (
         <Button variant="text" color="primary" onClick={() => setCouponView(true)}>
           Aplicar cupom
