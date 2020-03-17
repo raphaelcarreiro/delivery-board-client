@@ -53,8 +53,6 @@ function sitemapGenerator() {
       console.log(err);
     }
   });
-
-  console.log('sitemap.xml was created');
 }
 
 module.exports = sitemapGenerator;
