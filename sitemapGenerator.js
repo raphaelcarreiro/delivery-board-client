@@ -36,26 +36,25 @@ function sitemapGenerator() {
     })
     .then(response => {
       const categories = response.data;
-
       categories.forEach(category => {
         sitemap
           .ele('url')
           .ele('loc')
           .txt(`${process.env.PUBLIC_URL}/menu/${category.url}`);
       });
-
-      sitemap.end({ pretty: true });
-      fs.writeFile(`public/sitemap.xml`, sitemap, 'utf8', err => {
-        if (err) {
-          console.log(err);
-        }
-      });
-
-      console.log('sitemap.xml was created');
     })
     .catch(() => {
       console.log('There was an error on create sitemap.xml');
     });
+
+  sitemap.end({ pretty: true });
+  fs.writeFile(`public/sitemap.xml`, sitemap, 'utf8', err => {
+    if (err) {
+      console.log(err);
+    }
+  });
+
+  console.log('sitemap.xml was created');
 }
 
 module.exports = sitemapGenerator;
