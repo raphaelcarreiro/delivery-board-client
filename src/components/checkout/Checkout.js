@@ -191,7 +191,7 @@ export default function Checkout() {
         currentStep.id !== 'STEP_SUCCESS' &&
         cart.products.length > 0
       ) {
-        messaging.handleOpen(`Valor mínimo do pedido deve ser ${restaurant.formattedMinimumOrder}`);
+        messaging.handleOpen(`Valor mínimo do pedido deve ser ${restaurant.configs.formattedOrderMinimumValue}`);
         router.push('/menu');
       }
     }
@@ -245,7 +245,9 @@ export default function Checkout() {
 
   function handleSubmitOrder() {
     if (cart.subtotal < restaurant.configs.order_minimum_value && restaurant.configs.tax_mode !== 'order_value') {
-      messaging.handleOpen(`Valor mínimo do pedido é ${restaurant.formattedMinimumOrder}`, null, { marginBottom: 47 });
+      messaging.handleOpen(`Valor mínimo do pedido deve ser ${restaurant.configs.formattedOrderMinimumValue}`, null, {
+        marginBottom: 47,
+      });
       return;
     }
     setSaving(true);
