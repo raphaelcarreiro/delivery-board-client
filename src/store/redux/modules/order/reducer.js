@@ -1,3 +1,6 @@
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+
 const INITIAL_STATE = {
   shipment: {},
   customer: null,
@@ -112,6 +115,17 @@ export default function order(state = INITIAL_STATE, action) {
       return {
         ...state,
         tax: action.tax,
+      };
+    }
+
+    case '@order/SET_SCHEDULE': {
+      return {
+        ...state,
+        shipment: {
+          ...state.shipment,
+          scheduled_at: action.date,
+          formattedScheduledAt: action.date ? format(action.date, 'HH:mm', { locale: ptBR }) : null,
+        },
       };
     }
 

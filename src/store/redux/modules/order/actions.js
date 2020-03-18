@@ -81,3 +81,10 @@ export function setTax(tax) {
     tax,
   };
 }
+
+export function setSchedule(date) {
+  return {
+    type: '@order/SET_SCHEDULE',
+    date,
+  };
+}

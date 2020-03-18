@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItem, Typography, IconButton } from '@material-ui/core';
-import { orderStatus } from './orderStatus';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { List, ListItem, Typography } from '@material-ui/core';
 import { parseISO, formatDistanceStrict } from 'date-fns';
 import ptbr from 'date-fns/locale/pt-BR';
 import PropTypes from 'prop-types';
@@ -97,7 +95,7 @@ function OrderList({ orders }) {
             as={`/account/orders/${order.encrypted_id}`}
             component={Link}
           >
-            <span className={`${classes.status} ${classes[order.status]}`}>{orderStatus[order.status]}</span>
+            <span className={`${classes.status} ${classes[order.status]}`}>{order.statusName}</span>
             <Typography variant="body1" color="primary">
               Pedido {order.formattedId}
             </Typography>

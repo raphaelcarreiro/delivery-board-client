@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import { CheckoutContext } from '../../Checkout';
-import { setCustomerCollect, orderChange, setShipmentMethod } from 'src/store/redux/modules/order/actions';
+import { setShipmentMethod } from 'src/store/redux/modules/order/actions';
 import { updateTotal } from 'src/store/redux/modules/cart/actions';
+import ShipmentCollectSchedule from './ShipmentCollectSchedule';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -36,11 +37,12 @@ export default function ShipmentMethod() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const checkout = useContext(CheckoutContext);
+  const [dialogCollectSchedule, setDialogSchecule] = useState(false);
 
   function handleSetCustomerCollect() {
     dispatch(setShipmentMethod('customer_collect'));
     dispatch(updateTotal('customer_collect')); // update cart total
-    checkout.handleStepNext();
+    setDialogSchecule(true);
   }
 
   function handleSetDelivery() {
@@ -49,16 +51,24 @@ export default function ShipmentMethod() {
     checkout.handleStepNext();
   }
 
+  function handleDialogClose() {
+    setDialogSchecule(false);
+    checkout.handleStepNext();
+  }
+
   return (
-    <div className={classes.container}>
-      <div className={classes.actions}>
-        <Button variant="outlined" color="primary" size="large" onClick={handleSetCustomerCollect}>
-          Quero retirar
-        </Button>
-        <Button variant="outlined" color="primary" size="large" onClick={handleSetDelivery}>
-          Quero receber em casa
-        </Button>
+    <>
+      {dialogCollectSchedule && <ShipmentCollectSchedule onExited={handleDialogClose} />}
+      <div className={classes.container}>
+        <div className={classes.actions}>
+          <Button variant="outlined" color="primary" size="large" onClick={handleSetCustomerCollect}>
+            Quero retirar
+          </Button>
+          <Button variant="outlined" color="primary" size="large" onClick={handleSetDelivery}>
+            Quero receber em casa
+          </Button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
