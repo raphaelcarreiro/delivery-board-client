@@ -10,6 +10,7 @@ import PageHeader from '../../pageHeader/PageHeader';
 import CustomAppbar from '../../appbar/CustomAppbar';
 import { formatId } from 'src/helpers/formatOrderId';
 import { orderStatusName } from './orderStatus';
+import NoData from 'src/components/nodata/NoData';
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -49,15 +50,21 @@ function Orders() {
   return (
     <>
       <CustomAppbar title="Meus pedidos" />
+      <PageHeader title="Meus pedidos" description="Acompanhe seus pedidos" />
       {loading ? (
         <Loading />
       ) : (
-        <Grid container>
-          <PageHeader title="Meus pedidos" description="Acompanhe seus pedidos" />
-          <Grid item xs={12}>
-            <OrderList orders={orders} />
-          </Grid>
-        </Grid>
+        <>
+          {orders.length > 0 ? (
+            <Grid container>
+              <Grid item xs={12}>
+                <OrderList orders={orders} />
+              </Grid>
+            </Grid>
+          ) : (
+            <NoData message="Nenhum pedido para mostrar." />
+          )}
+        </>
       )}
     </>
   );

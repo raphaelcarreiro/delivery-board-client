@@ -8,6 +8,9 @@ const useStyles = makeStyles({
     height: 25,
     display: 'flex',
   },
+  img: {
+    width: 25,
+  },
 });
 
 export default function FacebookIcon() {
@@ -15,7 +18,7 @@ export default function FacebookIcon() {
 
   return (
     <div className={classes.container}>
-      <img src="/images/facebook_icon.png" alt="Google Logo" width="25px" />
+      <img src="/images/facebook_icon.png" alt="Google Logo" className={classes.img} />
     </div>
   );
 }

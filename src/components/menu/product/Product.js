@@ -128,7 +128,7 @@ export default function Product({ products, categoryName, categoryUrl }) {
     <>
       <Grid item xs={12} className={classes.pageHeader}>
         <div>
-          <Typography variant="h6" color="primary">
+          <Typography variant="h5" color="primary">
             {categoryName}
           </Typography>
           {filteredProducts.length > 0 ? (

@@ -141,7 +141,7 @@ export default function Login() {
   async function handleAppLoginWithGoogle(data) {
     setLoading(true);
 
-    const user = data || googleUser;
+    const user = data ? data.getBasicProfile() : googleUser;
 
     const userData = {
       name: user.getName(),
