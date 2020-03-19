@@ -9,6 +9,7 @@ import { Grid } from '@material-ui/core';
 import PageHeader from '../../pageHeader/PageHeader';
 import CustomAppbar from '../../appbar/CustomAppbar';
 import { formatId } from 'src/helpers/formatOrderId';
+import { orderStatusName } from './orderStatus';
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -34,6 +35,7 @@ function Orders() {
         formattedTotal: moneyFormat(order.total),
         formattedDate: format(date, "PP 'às' p", { locale: ptbr }),
         dateDistance: formatDistanceStrict(date, new Date(), { locale: ptbr, roundingMethod: 'ceil' }),
+        statusName: orderStatusName(order.shipment.shipment_method, order.status),
       };
     });
   }

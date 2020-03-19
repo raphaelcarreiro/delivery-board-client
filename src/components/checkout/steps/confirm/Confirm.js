@@ -64,6 +64,9 @@ const useStyles = makeStyles(theme => ({
     cursor: 'pointer',
     display: 'inline-block',
   },
+  scheduledAt: {
+    fontWeight: 300,
+  },
 }));
 
 export default function Confirm() {
@@ -71,7 +74,6 @@ export default function Confirm() {
   const cart = useSelector(state => state.cart);
   const checkout = useContext(CheckoutContext);
   const mainRestaurantAddress = useSelector(state => state.restaurant).addresses.find(address => address.is_main);
-  const app = useContext(AppContext);
   const classes = useStyles();
 
   useEffect(() => {
@@ -109,15 +111,17 @@ export default function Confirm() {
             <Typography variant="h5" className={classes.title}>
               Cliente retira
             </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Endereço para retirada
-            </Typography>
             <Typography>
               {mainRestaurantAddress.address}, {mainRestaurantAddress.number}
             </Typography>
             <Typography>{mainRestaurantAddress.district}</Typography>
             <Typography>{mainRestaurantAddress.address_complement}</Typography>
             <Typography>{mainRestaurantAddress.postal_code}</Typography>
+            {order.shipment.scheduled_at && (
+              <Typography className={classes.scheduledAt}>
+                Agendado para às {order.shipment.formattedScheduledAt}
+              </Typography>
+            )}
             <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
               Alterar
             </Typography>

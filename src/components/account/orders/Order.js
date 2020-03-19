@@ -9,7 +9,7 @@ import { format, parseISO } from 'date-fns';
 import ptbr from 'date-fns/locale/pt-BR';
 import { makeStyles } from '@material-ui/core/styles';
 import { moneyFormat } from 'src/helpers/numberFormat';
-import { orderStatus } from './orderStatus';
+import { orderStatus, orderStatusName } from './orderStatus';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import io from 'socket.io-client';
 import { MessagingContext } from 'src/components/messaging/Messaging';
@@ -253,7 +253,7 @@ export default function Order({ cryptId }) {
                 <ListItem key={status.id} className={classes.historyListItem} disableGutters>
                   <span className={`${classes.historyStatus} ${classes[status.status]}`} />
                   <div className={classes.historyContent}>
-                    <Typography>{orderStatus[status.status]}</Typography>
+                    <Typography>{orderStatusName(order.shipment.shipment_method, status.status)}</Typography>
                     <Typography variant="body2" color="textSecondary" className={classes.statusDate}>
                       {status.formattedDate}
                     </Typography>
