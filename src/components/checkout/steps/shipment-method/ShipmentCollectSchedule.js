@@ -44,10 +44,15 @@ ShipmentCollectSchedule.propTypes = {
 
 export default function ShipmentCollectSchedule({ onExited }) {
   const restaurant = useSelector(state => state.restaurant);
+  const order = useSelector(state => state.order);
   const [hasSchedule, setHasSchedule] = useState(false);
   const dispatch = useDispatch();
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [scheduledAt, setScheduledAt] = useState(addMinutes(currentTime, restaurant.configs.delivery_time));
+  const [scheduledAt, setScheduledAt] = useState(
+    order.shipment.scheduled_at
+      ? order.shipment.scheduled_at
+      : addMinutes(currentTime, restaurant.configs.delivery_time)
+  );
   const classes = useStyles();
 
   useEffect(() => {

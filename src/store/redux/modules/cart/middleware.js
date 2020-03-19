@@ -14,7 +14,11 @@ export const cartMiddlware = store => next => action => {
     '@cart/SET_COUPON',
     '@cart/REMOVE_COUPON',
     '@cart/SET_CART',
+    '@order/SET_SHIPMENT_METHOD',
   ];
+
+  // actions para salvar configurações do restaurante no carrinho
+  const actionsToSetConfigs = ['@restaurant/SET_RESTAURANT', '@cart/SET_CART'];
 
   // cria histórico para recuperar item excluído do carrinho
   if (action.type === '@cart/REMOVE_PRODUCT') {
@@ -25,7 +29,7 @@ export const cartMiddlware = store => next => action => {
   next(action);
 
   // atualiza as configurações do restaurante no carrinho para calculos
-  if (action.type === '@restaurant/SET_RESTAURANT' || action.type === '@cart/SET_CART') {
+  if (actionsToSetConfigs.includes(action.type)) {
     const { configs } = store.getState().restaurant;
     store.dispatch(
       setConfigs({

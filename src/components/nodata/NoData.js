@@ -22,7 +22,9 @@ function NoData({ message, action, buttonText, secondaryMessage }) {
 
   return (
     <div className={classes.container}>
-      <Typography variant="h6" color="textSecondary">{message}</Typography>
+      <Typography variant="h5" color="textSecondary">
+        {message}
+      </Typography>
       {secondaryMessage && (
         <Typography variant="body2" color="textSecondary">
           {secondaryMessage}

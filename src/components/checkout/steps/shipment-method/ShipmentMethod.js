@@ -1,11 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
+import { ListItem, Typography } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
 import { CheckoutContext } from '../../Checkout';
-import { setShipmentMethod } from 'src/store/redux/modules/order/actions';
-import { updateTotal } from 'src/store/redux/modules/cart/actions';
+import { setShipmentMethod, setSchedule } from 'src/store/redux/modules/order/actions';
 import ShipmentCollectSchedule from './ShipmentCollectSchedule';
+import StoreIcon from '@material-ui/icons/Store';
+import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -16,20 +17,34 @@ const useStyles = makeStyles(theme => ({
   },
   actions: {
     display: 'flex',
-    '& button': {
-      marginRight: 20,
-      width: 300,
-      height: 100,
-    },
     [theme.breakpoints.down('sm')]: {
       display: 'grid',
+      width: '100%',
       gridTemplateColumns: '1fr',
       gridGap: 10,
-      '& button': {
+      '&>div': {
         margin: 0,
-        width: 280,
+        width: '100%',
       },
     },
+  },
+  button: {
+    marginRight: 20,
+    width: 350,
+    height: 100,
+    display: 'flex',
+    backgroundColor: '#fff',
+    boxShadow: '1px 1px 9px 1px #eee',
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    fontSize: 18,
+    flexDirection: 'column',
+  },
+  icon: {
+    fontSize: 38,
+    marginRight: 10,
   },
 }));
 
@@ -37,17 +52,19 @@ export default function ShipmentMethod() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const checkout = useContext(CheckoutContext);
+  const restaurant = useSelector(state => state.restaurant);
+  const order = useSelector(state => state.order);
   const [dialogCollectSchedule, setDialogSchecule] = useState(false);
 
   function handleSetCustomerCollect() {
     dispatch(setShipmentMethod('customer_collect'));
-    dispatch(updateTotal('customer_collect')); // update cart total
-    setDialogSchecule(true);
+    if (restaurant.configs.shipment_schedule) setDialogSchecule(true);
+    else checkout.handleStepNext();
   }
 
   function handleSetDelivery() {
     dispatch(setShipmentMethod('delivery'));
-    dispatch(updateTotal('delivery')); // update cart total
+    dispatch(setSchedule(null));
     checkout.handleStepNext();
   }
 
@@ -61,12 +78,15 @@ export default function ShipmentMethod() {
       {dialogCollectSchedule && <ShipmentCollectSchedule onExited={handleDialogClose} />}
       <div className={classes.container}>
         <div className={classes.actions}>
-          <Button variant="outlined" color="primary" size="large" onClick={handleSetCustomerCollect}>
-            Quero retirar
-          </Button>
-          <Button variant="outlined" color="primary" size="large" onClick={handleSetDelivery}>
-            Quero receber em casa
-          </Button>
+          <ListItem button className={classes.button} onClick={handleSetCustomerCollect}>
+            <Typography variant="h6">Quero retirar</Typography>
+            {order.shipment.scheduled_at && (
+              <Typography color="textSecondary">Agendado para as {order.shipment.formattedScheduledAt}</Typography>
+            )}
+          </ListItem>
+          <ListItem button className={classes.button} onClick={handleSetDelivery}>
+            <Typography variant="h6">Quero receber em casa</Typography>
+          </ListItem>
         </div>
       </div>
     </>
