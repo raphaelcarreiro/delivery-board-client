@@ -204,6 +204,12 @@ export default function Order({ cryptId }) {
           formattedSubtotal: moneyFormat(response.data.subtotal),
           formattedDiscount: moneyFormat(response.data.discount),
           formattedTotal: moneyFormat(response.data.total),
+          shipment: {
+            ...order.shipment,
+            formattedScheduledAt: order.shipment.scheduled_at
+              ? format(parseISO(order.shipment.scheduled_at), 'HH:mm')
+              : null,
+          },
           order_status: response.data.order_status.reverse().map(status => {
             const statusDate = parseISO(status.created_at);
             status.formattedDate = format(statusDate, "PP 'às' p", { locale: ptbr });
@@ -267,6 +273,7 @@ export default function Order({ cryptId }) {
               <Typography variant="h5" className={classes.title} gutterBottom>
                 {order.shipment.shipment_method === 'delivery' ? 'Endereço de entrega' : 'Cliente retira'}
               </Typography>
+              {order.shipment.scheduled_at && <Typography>{order.shipment.formattedScheduledAt}</Typography>}
               <Typography>
                 {order.shipment.address}, {order.shipment.number}
               </Typography>
