@@ -120,7 +120,7 @@ function OrderList({ orders }) {
                 Cliente retira
                 {order.shipment.scheduled_at && (
                   <Typography variant="body2" color="textPrimary" component="span" display="inline">
-                    {`, agendado para às ${order.shipment.formattedScheduledAt}`}
+                    {`, agendado para as ${order.shipment.formattedScheduledAt}`}
                   </Typography>
                 )}
               </Typography>

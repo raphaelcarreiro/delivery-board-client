@@ -121,7 +121,7 @@ export default function Confirm() {
             <Typography color="textSecondary">{mainRestaurantAddress.postal_code}</Typography>
             {order.shipment.scheduled_at && (
               <Typography className={classes.scheduledAt}>
-                Agendado para às {order.shipment.formattedScheduledAt}
+                Agendado para as {order.shipment.formattedScheduledAt}
               </Typography>
             )}
             <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>

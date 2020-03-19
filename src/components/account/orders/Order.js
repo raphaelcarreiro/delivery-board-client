@@ -299,7 +299,7 @@ export default function Order({ cryptId }) {
               )}
               {order.shipment.scheduled_at && (
                 <Typography variant="body2" className={classes.scheduleAt}>
-                  <WatchLaterIcon /> Agendado para às {order.shipment.formattedScheduledAt}
+                  <WatchLaterIcon /> Agendado para as {order.shipment.formattedScheduledAt}
                 </Typography>
               )}
             </div>
