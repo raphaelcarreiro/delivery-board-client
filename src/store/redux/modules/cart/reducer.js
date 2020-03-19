@@ -223,7 +223,12 @@ export default function cart(state = INITIAL_STATE, action) {
 
     case '@cart/CLEAR_CART': {
       localStorage.removeItem(process.env.LOCALSTORAGE_CART);
-      return INITIAL_STATE;
+      return {
+        ...INITIAL_STATE,
+        configs: {
+          ...state.configs,
+        },
+      };
     }
 
     case '@cart/SET_CONFIGS': {

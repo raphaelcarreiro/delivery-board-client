@@ -29,7 +29,7 @@ export default function OrderPage({ cryptId }) {
   return (
     <>
       <Head>
-        <title>Carregando...</title>
+        <title>Meus pedidos</title>
       </Head>
       {auth && <Order cryptId={cryptId} />}
     </>
