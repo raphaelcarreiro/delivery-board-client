@@ -5,6 +5,7 @@ import { parseISO, formatDistanceStrict } from 'date-fns';
 import ptbr from 'date-fns/locale/pt-BR';
 import PropTypes from 'prop-types';
 import Link from 'src/components/link/Link';
+import WatchLaterIcon from '@material-ui/icons/WatchLater';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -56,6 +57,10 @@ const useStyles = makeStyles(theme => ({
   d: { backgroundColor: '#007bff', color: '#fff' },
   c: { backgroundColor: '#6c757d', color: '#fff' },
   x: { backgroundColor: '#dc3545', color: '#fff' },
+  scheduledAt: {
+    display: 'flex',
+    alignItems: 'center',
+  },
 }));
 
 function OrderList({ orders }) {
@@ -113,6 +118,11 @@ function OrderList({ orders }) {
             {order.shipment.shipment_method === 'customer_collect' ? (
               <Typography variant="body2" color="textSecondary">
                 Cliente retira
+                {order.shipment.scheduled_at && (
+                  <Typography variant="body2" color="textPrimary" component="span" display="inline">
+                    {`, agendado para às ${order.shipment.formattedScheduledAt}`}
+                  </Typography>
+                )}
               </Typography>
             ) : (
               <Typography className={classes.address} variant="body2" color="textSecondary">

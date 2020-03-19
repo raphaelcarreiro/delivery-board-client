@@ -9,7 +9,7 @@ import { format, parseISO } from 'date-fns';
 import ptbr from 'date-fns/locale/pt-BR';
 import { makeStyles } from '@material-ui/core/styles';
 import { moneyFormat } from 'src/helpers/numberFormat';
-import { orderStatus, orderStatusName } from './orderStatus';
+import { orderStatusName } from './orderStatus';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import io from 'socket.io-client';
 import { MessagingContext } from 'src/components/messaging/Messaging';
@@ -18,8 +18,9 @@ import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import { AppContext } from 'src/App';
 import { firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
 import OrderAction from './OrderAction';
-import CartProductListComplements from 'src/components/cart/CartProductListComplements';
 import OrderProductList from './OrderProductList';
+import Link from 'src/components/link/Link';
+import WatchLaterIcon from '@material-ui/icons/WatchLater';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -129,6 +130,14 @@ const useStyles = makeStyles(theme => ({
   historyContent: {
     padding: '0 10px',
   },
+  scheduleAt: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 10,
+    '& svg': {
+      marginRight: 6,
+    },
+  },
 }));
 
 Order.propTypes = {
@@ -169,18 +178,19 @@ export default function Order({ cryptId }) {
     api()
       .get(`orders/${cryptId}`)
       .then(response => {
-        const formattedId = formatId(response.data.id);
+        const _order = response.data;
+        const formattedId = formatId(_order.id);
         document.title = `Pedido ${formattedId}`;
 
-        const date = parseISO(response.data.created_at);
+        const date = parseISO(_order.created_at);
 
         setOrder({
-          ...response.data,
+          ..._order,
           formattedId,
           formattedDate: format(date, "PP 'às' p", { locale: ptbr }),
-          formattedChange: moneyFormat(response.data.change),
-          formattedTax: moneyFormat(response.data.tax),
-          products: response.data.products.map(product => {
+          formattedChange: moneyFormat(_order.change),
+          formattedTax: moneyFormat(_order.tax),
+          products: _order.products.map(product => {
             product.formattedFinalPrice = moneyFormat(product.final_price);
             product.formattedPrice = moneyFormat(product.price);
             product.formattedProductPrice = moneyFormat(product.product_price);
@@ -201,25 +211,28 @@ export default function Order({ cryptId }) {
             });
             return product;
           }),
-          formattedSubtotal: moneyFormat(response.data.subtotal),
-          formattedDiscount: moneyFormat(response.data.discount),
-          formattedTotal: moneyFormat(response.data.total),
+          formattedSubtotal: moneyFormat(_order.subtotal),
+          formattedDiscount: moneyFormat(_order.discount),
+          formattedTotal: moneyFormat(_order.total),
           shipment: {
-            ...order.shipment,
-            formattedScheduledAt: order.shipment.scheduled_at
-              ? format(parseISO(order.shipment.scheduled_at), 'HH:mm')
+            ..._order.shipment,
+            formattedScheduledAt: _order.shipment.scheduled_at
+              ? format(parseISO(_order.shipment.scheduled_at), 'HH:mm')
               : null,
           },
-          order_status: response.data.order_status.reverse().map(status => {
+          order_status: _order.order_status.reverse().map(status => {
             const statusDate = parseISO(status.created_at);
             status.formattedDate = format(statusDate, "PP 'às' p", { locale: ptbr });
             return status;
           }),
         });
       })
-      .catch(() => {
-        messaging.handleOpen('Pedido não encontrado');
-        document.title = 'Pedido não encontrado!';
+      .catch(err => {
+        if (err.response)
+          if (err.response.status === 404) {
+            document.title = 'Pedido não encontrado!';
+            messaging.handleOpen('Pedido não encontrado');
+          } else messaging.handleOpen('Não foi possível carregar o pedido');
       })
       .finally(() => {
         setLoading(false);
@@ -271,18 +284,24 @@ export default function Order({ cryptId }) {
           <div className={classes.containderGrid2}>
             <div className={classes.section}>
               <Typography variant="h5" className={classes.title} gutterBottom>
-                {order.shipment.shipment_method === 'delivery' ? 'Endereço de entrega' : 'Cliente retira'}
+                {order.shipment.shipment_method === 'delivery' ? 'Endereço de entrega' : 'Endereço para retirada'}
               </Typography>
-              {order.shipment.scheduled_at && <Typography>{order.shipment.formattedScheduledAt}</Typography>}
               <Typography>
                 {order.shipment.address}, {order.shipment.number}
               </Typography>
               <Typography>{order.shipment.district}</Typography>
-              <Typography>{order.shipment.complement}</Typography>
-              <Typography>
+              <Typography color="textSecondary">{order.shipment.complement}</Typography>
+              <Typography color="textSecondary">
                 {order.shipment.city} - {order.shipment.region}
               </Typography>
-              {order.shipment.postal_code !== '00000000' && <Typography>{order.shipment.postal_code}</Typography>}
+              {order.shipment.postal_code !== '00000000' && (
+                <Typography color="textSecondary">{order.shipment.postal_code}</Typography>
+              )}
+              {order.shipment.scheduled_at && (
+                <Typography variant="body2" className={classes.scheduleAt}>
+                  <WatchLaterIcon /> Agendado para às {order.shipment.formattedScheduledAt}
+                </Typography>
+              )}
             </div>
             <div className={classes.section}>
               <Typography variant="h5" className={classes.title} gutterBottom>
@@ -346,9 +365,12 @@ export default function Order({ cryptId }) {
         </Grid>
       ) : (
         <div className={classes.orderNotFound}>
-          <Typography variant="h6" color="error">
-            Pedido não encontrado!
+          <Typography variant="h5" color="textSecondary" gutterBottom>
+            Não foi possível carregar o pedido. Tente novamente.
           </Typography>
+          <Link href="/menu" color="primary">
+            Voltar ao menu
+          </Link>
         </div>
       )}
     </>

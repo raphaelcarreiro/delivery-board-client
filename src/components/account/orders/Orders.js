@@ -36,6 +36,12 @@ function Orders() {
         formattedDate: format(date, "PP 'às' p", { locale: ptbr }),
         dateDistance: formatDistanceStrict(date, new Date(), { locale: ptbr, roundingMethod: 'ceil' }),
         statusName: orderStatusName(order.shipment.shipment_method, order.status),
+        shipment: {
+          ...order.shipment,
+          formattedScheduledAt: order.shipment.scheduled_at
+            ? format(parseISO(order.shipment.scheduled_at), 'HH:mm')
+            : null,
+        },
       };
     });
   }

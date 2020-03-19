@@ -14,6 +14,7 @@ export const cartMiddlware = store => next => action => {
     '@cart/SET_COUPON',
     '@cart/REMOVE_COUPON',
     '@cart/SET_CART',
+    '@order/SET_SHIPMENT_METHOD',
   ];
 
   // cria histórico para recuperar item excluído do carrinho

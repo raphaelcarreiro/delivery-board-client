@@ -1,10 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { CheckoutContext } from '../../Checkout';
-import { setShipmentMethod } from 'src/store/redux/modules/order/actions';
-import { updateTotal } from 'src/store/redux/modules/cart/actions';
+import { setShipmentMethod, setSchedule } from 'src/store/redux/modules/order/actions';
 import ShipmentCollectSchedule from './ShipmentCollectSchedule';
 
 const useStyles = makeStyles(theme => ({
@@ -37,17 +36,18 @@ export default function ShipmentMethod() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const checkout = useContext(CheckoutContext);
+  const restaurant = useSelector(state => state.restaurant);
   const [dialogCollectSchedule, setDialogSchecule] = useState(false);
 
   function handleSetCustomerCollect() {
     dispatch(setShipmentMethod('customer_collect'));
-    dispatch(updateTotal('customer_collect')); // update cart total
-    setDialogSchecule(true);
+    if (restaurant.configs.shipment_schedule) setDialogSchecule(true);
+    else checkout.handleStepNext();
   }
 
   function handleSetDelivery() {
     dispatch(setShipmentMethod('delivery'));
-    dispatch(updateTotal('delivery')); // update cart total
+    dispatch(setSchedule(null));
     checkout.handleStepNext();
   }
 
