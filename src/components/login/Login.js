@@ -7,8 +7,7 @@ import { api } from 'src/services/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from 'src/store/redux/modules/user/actions';
 import Loading from '../loading/Loading';
-import GoogleIcon from '../icons/GoogleIcon';
-import FacebookIcon from '../icons/FacebookIcon';
+import { FaFacebookF, FaGoogle } from 'react-icons/fa';
 
 const useStyles = makeStyles({
   container: {
@@ -193,7 +192,7 @@ export default function Login() {
     <div className={classes.container}>
       {loading && <Loading background="rgba(250,250,250,0.5)" />}
       <Grid item xl={2} xs={12} md={4} lg={3} sm={5} container alignItems="center" direction="column">
-        <Typography variant="h6">Como deseja continuar?</Typography>
+        <Typography variant="h5">Como deseja continuar?</Typography>
         {restaurant.id && (
           <>
             {restaurant.configs.facebook_login && (
@@ -207,7 +206,8 @@ export default function Login() {
                   fullWidth
                   color="primary"
                   onClick={handleFacebookLogin}
-                  startIcon={<FacebookIcon />}
+                  size="large"
+                  startIcon={<FaFacebookF />}
                 >
                   {facebookUser ? `Continuar como ${facebookUser.name}` : 'Entrar com Facebook'}
                 </Button>
@@ -228,7 +228,8 @@ export default function Login() {
                   fullWidth
                   color="primary"
                   onClick={handleGoogleLogin}
-                  startIcon={<GoogleIcon />}
+                  size="large"
+                  startIcon={<FaGoogle />}
                 >
                   {googleUser ? `Continuar como ${googleUser.getName()}` : 'Entrar com Google'}
                 </Button>
@@ -237,12 +238,12 @@ export default function Login() {
           </>
         )}
         <div className={classes.buttonContent}>
-          <Button color="primary" variant="contained" fullWidth onClick={handleEmailPasswordClick}>
+          <Button size="large" color="primary" variant="contained" fullWidth onClick={handleEmailPasswordClick}>
             Entrar com E-mail ou Telefone
           </Button>
         </div>
         <div className={classes.btnCreateAccount}>
-          <Button color="primary" variant="contained" fullWidth onClick={handleCreateAccountClick}>
+          <Button size="large" color="primary" variant="contained" fullWidth onClick={handleCreateAccountClick}>
             Criar conta
           </Button>
           <Button color="primary" variant="text" size="large" fullWidth onClick={handleBack}>

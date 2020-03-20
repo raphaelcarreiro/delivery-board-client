@@ -99,6 +99,9 @@ export default class MyDocument extends Document {
             }
             ul {
               width: 100%;
+              list-style: none;
+              padding: 0;
+              margin: 0;
             }
             @media (min-width: 1200px) {
               /* width */

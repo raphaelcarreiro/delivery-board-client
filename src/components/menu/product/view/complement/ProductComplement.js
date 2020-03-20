@@ -94,7 +94,7 @@ function ProductComplement({ onExited, selectedProduct, handleAddProductToCart, 
       category.product_complement_category_id = category.id;
       category.complements = category.complements.map((complement, index) => {
         complement.product_complement_id = complement.id;
-        complement.selected = false;
+        complement.selected = !!complement.selected;
         complement.formattedPrice = complement.price && moneyFormat(complement.price);
 
         complement.prices = complement.prices.map((price, index) => {
@@ -124,9 +124,20 @@ function ProductComplement({ onExited, selectedProduct, handleAddProductToCart, 
       return category;
     });
 
+    const ready = product.complement_categories.every(category => {
+      if (category.is_required) {
+        const selectedAmount = category.complements.reduce((sum, complement) => {
+          return complement.selected ? sum + 1 : sum;
+        }, 0);
+
+        return category.min_quantity <= selectedAmount;
+      }
+      return true;
+    });
+
     setProduct({
       ...product,
-      ready: false,
+      ready,
       complement_categories: categories,
     });
   }, []);

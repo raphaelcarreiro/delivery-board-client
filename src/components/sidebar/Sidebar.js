@@ -17,6 +17,7 @@ import StatusIcon from '@material-ui/icons/FiberManualRecord';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { firebaseMessagingIsSupported } from 'src/config/FirebaseConfig';
+import ChatIcon from '@material-ui/icons/Chat';
 
 const useStyles = makeStyles(theme => ({
   drawerPaper: {
@@ -211,6 +212,12 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
           <ShoppingCartIcon />
         </ListItemIcon>
         <ListItemText classes={{ primary: classes.listItemText }} primary="Carrinho" />
+      </ListItem>
+      <ListItem component={Link} href="/contact" onClick={handleClick} button>
+        <ListItemIcon className={classes.listItemIcon}>
+          <ChatIcon />
+        </ListItemIcon>
+        <ListItemText classes={{ primary: classes.listItemText }} primary="Contato" />
       </ListItem>
       {user.id ? (
         <>
