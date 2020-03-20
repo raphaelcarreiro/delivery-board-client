@@ -63,7 +63,7 @@ export default function ProductPizzaComplement({
           sizeSelected = complement;
           setComplementSizeSelected(complement);
         } else {
-          complement.selected = false;
+          complement.selected = !!complement.selected;
         }
 
         complement.prices = complement.prices.map((price, index) => {
