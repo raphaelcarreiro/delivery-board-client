@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../../store/redux/modules/user/actions';
 import { AppContext } from 'src/App';
 import Loading from '../loading/Loading';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -82,9 +83,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function LoginEmail() {
+LoginEmail.propTypes = {
+  emailParam: PropTypes.string,
+  phoneParam: PropTypes.string,
+};
+
+function LoginEmail({ emailParam, phoneParam }) {
   const classes = useStyles();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(phoneParam || emailParam);
   const [password, setPassword] = useState('');
   const [step, setStep] = useState('email');
   const [loading, setLoading] = useState(false);
@@ -99,8 +105,12 @@ function LoginEmail() {
     if (isAuthenticated()) router.push('/account');
   }, []);
 
+  useEffect(() => {
+    if (email) handleSubmit();
+  }, []);
+
   function handleSubmit(event) {
-    event.preventDefault();
+    if (event) event.preventDefault();
 
     if (step === 'email') {
       setLoading(true);
@@ -110,7 +120,7 @@ function LoginEmail() {
         .then(response => {
           setName(response.data.name);
           setStep('password');
-          messaging.handleClose();
+          // messaging.handleClose();
         })
         .catch(err => {
           if (err.response) {
@@ -180,7 +190,13 @@ function LoginEmail() {
                 {step === 'email' ? (
                   <LoginEmailStep email={email} setEmail={setEmail} />
                 ) : (
-                  <LoginPasswordStep name={name} password={password} setPassword={setPassword} />
+                  <LoginPasswordStep
+                    name={name}
+                    password={password}
+                    setPassword={setPassword}
+                    emailParam={emailParam}
+                    phoneParam={phoneParam}
+                  />
                 )}
               </div>
               <div className={step === 'email' ? classes.action : classes.actionPassword}>

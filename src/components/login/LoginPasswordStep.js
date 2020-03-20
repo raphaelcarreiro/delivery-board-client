@@ -9,9 +9,12 @@ const useStyles = makeStyles({
   name: {
     fontWeight: 400,
   },
+  info: {
+    marginTop: 6,
+  },
 });
 
-export default function LoginPasswordStep({ password, setPassword, name }) {
+export default function LoginPasswordStep({ password, setPassword, name, phoneParam, emailParam }) {
   const [showPassword, setShowPassword] = useState(false);
   const classes = useStyles();
 
@@ -24,6 +27,16 @@ export default function LoginPasswordStep({ password, setPassword, name }) {
       <Typography align="center">
         Olá <span className={classes.name}>{name}</span>!
       </Typography>
+      {phoneParam && (
+        <Typography align="center" variant="body2" className={classes.info}>
+          Encontramos um registro para esse telefone. Você se registrou em outro restaurante que usa o mesmo aplicativo.
+        </Typography>
+      )}
+      {emailParam && (
+        <Typography align="center" variant="body2" className={classes.info}>
+          Encontramos um registro para esse email. Você se registrou em outro restaurante que usa o mesmo aplicativo.
+        </Typography>
+      )}
       <TextField
         variant="outlined"
         margin="normal"
@@ -52,4 +65,6 @@ LoginPasswordStep.propTypes = {
   password: PropTypes.string.isRequired,
   setPassword: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
+  phoneParam: PropTypes.string,
+  emailParam: PropTypes.string,
 };

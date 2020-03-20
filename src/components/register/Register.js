@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: '35px',
     borderRadius: 4,
-    height: 600,
+    minHeight: 600,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -107,6 +107,9 @@ export function Register({ name, email }) {
         .required('O e-mail é obrigatório'),
       phone: yup
         .string()
+        .transform(value => {
+          return value ? value.replace(/\D/g, '') : '';
+        })
         .min(10, 'Telefone inválido')
         .required('O telefone é obrigatório'),
       name: yup.string().required('O nome é obrigatório'),
@@ -129,7 +132,12 @@ export function Register({ name, email }) {
             } else setCreated(true);
           })
           .catch(err => {
-            if (err.response) messaging.handleOpen(err.response.data.error);
+            if (err.response) {
+              messaging.handleOpen(err.response.data.error);
+              if (err.response.data.code === 'duplicated-phone')
+                router.push(`/login/email?phone=${user.phone.replace(/\D/g, '')}`);
+              if (err.response.data.code === 'duplicated-email') router.push(`/login/email?email=${user.email}`);
+            }
             setLoading(false);
           });
       })
@@ -147,7 +155,7 @@ export function Register({ name, email }) {
           <div className={classes.paper}>
             {loading && (
               <div className={classes.loading}>
-                {app.isMobile || app.windowWidth >= 960 ? (
+                {!app.isMobile || app.windowWidth >= 960 ? (
                   <LinearProgress className={classes.linearProgress} color="primary" />
                 ) : (
                   <CircularProgress color="primary" />
