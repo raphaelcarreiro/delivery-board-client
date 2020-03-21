@@ -109,7 +109,7 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
   }
 
   function handleImageMouseEnter(event) {
-    setShowImageZoom(true);
+    // setShowImageZoom(true);
   }
 
   function handleImageMouseLeave() {

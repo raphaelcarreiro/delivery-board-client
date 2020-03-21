@@ -71,6 +71,7 @@ export default function RegisterForm({ user, validation, handleChange }) {
         fullWidth
         value={user.password}
         onChange={event => handleChange('password', event.target.value)}
+        autoComplete="new-password"
       />
       <TextField
         error={!!validation.passwordConfirm}
@@ -82,6 +83,7 @@ export default function RegisterForm({ user, validation, handleChange }) {
         fullWidth
         value={user.passwordConfirm}
         onChange={event => handleChange('passwordConfirm', event.target.value)}
+        autoComplete="new-password"
       />
     </div>
   );

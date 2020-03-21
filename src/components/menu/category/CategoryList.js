@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#fff',
     boxShadow: '1px 1px 9px 1px #eee',
     borderRadius: 4,
-    height: 110,
+    minHeight: 120,
   },
   content: {
     display: 'flex',
@@ -29,22 +29,18 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-between',
     flex: 1,
   },
-  categoryIcon: {
+  imageWrapper: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: 100,
-    height: 90,
+    height: 100,
     overflow: 'hidden',
+    borderRadius: 4,
   },
   image: {
     borderRadius: 4,
-    border: `2px solid #fff`,
     width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#eee',
   },
 }));
 
@@ -78,7 +74,7 @@ export default function CategoryList({ categories }) {
                   <Typography color="textSecondary">{item.price}</Typography>
                   {item.factor && <Typography color="textSecondary">Até {item.factor} sabores</Typography>}
                 </div>
-                <div className={classes.categoryIcon}>
+                <div className={classes.imageWrapper}>
                   <img className={classes.image} src={item.image && item.image.imageUrl} alt={item.name} />
                 </div>
               </div>

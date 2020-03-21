@@ -21,11 +21,11 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 4,
     position: 'relative',
     alignItems: 'center',
-    height: 110,
+    height: 120,
   },
   img: {
     width: 100,
-    height: 90,
+    height: 100,
     borderRadius: 4,
   },
   productData: {

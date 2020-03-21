@@ -17,13 +17,14 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 10,
     borderRadius: 4,
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
     overflow: 'hidden',
   },
   image: {
     width: '100%',
     cursor: 'zoom-in',
+    borderRadius: 4,
   },
   container: {
     marginBottom: 0,

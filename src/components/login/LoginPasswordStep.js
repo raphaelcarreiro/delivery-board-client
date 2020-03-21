@@ -44,6 +44,7 @@ export default function LoginPasswordStep({ password, setPassword, name, phonePa
         placeholder={`Informe sua senha ${name}`}
         autoFocus
         fullWidth
+        autoComplete="current-password"
         value={password}
         type={showPassword ? 'text' : 'password'}
         onChange={event => setPassword(event.target.value)}

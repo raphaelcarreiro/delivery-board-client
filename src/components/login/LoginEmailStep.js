@@ -16,6 +16,7 @@ export default function LoginEmailStep({ email, setEmail }) {
         onChange={event => setEmail(event.target.value)}
         required
         margin="normal"
+        autoComplete="email"
       />
     </div>
   );

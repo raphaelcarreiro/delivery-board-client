@@ -26,9 +26,17 @@ const useStyles = makeStyles(theme => ({
     minHeight: 120,
   },
   img: {
-    width: 100,
+    width: '100%',
     borderRadius: 4,
-    cursor: 'zoom-in',
+  },
+  imageWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 100,
+    height: 100,
+    overflow: 'hidden',
+    borderRadius: 4,
   },
   productData: {
     marginLeft: 10,
@@ -62,12 +70,14 @@ export default function ProductList({ products, handleProductClick, handleOpenIm
               )}
               {product.category.has_complement && <Typography color="primary">Monte esse produto</Typography>}
             </div>
-            <img
-              className={classes.img}
-              src={product.image.imageUrl}
-              alt={product.name}
-              onClick={event => handleOpenImagePreview(event, product)}
-            />
+            <div className={classes.imageWrapper}>
+              <img
+                className={classes.img}
+                src={product.image.imageUrl}
+                alt={product.name}
+                onClick={event => handleOpenImagePreview(event, product)}
+              />
+            </div>
           </ListItem>
         ))}
       </List>

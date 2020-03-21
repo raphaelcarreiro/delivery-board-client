@@ -183,7 +183,8 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
             <Typography color="textSecondary">
               {address.city}, {address.region}
             </Typography>
-            <Typography color="textSecondary">{address.postal_code}</Typography>
+            {address.postal_code !== '00000000' && <Typography color="textSecondary">{address.postal_code}</Typography>}
+
             <IconButton className={classes.iconButton} onClick={event => handleMoreClick(event, address)}>
               <MoreVertIcon />
             </IconButton>

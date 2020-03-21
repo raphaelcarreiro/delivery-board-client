@@ -11,17 +11,17 @@ import ProductSimpleAction from './ProductSimpleAction';
 const useStyles = makeStyles(theme => ({
   imageContainer: {
     width: 200,
-    maxHeight: 300,
+    height: 200,
     marginRight: 20,
     marginBottom: 10,
     borderRadius: 4,
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   image: {
-    width: 195,
-    backgroundColor: '#eee',
+    width: '100%',
     borderRadius: 4,
     cursor: 'zoom-in',
   },
