@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import CustomAppbar from '../appbar/CustomAppbar';
 import IndexAppbarActions from './IndexAppbarActions';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
 import Link from '../link/Link';
-
-import { moneyFormat } from 'src/helpers/numberFormat';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -87,17 +85,17 @@ export default function Index() {
             </Button>
           </div>
           <div>
-            {restaurant.configs.order_minimum_value && restaurant.configs.tax_mode !== 'order_value' && (
-              <Typography color="textSecondary" gutterBottom variant="body2">
-                *{restaurant.configs.formattedOrderMinimumValue} é o valor mínimo para o pedido
-              </Typography>
-            )}
             <Typography variant="body1" gutterBottom>
               {restaurant.working_hours}
             </Typography>
+            {restaurant.configs.order_minimum_value && (
+              <Typography variant="body1" gutterBottom>
+                {restaurant.configs.formattedOrderMinimumValue} é o valor mínimo para o pedido
+              </Typography>
+            )}
             {restaurant.configs.tax_mode === 'order_value' && (
-              <Typography variant="caption" color="textSecondary">
-                {`*A taxa de entrega ${restaurant.configs.formattedTax} será cobrada, se o valor do pedido mínimo não for atingido`}
+              <Typography variant="body2" color="textSecondary">
+                {`A taxa de entrega de ${restaurant.configs.formattedTax} será cobrada, se o valor do pedido mínimo não for atingido`}
               </Typography>
             )}
           </div>
