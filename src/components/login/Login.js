@@ -119,22 +119,30 @@ export default function Login() {
     });
   }
 
-  function handleAppLoginWithFacebook(response) {
+  async function handleAppLoginWithFacebook(response) {
     setLoading(true);
-    api()
-      .post('login/facebook', response || facebookUser)
-      .then(response => {
-        localStorage.setItem(process.env.TOKEN_NAME, response.data.token);
-        dispatch(setUser(response.data.user));
-        setLoading(false);
-        if (app.redirect) {
-          router.push(app.redirect);
-          app.setRedirect(null);
-        } else router.push('/');
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+
+    const userData = response || facebookUser;
+
+    try {
+      await api().get(`user/show/${userData.email}`);
+      api()
+        .post('login/facebook', userData)
+        .then(response => {
+          localStorage.setItem(process.env.TOKEN_NAME, response.data.token);
+          dispatch(setUser(response.data.user));
+          setLoading(false);
+          if (app.redirect) {
+            router.push(app.redirect);
+            app.setRedirect(null);
+          } else router.push('/');
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+    } catch (err) {
+      router.push(`/register?email=${userData.email}&name=${userData.name}`);
+    }
   }
 
   async function handleAppLoginWithGoogle(data) {
