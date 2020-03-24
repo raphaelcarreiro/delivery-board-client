@@ -10,8 +10,42 @@ import ProductPizzaComplementIngredient from './ProductPizzaComplementIngredient
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import ProductPizzaComplementHeader from './ProductPizzaComplementHeader';
+import ImagePreview from 'src/components/image-preview/ImagePreview';
 
 const useStyles = makeStyles(theme => ({
+  imageContainer: {
+    width: 200,
+    minHeight: 100,
+    maxHeight: 200,
+    marginRight: 20,
+    marginBottom: 10,
+    borderRadius: 4,
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  imageWrapper: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'flex',
+      justifyContent: 'center',
+      width: '100%',
+      marginBottom: 15,
+    },
+  },
+  image: {
+    width: '100%',
+    cursor: 'zoom-in',
+    borderRadius: 4,
+  },
+  productData: {
+    marginBottom: 15,
+    marginTop: 10,
+    display: 'flex',
+    [theme.breakpoints.down('sm')]: {
+      flexWrap: 'wrap',
+    },
+  },
   header: {
     border: `1px solid ${fade(theme.palette.primary.main, 0.1)}`,
     padding: '7px 15px',
@@ -62,6 +96,7 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
   const restaurant = useSelector(state => state.restaurant);
   const [searchedCategoryId, setSearchedCategoryId] = useState(null);
   const [searchedValue, setSearchedValue] = useState('');
+  const [imagePreview, setImagePreview] = useState(false);
 
   useEffect(() => {
     /*
@@ -249,6 +284,10 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
     setFilteredProduct(newProduct);
   }
 
+  function handleImagePreview() {
+    setImagePreview(!imagePreview);
+  }
+
   return (
     <CustomDialog
       backgroundColor="#fafafa"
@@ -274,7 +313,31 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
           setProduct={setProduct}
         />
       )}
+      {imagePreview && product.image && (
+        <ImagePreview src={product.image.imageUrl} description={product.name} onExited={handleImagePreview} />
+      )}
       <Grid container className={classes.container}>
+        <Grid item xs={12}>
+          <div className={classes.productData}>
+            <div className={classes.imageWrapper}>
+              <div className={classes.imageContainer}>
+                <img
+                  onClick={handleImagePreview}
+                  className={classes.image}
+                  src={product.image && product.image.imageUrl}
+                  alt={product.name}
+                />
+              </div>
+            </div>
+            <div className={classes.productDescription}>
+              <Typography color="primary" variant="caption" display="block">
+                Produto {product.id}
+              </Typography>
+              <Typography variant="h6">{product.name}</Typography>
+              <Typography>{product.description}</Typography>
+            </div>
+          </div>
+        </Grid>
         <Grid item xs={12}>
           {filteredProduct.complement_categories.map(category => (
             <section className={classes.category} key={category.id}>

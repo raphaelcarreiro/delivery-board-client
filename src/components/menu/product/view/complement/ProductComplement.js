@@ -7,8 +7,42 @@ import ProductComplementAction from './ProductComplementAction';
 import PropTypes from 'prop-types';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import { moneyFormat } from 'src/helpers/numberFormat';
+import ImagePreview from 'src/components/image-preview/ImagePreview';
 
 const useStyles = makeStyles(theme => ({
+  imageContainer: {
+    width: 200,
+    minHeight: 100,
+    maxHeight: 200,
+    marginRight: 20,
+    marginBottom: 10,
+    borderRadius: 4,
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  imageWrapper: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'flex',
+      justifyContent: 'center',
+      width: '100%',
+      marginBottom: 15,
+    },
+  },
+  image: {
+    width: '100%',
+    cursor: 'zoom-in',
+    borderRadius: 4,
+  },
+  productData: {
+    marginBottom: 15,
+    marginTop: 10,
+    display: 'flex',
+    [theme.breakpoints.down('sm')]: {
+      flexWrap: 'wrap',
+    },
+  },
   header: {
     border: `1px solid ${fade(theme.palette.primary.main, 0.1)}`,
     padding: '7px 15px',
@@ -16,7 +50,6 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    // backgroundColor: '#fff8dc',
   },
   chip: {
     display: 'inline-block',
@@ -84,6 +117,7 @@ ProductComplement.propTypes = {
 
 function ProductComplement({ onExited, selectedProduct, handleAddProductToCart, handlePrepareProduct }) {
   const [amount, setAmount] = useState(1);
+  const [imagePreview, setImagePreview] = useState(false);
   const [product, setProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
   const messaging = useContext(MessagingContext);
   const classes = useStyles();
@@ -231,6 +265,10 @@ function ProductComplement({ onExited, selectedProduct, handleAddProductToCart, 
     if (ready) handlePrepareProduct(newProduct);
   }
 
+  function handleImagePreview() {
+    setImagePreview(!imagePreview);
+  }
+
   return (
     <CustomDialog
       backgroundColor="#fafafa"
@@ -238,7 +276,31 @@ function ProductComplement({ onExited, selectedProduct, handleAddProductToCart, 
       title={`${product.name} - Complementos`}
       displayBottomActions
     >
+      {imagePreview && product.image && (
+        <ImagePreview src={product.image.imageUrl} description={product.name} onExited={handleImagePreview} />
+      )}
       <Grid container className={classes.container}>
+        <Grid item xs={12}>
+          <div className={classes.productData}>
+            <div className={classes.imageWrapper}>
+              <div className={classes.imageContainer}>
+                <img
+                  onClick={handleImagePreview}
+                  className={classes.image}
+                  src={product.image && product.image.imageUrl}
+                  alt={product.name}
+                />
+              </div>
+            </div>
+            <div className={classes.productDescription}>
+              <Typography color="primary" variant="caption" display="block">
+                Produto {product.id}
+              </Typography>
+              <Typography variant="h6">{product.name}</Typography>
+              <Typography>{product.description}</Typography>
+            </div>
+          </div>
+        </Grid>
         <Grid item xs={12}>
           {product.complement_categories.map(category => (
             <section className={classes.category} key={category.id}>

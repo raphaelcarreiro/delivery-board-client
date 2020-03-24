@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Grid, TextField } from '@material-ui/core';
+import { Grid, TextField, Typography } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import ProductPizzaComplementItem from './ProductPizzaComplementItem';
 import { MessagingContext } from '../../../../messaging/Messaging';
@@ -11,8 +11,42 @@ import { moneyFormat } from '../../../../../helpers/numberFormat';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import ProductPizzaComplementHeader from './ProductPizzaComplementHeader';
 import { useSelector } from 'react-redux';
+import ImagePreview from 'src/components/image-preview/ImagePreview';
 
 const useStyles = makeStyles(theme => ({
+  imageContainer: {
+    width: 200,
+    minHeight: 100,
+    maxHeight: 200,
+    marginRight: 20,
+    marginBottom: 10,
+    borderRadius: 4,
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  imageWrapper: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'flex',
+      justifyContent: 'center',
+      width: '100%',
+      marginBottom: 15,
+    },
+  },
+  image: {
+    width: '100%',
+    cursor: 'zoom-in',
+    borderRadius: 4,
+  },
+  productData: {
+    marginBottom: 15,
+    marginTop: 10,
+    display: 'flex',
+    [theme.breakpoints.down('sm')]: {
+      flexWrap: 'wrap',
+    },
+  },
   category: {
     display: 'block',
     marginBottom: 10,
@@ -49,6 +83,7 @@ export default function ProductPizzaComplement({
   const restaurant = useSelector(state => state.restaurant);
   const [searchedCategoryId, setSearchedCategoryId] = useState(null);
   const [searchedValue, setSearchedValue] = useState('');
+  const [imagePreview, setImagePreview] = useState(false);
 
   useEffect(() => {
     let sizeSelected = {};
@@ -312,6 +347,10 @@ export default function ProductPizzaComplement({
     setFilteredProduct(newProduct);
   }
 
+  function handleImagePreview() {
+    setImagePreview(!imagePreview);
+  }
+
   return (
     <CustomDialog
       backgroundColor="#fafafa"
@@ -337,7 +376,31 @@ export default function ProductPizzaComplement({
           setProduct={setProduct}
         />
       )}
+      {imagePreview && (
+        <ImagePreview onExited={handleImagePreview} src={product.image.imageUrl} description={product.name} />
+      )}
       <Grid container className={classes.container} justify="center">
+        <Grid item xs={12}>
+          <div className={classes.productData}>
+            <div className={classes.imageWrapper}>
+              <div className={classes.imageContainer}>
+                <img
+                  onClick={handleImagePreview}
+                  className={classes.image}
+                  src={product.image && product.image.imageUrl}
+                  alt={product.name}
+                />
+              </div>
+            </div>
+            <div className={classes.productDescription}>
+              <Typography color="primary" variant="caption" display="block">
+                Produto {product.id}
+              </Typography>
+              <Typography variant="h6">{product.name}</Typography>
+              <Typography>{product.description}</Typography>
+            </div>
+          </div>
+        </Grid>
         <Grid item xs={12}>
           {filteredProduct.complement_categories.map(category => (
             <section className={classes.category} key={category.id}>
