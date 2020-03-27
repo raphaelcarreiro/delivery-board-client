@@ -79,11 +79,13 @@ function Footer() {
               </Typography>
             </>
           )}
-          <div className={classes.links}>
-            <Link href="https://www.facebook.com">Facebook</Link>
-            <Link href="https://www.instagram.com">Instagram</Link>
-            <Link href="https://www.twitter.com">Twitter</Link>
-          </div>
+          {restaurant && (
+            <div className={classes.links}>
+              {restaurant.facebook_link && <Link href={restaurant.facebook_link}>Facebook</Link>}
+              {restaurant.instagram_link && <Link href={restaurant.instagram_link}>Instagram</Link>}
+              {restaurant.twitter_link && <Link href={restaurant.twitter_link}>Twitter</Link>}
+            </div>
+          )}
         </div>
         <div className={classes.phone}>
           <Typography variant="h6" color="primary">

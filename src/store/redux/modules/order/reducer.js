@@ -34,6 +34,7 @@ export default function order(state = INITIAL_STATE, action) {
         shipment: {
           ...state.shipment,
           ...action.address,
+          shipment_method: 'delivery',
         },
       };
     }

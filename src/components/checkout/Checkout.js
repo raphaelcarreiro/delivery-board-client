@@ -9,6 +9,7 @@ import {
   clearCard,
   setCoupon,
   setTax,
+  setShipmentMethod,
 } from 'src/store/redux/modules/order/actions';
 import Shipment from './steps/shipment/Shipment';
 import { setUser } from 'src/store/redux/modules/user/actions';

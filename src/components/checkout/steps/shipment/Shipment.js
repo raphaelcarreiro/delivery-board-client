@@ -6,7 +6,7 @@ import AccountAddressesNew from 'src/components/account/addresses/AccountAddress
 import AccountAddressesEdit from 'src/components/account/addresses/AccountAddressesEdit';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCustomerAddress, updateCustomerAddress, deleteCustomerAddress } from 'src/store/redux/modules/user/actions';
-import { setShipmentAddress } from 'src/store/redux/modules/order/actions';
+import { setShipmentAddress, setShipmentMethod } from 'src/store/redux/modules/order/actions';
 import { MessagingContext } from 'src/components/messaging/Messaging';
 import { api } from 'src/services/api';
 import DialogDelete from 'src/components/dialog/delete/DialogDelete';
