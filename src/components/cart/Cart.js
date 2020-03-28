@@ -16,6 +16,8 @@ import { AppContext } from 'src/App';
 import { isAuthenticated } from 'src/services/auth';
 import Coupon from './coupon/Coupon';
 import CartCouponButton from './CartCouponButton';
+import WatchLaterIcon from '@material-ui/icons/WatchLater';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -56,6 +58,20 @@ const useStyles = makeStyles(theme => ({
   coupon: {
     textAlign: 'right',
     marginBottom: 15,
+  },
+  info: {
+    display: 'grid',
+    gridGap: 7,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginTop: 10,
+  },
+  infoItem: {
+    display: 'flex',
+    alignItems: 'center',
+    '& svg': {
+      marginRight: 10,
+    },
   },
 }));
 
@@ -176,6 +192,20 @@ export default function Cart() {
             >
               Continuar comprando
             </Button>
+          </div>
+          <div className={classes.info}>
+            {restaurant.configs.delivery_time && (
+              <Typography color="textSecondary" variant="body2" className={classes.infoItem}>
+                <WatchLaterIcon />
+                Tempo estimado para entrega {restaurant.configs.delivery_time} minutos
+              </Typography>
+            )}
+            {restaurant.configs.order_minimum_value && restaurant.configs.tax_mode !== 'order_value' && (
+              <Typography color="textSecondary" variant="body2" align="center" className={classes.infoItem}>
+                <MonetizationOnIcon />
+                {restaurant.configs.formattedOrderMinimumValue} pedido mínimo
+              </Typography>
+            )}
           </div>
         </div>
       ) : (

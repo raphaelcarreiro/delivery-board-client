@@ -33,7 +33,7 @@ export default function Contact() {
     <>
       <CustomAppbar title="Contato" />
       <PageHeader title="Contato" />
-      <Typography gutterBottom>Será um prazer poder te atender.</Typography>
+      <Typography gutterBottom>Será um prazer lhe atender</Typography>
       {restaurant.phones && (
         <Card className={classes.card}>
           <CardContent>

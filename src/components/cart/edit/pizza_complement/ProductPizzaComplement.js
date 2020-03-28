@@ -330,9 +330,6 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
               </div>
             </div>
             <div className={classes.productDescription}>
-              <Typography color="primary" variant="caption" display="block">
-                Produto {product.id}
-              </Typography>
               <Typography variant="h6">{product.name}</Typography>
               <Typography>{product.description}</Typography>
             </div>

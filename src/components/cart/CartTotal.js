@@ -23,6 +23,7 @@ const useStyles = makeStyles({
 export default function CartTotal() {
   const cart = useSelector(state => state.cart);
   const order = useSelector(state => state.order);
+  const restaurant = useSelector(state => state.restaurant);
   const classes = useStyles();
 
   return (
@@ -43,7 +44,14 @@ export default function CartTotal() {
           )}
           {order.shipment.shipment_method !== 'customer_collect' && cart.tax > 0 && (
             <div className={classes.cartValues}>
-              <Typography>Taxa de entrega</Typography>
+              <div>
+                <Typography>Taxa de entrega</Typography>
+                {restaurant.configs.tax_mode === 'order_value' && (
+                  <Typography variant="caption" color="textSecondary" align="center">
+                    {`Será cobrada para os pedidos inferiores a ${restaurant.configs.formattedOrderMinimumValue}`}
+                  </Typography>
+                )}
+              </div>
               <Typography align="right">{cart.formattedTax}</Typography>
             </div>
           )}

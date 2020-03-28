@@ -61,7 +61,6 @@ ProductSimple.propTypes = {
 };
 
 export default function ProductSimple({ onExited, selectedProduct }) {
-  const [amount, setAmount] = useState(selectedProduct.amount);
   const [product, setProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
   const [imagePreview, setImagePreview] = useState(false);
   const classes = useStyles();
@@ -89,9 +88,6 @@ export default function ProductSimple({ onExited, selectedProduct }) {
               </div>
             </div>
             <div>
-              <Typography color="primary" variant="caption" display="block">
-                Produto {product.id}
-              </Typography>
               <Typography variant="h6">{product.name}</Typography>
               <Typography>{product.description}</Typography>
               <Typography color="textSecondary">{product.formattedProductPrice}</Typography>

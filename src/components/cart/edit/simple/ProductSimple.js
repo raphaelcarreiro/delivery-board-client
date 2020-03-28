@@ -133,9 +133,6 @@ export default function ProductSimple({ onExited, selectedProduct, handleUpdateC
               </div>
             </div>
             <div>
-              <Typography color="primary" variant="caption" display="block">
-                Produto {product.id}
-              </Typography>
               <Typography variant="h6">{product.name}</Typography>
               <Typography>{product.description}</Typography>
               <Typography color="textSecondary">{product.formattedProductPrice}</Typography>

@@ -64,14 +64,15 @@ const useStyles = makeStyles(theme => ({
     cursor: 'pointer',
     display: 'inline-block',
   },
-  scheduledAt: {
-    fontWeight: 300,
+  deliveryTime: {
+    marginTop: 7,
   },
 }));
 
 export default function Confirm() {
   const order = useSelector(state => state.order);
   const cart = useSelector(state => state.cart);
+  const restaurant = useSelector(state => state.restaurant);
   const checkout = useContext(CheckoutContext);
   const mainRestaurantAddress = useSelector(state => state.restaurant).addresses.find(address => address.is_main);
   const classes = useStyles();
@@ -104,6 +105,13 @@ export default function Confirm() {
             {order.shipment.postal_code !== '00000000' && (
               <Typography color="textSecondary">{order.shipment.postal_code}</Typography>
             )}
+            {restaurant.configs.delivery_time && (
+              <div className={classes.deliveryTime}>
+                <Typography color="textSecondary" variant="body2">
+                  Tempo estimado para entrega, {restaurant.configs.delivery_time} min
+                </Typography>
+              </div>
+            )}
             <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
               Alterar
             </Typography>
@@ -119,11 +127,19 @@ export default function Confirm() {
             <Typography>{mainRestaurantAddress.district}</Typography>
             <Typography>{mainRestaurantAddress.address_complement}</Typography>
             <Typography color="textSecondary">{mainRestaurantAddress.postal_code}</Typography>
-            {order.shipment.scheduled_at && (
-              <Typography className={classes.scheduledAt}>
-                Agendado para as {order.shipment.formattedScheduledAt}
-              </Typography>
-            )}
+            <div className={classes.deliveryTime}>
+              {order.shipment.scheduled_at ? (
+                <Typography color="textSecondary" variant="body2">
+                  Agendado para as {order.shipment.formattedScheduledAt}
+                </Typography>
+              ) : (
+                restaurant.configs.delivery_time && (
+                  <Typography color="textSecondary" variant="body2">
+                    Tempo estimado para retirada, {restaurant.configs.delivery_time} min
+                  </Typography>
+                )
+              )}
+            </div>
             <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
               Alterar
             </Typography>
@@ -167,7 +183,7 @@ export default function Confirm() {
           </Typography>
           {cart.tax > 0 && (
             <Typography color="textSecondary" variant="body2">
-              *Este valor inclui a taxa de {cart.formattedTax} para a entrega
+              Este valor inclui a taxa de {cart.formattedTax} para a entrega
             </Typography>
           )}
         </div>

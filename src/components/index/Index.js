@@ -88,16 +88,6 @@ export default function Index() {
             <Typography variant="body1" gutterBottom>
               {restaurant.working_hours}
             </Typography>
-            {restaurant.configs.order_minimum_value && (
-              <Typography variant="body1" gutterBottom>
-                {restaurant.configs.formattedOrderMinimumValue} é o valor mínimo para o pedido
-              </Typography>
-            )}
-            {restaurant.configs.tax_mode === 'order_value' && (
-              <Typography variant="body2" color="textSecondary">
-                {`A taxa de entrega de ${restaurant.configs.formattedTax} será cobrada, se o valor do pedido mínimo não for atingido`}
-              </Typography>
-            )}
           </div>
         </div>
       )}
