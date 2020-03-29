@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import CartProductList from './CartProductList';
 import CartTotal from './CartTotal';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button, Chip } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import ProductSimple from './edit/simple/ProductSimple';
 import { MessagingContext } from '../messaging/Messaging';
@@ -194,13 +194,13 @@ export default function Cart() {
             </Button>
           </div>
           <div className={classes.info}>
-            {restaurant.configs.delivery_time && (
+            {restaurant.configs.delivery_time > 0 && (
               <Typography color="textSecondary" variant="body2" className={classes.infoItem}>
                 <WatchLaterIcon />
                 Tempo estimado para entrega {restaurant.configs.delivery_time} minutos
               </Typography>
             )}
-            {restaurant.configs.order_minimum_value && restaurant.configs.tax_mode !== 'order_value' && (
+            {restaurant.configs.order_minimum_value > 0 && restaurant.configs.tax_mode !== 'order_value' && (
               <Typography color="textSecondary" variant="body2" align="center" className={classes.infoItem}>
                 <MonetizationOnIcon />
                 {restaurant.configs.formattedOrderMinimumValue} pedido mínimo

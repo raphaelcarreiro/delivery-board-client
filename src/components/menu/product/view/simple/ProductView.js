@@ -12,7 +12,8 @@ import ImagePreview from 'src/components/image-preview/ImagePreview';
 const useStyles = makeStyles(theme => ({
   imageContainer: {
     width: 200,
-    height: 200,
+    maxHeight: 200,
+    minHeight: 100,
     marginRight: 20,
     marginBottom: 10,
     borderRadius: 4,
