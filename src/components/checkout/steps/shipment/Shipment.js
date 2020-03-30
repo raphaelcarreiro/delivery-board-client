@@ -6,7 +6,7 @@ import AccountAddressesNew from 'src/components/account/addresses/AccountAddress
 import AccountAddressesEdit from 'src/components/account/addresses/AccountAddressesEdit';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCustomerAddress, updateCustomerAddress, deleteCustomerAddress } from 'src/store/redux/modules/user/actions';
-import { setShipmentAddress, setShipmentMethod } from 'src/store/redux/modules/order/actions';
+import { setShipmentAddress } from 'src/store/redux/modules/order/actions';
 import { MessagingContext } from 'src/components/messaging/Messaging';
 import { api } from 'src/services/api';
 import DialogDelete from 'src/components/dialog/delete/DialogDelete';
@@ -31,13 +31,16 @@ export default function Shipment({ addresses }) {
   const app = useContext(AppContext);
   const { customer } = useSelector(state => state.user);
   const order = useSelector(state => state.order);
+  const restaurant = useSelector(state => state.restaurant);
 
   useEffect(() => {
     app.handleCartVisibility(false);
     if (order.shipment)
       if (!order.shipment.id)
         if (customer.addresses.length > 0) {
-          dispatch(setShipmentAddress(customer.addresses.find(address => address.is_main)));
+          const shipmentAddress = customer.addresses.find(address => address.is_main);
+          if (restaurant.configs.tax_mode === 'district')
+            if (shipmentAddress.area_region) dispatch(setShipmentAddress(shipmentAddress));
         }
   }, [order]);
 
@@ -49,6 +52,16 @@ export default function Shipment({ addresses }) {
           dispatch(setShipmentAddress({}));
         }
   }, [customer]);
+
+  /* useEffect(() => {
+    if (order.shipment)
+      if (restaurant.configs.tax_mode === 'district')
+        if (!order.shipment.area_region) {
+          setDialogEditAddress(true);
+          setSelectedAddress(order.shipment);
+          messaging.handleOpen('Selecione o bairro');
+        }
+  }, [order.shipment]); */
 
   async function handleAddressSubmit(address) {
     try {
@@ -89,7 +102,9 @@ export default function Shipment({ addresses }) {
       .then(() => {
         messaging.handleOpen('Excluído');
         dispatch(deleteCustomerAddress(selectedAddress.id));
-        if (order.shipmentAddress.id === selectedAddress.id) dispatch(setShipmentAddress({}));
+        if (order.shipment.id === selectedAddress.id) {
+          dispatch(setShipmentAddress({}));
+        }
       })
       .catch(err => {
         if (err.response) messaging.handleOpen(err.response.data.error);
@@ -109,6 +124,12 @@ export default function Shipment({ addresses }) {
   }
 
   function handleSelectAddress(address) {
+    if (restaurant.configs.tax_mode === 'district' && !address.area_region) {
+      setSelectedAddress(address);
+      setDialogEditAddress(true);
+      messaging.handleOpen('Selecione o bairro');
+      return;
+    }
     dispatch(setShipmentAddress(address));
     checkout.handleSetStepById('STEP_PAYMENT');
   }

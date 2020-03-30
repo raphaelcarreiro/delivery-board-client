@@ -95,6 +95,7 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
       messaging.handleOpen('Endereço incluído');
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
+      else messaging.handleOpen('Não foi possível salvar');
     } finally {
       setSavingAddress(false);
     }
@@ -105,7 +106,7 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
       setSavingAddress(true);
       const response = await api().put(`/customerAddresses/${selectedAddress.id}`, address);
       dispatch(updateCustomerAddress(response.data));
-      messaging.handleOpen('Endereço incluído');
+      messaging.handleOpen('Endereço alterado');
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
     } finally {

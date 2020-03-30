@@ -79,3 +79,10 @@ export function updateTotal(shipmentMethod) {
     shipmentMethod,
   };
 }
+
+export function setTax(tax) {
+  return {
+    type: '@cart/SET_TAX',
+    tax,
+  };
+}

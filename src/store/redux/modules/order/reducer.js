@@ -32,7 +32,7 @@ export default function order(state = INITIAL_STATE, action) {
       return {
         ...state,
         shipment: {
-          ...state.shipment,
+          // ...state.shipment,
           ...action.address,
           shipment_method: 'delivery',
         },

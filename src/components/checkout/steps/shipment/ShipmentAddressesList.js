@@ -96,6 +96,9 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     marginRight: 7,
   },
+  tax: {
+    marginTop: 7,
+  },
 }));
 
 ShipmentAddressesList.propTypes = {
@@ -117,6 +120,7 @@ export default function ShipmentAddressesList({
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState({});
   const order = useSelector(state => state.order);
+  const restaurant = useSelector(state => state.restaurant);
 
   function handleMoreClick(event, address) {
     setAnchorEl(event.currentTarget);
@@ -170,6 +174,11 @@ export default function ShipmentAddressesList({
               </Typography>
               {address.postal_code !== '00000000' && (
                 <Typography color="textSecondary">{address.postal_code}</Typography>
+              )}
+              {restaurant.configs.tax_mode === 'district' && address.area_region && address.area_region.tax > 0 && (
+                <Typography color="textSecondary" className={classes.tax} variant="caption" display="block">
+                  Será cobrado {address.area_region.formattedTax} de taxa de entrega
+                </Typography>
               )}
             </div>
             {address.id === order.shipment.id && <CheckCircleIcon color="primary" className={classes.checkIcon} />}

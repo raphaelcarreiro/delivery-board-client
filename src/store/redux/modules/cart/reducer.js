@@ -255,21 +255,38 @@ export default function cart(state = INITIAL_STATE, action) {
       };
     }
 
+    case '@cart/SET_TAX': {
+      return {
+        ...state,
+        tax: action.tax,
+        formattedTax: moneyFormat(action.tax),
+      };
+    }
+
     case '@cart/UPDATE_TOTAL': {
       const { configs } = state;
       const { coupon } = state;
-      let tax = 0;
+      let tax = state.tax;
       let total = 0;
       const subtotal = state.products.reduce((sum, value) => sum + value.final_price, 0);
       const discount = coupon ? subtotal * (coupon.discount / 100) : 0;
+
       if (configs.tax_mode === 'order_value') {
         if (action.shipmentMethod === 'delivery') {
           tax = configs.tax_value > 0 && subtotal < configs.order_minimum_value ? configs.tax_value : 0;
           total = subtotal < configs.order_minimum_value ? subtotal - discount + tax : subtotal - discount;
         } else {
+          tax = 0;
+          total = subtotal - discount;
+        }
+      } else if (configs.tax_mode === 'district') {
+        if (action.shipmentMethod === 'delivery') total = subtotal - discount + tax;
+        else {
+          tax = 0;
           total = subtotal - discount;
         }
       } else {
+        tax = 0;
         total = subtotal - discount;
       }
 

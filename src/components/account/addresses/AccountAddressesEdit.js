@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { TextField, Grid, Button, CircularProgress } from '@material-ui/core';
+import React, { useState, useContext, useEffect } from 'react';
+import { TextField, Grid, Button, CircularProgress, MenuItem } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import AccountAddressesAction from './AccountAddressesAction';
 import { MessagingContext } from '../../messaging/Messaging';
@@ -7,6 +7,9 @@ import PostalCodeInput from '../../masked-input/PostalCodeInput';
 import CustomDialogForm from 'src/components/dialog/CustomDialogForm';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
+import * as yup from 'yup';
+import { api } from 'src/services/api';
+import { moneyFormat } from 'src/helpers/numberFormat';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -62,6 +65,76 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
   const messaging = useContext(MessagingContext);
   const classes = useStyles();
   const restaurant = useSelector(state => state.restaurant);
+  const [validation, setValidation] = useState({});
+  const [regions, setRegions] = useState([]);
+  const [areaRegionId, setAreaRegionId] = useState(
+    selectedAddress.area_region ? selectedAddress.area_region.area_region_id : null
+  );
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (restaurant.configs.tax_mode === 'district') {
+      setLoading(true);
+      api()
+        .get('/areas')
+        .then(response => {
+          setRegions(
+            response.data.regions.map(r => {
+              r.formattedTax = moneyFormat(r.tax);
+              return r;
+            })
+          );
+        })
+        .catch(() => {
+          messaging.handleOpen('Não foi possível carregar os bairros');
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, []);
+
+  async function handleValidation() {
+    const schema = yup.object().shape({
+      complement: yup.string().nullable(),
+      district: yup.string().test('check_config', 'Bairro é obrigatório', value => {
+        if (restaurant.configs.tax_mode !== 'district') {
+          return value !== '';
+        } else return true;
+      }),
+      areaRegionId: yup
+        .string()
+        .typeError('Bairro é obrigatório')
+        .test('check_area', 'Bairro é obrigatório', value => {
+          if (restaurant.configs.tax_mode === 'district') {
+            return value !== '';
+          } else return true;
+        }),
+      number: yup.string().required('O número é obrigatório'),
+      address: yup.string().required('O endereço é obrigatório'),
+    });
+
+    const data = {
+      address,
+      number,
+      complement,
+      district,
+      region,
+      city,
+      areaRegionId,
+      postal_code: restaurant.configs.use_postalcode ? postalCode : '00000000',
+    };
+
+    try {
+      await schema.validate(data);
+      await handleSubmit();
+    } catch (err) {
+      setValidation({
+        [err.path]: err.message,
+      });
+      throw new Error('validation fails');
+    }
+  }
 
   async function handleSubmit() {
     const data = {
@@ -71,10 +144,12 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
       district,
       region,
       city,
+      area_region_id: areaRegionId,
       postal_code: postalCode,
     };
 
     try {
+      setValidation({});
       await handleAddressUpdateSubmit(data);
     } catch (err) {
       if (err.response) {
@@ -84,17 +159,22 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
     }
   }
 
+  function handleDistrictSelectChange(e) {
+    setAreaRegionId(e.target.value);
+    setDistrict(regions.find(r => r.id === e.target.value).name);
+  }
+
   return (
     <CustomDialogForm
       title="Atualizar endereço"
       handleModalState={handleModalState}
-      handleSubmit={handleSubmit}
+      handleSubmit={handleValidation}
       closeOnSubmit
       async
       componentActions={<AccountAddressesAction saving={saving} />}
       displayBottomActions
     >
-      {saving && (
+      {(saving || loading) && (
         <div className={classes.loading}>
           <CircularProgress color="primary" />
         </div>
@@ -135,15 +215,39 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
           onChange={event => setNumber(event.target.value)}
           required
         />
-        <TextField
-          label="Bairro"
-          placeholder="Digite o bairro"
-          margin="normal"
-          fullWidth
-          value={district}
-          onChange={event => setDistrict(event.target.value)}
-          required
-        />
+        {restaurant.configs.tax_mode === 'district' ? (
+          <TextField
+            error={!!validation.areaRegionId}
+            helperText={
+              validation.areaRegionId
+                ? validation.areaRegionId
+                : 'Se o bairro não estiver na lista, é porque não entregamos na região'
+            }
+            select
+            label="Selecione um bairro"
+            fullWidth
+            value={areaRegionId}
+            onChange={event => handleDistrictSelectChange(event)}
+            margin="normal"
+          >
+            {regions.map(region => (
+              <MenuItem key={region.id} value={region.id}>
+                {region.name} - {region.formattedTax} (taxa de entrega)
+              </MenuItem>
+            ))}
+          </TextField>
+        ) : (
+          <TextField
+            error={!!validation.district}
+            helperText={!!validation.district && validation.district}
+            label="Bairro"
+            placeholder="Digite o bairro"
+            margin="normal"
+            fullWidth
+            value={district}
+            onChange={event => setDistrict(event.target.value)}
+          />
+        )}
         <TextField
           label="Complemento"
           placeholder="Digite o complemento"

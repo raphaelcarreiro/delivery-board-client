@@ -1,4 +1,4 @@
-import { createHistory, setConfigs, updateTotal } from './actions';
+import { createHistory, setConfigs, updateTotal, setTax } from './actions';
 
 const saveCartAtLocalStorage = cart => {
   localStorage.setItem(process.env.LOCALSTORAGE_CART, JSON.stringify(cart));
@@ -15,6 +15,7 @@ export const cartMiddlware = store => next => action => {
     '@cart/REMOVE_COUPON',
     '@cart/SET_CART',
     '@order/SET_SHIPMENT_METHOD',
+    '@order/SET_SHIPMENT_ADDRESS',
   ];
 
   // actions para salvar configurações do restaurante no carrinho
@@ -27,6 +28,27 @@ export const cartMiddlware = store => next => action => {
   }
 
   next(action);
+
+  if (action.type === '@order/SET_SHIPMENT_METHOD') {
+    const restaurant = store.getState().restaurant;
+    const order = store.getState().order;
+    if (restaurant.configs.tax_mode === 'district') {
+      const { area_region } = order.shipment;
+      if (!area_region) return;
+      const tax = area_region.tax;
+      store.dispatch(setTax(tax));
+    }
+  }
+
+  if (action.type === '@order/SET_SHIPMENT_ADDRESS') {
+    const restaurant = store.getState().restaurant;
+    if (restaurant.configs.tax_mode === 'district') {
+      const { area_region } = action.address;
+      if (!area_region) return;
+      const tax = area_region.tax;
+      store.dispatch(setTax(tax));
+    }
+  }
 
   // atualiza as configurações do restaurante no carrinho para calculos
   if (actionsToSetConfigs.includes(action.type)) {

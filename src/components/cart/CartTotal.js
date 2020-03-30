@@ -42,14 +42,20 @@ export default function CartTotal() {
               </div>
             </>
           )}
-          {order.shipment.shipment_method !== 'customer_collect' && cart.tax > 0 && (
+          {cart.tax > 0 && (
             <div className={classes.cartValues}>
               <div>
                 <Typography>Taxa de entrega</Typography>
-                {restaurant.configs.tax_mode === 'order_value' && (
+                {restaurant.configs.tax_mode === 'order_value' ? (
                   <Typography variant="caption" color="textSecondary" align="center">
                     {`Será cobrada para os pedidos inferiores a ${restaurant.configs.formattedOrderMinimumValue}`}
                   </Typography>
+                ) : (
+                  restaurant.configs.tax_mode === 'district' && (
+                    <Typography variant="caption" color="textSecondary" align="center">
+                      De acordo com o bairro selecionado
+                    </Typography>
+                  )
                 )}
               </div>
               <Typography align="right">{cart.formattedTax}</Typography>

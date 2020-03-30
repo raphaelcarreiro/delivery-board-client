@@ -209,7 +209,16 @@ export default function Checkout() {
           const address = customer && customer.addresses.find(address => address.is_main);
 
           dispatch(setCustomer(customer));
-          dispatch(setShipmentAddress(address));
+          if (restaurant.configs.tax_mode === 'district') {
+            if (address) {
+              if (address.area_region) {
+                dispatch(setShipmentAddress(address));
+              }
+            } else dispatch(setShipmentAddress({}));
+            return;
+          }
+
+          dispatch(setShipmentAddress(address || {}));
         })
         .catch(err => {
           if (err.response) messaging(err.response.data.error);
@@ -222,6 +231,17 @@ export default function Checkout() {
       const address = customer.addresses.find(address => address.is_main);
 
       dispatch(setCustomer(customer));
+
+      if (restaurant.configs.tax_mode === 'district') {
+        if (address) {
+          if (address.area_region) {
+            dispatch(setShipmentAddress(address));
+          }
+        } else dispatch(setShipmentAddress({}));
+        setLoading(false);
+        return;
+      }
+
       dispatch(setShipmentAddress(address || {}));
       setLoading(false);
     }
@@ -256,10 +276,10 @@ export default function Checkout() {
       .post('/orders', order)
       .then(response => {
         setCreatedOrder(response.data);
+        // dispatch(setShipmentAddress({}));
         dispatch(setChange(0));
         dispatch(clearCard());
         dispatch(clearCart());
-        dispatch(setShipmentAddress({}));
         handleStepNext();
       })
       .catch(err => {

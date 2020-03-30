@@ -1,7 +1,6 @@
-import React, { useState, Fragment, useContext } from 'react';
-import { TextField, Grid, Button, CircularProgress } from '@material-ui/core';
+import React, { useState, useContext, useEffect } from 'react';
+import { TextField, Grid, Button, CircularProgress, MenuItem } from '@material-ui/core';
 import PostalCodeInput from '../../masked-input/PostalCodeInput';
-import Loading from '../../loading/Loading';
 import { MessagingContext } from '../../messaging/Messaging';
 import PropTypes from 'prop-types';
 import AccountAddressesAction from './AccountAddressesAction';
@@ -9,6 +8,9 @@ import { postalCodeSearch } from 'src/services/postalCodeSearch';
 import CustomDialogForm from 'src/components/dialog/CustomDialogForm';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
+import { api } from 'src/services/api';
+import { moneyFormat } from 'src/helpers/numberFormat';
+import * as yup from 'yup';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -57,7 +59,7 @@ let timer = null;
 function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) {
   const restaurant = useSelector(state => state.restaurant);
   const mainAddress = restaurant.addresses.find(address => address.is_main);
-
+  const [regions, setRegions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [postalCode, setPostalCode] = useState('');
   const [address, setAddress] = useState('');
@@ -66,10 +68,34 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
   const [district, setDistrict] = useState('');
   const [city, setCity] = useState(mainAddress.city);
   const [region, setRegion] = useState(mainAddress.region);
+  const [areaRegionId, setAreaRegionId] = useState('');
   const [cepValidation, setCepValidation] = useState(!restaurant.configs.use_postalcode);
   const [cepValidationText, setCepValidationText] = useState('');
+  const [validation, setValidation] = useState({});
   const messaging = useContext(MessagingContext);
   const classes = useStyles();
+
+  useEffect(() => {
+    if (restaurant.configs.tax_mode === 'district') {
+      setLoading(true);
+      api()
+        .get('/areas')
+        .then(response => {
+          setRegions(
+            response.data.regions.map(r => {
+              r.formattedTax = moneyFormat(r.tax);
+              return r;
+            })
+          );
+        })
+        .catch(() => {
+          messaging.handleOpen('Não foi possível carregar os bairros');
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, []);
 
   function handleChangeCep(value) {
     setPostalCode(value);
@@ -118,6 +144,45 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
       }, interval);
   }
 
+  async function handleValidation() {
+    const schema = yup.object().shape({
+      complement: yup.string().nullable(),
+      district: yup.string().test('check_config', 'Bairro é obrigatório', value => {
+        if (restaurant.configs.tax_mode !== 'district') {
+          return value !== '';
+        } else return true;
+      }),
+      areaRegionId: yup.string().test('check_area', 'Bairro é obrigatório', value => {
+        if (restaurant.configs.tax_mode === 'district') {
+          return value !== '';
+        } else return true;
+      }),
+      number: yup.string().required('O número é obrigatório'),
+      address: yup.string().required('O endereço é obrigatório'),
+    });
+
+    const data = {
+      address,
+      number,
+      complement,
+      district,
+      region,
+      city,
+      areaRegionId,
+      postal_code: restaurant.configs.use_postalcode ? postalCode : '00000000',
+    };
+
+    try {
+      await schema.validate(data);
+      await handleSubmit();
+    } catch (err) {
+      setValidation({
+        [err.path]: err.message,
+      });
+      throw new Error('validation fails');
+    }
+  }
+
   async function handleSubmit() {
     if (!cepValidation) {
       throw new Error('CEP inválido');
@@ -130,10 +195,12 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
       district,
       region,
       city,
+      area_region_id: areaRegionId,
       postal_code: restaurant.configs.use_postalcode ? postalCode : '00000000',
     };
 
     try {
+      setValidation({});
       await handleAddressSubmit(data);
     } catch (err) {
       if (err.response) {
@@ -143,24 +210,28 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
     }
   }
 
+  function handleDistrictSelectChange(e) {
+    setAreaRegionId(e.target.value);
+    setDistrict(regions.find(r => r.id === e.target.value).name);
+  }
+
   return (
     <CustomDialogForm
       title="Adicionar endereço"
       handleModalState={handleModalState}
-      handleSubmit={handleSubmit}
+      handleSubmit={handleValidation}
       closeOnSubmit
       async
       componentActions={<AccountAddressesAction saving={saving} />}
       displayBottomActions
     >
-      {saving && (
+      {(saving || loading) && (
         <div className={classes.loading}>
           <CircularProgress color="primary" />
         </div>
       )}
       {restaurant.configs.use_postalcode && (
         <Grid item xs={12} xl={3} md={5} lg={3} style={{ flexBasis: 0 }}>
-          {loading && <Loading />}
           <TextField
             label="CEP"
             placeholder="Digite o CEP"
@@ -183,33 +254,57 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
           <div className={classes.form}>
             <div>
               <TextField
+                error={!!validation.address}
+                helperText={!!validation.address && validation.address}
                 label="Endereço"
                 placeholder="Digite o endereço"
                 margin="normal"
                 fullWidth
                 value={address}
                 onChange={event => setAddress(event.target.value)}
-                required
               />
               <TextField
+                error={!!validation.number}
+                helperText={!!validation.number && validation.number}
                 label="Número"
                 placeholder="Digite o número"
                 margin="normal"
                 fullWidth
                 value={number}
                 onChange={event => setNumber(event.target.value)}
-                required
               />
+              {restaurant.configs.tax_mode === 'district' ? (
+                <TextField
+                  error={!!validation.areaRegionId}
+                  helperText={!!validation.areaRegionId && validation.areaRegionId}
+                  select
+                  label="Selecione um bairro"
+                  fullWidth
+                  value={areaRegionId}
+                  onChange={event => handleDistrictSelectChange(event)}
+                  margin="normal"
+                >
+                  {regions.map(region => (
+                    <MenuItem key={region.id} value={region.id}>
+                      {region.name} - {region.formattedTax} (taxa de entrega)
+                    </MenuItem>
+                  ))}
+                </TextField>
+              ) : (
+                <TextField
+                  error={!!validation.district}
+                  helperText={!!validation.district && validation.district}
+                  label="Bairro"
+                  placeholder="Digite o bairro"
+                  margin="normal"
+                  fullWidth
+                  value={district}
+                  onChange={event => setDistrict(event.target.value)}
+                />
+              )}
               <TextField
-                label="Bairro"
-                placeholder="Digite o bairro"
-                margin="normal"
-                fullWidth
-                value={district}
-                onChange={event => setDistrict(event.target.value)}
-                required
-              />
-              <TextField
+                error={!!validation.complement}
+                helperText={!!validation.complement && validation.complement}
                 label="Complemento"
                 placeholder="Digite o complemento"
                 margin="normal"
@@ -217,15 +312,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
                 value={complement}
                 onChange={event => setComplement(event.target.value)}
               />
-              <TextField
-                label="Cidade"
-                placeholder="Digite a cidade"
-                margin="normal"
-                fullWidth
-                value={city}
-                disabled
-                required
-              />
+              <TextField label="Cidade" placeholder="Digite a cidade" margin="normal" fullWidth value={city} disabled />
               <TextField
                 label="Estado"
                 placeholder="Digite o estado"
@@ -233,11 +320,10 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
                 fullWidth
                 value={region}
                 disabled
-                required
               />
             </div>
             <div className={classes.actions}>
-              <Button size="large" disabled={saving} type="submit" variant="contained" color="primary">
+              <Button disabled={saving} type="submit" variant="contained" color="primary">
                 Confirmar endereço
               </Button>
             </div>

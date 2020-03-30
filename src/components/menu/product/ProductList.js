@@ -39,7 +39,6 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 4,
   },
   productData: {
-    marginLeft: 10,
     display: 'flex',
     flexDirection: 'column',
     flex: '1 1',
