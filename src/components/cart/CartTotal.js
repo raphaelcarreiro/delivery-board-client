@@ -17,6 +17,7 @@ const useStyles = makeStyles({
   cartValues: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
+    alignItems: 'center',
   },
 });
 
@@ -52,9 +53,14 @@ export default function CartTotal() {
                   </Typography>
                 ) : (
                   restaurant.configs.tax_mode === 'district' && (
-                    <Typography variant="caption" color="textSecondary" align="center">
-                      De acordo com o bairro selecionado
-                    </Typography>
+                    <>
+                      <Typography variant="caption" color="textSecondary" display="block">
+                        Valor determinado por bairro
+                      </Typography>
+                      <Typography variant="caption" color="textSecondary" display="block">
+                        {order.shipment.district}, {order.shipment.city}
+                      </Typography>
+                    </>
                   )
                 )}
               </div>
