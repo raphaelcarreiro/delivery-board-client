@@ -149,12 +149,12 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
       complement: yup.string().nullable(),
       district: yup.string().test('check_config', 'Bairro é obrigatório', value => {
         if (restaurant.configs.tax_mode !== 'district') {
-          return value !== '';
+          return !!value;
         } else return true;
       }),
-      areaRegionId: yup.string().test('check_area', 'Bairro é obrigatório', value => {
+      areaRegionId: yup.mixed().test('check_area', 'Bairro é obrigatório', value => {
         if (restaurant.configs.tax_mode === 'district') {
-          return value !== '';
+          return !!value;
         } else return true;
       }),
       number: yup.string().required('O número é obrigatório'),

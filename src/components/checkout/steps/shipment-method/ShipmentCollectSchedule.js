@@ -56,9 +56,13 @@ export default function ShipmentCollectSchedule({ onExited }) {
   const classes = useStyles();
 
   useEffect(() => {
-    setInterval(() => {
+    const interval = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   function handleScheduleYes() {

@@ -5,11 +5,11 @@ import AccountAddressesAction from './AccountAddressesAction';
 import { MessagingContext } from '../../messaging/Messaging';
 import PostalCodeInput from '../../masked-input/PostalCodeInput';
 import CustomDialogForm from 'src/components/dialog/CustomDialogForm';
-import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 import * as yup from 'yup';
 import { api } from 'src/services/api';
 import { moneyFormat } from 'src/helpers/numberFormat';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -99,17 +99,14 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
       complement: yup.string().nullable(),
       district: yup.string().test('check_config', 'Bairro é obrigatório', value => {
         if (restaurant.configs.tax_mode !== 'district') {
-          return value !== '';
+          return !!value;
         } else return true;
       }),
-      areaRegionId: yup
-        .string()
-        .typeError('Bairro é obrigatório')
-        .test('check_area', 'Bairro é obrigatório', value => {
-          if (restaurant.configs.tax_mode === 'district') {
-            return value !== '';
-          } else return true;
-        }),
+      areaRegionId: yup.mixed().test('check_area', 'Bairro é obrigatório', value => {
+        if (restaurant.configs.tax_mode === 'district') {
+          return !!value;
+        } else return true;
+      }),
       number: yup.string().required('O número é obrigatório'),
       address: yup.string().required('O endereço é obrigatório'),
     });

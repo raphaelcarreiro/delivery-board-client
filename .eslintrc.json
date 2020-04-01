@@ -23,6 +23,7 @@
   "plugins": ["react", "prettier", "react-hooks"],
   "rules": {
     "prettier/prettier": "error",
-    "no-unused-vars": "warn"
+    "no-unused-vars": "warn",
+    "camelcase": "off"
   }
 }
