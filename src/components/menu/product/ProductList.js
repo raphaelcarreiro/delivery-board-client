@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { List, ListItem, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import BookmarkIcon from '@material-ui/icons/Bookmark';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -47,6 +48,22 @@ const useStyles = makeStyles(theme => ({
   price: {
     fontWeight: 300,
   },
+  oldPrice: {
+    textDecoration: 'line-through',
+  },
+  specialPrice: {},
+  specialPriceContent: {
+    display: 'flex',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    minWidth: 135,
+  },
+  tag: {
+    position: 'absolute',
+    top: -7,
+    left: 10,
+    color: theme.palette.secondary.main,
+  },
 }));
 
 export default function ProductList({ products, handleProductClick, handleOpenImagePreview }) {
@@ -58,14 +75,26 @@ export default function ProductList({ products, handleProductClick, handleOpenIm
         {products.map(product => (
           <ListItem onClick={() => handleProductClick(product)} button className={classes.listItem} key={product.id}>
             <div className={classes.productData}>
+              {product.promotion_activated && <BookmarkIcon className={classes.tag} />}
               <Typography variant="h6">{product.name}</Typography>
               <Typography variant="body2" color="textSecondary">
                 {product.description}
               </Typography>
-              {product.price > 0 && (
-                <Typography variant="h6" className={classes.price} color="primary">
-                  {product.formattedPrice}
-                </Typography>
+              {product.promotion_activated && product.special_price > 0 ? (
+                <div className={classes.specialPriceContent}>
+                  <Typography variant="body2" color="textSecondary" className={classes.oldPrice}>
+                    {product.formattedPrice}
+                  </Typography>
+                  <Typography variant="h6" className={classes.specialPrice} color="primary">
+                    {product.formattedSpecialPrice}
+                  </Typography>
+                </div>
+              ) : (
+                product.price > 0 && (
+                  <Typography variant="h6" className={classes.price} color="primary">
+                    {product.formattedPrice}
+                  </Typography>
+                )
               )}
               {product.category.has_complement && <Typography color="primary">Monte esse produto</Typography>}
             </div>

@@ -38,23 +38,11 @@ Category.getInitialProps = async ({ query }) => {
 
   const response = await axiosInstance.get(`/categories/${query.url}`);
 
-  if (!response.data.activated) {
-    const category = {
-      ...response.data,
-      products: [],
-    };
-
-    return {
-      category,
-    };
-  }
-
-  const products = response.data.products
-    .filter(product => product.activated)
-    .map(product => {
-      product.formattedPrice = moneyFormat(product.price);
-      return product;
-    });
+  const products = response.data.products.map(product => {
+    product.formattedPrice = moneyFormat(product.price);
+    product.formattedSpecialPrice = moneyFormat(product.special_price);
+    return product;
+  });
 
   const category = {
     ...response.data,

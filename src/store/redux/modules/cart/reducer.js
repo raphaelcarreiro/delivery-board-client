@@ -30,7 +30,10 @@ export default function cart(state = INITIAL_STATE, action) {
     }
 
     case '@cart/ADD_PRODUCT': {
-      const price = state.product.price;
+      const price =
+        state.product.promotion_activated && state.product.special_price > 0
+          ? state.product.special_price
+          : state.product.price;
       let additionalPrice = 0;
       let finalPrice = 0;
       let complementsPrice = 0;

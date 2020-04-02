@@ -4,7 +4,6 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { moneyFormat } from '../../../../../helpers/numberFormat';
 import { CustomDialogContext } from 'src/components/dialog/CustomDialog';
 
 const useStyles = makeStyles(theme => ({
@@ -60,7 +59,7 @@ ProductViewAction.propTypes = {
   amount: PropTypes.number.isRequired,
   handleAmountUp: PropTypes.func.isRequired,
   handleAddProductToCart: PropTypes.func.isRequired,
-  product: PropTypes.object.isRequired,
+  total: PropTypes.number.isRequired,
   additionalPrice: PropTypes.number.isRequired,
 };
 
@@ -69,11 +68,12 @@ export default function ProductViewAction({
   amount,
   handleAmountUp,
   handleAddProductToCart,
-  product,
+  total,
   additionalPrice,
 }) {
   const classes = useStyles();
   const { handleCloseDialog } = useContext(CustomDialogContext);
+
   return (
     <div className={classes.action}>
       <Grid item xs={12}>
@@ -101,7 +101,7 @@ export default function ProductViewAction({
           >
             <span>Adicionar</span>
             <Typography className={classes.finalPrice} color="textPrimary">
-              {moneyFormat((product.price + additionalPrice) * amount)}
+              {total}
             </Typography>
           </Button>
         </div>

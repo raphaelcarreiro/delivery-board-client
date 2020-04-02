@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ProductViewIngredients from './ProductViewIngredients';
 import ProductViewAdditional from './ProductViewAdditional';
@@ -61,6 +61,10 @@ const useStyles = makeStyles(theme => ({
   price: {
     fontWeight: 300,
   },
+  oldPrice: {
+    textDecoration: 'line-through',
+  },
+  specialPrice: {},
   productDescription: {
     display: 'flex',
     flexDirection: 'column',
@@ -101,6 +105,12 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
       ingredients,
     });
   }, []);
+
+  const total = useMemo(() => {
+    const productPrice = product.promotion_activated && product.special_price ? product.special_price : product.price;
+    const total = (productPrice + additionalPrice) * amount;
+    return moneyFormat(total);
+  }, [additionalPrice, amount]);
 
   useEffect(() => {
     setAdditionalPrice(
@@ -165,9 +175,18 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
             <div className={classes.productDescription}>
               <Typography variant="h6">{product.name}</Typography>
               <Typography>{product.description}</Typography>
-              <Typography color="textSecondary" className={classes.price}>
-                {product.formattedPrice}
-              </Typography>
+              {product.promotion_activated && product.special_price > 0 ? (
+                <>
+                  <Typography variant="body2" color="textSecondary" className={classes.oldPrice}>
+                    {product.formattedPrice}
+                  </Typography>
+                  <Typography className={classes.specialPrice}>{product.formattedSpecialPrice}</Typography>
+                </>
+              ) : (
+                <Typography color="textSecondary" className={classes.price}>
+                  {product.formattedPrice}
+                </Typography>
+              )}
             </div>
           </div>
           <Grid item xs={12}>
@@ -202,7 +221,7 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
         amount={amount}
         handleAmountUp={handleAmountUp}
         handleAddProductToCart={handleAddProductToCart}
-        product={product}
+        total={total}
         additionalPrice={additionalPrice}
       />
     </CustomDialog>
