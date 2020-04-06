@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   logo: {
     maxWidth: 100,
     borderRadius: 4,
-    zIndex: 1,
+    zIndex: 2,
     [theme.breakpoints.down('sm')]: {
       maxWidth: 100,
     },
@@ -58,7 +58,8 @@ const useStyles = makeStyles(theme => ({
     padding: 10,
     overflow: 'hidden',
     position: 'relative',
-    backgroundColor: '#777',
+    zIndex: 1,
+    backgroundColor: '#555',
   },
   background: ({ coverUrl }) => ({
     backgroundImage: `url(${coverUrl})`,
@@ -71,10 +72,11 @@ const useStyles = makeStyles(theme => ({
     bottom: -1,
     left: -1,
     right: -1,
-    zIndex: -1,
+    zIndex: 2,
   }),
   textInfo: {
     color: '#fff',
+    zIndex: 2,
   },
   info: {
     display: 'flex',
@@ -95,7 +97,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Index() {
   const restaurant = useSelector(state => state.restaurant);
-  const classes = useStyles({ coverUrl: restaurant && restaurant.conver && restaurant.cover.imageUrl });
+  const classes = useStyles({ coverUrl: restaurant && restaurant.cover && restaurant.cover.imageUrl });
 
   return (
     <>
