@@ -20,6 +20,9 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'flex-start',
     justifyContent: 'center',
     overflow: 'hidden',
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 0,
+    },
   },
   imageWrapper: {
     [theme.breakpoints.down('sm')]: {

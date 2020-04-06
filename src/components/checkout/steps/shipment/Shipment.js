@@ -53,16 +53,6 @@ export default function Shipment({ addresses }) {
         }
   }, [customer]);
 
-  /* useEffect(() => {
-    if (order.shipment)
-      if (restaurant.configs.tax_mode === 'district')
-        if (!order.shipment.area_region) {
-          setDialogEditAddress(true);
-          setSelectedAddress(order.shipment);
-          messaging.handleOpen('Selecione o bairro');
-        }
-  }, [order.shipment]); */
-
   async function handleAddressSubmit(address) {
     try {
       setSavingAddress(true);
@@ -127,7 +117,7 @@ export default function Shipment({ addresses }) {
     if (restaurant.configs.tax_mode === 'district' && !address.area_region) {
       setSelectedAddress(address);
       setDialogEditAddress(true);
-      messaging.handleOpen('Selecione o bairro');
+      messaging.handleOpen('Por favor, atualize o bairro');
       return;
     }
     dispatch(setShipmentAddress(address));

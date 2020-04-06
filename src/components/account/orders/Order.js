@@ -153,7 +153,7 @@ export default function Order({ cryptId }) {
   const classes = useStyles();
 
   useEffect(() => {
-    const socket = io.connect(process.env.URL_NODE_SERVER, { reconnectionAttempts: 5 });
+    const socket = io.connect(process.env.URL_NODE_SERVER + '/client');
     if (order) {
       socket.emit('register', order.id);
 
@@ -175,6 +175,11 @@ export default function Order({ cryptId }) {
   }, [order]);
 
   useEffect(() => {
+    handleSetOrders();
+  }, []);
+
+  function handleSetOrders() {
+    setLoading(true);
     api()
       .get(`orders/${cryptId}`)
       .then(response => {
@@ -237,13 +242,21 @@ export default function Order({ cryptId }) {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }
 
   return (
     <>
       <CustomAppbar
         title={order ? `Pedido ${order.formattedId}` : 'Carregando...'}
-        actionComponent={<OrderAction hasToken={app.fmHasToken} isSupported={isSupported()} user={!!user.id} />}
+        actionComponent={
+          <OrderAction
+            hasToken={app.fmHasToken}
+            isSupported={isSupported()}
+            user={!!user.id}
+            handleRefresh={handleSetOrders}
+            loading={loading}
+          />
+        }
       />
       {loading ? (
         <Loading />

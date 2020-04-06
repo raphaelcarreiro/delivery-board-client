@@ -9,13 +9,8 @@ import Link from '../link/Link';
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
-    flex: 0.8,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
-    alignItems: 'center',
-    '& div': {
-      textAlign: 'center',
-    },
   },
   closedRestaurant: {
     backgroundColor: theme.palette.error.main,
@@ -32,15 +27,12 @@ const useStyles = makeStyles(theme => ({
     },
   },
   restaurant: {
-    marginTop: 20,
-  },
-  user: {
-    margin: '20px 0',
-    '& a': {
-      display: 'inline-block',
+    [theme.breakpoints.down('sm')]: {
       marginTop: 10,
-      fontSize: 20,
     },
+  },
+  menu: {
+    margin: '20px 0',
   },
   closed: {
     padding: 10,
@@ -50,44 +42,93 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 15,
   },
   logo: {
-    maxWidth: 150,
+    maxWidth: 100,
     borderRadius: 4,
+    zIndex: 1,
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: 100,
+    },
   },
-  logoContainer: {
-    display: 'none',
-    [theme.breakpoints.down('md')]: {
-      display: 'block',
+  cover: {
+    width: '100%',
+    height: 300,
+    display: 'flex',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    padding: 10,
+    overflow: 'hidden',
+    position: 'relative',
+    backgroundColor: '#777',
+  },
+  background: ({ coverUrl }) => ({
+    backgroundImage: `url(${coverUrl})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    filter: 'brightness(0.5) blur(2px)',
+    position: 'absolute',
+    top: -1,
+    bottom: -1,
+    left: -1,
+    right: -1,
+    zIndex: -1,
+  }),
+  textInfo: {
+    color: '#fff',
+  },
+  info: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: 6,
+    '&>h5': {
+      marginLeft: 15,
+      [theme.breakpoints.down('sm')]: {
+        marginLeft: 0,
+      },
+    },
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'space-between',
+      marginLeft: 0,
     },
   },
 }));
 
 export default function Index() {
   const restaurant = useSelector(state => state.restaurant);
-  const classes = useStyles();
+  const classes = useStyles({ coverUrl: restaurant && restaurant.conver && restaurant.cover.imageUrl });
 
   return (
     <>
       <CustomAppbar title="Início" actionComponent={<IndexAppbarActions />} />
       {restaurant && (
         <div className={classes.container}>
-          {restaurant.image && (
-            <div className={classes.logoContainer}>
-              <img src={restaurant.image.imageUrl} alt={restaurant.name} className={classes.logo} />
-            </div>
-          )}
-          <div className={classes.restaurant}>
-            <Typography variant="h6">{restaurant.name}</Typography>
-            <Typography variant="body1">{restaurant.description}</Typography>
-          </div>
-          <div className={classes.user}>
-            <Button variant="contained" color="primary" component={Link} href="/menu">
-              Acessar cardápio
-            </Button>
-          </div>
-          <div>
-            <Typography variant="body1" gutterBottom>
+          <div className={classes.cover}>
+            <div className={classes.background} />
+            <Typography variant="body1" className={classes.textInfo}>
               {restaurant.working_hours}
             </Typography>
+            {restaurant.image && <img src={restaurant.image.imageUrl} alt={restaurant.name} className={classes.logo} />}
+          </div>
+          <div className={classes.info}>
+            {restaurant.configs.delivery_time > 0 && (
+              <Typography color="textSecondary" variant="h5" className={classes.infoItem}>
+                {restaurant.configs.delivery_time} minutos
+              </Typography>
+            )}
+            {restaurant.configs.order_minimum_value > 0 && restaurant.configs.tax_mode !== 'order_value' && (
+              <Typography color="textSecondary" variant="h5" className={classes.infoItem}>
+                {restaurant.configs.formattedOrderMinimumValue} mínimo
+              </Typography>
+            )}
+          </div>
+          <div className={classes.restaurant}>
+            <Typography variant="h4">{restaurant.name}</Typography>
+            <Typography variant="body1">{restaurant.description}</Typography>
+          </div>
+          <div className={classes.menu}>
+            <Button variant="contained" size="large" color="primary" component={Link} href="/menu">
+              Acessar cardápio
+            </Button>
           </div>
         </div>
       )}

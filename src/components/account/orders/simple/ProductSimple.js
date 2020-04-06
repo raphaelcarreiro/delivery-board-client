@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, TextField } from '@material-ui/core';
 import ProductSimpleAdditional from './ProductSimpleAdditional';
@@ -19,6 +19,9 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'flex-start',
     justifyContent: 'center',
     overflow: 'hidden',
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 0,
+    },
   },
   image: {
     width: '100%',

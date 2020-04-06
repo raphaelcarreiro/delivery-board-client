@@ -12,12 +12,10 @@ export default function restaurant(state = INITIAL_STATE, action) {
     }
 
     case '@restaurant/SET_RESTAURANT_IS_OPEN': {
-      return state.id === action.state.restaurantId
-        ? {
-            ...state,
-            is_open: action.state.state,
-          }
-        : state;
+      return {
+        ...state,
+        is_open: action.state.state,
+      };
     }
 
     default: {

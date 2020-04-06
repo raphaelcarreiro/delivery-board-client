@@ -14,7 +14,7 @@ import { verifyToken } from './helpers/verifyToken';
 import Sidebar from './components/sidebar/Sidebar';
 import InitialLoading from './components/loading/InitialLoading';
 import Checkout from './components/layout/Checkout';
-import { setCart, updateTotal } from 'src/store/redux/modules/cart/actions';
+import { setCart } from 'src/store/redux/modules/cart/actions';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import { createTheme } from 'src/helpers/createTheme';
@@ -170,10 +170,11 @@ function App({ pageProps, component: Component }) {
   // set webscoket connection
   useEffect(() => {
     if (restaurant) {
-      socket = io(process.env.URL_NODE_SERVER);
+      socket = io(process.env.URL_NODE_SERVER + '/client');
+      socket.emit('register', restaurant.id);
       // socket = io(process.env.URL_NODE_SERVER, { reconnectionAttempts: 5 });
       socket.on('handleRestaurantState', state => {
-        if (state.restaurantId === restaurant.id) dispatch(setRestaurantIsOpen(state));
+        dispatch(setRestaurantIsOpen(state));
       });
     }
 

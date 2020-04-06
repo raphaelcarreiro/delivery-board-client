@@ -21,7 +21,7 @@ export default function Menu() {
     api()
       .get('/categories', { cancelToken: source.token })
       .then(response => {
-        setProductsAmount(response.data.reduce((sum, category) => sum + category.productsAmount, 0));
+        setProductsAmount(response.data.reduce((sum, category) => sum + category.available_products_amount, 0));
         if (request) setCategories(response.data);
       })
       .catch(err => {
