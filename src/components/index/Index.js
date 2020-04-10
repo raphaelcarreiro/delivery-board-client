@@ -45,6 +45,8 @@ const useStyles = makeStyles(theme => ({
     maxWidth: 100,
     borderRadius: 4,
     zIndex: 2,
+    padding: 5,
+    backgroundColor: '#fff',
     [theme.breakpoints.down('sm')]: {
       maxWidth: 100,
     },
@@ -86,11 +88,13 @@ const useStyles = makeStyles(theme => ({
       marginLeft: 15,
       [theme.breakpoints.down('sm')]: {
         marginLeft: 0,
+        fontSize: 20,
       },
     },
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'space-between',
       marginLeft: 0,
+      fontSize: 20,
     },
   },
 }));

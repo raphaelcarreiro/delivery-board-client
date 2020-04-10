@@ -4,7 +4,7 @@ import { IconButton, Menu, MenuItem, Avatar, Typography } from '@material-ui/cor
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import InputIcon from '@material-ui/icons/Input';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import StatusIcon from '@material-ui/icons/FiberManualRecord';
+import LocalOfferIcons from '@material-ui/icons/LocalOffer';
 import Link from '../../link/Link';
 import { useRouter } from 'next/router';
 import { AppContext } from '../../../App';
@@ -175,6 +175,11 @@ export default function Header() {
             </div>
           )}
           <div className={classes.headerLinks}>
+            <div>
+              <Link href="/offers" className={classes.link}>
+                <LocalOfferIcons color="primary" /> Ofertas
+              </Link>
+            </div>
             <div>
               <Link href="/menu" className={classes.link}>
                 <MenuBookIcon color="primary" /> Cardápio

@@ -101,7 +101,7 @@ export default function Product({ products, categoryName, categoryUrl }) {
     // messaging.handleOpen('Produto adicionado ao carrinho');
     app.handleCartVisibility(true);
     handleCancelSearch();
-    router.push('/menu');
+    if (categoryUrl !== '/offers') router.push('/menu');
   }
 
   function handleSearch(searchValue) {

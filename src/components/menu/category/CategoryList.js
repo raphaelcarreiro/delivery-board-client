@@ -76,9 +76,15 @@ export default function CategoryList({ categories }) {
                   <Typography color="textSecondary">{item.price}</Typography>
                   {item.factor && <Typography color="textSecondary">Até {item.factor} sabores</Typography>}
                 </div>
-                <div className={classes.imageWrapper}>
-                  <img className={classes.image} src={item.image && item.image.imageUrl} alt={item.name} />
-                </div>
+                {item.image && (
+                  <div className={classes.imageWrapper}>
+                    <img
+                      className={classes.image}
+                      src={item.image.imageThumbUrl ? item.image.imageThumbUrl : item.image.imageUrl}
+                      alt={item.name}
+                    />
+                  </div>
+                )}
               </div>
             </ListItem>
           )

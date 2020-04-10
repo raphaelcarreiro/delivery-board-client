@@ -18,6 +18,7 @@ import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { firebaseMessagingIsSupported } from 'src/config/FirebaseConfig';
 import ChatIcon from '@material-ui/icons/Chat';
+import LocalOfferIcons from '@material-ui/icons/LocalOffer';
 
 const useStyles = makeStyles(theme => ({
   drawerPaper: {
@@ -199,6 +200,12 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
           <HomeIcon />
         </ListItemIcon>
         <ListItemText classes={{ primary: classes.listItemText }} primary="Início" />
+      </ListItem>
+      <ListItem component={Link} href="/offers" onClick={handleClick} button>
+        <ListItemIcon className={classes.listItemIcon}>
+          <LocalOfferIcons />
+        </ListItemIcon>
+        <ListItemText classes={{ primary: classes.listItemText }} primary="Ofertas" />
       </ListItem>
       <ListItem component={Link} href="/menu" onClick={handleClick} button>
         <ListItemIcon className={classes.listItemIcon}>

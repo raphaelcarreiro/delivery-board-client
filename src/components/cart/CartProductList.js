@@ -142,7 +142,7 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
                 onMouseEnter={handleImageMouseEnter}
                 onMouseLeave={handleImageMouseLeave}
                 onMouseMoveCapture={() => handleImageMouseMove(product.uid)}
-                src={product.image.imageUrl}
+                src={product.image.imageThumbUrl ? product.image.imageThumbUrl : product.image.imageUrl}
                 alt={product.name}
                 className={classes.productImage}
               />

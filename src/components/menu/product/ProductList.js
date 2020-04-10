@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { List, ListItem, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import BookmarkIcon from '@material-ui/icons/Bookmark';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -38,6 +37,7 @@ const useStyles = makeStyles(theme => ({
     height: 100,
     overflow: 'hidden',
     borderRadius: 4,
+    position: 'relative',
   },
   productData: {
     display: 'flex',
@@ -75,7 +75,6 @@ export default function ProductList({ products, handleProductClick, handleOpenIm
         {products.map(product => (
           <ListItem onClick={() => handleProductClick(product)} button className={classes.listItem} key={product.id}>
             <div className={classes.productData}>
-              {product.promotion_activated && <BookmarkIcon className={classes.tag} />}
               <Typography variant="h6">{product.name}</Typography>
               <Typography variant="body2" color="textSecondary">
                 {product.description}
@@ -98,14 +97,16 @@ export default function ProductList({ products, handleProductClick, handleOpenIm
               )}
               {product.category.has_complement && <Typography color="primary">Monte esse produto</Typography>}
             </div>
-            <div className={classes.imageWrapper}>
-              <img
-                className={classes.img}
-                src={product.image.imageUrl}
-                alt={product.name}
-                onClick={event => handleOpenImagePreview(event, product)}
-              />
-            </div>
+            {product.image && (
+              <div className={classes.imageWrapper}>
+                <img
+                  className={classes.img}
+                  src={product.image.imageThumbUrl ? product.image.imageThumbUrl : product.image.imageUrl}
+                  alt={product.name}
+                  onClick={event => handleOpenImagePreview(event, product)}
+                />
+              </div>
+            )}
           </ListItem>
         ))}
       </List>

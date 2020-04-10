@@ -31,7 +31,7 @@ const useStyles = makeStyles({
     position: 'fixed',
     width: '100%',
     top: 0,
-    zIndex: 11,
+    zIndex: 1102,
     height: 2,
   },
 });
@@ -331,7 +331,7 @@ function App({ pageProps, component: Component }) {
 
         {loading && <Loading background="rgba(250,250,250,0.5)" />}
 
-        {isProgressBarVisible && <LinearProgress color="primary" className={classes.progressBar} />}
+        {isProgressBarVisible && <LinearProgress color="secondary" className={classes.progressBar} />}
 
         <Sidebar handleLogout={handleLogout} handleOpenMenu={handleOpenMenu} isOpenMenu={isOpenMenu} />
 

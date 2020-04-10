@@ -59,7 +59,7 @@ ProductViewAction.propTypes = {
   amount: PropTypes.number.isRequired,
   handleAmountUp: PropTypes.func.isRequired,
   handleAddProductToCart: PropTypes.func.isRequired,
-  total: PropTypes.number.isRequired,
+  total: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   additionalPrice: PropTypes.number.isRequired,
 };
 
