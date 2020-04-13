@@ -13,7 +13,7 @@ export default function OffersPage({ products }) {
   return (
     <>
       <Head>
-        <title>Promoções</title>
+        <title>Ofertas</title>
       </Head>
       <Offer products={products} />
     </>
