@@ -1,13 +1,14 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import reducers from './modules/reducers';
 import { cartMiddlware } from 'src/store/redux/modules/cart/middleware';
+import { promotionMiddleware } from './modules/promotion/middleware';
 import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
 
 function middlewares() {
   if (process.env.NODE_ENV === 'development' && process.browser) {
     const reactotron = reactotronInitialize();
-    return compose(applyMiddleware(cartMiddlware), reactotron.createEnhancer());
-  } else return applyMiddleware(cartMiddlware);
+    return compose(applyMiddleware(cartMiddlware, promotionMiddleware), reactotron.createEnhancer());
+  } else return applyMiddleware(cartMiddlware, promotionMiddleware);
 }
 
 const store = createStore(reducers, middlewares());

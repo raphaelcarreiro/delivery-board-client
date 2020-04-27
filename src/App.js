@@ -25,6 +25,7 @@ import { initialize as reactotronInitialize } from 'src/config/ReactotronInitial
 import { getFirebaseMessaging, firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
 import reactGA from 'react-ga';
 import { moneyFormat } from './helpers/numberFormat';
+import { setPromotions } from './store/redux/modules/promotion/actions';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -141,6 +142,7 @@ function App({ pageProps, component: Component }) {
       .finally(() => {
         setInitialLoading(false);
         document.body.classList.add('zoom');
+        loadPromotions(); // load promotion after request for restaurant data was finished
       });
   }, []);
 
@@ -263,6 +265,7 @@ function App({ pageProps, component: Component }) {
     }
   }
 
+  // function to pwa installation
   function handleInstallApp() {
     defferedPromptPwa.prompt();
     defferedPromptPwa.userChoice.then(choiceResult => {
@@ -321,6 +324,14 @@ function App({ pageProps, component: Component }) {
 
   function handleCartVisibility(state = !isCartVisible) {
     setIsCartVisible(state);
+  }
+
+  function loadPromotions() {
+    api()
+      .get('/promotions')
+      .then(response => {
+        dispatch(setPromotions(response.data));
+      });
   }
 
   return (

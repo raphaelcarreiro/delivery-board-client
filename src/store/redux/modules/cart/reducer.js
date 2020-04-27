@@ -271,8 +271,12 @@ export default function cart(state = INITIAL_STATE, action) {
       const { coupon } = state;
       let tax = state.tax;
       let total = 0;
+      let discount = 0;
       const subtotal = state.products.reduce((sum, value) => sum + value.final_price, 0);
-      const discount = coupon ? subtotal * (coupon.discount / 100) : 0;
+
+      if (coupon) {
+        discount = coupon.discount_type === 'percent' ? subtotal * (coupon.discount / 100) : coupon.discount;
+      }
 
       if (configs.tax_mode === 'order_value') {
         if (action.shipmentMethod === 'delivery') {
@@ -292,6 +296,8 @@ export default function cart(state = INITIAL_STATE, action) {
         tax = 0;
         total = subtotal - discount;
       }
+
+      total = total < 0 ? 0 : total;
 
       return {
         ...state,
