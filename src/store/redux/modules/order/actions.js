@@ -88,3 +88,10 @@ export function setSchedule(date) {
     date,
   };
 }
+
+export function setDiscount(discount) {
+  return {
+    type: '@order/SET_DISCOUNT',
+    discount,
+  };
+}

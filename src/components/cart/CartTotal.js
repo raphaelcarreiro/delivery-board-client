@@ -31,7 +31,7 @@ export default function CartTotal() {
     <>
       <div className={classes.container}>
         <div className={classes.cartValuesContent}>
-          {cart.coupon && (
+          {cart.discount > 0 && (
             <>
               <div className={classes.cartValues}>
                 <Typography>Subtotal</Typography>

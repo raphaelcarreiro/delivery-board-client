@@ -8,7 +8,6 @@ export const INITIAL_STATE = {
   configs: null,
   coupon: null,
   discount: 0,
-  discountPercent: 0,
   subtotal: 0,
   tax: 0,
 };
@@ -266,12 +265,21 @@ export default function cart(state = INITIAL_STATE, action) {
       };
     }
 
+    case '@cart/SET_DISCOUNT': {
+      const subtotal = state.products.reduce((sum, value) => sum + value.final_price, 0);
+
+      return {
+        ...state,
+        discount: action.discountType === 'percent' ? subtotal * (action.discount / 100) : action.discount,
+      };
+    }
+
     case '@cart/UPDATE_TOTAL': {
       const { configs } = state;
       const { coupon } = state;
       let tax = state.tax;
       let total = 0;
-      let discount = 0;
+      let discount = 0 || state.discount;
       const subtotal = state.products.reduce((sum, value) => sum + value.final_price, 0);
 
       if (coupon) {

@@ -10,6 +10,7 @@ import {
   setCoupon,
   setTax,
   setShipmentMethod,
+  setDiscount,
 } from 'src/store/redux/modules/order/actions';
 import Shipment from './steps/shipment/Shipment';
 import { setUser } from 'src/store/redux/modules/user/actions';
@@ -186,6 +187,7 @@ export default function Checkout() {
   useEffect(() => {
     if (restaurant.id) {
       dispatch(setTax(cart.tax));
+      dispatch(setDiscount(cart.discount));
       if (
         cart.subtotal < restaurant.configs.order_minimum_value &&
         restaurant.configs.tax_mode !== 'order_value' &&

@@ -17,6 +17,7 @@ const INITIAL_STATE = {
   },
   coupon: null,
   tax: 0,
+  discount: 0,
 };
 
 export default function order(state = INITIAL_STATE, action) {
@@ -116,6 +117,13 @@ export default function order(state = INITIAL_STATE, action) {
       return {
         ...state,
         tax: action.tax,
+      };
+    }
+
+    case '@order/SET_DISCOUNT': {
+      return {
+        ...state,
+        discount: action.discount,
       };
     }
 

@@ -86,3 +86,11 @@ export function setTax(tax) {
     tax,
   };
 }
+
+export function setDiscount(discountType, discount) {
+  return {
+    type: '@cart/SET_DISCOUNT',
+    discount,
+    discountType,
+  };
+}

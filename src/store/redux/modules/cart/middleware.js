@@ -1,4 +1,4 @@
-import { createHistory, setConfigs, updateTotal, setTax } from './actions';
+import { createHistory, setConfigs, updateTotal, setTax, setDiscount } from './actions';
 
 const saveCartAtLocalStorage = cart => {
   localStorage.setItem(process.env.LOCALSTORAGE_CART, JSON.stringify(cart));
@@ -16,6 +16,7 @@ export const cartMiddlware = store => next => action => {
     '@cart/SET_CART',
     '@order/SET_SHIPMENT_METHOD',
     '@order/SET_SHIPMENT_ADDRESS',
+    '@promotion/SET_PROMOTIONS',
   ];
 
   // actions para salvar configurações do restaurante no carrinho
@@ -65,10 +66,38 @@ export const cartMiddlware = store => next => action => {
 
   // atualiza total do carrinho de acordo com a action emitida
   if (actionsToSaveCart.includes(action.type)) {
-    const cart = store.getState().cart;
     const order = store.getState().order;
     store.dispatch(updateTotal(order.shipment.shipment_method || 'delivery'));
-    saveCartAtLocalStorage(cart);
+  }
+
+  /*
+   * verifica se há promoções e aplica ao carrinho depois da atualização do total.
+   * total é atualizado novamente
+   */
+  if (actionsToSaveCart.includes(action.type)) {
+    const promotions = store.getState().promotion;
+    const cart = store.getState().cart;
+    const order = store.getState().order;
+
+    if (promotions) {
+      promotions.forEach(promotion => {
+        if (promotion.categories.length > 0) {
+        } else if (promotion.products.length > 0) {
+        } else if (promotion.order_value) {
+          const { order_value: orderValue } = promotion.order_value;
+          const { safe } = promotion;
+          if (cart.subtotal >= orderValue) {
+            store.dispatch(setDiscount(safe.discount_type, safe.discount));
+          } else {
+            store.dispatch(setDiscount('value', 0));
+          }
+          store.dispatch(updateTotal(order.shipment.shipment_method || 'delivery'));
+        }
+      });
+    } else {
+      store.dispatch(setDiscount('value', 0));
+      store.dispatch(updateTotal(order.shipment.shipment_method || 'delivery'));
+    }
   }
 
   // salva o carrinho em local storage
