@@ -135,10 +135,14 @@ export const cartMiddlware = store => next => action => {
 
                   category.complements.forEach(complement => {
                     if (cartComplementCategory) {
-                      checkedComplements.push({
-                        complement_category_id: cartComplementCategory.id,
-                        complements: [],
-                      });
+                      const checkedCategory = checkedComplements.some(
+                        c => c.complement_category_id === cartComplementCategory.id
+                      );
+                      if (!checkedCategory)
+                        checkedComplements.push({
+                          complement_category_id: cartComplementCategory.id,
+                          complements: [],
+                        });
                       const test = cartComplementCategory.complements.some(
                         cartComplement =>
                           cartComplement.product_complement_id === complement.product_complement_id &&
@@ -184,16 +188,17 @@ export const cartMiddlware = store => next => action => {
             const { safe } = promotion;
             store.dispatch(setDiscount(safe.discount_type, safe.discount));
           } else if (promotion.type === 'get') {
-            store.dispatch(promotionRemoveFromCart());
+            store.dispatch(promotionRemoveFromCart(promotion.id));
             promotion.offered_products.forEach(product => {
               store.dispatch(prepareProduct(product, product.amount));
-              store.dispatch(promotionAddToCart());
+              store.dispatch(promotionAddToCart({ id: promotion.id, name: promotion.name }));
             });
           }
         } else {
-          store.dispatch(setDiscount('value', 0));
-          store.dispatch(promotionRemoveFromCart());
+          if (promotion.type === 'safe') store.dispatch(setDiscount('value', 0));
+          else store.dispatch(promotionRemoveFromCart(promotion.id));
         }
+        store.dispatch(updateTotal(order.shipment.shipment_method || 'delivery'));
       });
     } else {
       store.dispatch(setDiscount('value', 0));

@@ -13,7 +13,7 @@ export const INITIAL_STATE = {
 };
 
 export default function cart(state = INITIAL_STATE, action) {
-  function addToCart(config = { promotion: false }) {
+  function addToCart(promotion = { id: null, name: null }) {
     const price =
       state.product.promotion_activated && state.product.special_price > 0
         ? state.product.special_price
@@ -74,7 +74,7 @@ export default function cart(state = INITIAL_STATE, action) {
       complementsPrice = complementsPrice + tastePrice + complementAdditionalPrice;
     }
 
-    finalPrice = config.promotion ? 0 : (price + additionalPrice + complementsPrice) * state.product.amount;
+    finalPrice = promotion.id ? 0 : (price + additionalPrice + complementsPrice) * state.product.amount;
 
     const products = [
       ...state.products,
@@ -89,7 +89,7 @@ export default function cart(state = INITIAL_STATE, action) {
         complementsPrice: complementsPrice,
         formattedPrice: moneyFormat(price + additionalPrice + complementsPrice),
         formattedFinalPrice: moneyFormat(finalPrice),
-        fromPromotion: config.promotion,
+        promotion,
       },
     ];
 
@@ -120,7 +120,7 @@ export default function cart(state = INITIAL_STATE, action) {
     }
 
     case '@cart/PROMOTION_ADD_PRODUCT': {
-      return addToCart({ promotion: true });
+      return addToCart({ id: action.promotion.id, name: action.promotion.name });
     }
 
     case '@cart/REMOVE_PRODUCT': {
@@ -133,7 +133,7 @@ export default function cart(state = INITIAL_STATE, action) {
     }
 
     case '@cart/PROMOTION_REMOVE_PRODUCT': {
-      const products = state.products.filter(product => !product.fromPromotion);
+      const products = state.products.filter(product => product.promotion.id !== action.promotionId);
 
       return {
         ...state,

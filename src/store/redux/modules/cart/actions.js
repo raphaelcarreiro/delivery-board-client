@@ -19,9 +19,10 @@ export function addToCart() {
   };
 }
 
-export function promotionAddToCart() {
+export function promotionAddToCart(promotion) {
   return {
     type: '@cart/PROMOTION_ADD_PRODUCT',
+    promotion,
   };
 }
 
@@ -32,9 +33,10 @@ export function removeFromCart(productUid) {
   };
 }
 
-export function promotionRemoveFromCart() {
+export function promotionRemoveFromCart(promotionId) {
   return {
     type: '@cart/PROMOTION_REMOVE_PRODUCT',
+    promotionId,
   };
 }
 
