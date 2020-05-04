@@ -1,4 +1,13 @@
-import { createHistory, setConfigs, updateTotal, setTax, setDiscount } from './actions';
+import {
+  createHistory,
+  setConfigs,
+  updateTotal,
+  setTax,
+  setDiscount,
+  prepareProduct,
+  promotionAddToCart,
+  promotionRemoveFromCart,
+} from './actions';
 
 const saveCartAtLocalStorage = cart => {
   localStorage.setItem(process.env.LOCALSTORAGE_CART, JSON.stringify(cart));
@@ -81,22 +90,115 @@ export const cartMiddlware = store => next => action => {
 
     if (promotions) {
       promotions.forEach(promotion => {
+        let checked = false;
         if (promotion.categories.length > 0) {
-        } else if (promotion.products.length > 0) {
-        } else if (promotion.order_value) {
-          const { order_value: orderValue } = promotion.order_value;
-          const { safe } = promotion;
-          if (cart.subtotal >= orderValue) {
-            store.dispatch(setDiscount(safe.discount_type, safe.discount));
-          } else {
-            store.dispatch(setDiscount('value', 0));
-          }
+          // promoção com regras de categorias
+
+          // monta array de categorias x total dos produtos
+          const cartCategories = [];
+          cart.products.forEach(product => {
+            if (!product.fromPromotion)
+              if (!cartCategories.includes(product.category.id))
+                cartCategories.push({ id: product.category.id, value: 0 });
+          });
+          cart.products.forEach(product => {
+            cartCategories.map(category => {
+              if (!product.fromPromotion)
+                if (category.id === product.category.id) {
+                  category.value += product.final_price;
+                }
+              return category;
+            });
+          });
+
+          // verifica se produtos no carrinho satisfação regra da promoção
+          checked = promotion.categories.every(promotionCategory => {
+            const cartCategory = cartCategories.find(cartCategory => cartCategory.id === promotionCategory.category_id);
+            if (cartCategory) return cartCategory.value >= promotionCategory.value;
+            else return false;
+          });
+
           store.dispatch(updateTotal(order.shipment.shipment_method || 'delivery'));
+        } else if (promotion.products.length > 0) {
+          // promoção com regras de produtos
+          const cartProducts = cart.products;
+
+          checked = promotion.products.every(promotionProduct => {
+            const cartProduct = cartProducts.find(cp => cp.id === promotionProduct.product_id);
+            if (cartProduct) {
+              let checkedComplements = [];
+              if (promotionProduct.complement_categories.length > 0) {
+                promotionProduct.complement_categories.forEach(category => {
+                  const cartComplementCategory = cartProduct.complement_categories.find(
+                    cc => cc.id === category.product_complement_category_id
+                  );
+
+                  category.complements.forEach(complement => {
+                    if (cartComplementCategory) {
+                      checkedComplements.push({
+                        complement_category_id: cartComplementCategory.id,
+                        complements: [],
+                      });
+                      const test = cartComplementCategory.complements.some(
+                        cartComplement =>
+                          cartComplement.product_complement_id === complement.product_complement_id &&
+                          cartComplement.selected
+                      );
+                      checkedComplements = checkedComplements.map(_category => {
+                        if (_category.complement_category_id === cartComplementCategory.id)
+                          _category.complements = [
+                            ..._category.complements,
+                            {
+                              complement_id: complement.product_complement_id,
+                              test,
+                            },
+                          ];
+
+                        return _category;
+                      });
+                    } else {
+                      checkedComplements.push({
+                        complement_category_id: category.id,
+                        complements: [],
+                      });
+                    }
+                  });
+                });
+              }
+              checkedComplements = checkedComplements.every(category => {
+                const checkedComplement = category.complements.some(complement => complement.test);
+                return checkedComplement;
+              });
+              return cartProduct.amount >= promotionProduct.amount && checkedComplements;
+            } else return false;
+          });
+        } else if (promotion.order_value) {
+          // promoção com regra de valor de pedido
+          const { order_value: orderValue } = promotion.order_value;
+          checked = cart.subtotal >= orderValue;
+        }
+
+        // se carrinho setisfez condições de alguma promoção ativa.
+        if (checked) {
+          if (promotion.type === 'safe') {
+            const { safe } = promotion;
+            store.dispatch(setDiscount(safe.discount_type, safe.discount));
+          } else if (promotion.type === 'get') {
+            store.dispatch(promotionRemoveFromCart());
+            promotion.offered_products.forEach(product => {
+              store.dispatch(prepareProduct(product, product.amount));
+              store.dispatch(promotionAddToCart());
+            });
+          }
+        } else {
+          store.dispatch(setDiscount('value', 0));
+          store.dispatch(promotionRemoveFromCart());
         }
       });
     } else {
       store.dispatch(setDiscount('value', 0));
       store.dispatch(updateTotal(order.shipment.shipment_method || 'delivery'));
+      store.dispatch(promotionRemoveFromCart());
     }
   }
 

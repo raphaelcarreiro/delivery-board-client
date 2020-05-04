@@ -19,10 +19,22 @@ export function addToCart() {
   };
 }
 
+export function promotionAddToCart() {
+  return {
+    type: '@cart/PROMOTION_ADD_PRODUCT',
+  };
+}
+
 export function removeFromCart(productUid) {
   return {
     type: '@cart/REMOVE_PRODUCT',
     productUid,
+  };
+}
+
+export function promotionRemoveFromCart() {
+  return {
+    type: '@cart/PROMOTION_REMOVE_PRODUCT',
   };
 }
 

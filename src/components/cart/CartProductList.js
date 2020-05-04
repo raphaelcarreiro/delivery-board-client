@@ -146,9 +146,16 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
                 alt={product.name}
                 className={classes.productImage}
               />
-              <Typography variant="h6" className={classes.productName}>
-                {product.amount}x {product.name}
-              </Typography>
+              <div>
+                <Typography variant="h6" className={classes.productName}>
+                  {product.amount}x {product.name}
+                </Typography>
+                {product.fromPromotion && (
+                  <Typography variant="body2" color="secondary">
+                    *Você ganhou esse produto!
+                  </Typography>
+                )}
+              </div>
             </div>
             <Typography variant="h5" className={classes.price}>
               {product.formattedFinalPrice}
@@ -177,14 +184,16 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
                 )}
             </div>
           )}
-          <div className={classes.actions}>
-            <Typography onClick={() => handleClickUpdateProduct(product)} color="primary" className={classes.link}>
-              Editar
-            </Typography>
-            <Typography className={classes.link} onClick={() => handleRemoveFromCart(product.uid)}>
-              Excluir
-            </Typography>
-          </div>
+          {!product.fromPromotion && (
+            <div className={classes.actions}>
+              <Typography onClick={() => handleClickUpdateProduct(product)} color="primary" className={classes.link}>
+                Editar
+              </Typography>
+              <Typography className={classes.link} onClick={() => handleRemoveFromCart(product.uid)}>
+                Excluir
+              </Typography>
+            </div>
+          )}
         </ListItem>
       ))}
     </List>

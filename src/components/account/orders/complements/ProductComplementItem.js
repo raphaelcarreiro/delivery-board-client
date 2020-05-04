@@ -53,23 +53,13 @@ ProductComplementItem.propTypes = {
   complementCategoryId: PropTypes.number.isRequired,
 };
 
-export default function ProductComplementItem({
-  complements,
-  handleClickComplements,
-  productId,
-  complementCategoryId,
-}) {
+export default function ProductComplementItem({ complements, productId, complementCategoryId }) {
   const classes = useStyles();
 
   return (
     <List className={classes.list}>
       {complements.map(complement => (
-        <ListItem
-          className={complement.selected ? classes.selected : classes.listItem}
-          button
-          key={complement.id}
-          onClick={() => handleClickComplements(productId, complementCategoryId, complement.id)}
-        >
+        <ListItem className={complement.selected ? classes.selected : classes.listItem} button key={complement.id}>
           <div>
             <Typography variant="body1" className={classes.complementName}>
               {complement.name}

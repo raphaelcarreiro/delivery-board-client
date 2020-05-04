@@ -13,6 +13,93 @@ export const INITIAL_STATE = {
 };
 
 export default function cart(state = INITIAL_STATE, action) {
+  function addToCart(config = { promotion: false }) {
+    const price =
+      state.product.promotion_activated && state.product.special_price > 0
+        ? state.product.special_price
+        : state.product.price;
+    let additionalPrice = 0;
+    let finalPrice = 0;
+    let complementsPrice = 0;
+    let tastePrice = 0;
+    let counterTaste = 0;
+    let complementAdditionalPrice = 0;
+    const tastePrices = [];
+
+    state.product.additional.forEach(additional => {
+      if (additional.selected) additionalPrice += additional.price;
+    });
+
+    // soma os preços dos complementos de pizza
+    if (state.product.category.is_pizza)
+      state.product.complement_categories.forEach(category => {
+        category.complements.forEach(complement => {
+          if (complement.selected) {
+            counterTaste = category.is_pizza_taste && complement.selected ? counterTaste + 1 : counterTaste;
+            complement.prices.forEach(price => {
+              if (category.is_pizza_taste) {
+                tastePrice = price.selected && price.price ? tastePrice + price.price : tastePrice;
+                if (price.selected) tastePrices.push(price.price);
+              } else
+                complementsPrice = price.selected && price.price ? complementsPrice + price.price : complementsPrice;
+            });
+            complement.additional.forEach(additional => {
+              if (additional.selected)
+                additional.prices.forEach(price => {
+                  complementAdditionalPrice = price.selected
+                    ? price.price + complementAdditionalPrice
+                    : complementAdditionalPrice;
+                });
+              return additional;
+            });
+          }
+        });
+      });
+    // soma os preços dos complementos em geral
+    else
+      state.product.complement_categories.forEach(category => {
+        complementsPrice = category.complements.reduce((sum, complement) => {
+          return complement.selected && complement.price ? sum + complement.price : sum;
+        }, complementsPrice);
+      });
+
+    // calcula do valor das pizzas
+    if (counterTaste > 0) {
+      if (state.configs.pizza_calculate === 'average_value') {
+        tastePrice = tastePrice / counterTaste;
+      } else if (state.configs.pizza_calculate === 'higher_value') {
+        tastePrice = Math.max.apply(Math, tastePrices);
+      }
+
+      complementsPrice = complementsPrice + tastePrice + complementAdditionalPrice;
+    }
+
+    finalPrice = config.promotion ? 0 : (price + additionalPrice + complementsPrice) * state.product.amount;
+
+    const products = [
+      ...state.products,
+      {
+        ...state.product,
+        uid: new Date().getTime(),
+        product_price: price,
+        formattedProductPrice: moneyFormat(price),
+        price: price + additionalPrice + complementsPrice,
+        final_price: finalPrice,
+        additionalPrice: additionalPrice,
+        complementsPrice: complementsPrice,
+        formattedPrice: moneyFormat(price + additionalPrice + complementsPrice),
+        formattedFinalPrice: moneyFormat(finalPrice),
+        fromPromotion: config.promotion,
+      },
+    ];
+
+    return {
+      ...state,
+      product: null,
+      products,
+    };
+  }
+
   switch (action.type) {
     case '@cart/SET_CART': {
       return action.cart;
@@ -29,93 +116,24 @@ export default function cart(state = INITIAL_STATE, action) {
     }
 
     case '@cart/ADD_PRODUCT': {
-      const price =
-        state.product.promotion_activated && state.product.special_price > 0
-          ? state.product.special_price
-          : state.product.price;
-      let additionalPrice = 0;
-      let finalPrice = 0;
-      let complementsPrice = 0;
-      let tastePrice = 0;
-      let counterTaste = 0;
-      let complementAdditionalPrice = 0;
-      const tastePrices = [];
+      return addToCart();
+    }
 
-      state.product.additional.forEach(additional => {
-        if (additional.selected) additionalPrice += additional.price;
-      });
-
-      // soma os preços dos complementos de pizza
-      if (state.product.category.is_pizza)
-        state.product.complement_categories.forEach(category => {
-          category.complements.forEach(complement => {
-            if (complement.selected) {
-              counterTaste = category.is_pizza_taste && complement.selected ? counterTaste + 1 : counterTaste;
-              complement.prices.forEach(price => {
-                if (category.is_pizza_taste) {
-                  tastePrice = price.selected && price.price ? tastePrice + price.price : tastePrice;
-                  if (price.selected) tastePrices.push(price.price);
-                } else
-                  complementsPrice = price.selected && price.price ? complementsPrice + price.price : complementsPrice;
-              });
-              complement.additional.forEach(additional => {
-                if (additional.selected)
-                  additional.prices.forEach(price => {
-                    complementAdditionalPrice = price.selected
-                      ? price.price + complementAdditionalPrice
-                      : complementAdditionalPrice;
-                  });
-                return additional;
-              });
-            }
-          });
-        });
-      // soma os preços dos complementos em geral
-      else
-        state.product.complement_categories.forEach(category => {
-          complementsPrice = category.complements.reduce((sum, complement) => {
-            return complement.selected && complement.price ? sum + complement.price : sum;
-          }, complementsPrice);
-        });
-
-      // calcula do valor das pizzas
-      if (counterTaste > 0) {
-        if (state.configs.pizza_calculate === 'average_value') {
-          tastePrice = tastePrice / counterTaste;
-        } else if (state.configs.pizza_calculate === 'higher_value') {
-          tastePrice = Math.max.apply(Math, tastePrices);
-        }
-
-        complementsPrice = complementsPrice + tastePrice + complementAdditionalPrice;
-      }
-
-      finalPrice = (price + additionalPrice + complementsPrice) * state.product.amount;
-
-      const products = [
-        ...state.products,
-        {
-          ...state.product,
-          uid: new Date().getTime(),
-          product_price: price,
-          formattedProductPrice: moneyFormat(price),
-          price: price + additionalPrice + complementsPrice,
-          final_price: finalPrice,
-          additionalPrice: additionalPrice,
-          complementsPrice: complementsPrice,
-          formattedPrice: moneyFormat(price + additionalPrice + complementsPrice),
-          formattedFinalPrice: moneyFormat(finalPrice),
-        },
-      ];
-
-      return {
-        ...state,
-        product: null,
-        products,
-      };
+    case '@cart/PROMOTION_ADD_PRODUCT': {
+      return addToCart({ promotion: true });
     }
 
     case '@cart/REMOVE_PRODUCT': {
       const products = state.products.filter(product => product.uid !== action.productUid);
+
+      return {
+        ...state,
+        products,
+      };
+    }
+
+    case '@cart/PROMOTION_REMOVE_PRODUCT': {
+      const products = state.products.filter(product => !product.fromPromotion);
 
       return {
         ...state,
