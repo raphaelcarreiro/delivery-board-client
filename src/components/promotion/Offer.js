@@ -9,7 +9,7 @@ Offer.propTypes = {
 export default function Offer({ products }) {
   return (
     <>
-      <Product products={products} categoryName="Ofertas" categoryUrl="/offers" />;
+      <Product products={products} categoryName="Ofertas" categoryUrl="/offers" />
     </>
   );
 }
