@@ -40,6 +40,13 @@ export function promotionRemoveFromCart(promotionId) {
   };
 }
 
+export function inactivePromotionRemoveFromCart(promotions) {
+  return {
+    type: '@cart/INACTIVE_PROMOTION_REMOVE_PRODUCT',
+    promotions,
+  };
+}
+
 export function updateProductFromCart(product, amount) {
   return {
     type: '@cart/UPDATE_PRODUCT',

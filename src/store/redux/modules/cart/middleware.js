@@ -7,6 +7,7 @@ import {
   prepareProduct,
   promotionAddToCart,
   promotionRemoveFromCart,
+  inactivePromotionRemoveFromCart,
 } from './actions';
 
 const saveCartAtLocalStorage = cart => {
@@ -89,6 +90,7 @@ export const cartMiddlware = store => next => action => {
     const order = store.getState().order;
 
     if (promotions) {
+      store.dispatch(inactivePromotionRemoveFromCart(promotions));
       promotions.forEach(promotion => {
         let checked = false;
         if (promotion.categories.length > 0) {
@@ -203,7 +205,6 @@ export const cartMiddlware = store => next => action => {
     } else {
       store.dispatch(setDiscount('value', 0));
       store.dispatch(updateTotal(order.shipment.shipment_method || 'delivery'));
-      store.dispatch(promotionRemoveFromCart());
     }
   }
 

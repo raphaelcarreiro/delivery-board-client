@@ -150,12 +150,12 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
                 <Typography variant="h6" className={classes.productName}>
                   {product.amount}x {product.name}
                 </Typography>
-                {product.promotion.id && (
+                {product.promotion && (
                   <>
-                    <Typography variant="caption" color="secondary" display="block">
+                    <Typography variant="caption" color="textSecondary" display="block">
                       Você ganhou esse produto!
                     </Typography>
-                    <Typography variant="caption" color="secondary" display="block">
+                    <Typography variant="caption" color="textSecondary" display="block">
                       Promoção {product.promotion.name}
                     </Typography>
                   </>
@@ -189,7 +189,7 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
                 )}
             </div>
           )}
-          {!product.promotion.id && (
+          {!product.promotion && (
             <div className={classes.actions}>
               <Typography onClick={() => handleClickUpdateProduct(product)} color="primary" className={classes.link}>
                 Editar
