@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   buying: {
-    display: 'none',
+    display: 'block',
     [theme.breakpoints.down('md')]: {
       display: 'block',
     },
