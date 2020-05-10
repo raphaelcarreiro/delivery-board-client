@@ -51,7 +51,9 @@ const useStyles = makeStyles(theme => ({
   oldPrice: {
     textDecoration: 'line-through',
   },
-  specialPrice: {},
+  specialPrice: {
+    color: '#2ca52a',
+  },
   specialPriceContent: {
     display: 'flex',
     alignItems: 'baseline',
@@ -81,10 +83,10 @@ export default function ProductList({ products, handleProductClick, handleOpenIm
               </Typography>
               {product.promotion_activated && product.special_price > 0 ? (
                 <div className={classes.specialPriceContent}>
-                  <Typography variant="body2" color="textSecondary" className={classes.oldPrice}>
+                  <Typography variant="body1" color="textSecondary" className={classes.oldPrice}>
                     {product.formattedPrice}
                   </Typography>
-                  <Typography variant="h6" className={classes.specialPrice} color="primary">
+                  <Typography variant="h6" color="secondary">
                     {product.formattedSpecialPrice}
                   </Typography>
                 </div>

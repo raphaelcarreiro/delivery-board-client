@@ -180,10 +180,12 @@ export default function ProductView({ onExited, selectedProduct, handlePreparePr
               <Typography>{product.description}</Typography>
               {product.promotion_activated && product.special_price > 0 ? (
                 <>
-                  <Typography variant="body2" color="textSecondary" className={classes.oldPrice}>
+                  <Typography variant="body1" color="textSecondary" className={classes.oldPrice}>
                     {product.formattedPrice}
                   </Typography>
-                  <Typography className={classes.specialPrice}>{product.formattedSpecialPrice}</Typography>
+                  <Typography variant="h6" color="secondary" className={classes.specialPrice}>
+                    {product.formattedSpecialPrice}
+                  </Typography>
                 </>
               ) : (
                 <Typography color="textSecondary" className={classes.price}>
