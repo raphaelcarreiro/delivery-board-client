@@ -36,6 +36,7 @@ import * as yup from 'yup';
 import { cpfValidation } from 'src/helpers/cpfValidation';
 import ShipmentMethod from './steps/shipment-method/ShipmentMethod';
 import { useRouter } from 'next/router';
+import { cardBrandValidation } from 'src/helpers/cardBrandValidation';
 
 const cartWidth = 450;
 
@@ -354,17 +355,21 @@ export default function Checkout() {
           return originalValue.replace(/\D/g, '');
         })
         .min(12, 'Número do cartão inválido')
+        .test('cardValidation', 'Infelizmente não trabalhamos com essa bandeira de cartão', value => {
+          return cardBrandValidation(value);
+        })
         .required('O número do cartão é obrigatório'),
     });
 
     try {
       await schema.validate(card);
+      setCardValidation({});
       return true;
     } catch (err) {
+      console.log(err.message);
       setCardValidation({
         [err.path]: err.message,
       });
-      messaging.handleOpen(err.message, null, { marginBottom: 47 });
       return false;
     }
   }

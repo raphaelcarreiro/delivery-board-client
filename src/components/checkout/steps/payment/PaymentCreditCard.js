@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 import { Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
@@ -21,6 +21,22 @@ export default function PaymentCreditCard() {
   const dispatch = useDispatch();
   const checkout = useContext(CheckoutContext);
 
+  const inputs = {
+    number: useRef(),
+    name: useRef(),
+    expiration_date: useRef(),
+    cvv: useRef(),
+    cpf: useRef(),
+  };
+
+  useEffect(() => {
+    if (checkout.cardValidation.number) inputs.number.focus();
+    else if (checkout.cardValidation.name) inputs.name.focus();
+    else if (checkout.cardValidation.expiration_date) inputs.expiration_date.focus();
+    else if (checkout.cardValidation.cvv) inputs.cvv.focus();
+    else if (checkout.cardValidation.cpf) inputs.cpf.focus();
+  }, [checkout.cardValidation]);
+
   function handleChange(index, value) {
     dispatch(changeCreditCard(index, value));
   }
@@ -29,6 +45,7 @@ export default function PaymentCreditCard() {
     <Grid container className={classes.container}>
       <Grid item xl={4} lg={4} md={6} xs={12}>
         <TextField
+          inputRef={ref => (inputs.number = ref)}
           error={!!checkout.cardValidation.number}
           helperText={checkout.cardValidation.number}
           label="Número do cartão"
@@ -44,6 +61,7 @@ export default function PaymentCreditCard() {
           }}
         />
         <TextField
+          inputRef={ref => (inputs.name = ref)}
           label="Nome e sobrenome"
           error={!!checkout.cardValidation.name}
           helperText={checkout.cardValidation.name ? checkout.cardValidation.name : 'Assim como está escrito no cartão'}
@@ -57,6 +75,7 @@ export default function PaymentCreditCard() {
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
+              inputRef={ref => (inputs.expiration_date = ref)}
               error={!!checkout.cardValidation.expiration_date}
               helperText={checkout.cardValidation.expiration_date ? checkout.cardValidation.expiration_date : 'MM/AA'}
               label="Vencimento"
@@ -73,6 +92,7 @@ export default function PaymentCreditCard() {
           </Grid>
           <Grid item xs={6}>
             <TextField
+              inputRef={ref => (inputs.cvv = ref)}
               label="Código"
               error={!!checkout.cardValidation.cvv}
               helperText={
@@ -91,6 +111,7 @@ export default function PaymentCreditCard() {
           </Grid>
         </Grid>
         <TextField
+          inputRef={ref => (inputs.cpf = ref)}
           error={!!checkout.cardValidation.cpf}
           helperText={checkout.cardValidation.cpf}
           label="CPF do titular do cartão"
