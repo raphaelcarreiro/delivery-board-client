@@ -9,7 +9,6 @@ import {
   clearCard,
   setCoupon,
   setTax,
-  setShipmentMethod,
   setDiscount,
 } from 'src/store/redux/modules/order/actions';
 import Shipment from './steps/shipment/Shipment';
@@ -161,6 +160,13 @@ export default function Checkout() {
   };
 
   useEffect(() => {
+    if (restaurant)
+      if (restaurant.configs.facebook_pixel_id) {
+        fbq('track', 'InitiateCheckout');
+      }
+  }, [restaurant]);
+
+  useEffect(() => {
     if (restaurant.id) {
       const { configs } = restaurant;
 
@@ -197,10 +203,6 @@ export default function Checkout() {
       ) {
         messaging.handleOpen(`Valor mínimo do pedido deve ser ${restaurant.configs.formattedOrderMinimumValue}`);
         router.push('/menu');
-      }
-
-      if (restaurant.configs.facebook_pixel_id) {
-        fbq('track', 'InitiateCheckout');
       }
     }
   }, [cart.total, restaurant]);
