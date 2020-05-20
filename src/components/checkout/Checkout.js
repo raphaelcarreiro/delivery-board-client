@@ -160,7 +160,7 @@ export default function Checkout() {
   };
 
   useEffect(() => {
-    if (restaurant)
+    if (restaurant.id)
       if (restaurant.configs.facebook_pixel_id) {
         fbq('track', 'InitiateCheckout');
       }
