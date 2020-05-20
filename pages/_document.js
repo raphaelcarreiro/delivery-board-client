@@ -28,7 +28,7 @@ export default class MyDocument extends Document {
       n.queue=[];t=b.createElement(e);t.async=!0;
       t.src=v;s=b.getElementsByTagName(e)[0];
       s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/pt_BR/fbevents.js');
+      'https://connect.facebook.net/en_US/fbevents.js');
       fbq('init', '${this.props.pixelId}');
       fbq('track', 'PageView');
       `,
