@@ -56,9 +56,11 @@ export default function CheckoutSuccess() {
   const order = checkout.createdOrder;
   const classes = useStyles();
   const app = useContext(AppContext);
+  const { configs } = useSelector(state => state.restaurant);
 
   useEffect(() => {
     app.handleCartVisibility(false);
+    if (configs.facebook_pixel_id) fbq('track', 'Purchase', { value: order.total, currency: 'BRL' });
   }, []);
 
   return (

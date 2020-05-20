@@ -198,6 +198,10 @@ export default function Checkout() {
         messaging.handleOpen(`Valor mínimo do pedido deve ser ${restaurant.configs.formattedOrderMinimumValue}`);
         router.push('/menu');
       }
+
+      if (restaurant.configs.facebook_pixel_id) {
+        fbq('track', 'InitiateCheckout');
+      }
     }
   }, [cart.total, restaurant]);
 

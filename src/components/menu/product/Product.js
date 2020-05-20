@@ -2,7 +2,7 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import ImagePreview from '../../image-preview/ImagePreview';
 import PropTypes from 'prop-types';
 import ProductView from './view/simple/ProductView';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { prepareProduct, addToCart } from 'src/store/redux/modules/cart/actions';
 import { MessagingContext } from '../../messaging/Messaging';
 import ProductPizzaComplement from './view/pizza_complement/ProductPizzaComplement';
@@ -66,6 +66,7 @@ export default function Product({ products, categoryName, categoryUrl }) {
   const [search, setSearch] = useState('');
   const ref = useRef();
   const router = useRouter();
+  const { configs } = useSelector(state => state.restaurant);
 
   useEffect(() => {
     if (products.length === 1) {
@@ -73,6 +74,12 @@ export default function Product({ products, categoryName, categoryUrl }) {
       if (product.category.is_pizza) handleProductClick(product);
     }
   }, []);
+
+  useEffect(() => {
+    if (selectedProduct) {
+      if (configs.facebook_pixel_id) fbq('track', 'ViewContent');
+    }
+  }, [selectedProduct]);
 
   function handleProductClick(product) {
     setSelectedProduct(product);
@@ -98,9 +105,9 @@ export default function Product({ products, categoryName, categoryUrl }) {
 
   function handleAddProductToCart() {
     dispatch(addToCart());
-    // messaging.handleOpen('Produto adicionado ao carrinho');
     app.handleCartVisibility(true);
     handleCancelSearch();
+    if (configs.facebook_pixel_id) fbq('track', 'AddToCart');
     if (categoryUrl !== '/offers') router.push('/menu');
   }
 

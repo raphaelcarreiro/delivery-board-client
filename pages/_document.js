@@ -57,7 +57,14 @@ export default class MyDocument extends Document {
           {pixelId && (
             <>
               <script dangerouslySetInnerHTML={this.setFacebookPixel()}></script>
-              <noscript dangerouslySetInnerHTML={this.setFacebokScript()}></noscript>
+              <noscript>
+                <img
+                  height="1"
+                  width="1"
+                  style={{ display: 'none' }}
+                  src={`https://www.facebook.com/tr?id=${this.props.pixelId}&ev=PageView&noscript=1`}
+                />
+              </noscript>
             </>
           )}
           <meta charSet="utf-8" />

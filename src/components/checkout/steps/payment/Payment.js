@@ -25,6 +25,7 @@ export default function Payment({ handleSetPaymentMethod, paymentMethods, paymen
   const classes = useStyles();
   const app = useContext(AppContext);
   const order = useSelector(state => state.order);
+  const { configs } = useSelector(state => state.restaurant);
 
   useEffect(() => {
     // if (!app.isMobile && app.windowWidth >= 960) app.handleCartVisibility(true);
@@ -32,6 +33,10 @@ export default function Payment({ handleSetPaymentMethod, paymentMethods, paymen
     setOnlinePayment(!!online);
     if (online) if (online.id === paymentMethodId) setTab(1);
   }, [paymentMethods]);
+
+  useEffect(() => {
+    if (configs.facebook_pixel_id) fbq('track', 'AddPaymentInfo');
+  }, []);
 
   function handleTabChange(event, value) {
     setTab(value);
