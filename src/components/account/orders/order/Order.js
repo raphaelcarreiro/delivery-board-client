@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography, List, ListItem, Button } from '@material-ui/core';
+import { Grid, Typography, Button } from '@material-ui/core';
 import PageHeader from 'src/components/pageHeader/PageHeader';
 import { formatId } from 'src/helpers/formatOrderId';
 import { api } from 'src/services/api';
@@ -9,7 +9,6 @@ import { format, parseISO } from 'date-fns';
 import ptbr from 'date-fns/locale/pt-BR';
 import { makeStyles } from '@material-ui/core/styles';
 import { moneyFormat } from 'src/helpers/numberFormat';
-import { orderStatusName } from './orderStatus';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import io from 'socket.io-client';
 import { MessagingContext } from 'src/components/messaging/Messaging';
@@ -20,72 +19,28 @@ import { firebaseMessagingIsSupported as isSupported } from 'src/config/Firebase
 import OrderAction from './OrderAction';
 import OrderProductList from './OrderProductList';
 import Link from 'src/components/link/Link';
-import WatchLaterIcon from '@material-ui/icons/WatchLater';
+
+import OrderStatusList from './OrderStatusList';
+import OrderShipment from './OrderShipment';
+import OrderPayment from './OrderPayment';
 
 const useStyles = makeStyles(theme => ({
-  title: {
-    fontWeight: 300,
-  },
   section: {
     marginBottom: 15,
     padding: 10,
-    border: '1px solid #eee',
+    // border: '1px solid #eee',
     borderRadius: 4,
-    backgroundColor: '#f5f5f5',
+    // backgroundColor: '#f5f5f5',
     maxWidth: 900,
     width: '100%',
   },
-  o: { backgroundColor: '#ffc107' },
-  a: { backgroundColor: '#8BC34A', color: '#fff' },
-  d: { backgroundColor: '#007bff', color: '#fff' },
-  c: { backgroundColor: '#6c757d', color: '#fff' },
-  x: { backgroundColor: '#dc3545', color: '#fff' },
-  status: {
-    padding: '2px 10px',
-    borderRadius: 3,
-    margin: '0 0 6px',
-    display: 'inline-flex',
-  },
-  historyStatus: {
-    borderRadius: '50%',
-    display: 'inline-flex',
-    width: 30,
-    height: 30,
-    '&::after': {
-      content: '" "',
-      height: 29,
-      backgroundColor: '#ccc',
-      display: 'block',
-      position: 'absolute',
-      width: 3,
-      bottom: -16,
-      left: 14,
-    },
-  },
-  containderGrid2: {
+  containerGrid2: {
     display: 'grid',
     gridTemplateColumns: 'repeat(1, 1fr)',
     gridGap: 6,
     width: '100%',
     [theme.breakpoints.down('md')]: {
       gridTemplateColumns: '1fr',
-    },
-  },
-  historyList: {
-    // borderLeft: `2px solid ${theme.palette.primary.main}`,
-    marginBottom: 20,
-    padding: 0,
-  },
-  historyListItem: {
-    // paddingBottom: 0,
-    // paddingTop: 0,
-    '&:last-child span::after': {
-      display: 'none',
-    },
-  },
-  statusDate: {
-    [theme.breakpoints.down('md')]: {
-      fontSize: 12,
     },
   },
   orderNotFound: {
@@ -109,33 +64,6 @@ const useStyles = makeStyles(theme => ({
     },
     [theme.breakpoints.down('md')]: {
       display: 'none',
-    },
-  },
-  total: {
-    marginTop: 5,
-  },
-  totals: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gridGap: 6,
-    '& p': {
-      lineHeight: '15px',
-    },
-    '& div': {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-    },
-  },
-  historyContent: {
-    padding: '0 10px',
-  },
-  scheduleAt: {
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: 10,
-    '& svg': {
-      marginRight: 6,
     },
   },
 }));
@@ -280,99 +208,17 @@ export default function Order({ cryptId }) {
           )}
           <PageHeader title={`Pedido ${order.formattedId}`} description={`Pedido gerado em ${order.formattedDate}`} />
           <div>
-            <List className={classes.historyList}>
-              {order.order_status.map(status => (
-                <ListItem key={status.id} className={classes.historyListItem} disableGutters>
-                  <span className={`${classes.historyStatus} ${classes[status.status]}`} />
-                  <div className={classes.historyContent}>
-                    <Typography>{orderStatusName(order.shipment.shipment_method, status.status)}</Typography>
-                    <Typography variant="body2" color="textSecondary" className={classes.statusDate}>
-                      {status.formattedDate}
-                    </Typography>
-                  </div>
-                </ListItem>
-              ))}
-            </List>
+            <OrderStatusList order={order} />
           </div>
-          <div className={classes.containderGrid2}>
+          <div className={classes.containerGrid2}>
             <div className={classes.section}>
-              <Typography variant="h5" className={classes.title} gutterBottom>
-                {order.shipment.shipment_method === 'delivery' ? 'Endereço de entrega' : 'Endereço para retirada'}
-              </Typography>
-              <Typography>
-                {order.shipment.address}, {order.shipment.number}
-              </Typography>
-              <Typography>{order.shipment.district}</Typography>
-              <Typography color="textSecondary">{order.shipment.complement}</Typography>
-              <Typography color="textSecondary">
-                {order.shipment.city} - {order.shipment.region}
-              </Typography>
-              {order.shipment.postal_code !== '00000000' && (
-                <Typography color="textSecondary">{order.shipment.postal_code}</Typography>
-              )}
-              {order.shipment.scheduled_at && (
-                <Typography variant="body2" className={classes.scheduleAt}>
-                  <WatchLaterIcon /> Agendado para as {order.shipment.formattedScheduledAt}
-                </Typography>
-              )}
+              <OrderShipment order={order} />
             </div>
             <div className={classes.section}>
-              <Typography variant="h5" className={classes.title} gutterBottom>
-                Forma de pagamento
-              </Typography>
-              {order.payment_method.kind === 'online_payment' ? (
-                <>
-                  <Typography>{order.payment_method.method}</Typography>
-                </>
-              ) : (
-                <>
-                  <Typography>Pagamento na entrega</Typography>
-                  <Typography>
-                    {order.payment_method.method}
-                    {order.change > 0 && (
-                      <Typography
-                        color="textSecondary"
-                        display="inline"
-                        variant="body1"
-                      >{`, troco para ${order.formattedChange}`}</Typography>
-                    )}
-                  </Typography>
-                </>
-              )}
+              <OrderPayment order={order} />
             </div>
             <div className={classes.section}>
-              <Typography variant="h5" className={classes.title} gutterBottom>
-                Itens
-              </Typography>
               <OrderProductList products={order.products} />
-              <div className={classes.totals}>
-                <div>
-                  <Typography>Subtotal</Typography>
-                </div>
-                <div>
-                  <Typography>{order.formattedSubtotal}</Typography>
-                </div>
-                <div>
-                  <Typography>Desconto</Typography>
-                </div>
-                <div>
-                  <Typography>{order.formattedDiscount}</Typography>
-                </div>
-                <div>
-                  <Typography>Taxa de entrega</Typography>
-                </div>
-                <div>
-                  <Typography>{order.formattedTax}</Typography>
-                </div>
-                <div className={classes.total}>
-                  <Typography>Total</Typography>
-                </div>
-                <div className={classes.total}>
-                  <Typography variant="h5">
-                    <strong>{order.formattedTotal}</strong>
-                  </Typography>
-                </div>
-              </div>
             </div>
           </div>
         </Grid>

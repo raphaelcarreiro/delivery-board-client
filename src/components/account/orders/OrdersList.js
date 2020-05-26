@@ -63,7 +63,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function OrderList({ orders }) {
+function OrdersList({ orders }) {
   const classes = useStyles();
   const [formattedOrders, setFormattedOrders] = useState([]);
 
@@ -139,8 +139,8 @@ function OrderList({ orders }) {
   );
 }
 
-OrderList.propTypes = {
+OrdersList.propTypes = {
   orders: PropTypes.array.isRequired,
 };
 
-export default OrderList;
+export default OrdersList;

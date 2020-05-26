@@ -10,12 +10,13 @@ const useStyles = makeStyles({
   listItem: {
     display: 'flex',
     backgroundColor: '#fff',
-    border: '1px solid #eee',
+    // border: '1px solid #eee',
     borderRadius: 4,
     position: 'relative',
     alignItems: 'center',
     minHeight: 60,
     marginBottom: 4,
+    boxShadow: '1px 1px 9px 1px #eee',
   },
   list: {
     paddingBottom: 20,
@@ -74,6 +75,9 @@ export default function OrderProductList({ products }) {
         </>
       )}
       {dialogProduct && <ProductSimple onExited={() => setDialogProduct(false)} selectedProduct={selectedProduct} />}
+      <Typography variant="h5" gutterBottom>
+        Itens
+      </Typography>
       <List className={classes.list}>
         {products.map(product => (
           <ListItem button key={product.id} className={classes.listItem} onClick={() => handleClick(product)}>

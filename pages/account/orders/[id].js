@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import Order from '../../../src/components/account/orders/Order';
+import Order from '../../../src/components/account/orders/order/Order';
 import { isAuthenticated } from '../../../src/services/auth';
 import { useRouter } from 'next/router';
 import { AppContext } from '../../../src/App';

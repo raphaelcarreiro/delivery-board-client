@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { api } from '../../../services/api';
 import Loading from '../../loading/Loading';
-import OrderList from './OrderList';
+import OrdersList from './OrdersList';
 import { formatDistanceStrict, parseISO, format } from 'date-fns';
 import ptbr from 'date-fns/locale/pt-BR';
 import { moneyFormat } from '../../../helpers/numberFormat';
@@ -9,7 +9,7 @@ import { Grid } from '@material-ui/core';
 import PageHeader from '../../pageHeader/PageHeader';
 import CustomAppbar from '../../appbar/CustomAppbar';
 import { formatId } from 'src/helpers/formatOrderId';
-import { orderStatusName } from './orderStatus';
+import { orderStatusName } from './order/orderStatus';
 import NoData from 'src/components/nodata/NoData';
 
 function Orders() {
@@ -58,7 +58,7 @@ function Orders() {
           {orders.length > 0 ? (
             <Grid container>
               <Grid item xs={12}>
-                <OrderList orders={orders} />
+                <OrdersList orders={orders} />
               </Grid>
             </Grid>
           ) : (
