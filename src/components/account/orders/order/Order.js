@@ -28,9 +28,9 @@ const useStyles = makeStyles(theme => ({
   section: {
     marginBottom: 15,
     padding: 10,
-    // border: '1px solid #eee',
+    border: '1px solid #eee',
     borderRadius: 4,
-    // backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5',
     maxWidth: 900,
     width: '100%',
   },
