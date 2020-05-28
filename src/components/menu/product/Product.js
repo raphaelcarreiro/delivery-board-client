@@ -53,20 +53,20 @@ Product.propTypes = {
 };
 
 export default function Product({ products, categoryName, categoryUrl }) {
+  const classes = useStyles();
+  const app = useContext(AppContext);
+  const messaging = useContext(MessagingContext);
+  const dispatch = useDispatch();
+  const ref = useRef();
+  const router = useRouter();
+  const restaurant = useSelector(state => state.restaurant);
   const [imagePreview, setImagePreview] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [dialogProductView, setDialogProductView] = useState(false);
   const [dialogProductComplement, setDialogProductComplement] = useState(false);
-  const dispatch = useDispatch();
-  const messaging = useContext(MessagingContext);
-  const app = useContext(AppContext);
   const [isSearching, setIsSearching] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState(products);
-  const classes = useStyles();
   const [search, setSearch] = useState('');
-  const ref = useRef();
-  const router = useRouter();
-  const { configs } = useSelector(state => state.restaurant);
 
   useEffect(() => {
     if (products.length === 1) {
@@ -77,7 +77,7 @@ export default function Product({ products, categoryName, categoryUrl }) {
 
   useEffect(() => {
     if (selectedProduct) {
-      if (configs.facebook_pixel_id) fbq('track', 'ViewContent');
+      if (restaurant.configs.facebook_pixel_id) fbq('track', 'ViewContent');
     }
   }, [selectedProduct]);
 
@@ -107,7 +107,7 @@ export default function Product({ products, categoryName, categoryUrl }) {
     dispatch(addToCart());
     app.handleCartVisibility(true);
     handleCancelSearch();
-    if (configs.facebook_pixel_id) fbq('track', 'AddToCart');
+    if (restaurant.configs.facebook_pixel_id) fbq('track', 'AddToCart');
     if (categoryUrl !== '/offers') router.push('/menu');
   }
 
