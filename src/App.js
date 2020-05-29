@@ -172,11 +172,15 @@ function App({ pageProps, component: Component }) {
   // set webscoket connection
   useEffect(() => {
     if (restaurant) {
-      socket = io(process.env.URL_NODE_SERVER + '/client');
+      socket = io.connect(process.env.URL_NODE_SERVER + '/client');
       socket.emit('register', restaurant.id);
-      // socket = io(process.env.URL_NODE_SERVER, { reconnectionAttempts: 5 });
+
       socket.on('handleRestaurantState', state => {
         dispatch(setRestaurantIsOpen(state));
+      });
+
+      socket.on('reconnect', () => {
+        socket.emit('register', restaurant.id);
       });
     }
 

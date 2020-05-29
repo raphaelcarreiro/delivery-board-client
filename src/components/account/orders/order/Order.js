@@ -84,7 +84,9 @@ export default function Order({ cryptId }) {
     const socket = io.connect(process.env.URL_NODE_SERVER + '/client');
     if (order) {
       socket.emit('register', order.id);
-
+      socket.on('reconnect', () => {
+        socket.emit('register', order.id);
+      });
       socket.on('orderStatusChange', status => {
         const statusOrder = status.reverse().map(status => {
           const statusDate = parseISO(status.created_at);
