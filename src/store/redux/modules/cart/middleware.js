@@ -3,7 +3,7 @@ import { createHistory, setConfigs, updateTotal, setTax } from './actions';
 import checkPromotion from './promotion/checkPromotion';
 
 const saveCartAtLocalStorage = cart => {
-  // localStorage.setItem(process.env.LOCALSTORAGE_CART, JSON.stringify(cart));
+  localStorage.setItem(process.env.LOCALSTORAGE_CART, JSON.stringify(cart));
 };
 
 export const cartMiddlware = store => next => action => {
@@ -83,6 +83,7 @@ export const cartMiddlware = store => next => action => {
   // salva o carrinho em local storage
   if (actionsToSaveCart.includes(action.type)) {
     const cart = store.getState().cart;
-    saveCartAtLocalStorage(cart);
+    const { configs } = store.getState().restaurant;
+    if (configs.preserve_cart) saveCartAtLocalStorage(cart);
   }
 };

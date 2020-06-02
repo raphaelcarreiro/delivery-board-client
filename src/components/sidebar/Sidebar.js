@@ -68,10 +68,11 @@ const useStyles = makeStyles(theme => ({
     right: 15,
     backgroundColor: theme.palette.primary.dark,
     borderRadius: '50%',
-    height: 20,
-    width: 20,
+    height: 23,
+    width: 23,
     fontSize: 12,
     color: '#FFF',
+    border: `2px solid ${theme.palette.secondary.contrastText}`,
   }),
   avatar: {
     width: 30,

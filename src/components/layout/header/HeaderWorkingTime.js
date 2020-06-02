@@ -36,10 +36,10 @@ export default function HeaderWorkingTime({ onExited }) {
           {({ handleCloseDialog }) => (
             <>
               <div>
-                <Typography variant="h6">Atendimento</Typography>
-                <Typography variant="body1" gutterBottom>
-                  {restaurant.working_hours}
+                <Typography variant="h5" gutterBottom>
+                  Atendimento
                 </Typography>
+                <Typography variant="body1">{restaurant.working_hours}</Typography>
               </div>
               <div className={classes.action}>
                 <Button variant="contained" color="primary" onClick={handleCloseDialog}>

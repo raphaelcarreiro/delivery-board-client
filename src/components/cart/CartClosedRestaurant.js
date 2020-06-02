@@ -10,13 +10,14 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     height: 200,
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
+    paddingTop: 30,
   },
   message: {
-    marginBottom: 20,
+    marginBottom: 30,
     [theme.breakpoints.down('sm')]: {
-      fontSize: 16,
+      fontSize: 20,
     },
   },
 }));
@@ -34,11 +35,11 @@ export default function CartClosedRestaurant({ onExited }) {
       <DialogInputConsumer>
         {({ handleCloseDialog }) => (
           <div className={classes.container}>
-            <Typography variant="h6" className={classes.message}>
+            <Typography variant="h5" className={classes.message}>
               {restaurant.name} está fechado no momento.
             </Typography>
             <Button variant="contained" color="primary" onClick={handleCloseDialog}>
-              OK
+              FECHAR
             </Button>
           </div>
         )}

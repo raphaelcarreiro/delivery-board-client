@@ -102,8 +102,8 @@ export default function Cart() {
         </div>
       ) : (
         <div className={classes.emptyCart}>
-          <Typography variant="h6" color="textSecondary">
-            Carrinho vazio.
+          <Typography variant="h5" color="textSecondary">
+            Carrinho vazio
           </Typography>
         </div>
       )}
