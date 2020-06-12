@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
   },
   list: {
     display: 'grid',
+    flex: 1,
     gridTemplateColumns: 'repeat(3, 1fr)',
     gridGap: 6,
     [theme.breakpoints.down('md')]: {

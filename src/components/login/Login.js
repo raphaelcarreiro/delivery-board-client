@@ -47,6 +47,12 @@ const useStyles = makeStyles({
   startIcon: {
     marginRight: 10,
   },
+  logo: {
+    width: 70,
+  },
+  logoContainer: {
+    marginBottom: 20,
+  },
 });
 
 let googleAuth2;
@@ -200,6 +206,11 @@ export default function Login() {
     <div className={classes.container}>
       {loading && <Loading background="rgba(250,250,250,0.5)" />}
       <Grid item xl={2} xs={12} md={4} lg={3} sm={5} container alignItems="center" direction="column">
+        {restaurant.image && (
+          <div className={classes.logoContainer}>
+            <img src={restaurant.image.imageUrl} className={classes.logo} />
+          </div>
+        )}
         <Typography variant="h5">Como deseja continuar?</Typography>
         {restaurant.id && (
           <>
