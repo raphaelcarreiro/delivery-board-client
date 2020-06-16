@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import AccountAddressesNew from './AccountAddressesNew';
 import AccountAddressesEdit from './AccountAddressesEdit';
 import { api } from '../../../services/api';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { MessagingContext } from '../../messaging/Messaging';
 import {
   addCustomerAddress,
