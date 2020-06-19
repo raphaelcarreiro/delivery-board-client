@@ -245,9 +245,9 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   }, [user.id]);
 
   useEffect(() => {
-    window.addEventListener('beforeinstallprompt', (e: BeforeInstallPromptEvent) => {
+    window.addEventListener('beforeinstallprompt', (event: BeforeInstallPromptEvent) => {
       e.preventDefault();
-      defferedPromptPwa = e;
+      defferedPromptPwa = event;
       setReadyToInstall(true);
     });
   }, []);

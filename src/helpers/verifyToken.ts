@@ -15,7 +15,7 @@ export function verifyToken(): Payload | null {
 
   if (token) {
     try {
-      const decoded = jwt.verify(token, process.env.SECRET, {
+      const decoded: any = jwt.verify(token, process.env.SECRET, {
         ignoreNotBefore: true,
       });
 

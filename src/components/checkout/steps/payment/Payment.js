@@ -32,11 +32,11 @@ export default function Payment({ handleSetPaymentMethod, paymentMethods, paymen
     const online = paymentMethods.find(method => method.kind === 'online_payment');
     setOnlinePayment(!!online);
     if (online) if (online.id === paymentMethodId) setTab(1);
-  }, [paymentMethods]);
+  }, [paymentMethods, paymentMethodId]);
 
   useEffect(() => {
     if (configs.facebook_pixel_id) fbq('track', 'AddPaymentInfo');
-  }, []);
+  }, [configs.facebook_pixel_id]);
 
   function handleTabChange(event, value) {
     setTab(value);
