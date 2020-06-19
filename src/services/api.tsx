@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios, { AxiosInstance, CancelTokenSource } from 'axios';
 
-function getAxiosInstance() {
-  let instance;
+function getAxiosInstance(): AxiosInstance {
+  let instance: AxiosInstance;
   const token = localStorage.getItem(process.env.TOKEN_NAME);
 
   if (token)
@@ -41,7 +41,7 @@ function getAxiosInstance() {
   return instance;
 }
 
-export function getCancelTokenSource() {
+export function getCancelTokenSource(): CancelTokenSource {
   const CancelToken = axios.CancelToken;
   const source = CancelToken.source();
   return source;

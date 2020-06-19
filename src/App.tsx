@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, ReactElement, useCallback } from 'react';
 import { api } from './services/api';
 import { useRouter } from 'next/router';
 import Loading from './components/loading/Loading';
@@ -6,9 +6,8 @@ import Messaging from './components/messaging/Messaging';
 import OnlyMain from './components/layout/OnlyMain';
 import Default from './components/layout/Default';
 import { mobileCheck } from './helpers/MobileCheck';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setRestaurant, setRestaurantIsOpen } from './store/redux/modules/restaurant/actions';
-import PropTypes from 'prop-types';
 import { setUser, removeUser } from './store/redux/modules/user/actions';
 import { verifyToken } from './helpers/verifyToken';
 import Sidebar from './components/sidebar/Sidebar';
@@ -18,7 +17,7 @@ import { setCart } from 'src/store/redux/modules/cart/actions';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import { createTheme } from 'src/helpers/createTheme';
-import defaultTheme from '../src/theme';
+import defaultTheme from './theme';
 import io from 'socket.io-client';
 import { LinearProgress } from '@material-ui/core';
 import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
@@ -26,6 +25,8 @@ import { getFirebaseMessaging, firebaseMessagingIsSupported as isSupported } fro
 import reactGA from 'react-ga';
 import { moneyFormat } from './helpers/numberFormat';
 import { setPromotions } from './store/redux/modules/promotion/actions';
+import { NextComponentType } from 'next';
+import { useSelector } from './store/redux/selector';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -37,39 +38,55 @@ const useStyles = makeStyles({
   },
 });
 
-export const AppContext = createContext({
-  isMobile: false,
-  windowWidth: null,
-  isOpenMenu: false,
-  isCartVisible: false,
-  redirect: null,
-  socket: null,
-  readyToInstall: false,
-  fmHasToken: false,
-  setRedirect: () => {},
-  handleLogout: () => {},
-  handleOpenMenu: () => {},
-  handleCartVisibility: () => {},
-  handleInstallApp: () => {},
-  handleRequestPermissionMessaging: () => {},
-});
+interface AppContextData {
+  isMobile: boolean;
+  windowWidth: number | null;
+  isOpenMenu: boolean;
+  isCartVisible: boolean;
+  redirect: string | null;
+  socket: SocketIOClient.Socket | null;
+  readyToInstall: boolean;
+  fmHasToken: boolean;
+  setRedirect(uri: string): void;
+  handleLogout(): void;
+  handleOpenMenu(): void;
+  handleCartVisibility(state: boolean): void;
+  handleInstallApp(): void;
+  handleRequestPermissionMessaging(): void;
+}
+
+interface AppProps {
+  pageProps: any;
+  Component: NextComponentType;
+}
+
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: Array<string>;
+  readonly userChoice: Promise<{
+    outcome: 'accepted' | 'dismissed';
+    platform: string;
+  }>;
+  prompt(): Promise<void>;
+}
+
+export const AppContext = createContext({} as AppContextData);
 
 export const menuWidth = 240;
-let socket;
-let defferedPromptPwa;
+let socket: SocketIOClient.Socket;
+let defferedPromptPwa: BeforeInstallPromptEvent;
 
-function App({ pageProps, component: Component }) {
+const App: React.FC<AppProps> = ({ pageProps, Component }) => {
+  const classes = useStyles({});
   const user = useSelector(state => state.user);
   const router = useRouter();
   const dispatch = useDispatch();
-  const classes = useStyles();
   const [isMobile, setIsMobile] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1500);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [isCartVisible, setIsCartVisible] = useState(false);
-  const [redirect, setRedirect] = useState(null);
+  const [redirect, setRedirect] = useState<string | null>(null);
   const [isProgressBarVisible, setIsProgressBarVisible] = useState(false);
   const [theme, setTheme] = useState(defaultTheme);
   const [readyToInstall, setReadyToInstall] = useState(false);
@@ -88,7 +105,7 @@ function App({ pageProps, component: Component }) {
     handleLogout: handleLogout,
     handleOpenMenu: handleOpenMenu,
     handleCartVisibility: handleCartVisibility,
-    setRedirect: setRedirect,
+    setRedirect: handleSetRedirect,
     handleInstallApp: handleInstallApp,
     handleRequestPermissionMessaging: handleRequestPermissionMessaging,
   };
@@ -106,6 +123,14 @@ function App({ pageProps, component: Component }) {
 
   // load restaurant data from server
   useEffect(() => {
+    function loadPromotions() {
+      api()
+        .get('/promotions')
+        .then(response => {
+          dispatch(setPromotions(response.data));
+        });
+    }
+
     api()
       .get('/restaurants')
       .then(response => {
@@ -123,9 +148,11 @@ function App({ pageProps, component: Component }) {
           })
         );
 
-        const cart = JSON.parse(localStorage.getItem(process.env.LOCALSTORAGE_CART));
-        if (cart) {
-          dispatch(setCart(cart));
+        if (process.env.LOCALSTORAGE_CART) {
+          const cart = JSON.parse(process.env.LOCALSTORAGE_CART);
+          if (cart) {
+            dispatch(setCart(cart));
+          }
         }
 
         setTheme(createTheme(_restaurant.primary_color, _restaurant.secondary_color));
@@ -144,7 +171,7 @@ function App({ pageProps, component: Component }) {
         document.body.classList.add('zoom');
         loadPromotions(); // load promotion after request for restaurant data was finished
       });
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     setInitialLoading(true);
@@ -167,7 +194,7 @@ function App({ pageProps, component: Component }) {
     window.addEventListener('resize', handleResize);
     setIsMobile(mobileCheck());
     setWindowWidth(window.innerWidth);
-  }, []);
+  }, [dispatch]);
 
   // set webscoket connection
   useEffect(() => {
@@ -187,6 +214,16 @@ function App({ pageProps, component: Component }) {
     return () => {
       if (socket) socket.disconnect();
     };
+  }, [dispatch, restaurant]);
+
+  const handleRouteChangeComplete = useCallback(() => {
+    setIsProgressBarVisible(false);
+
+    if (restaurant)
+      if (restaurant.configs.google_analytics_id) {
+        reactGA.set({ page: window.location.pathname });
+        reactGA.pageview(window.location.pathname);
+      }
   }, [restaurant]);
 
   // set actions on router changes, to display loading
@@ -194,7 +231,7 @@ function App({ pageProps, component: Component }) {
     router.events.on('routeChangeStart', handleRouteChangeStart);
     router.events.on('routeChangeComplete', handleRouteChangeComplete);
     router.events.on('routeChangeError', handleRouteChangeError);
-  }, [restaurant]);
+  }, [handleRouteChangeComplete, restaurant, router.events]);
 
   /*
   handle request permission for firebase messaging if is not server,
@@ -208,7 +245,7 @@ function App({ pageProps, component: Component }) {
   }, [user.id]);
 
   useEffect(() => {
-    window.addEventListener('beforeinstallprompt', e => {
+    window.addEventListener('beforeinstallprompt', (e: BeforeInstallPromptEvent) => {
       e.preventDefault();
       defferedPromptPwa = e;
       setReadyToInstall(true);
@@ -282,18 +319,8 @@ function App({ pageProps, component: Component }) {
     });
   }
 
-  function handleRouteChangeStart(url) {
+  function handleRouteChangeStart() {
     setIsProgressBarVisible(true);
-  }
-
-  function handleRouteChangeComplete() {
-    setIsProgressBarVisible(false);
-
-    if (restaurant)
-      if (restaurant.configs.google_analytics_id) {
-        reactGA.set({ page: window.location.pathname });
-        reactGA.pageview(window.location.pathname);
-      }
   }
 
   function handleRouteChangeError() {
@@ -305,8 +332,8 @@ function App({ pageProps, component: Component }) {
 
     api()
       .post('/logout')
-      .then(response => {
-        localStorage.removeItem(process.env.TOKEN_NAME);
+      .then(() => {
+        if (process.env.TOKEN_NAME) localStorage.removeItem(process.env.TOKEN_NAME);
         dispatch(removeUser());
       })
       .finally(() => {
@@ -330,19 +357,15 @@ function App({ pageProps, component: Component }) {
     setIsCartVisible(state);
   }
 
-  function loadPromotions() {
-    api()
-      .get('/promotions')
-      .then(response => {
-        dispatch(setPromotions(response.data));
-      });
+  function handleSetRedirect(uri: string) {
+    setRedirect(uri);
   }
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AppContext.Provider value={appProviderValue}>
-        {initialLoading && <InitialLoading background="#fafafa" />}
+        {initialLoading && <InitialLoading />}
 
         {loading && <Loading background="rgba(250,250,250,0.5)" />}
 
@@ -362,11 +385,6 @@ function App({ pageProps, component: Component }) {
       </AppContext.Provider>
     </ThemeProvider>
   );
-}
-
-App.propTypes = {
-  pageProps: PropTypes.object.isRequired,
-  component: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
 };
 
 export default App;

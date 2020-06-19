@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import { NextComponentType } from 'next';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   container: {
     display: 'flex',
     position: 'relative',
@@ -21,10 +21,15 @@ const useStyles = makeStyles(theme => ({
     overflowY: 'auto',
     position: 'relative',
   },
-}));
+});
 
-export default function OnlyMain({ pageProps, component: Component }) {
-  const classes = useStyles();
+interface OnlyMainProps {
+  pageProps: any;
+  component: NextComponentType;
+}
+
+const OnlyMain: React.FC<OnlyMainProps> = ({ pageProps, component: Component }) => {
+  const classes = useStyles({});
 
   return (
     <div className={classes.wrapper}>
@@ -35,9 +40,6 @@ export default function OnlyMain({ pageProps, component: Component }) {
       </div>
     </div>
   );
-}
-
-OnlyMain.propTypes = {
-  pageProps: PropTypes.object.isRequired,
-  component: PropTypes.func.isRequired,
 };
+
+export default OnlyMain;

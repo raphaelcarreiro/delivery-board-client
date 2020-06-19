@@ -4,7 +4,7 @@
     "es6": true,
     "node": true
   },
-  "extends": ["plugin:react/recommended", "standard", "prettier", "prettier/react"],
+  "extends": ["plugin:react/recommended", "standard", "prettier", "plugin:prettier/recommended"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly",
@@ -25,6 +25,23 @@
   "rules": {
     "prettier/prettier": "error",
     "no-unused-vars": "warn",
-    "camelcase": "off"
-  }
+    "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
+    "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
+    "camelcase": "off",
+    "semi": "off",
+    "no-empty-function": "off"
+  },
+  "overrides": [
+    {
+      "extends": ["plugin:@typescript-eslint/recommended", "prettier/@typescript-eslint"],
+      "files": ["**/*.tsx", "**/*.ts"],
+      "parser": "@typescript-eslint/parser",
+      "plugins": ["@typescript-eslint", "prettier"],
+      "rules": {
+        "react/prop-types": "off",
+        "@typescript-eslint/no-empty-function": ["off"],
+        "@typescript-eslint/ban-types": "off"
+      }
+    }
+  ]
 }

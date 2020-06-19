@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import Header from './header/Header';
 import Footer from './footer/Footer';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Cart from '../cart/Cart';
 import { AppContext } from 'src/App';
 import DialogFullscreen from 'src/components/dialog/DialogFullscreen';
+import { NextComponentType } from 'next';
 
 const cartWidth = 450;
 
@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
       marginTop: 56,
     },
   },
-  cart: ({ isCartVisible }) => ({
+  cart: ({ isCartVisible }: { isCartVisible: boolean }) => ({
     transition: 'transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms',
     transform: isCartVisible ? 'none' : `translateX(${cartWidth}px)`,
     position: 'fixed',
@@ -68,7 +68,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Default({ pageProps, component: Component, isMobile, windowWidth }) {
+interface DefaultProps {
+  pageProps: any;
+  component: NextComponentType;
+  isMobile: boolean;
+  windowWidth: number;
+}
+
+const Default: React.FC<DefaultProps> = ({ pageProps, component: Component, isMobile, windowWidth }) => {
   const app = useContext(AppContext);
   const classes = useStyles({ isCartVisible: app.isCartVisible });
 
@@ -98,11 +105,6 @@ export default function Default({ pageProps, component: Component, isMobile, win
       </div>
     </div>
   );
-}
-
-Default.propTypes = {
-  pageProps: PropTypes.object.isRequired,
-  component: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
-  isMobile: PropTypes.bool.isRequired,
-  windowWidth: PropTypes.number.isRequired,
 };
+
+export default Default;

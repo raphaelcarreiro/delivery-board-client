@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import CheckoutHeader from './header/CheckoutHeader';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppContext } from 'src/App';
+import { NextComponentType } from 'next';
 
 const cartWidth = 450;
 
@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
       marginTop: 56,
     },
   },
-  cart: ({ isCartVisible }) => ({
+  cart: ({ isCartVisible }: { isCartVisible: boolean }) => ({
     transition: 'transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms',
     transform: isCartVisible ? 'none' : `translateX(${cartWidth}px)`,
     position: 'fixed',
@@ -53,7 +53,14 @@ const useStyles = makeStyles(theme => ({
   }),
 }));
 
-export default function Checkout({ pageProps, component: Component, isMobile, windowWidth }) {
+interface CheckoutProps {
+  pageProps: any;
+  component: NextComponentType;
+  isMobile: boolean;
+  windowWidth: number;
+}
+
+const Checkout: React.FC<CheckoutProps> = ({ pageProps, component: Component, isMobile, windowWidth }) => {
   const app = useContext(AppContext);
   const classes = useStyles({ isCartVisible: app.isCartVisible });
 
@@ -67,11 +74,6 @@ export default function Checkout({ pageProps, component: Component, isMobile, wi
       </div>
     </div>
   );
-}
-
-Checkout.propTypes = {
-  pageProps: PropTypes.object.isRequired,
-  component: PropTypes.oneOfType([PropTypes.element, PropTypes.func]).isRequired,
-  isMobile: PropTypes.bool.isRequired,
-  windowWidth: PropTypes.number.isRequired,
 };
+
+export default Checkout;
