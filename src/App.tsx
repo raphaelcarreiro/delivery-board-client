@@ -246,7 +246,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
 
   useEffect(() => {
     window.addEventListener('beforeinstallprompt', (event: BeforeInstallPromptEvent) => {
-      e.preventDefault();
+      event.preventDefault();
       defferedPromptPwa = event;
       setReadyToInstall(true);
     });
