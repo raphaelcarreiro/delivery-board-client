@@ -37,6 +37,11 @@ export default function AccountForm({
 }) {
   const classes = useStyles();
   const [validation, setValidation] = useState({});
+  const [name, setName] = useState(user.customer ? user.customer.name : '');
+  const [phone, setPhone] = useState(user.customer ? user.customer.phone : '');
+  const [cpf, setCpf] = useState(user.customer ? user.customer.cpf : '');
+  const [image, setImage] = useState(user.image);
+  const [isImageSelected, setIsImageSelected] = useState(false);
 
   function accountFormHandleSubmit(event) {
     event.preventDefault();
@@ -64,15 +69,19 @@ export default function AccountForm({
     });
 
     const form = {
-      name: user.name,
-      phone: user.customer.phone,
-      cpf: user.customer.cpf,
+      name,
+      phone,
+      cpf,
+      image,
+      customer: {
+        cpf,
+      },
     };
 
     schema
       .validate(form)
       .then(() => {
-        handleSubmit();
+        handleSubmit(form);
       })
       .catch(err => {
         setValidation({
@@ -86,9 +95,10 @@ export default function AccountForm({
       <Grid container>
         <div className={classes.accountImage}>
           <AccountImage
-            user={user}
-            handleUserChange={handleUserChange}
-            handleImageSelect={handleImageSelect}
+            image={image}
+            setImage={setImage}
+            isImageSelected={isImageSelected}
+            setIsImageSelected={setIsImageSelected}
             handleImageDelete={handleImageDelete}
           />
           <Typography variant="body2" color="textSecondary">
@@ -102,44 +112,43 @@ export default function AccountForm({
             placeholder="E-mail"
             margin="normal"
             value={user.email}
-            onChange={event => handleUserChange('email', event.target.value)}
             fullWidth
             disabled
           />
           <TextField
-            error={validation.name}
+            error={!!validation.name}
             helperText={validation.name}
             variant="standard"
             label="Nome"
             placeholder="Nome"
             margin="normal"
-            value={user.name}
+            value={name}
             fullWidth
-            onChange={event => handleUserChange('name', event.target.value)}
+            onChange={event => setName(event.target.value)}
           />
           <TextField
-            error={validation.phone}
+            error={!!validation.phone}
             helperText={validation.phone}
             variant="standard"
             label="Telefone"
             placeholder="Telefone"
             margin="normal"
-            value={user.customer && user.customer.phone}
-            onChange={event => handleCustomerChange('phone', event.target.value)}
+            value={phone}
+            onChange={event => setPhone(event.target.value)}
             fullWidth
             InputProps={{
               inputComponent: PhoneInput,
             }}
           />
           <TextField
-            error={validation.cpf}
+            error={!!validation.cpf}
             helperText={validation.cpf}
             variant="standard"
             label="CPF"
             placeholder="CPF"
             margin="normal"
-            value={user.customer && user.customer.cpf}
-            onChange={event => handleCustomerChange('cpf', event.target.value)}
+            value={cpf}
+            onChange={event => setCpf(event.target.value)}
             fullWidth
             InputProps={{
               inputComponent: CpfInput,

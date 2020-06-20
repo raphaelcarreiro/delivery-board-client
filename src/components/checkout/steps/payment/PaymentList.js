@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { List, ListItem, Typography } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
@@ -10,6 +10,7 @@ import PaymentChange from 'src/components/checkout/steps/payment/PaymentChange';
 import { useDispatch, useSelector } from 'react-redux';
 import { setChange } from 'src/store/redux/modules/order/actions';
 import { moneyFormat } from 'src/helpers/numberFormat';
+import PaymentCpf from './PaymentCpf';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -78,22 +79,30 @@ const useStyles = makeStyles(theme => ({
 PaymentList.propTypes = {
   paymentMethods: PropTypes.array.isRequired,
   handleSetPaymentMethod: PropTypes.func.isRequired,
-  paymentMethodId: PropTypes.number.isRequired,
+  paymentMethodId: PropTypes.number,
 };
 
 export default function PaymentList({ paymentMethods, handleSetPaymentMethod, paymentMethodId }) {
   const classes = useStyles();
   const checkout = useContext(CheckoutContext);
   const [dialogChange, setDialogChange] = useState(false);
+  const [dialogCpf, setDialogCpf] = useState(false);
   const dispatch = useDispatch();
   const order = useSelector(state => state.order);
+  const user = useSelector(state => state.user);
 
   function handleClick(paymentMethod) {
     handleSetPaymentMethod(paymentMethod);
+
     if (paymentMethod.kind === 'money') {
       setDialogChange(true);
       return;
-    } else dispatch(setChange(0));
+    } else if (paymentMethod.kind === 'picpay') {
+      if (!user.customer.cpf) {
+        setDialogCpf(true);
+        return;
+      }
+    }
 
     checkout.handleStepNext();
   }
@@ -103,9 +112,18 @@ export default function PaymentList({ paymentMethods, handleSetPaymentMethod, pa
     checkout.handleStepNext();
   }
 
+  function handleCloseDialogCpf() {
+    setDialogCpf(false);
+    if (user.customer.cpf) checkout.handleStepNext();
+    else {
+      handleSetPaymentMethod(null);
+    }
+  }
+
   return (
     <>
       {dialogChange && <PaymentChange onExited={handleCloseDialog} />}
+      {dialogCpf && <PaymentCpf onExited={handleCloseDialogCpf} />}
       <List className={classes.list}>
         {paymentMethods.map(
           paymentMethod =>

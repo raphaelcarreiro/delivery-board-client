@@ -53,7 +53,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function AccountImage({ user, handleUserChange, handleImageSelect, handleImageDelete }) {
+AccountImage.propTypes = {
+  image: PropTypes.object.isRequired,
+  setImage: PropTypes.func.isRequired,
+  setIsImageSelected: PropTypes.func.isRequired,
+  handleImageDelete: PropTypes.func.isRequired,
+  isImageSelected: PropTypes.bool.isRequired,
+};
+
+function AccountImage({ image, setImage, isImageSelected, setIsImageSelected, handleImageDelete }) {
   const messaging = useContext(MessagingContext);
   const [loading, setLoading] = useState(false);
   const classes = useStyles();
@@ -67,7 +75,7 @@ function AccountImage({ user, handleUserChange, handleImageSelect, handleImageDe
     api()
       .post('/images', form)
       .then(response => {
-        handleUserChange('image', response.data);
+        setImage(response.data);
       })
       .catch(() => {
         messaging.handleOpen('Não foi possível carregar a imagem');
@@ -88,7 +96,7 @@ function AccountImage({ user, handleUserChange, handleImageSelect, handleImageDe
         <div className={classes.imageContainer}>
           <CircularProgress color="primary" />
         </div>
-      ) : !user.image ? (
+      ) : !image ? (
         <>
           <input
             type="file"
@@ -106,27 +114,20 @@ function AccountImage({ user, handleUserChange, handleImageSelect, handleImageDe
         </>
       ) : (
         <>
-          <div className={classes.imageContainer} onClick={handleImageSelect}>
-            <Zoom in={user.image.selected}>
+          <div className={classes.imageContainer} onClick={() => setIsImageSelected(!isImageSelected)}>
+            <Zoom in={isImageSelected}>
               <div className={classes.imageWrapper}>
                 <Button variant="contained" color="primary" onClick={event => handleImageDeleteClick(event)}>
                   Trocar foto
                 </Button>
               </div>
             </Zoom>
-            <img alt="Foto do produto" className={classes.image} src={user.image.imageUrl} />
+            <img alt="Foto do produto" className={classes.image} src={image.imageUrl} />
           </div>
         </>
       )}
     </>
   );
 }
-
-AccountImage.propTypes = {
-  user: PropTypes.object.isRequired,
-  handleUserChange: PropTypes.func.isRequired,
-  handleImageSelect: PropTypes.func.isRequired,
-  handleImageDelete: PropTypes.func.isRequired,
-};
 
 export default AccountImage;

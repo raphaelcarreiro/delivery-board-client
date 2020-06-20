@@ -54,6 +54,7 @@ export default function order(state = INITIAL_STATE, action) {
       return {
         ...state,
         paymentMethod: action.paymentMethod,
+        change: action.paymentMethod.kind === 'money' ? state.change : 0,
       };
     }
 

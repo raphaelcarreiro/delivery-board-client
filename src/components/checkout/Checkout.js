@@ -205,7 +205,7 @@ export default function Checkout() {
         router.push('/menu');
       }
     }
-  }, [cart.total, restaurant]);
+  }, [cart.total, restaurant]); // eslint-disable-line
 
   useEffect(() => {
     app.handleCartVisibility(false);
@@ -254,7 +254,7 @@ export default function Checkout() {
       dispatch(setShipmentAddress(address || {}));
       setLoading(false);
     }
-  }, []);
+  }, []); // eslint-disable-line
 
   useEffect(() => {
     api()
@@ -266,12 +266,12 @@ export default function Checkout() {
       .catch(err => {
         if (err.response) messaging.handleOpen(err.response.data.error, null, { marginBottom: 47 });
       });
-  }, []);
+  }, []); // eslint-disable-line
 
   useEffect(() => {
     dispatch(setProducts(cart.products));
     dispatch(setCoupon(cart.coupon));
-  }, [cart]);
+  }, [cart, dispatch]);
 
   function handleSubmitOrder() {
     if (cart.subtotal < restaurant.configs.order_minimum_value && restaurant.configs.tax_mode !== 'order_value') {
@@ -306,6 +306,10 @@ export default function Checkout() {
         return;
       }
     } else if (currentStep.id === 'STEP_PAYMENT') {
+      if (!order.paymentMethod) {
+        messaging.handleOpen('Selecione uma forma de pagamento');
+        return;
+      }
       if (order.paymentMethod.kind === 'online_payment') {
         const validation = await handleCardValidation(order.creditCard);
         if (!validation) return;

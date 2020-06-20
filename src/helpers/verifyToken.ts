@@ -10,12 +10,14 @@ interface Payload {
 }
 
 export function verifyToken(): Payload | null {
-  let payload: Payload | null;
-  const token = localStorage.getItem(process.env.TOKEN_NAME);
+  let payload: Payload | null = null;
+  const tokenName = process.env.TOKEN_NAME || '';
+  const secret = process.env.SECRET || '';
+  const token = localStorage.getItem(tokenName);
 
   if (token) {
     try {
-      const decoded: any = jwt.verify(token, process.env.SECRET, {
+      const decoded: any = jwt.verify(token, secret, {
         ignoreNotBefore: true,
       });
 

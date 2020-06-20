@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
 Payment.propTypes = {
   handleSetPaymentMethod: PropTypes.func.isRequired,
   paymentMethods: PropTypes.array.isRequired,
-  paymentMethodId: PropTypes.number.isRequired,
+  paymentMethodId: PropTypes.number,
 };
 
 export default function Payment({ handleSetPaymentMethod, paymentMethods, paymentMethodId }) {

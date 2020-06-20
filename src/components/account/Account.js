@@ -61,7 +61,7 @@ export default function Account() {
     } else {
       setLoading(false);
     }
-  }, []);
+  }, []); // eslint-disable-line
 
   function handleTabChange(event, value) {
     setTabIndex(value);
@@ -104,11 +104,12 @@ export default function Account() {
       });
   }
 
-  function handleSubmit() {
+  function handleSubmit(data) {
     setSaving(true);
     api()
-      .put(`users/${user.id}`, user)
+      .put(`users/${user.id}`, data)
       .then(response => {
+        dispatch(setUser(response.data));
         messaging.handleOpen('Salvo');
       })
       .catch(err => {

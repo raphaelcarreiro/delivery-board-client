@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, ReactElement, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { api } from './services/api';
 import { useRouter } from 'next/router';
 import Loading from './components/loading/Loading';
@@ -73,7 +73,7 @@ export const AppContext = createContext({} as AppContextData);
 
 export const menuWidth = 240;
 let socket: SocketIOClient.Socket;
-let defferedPromptPwa: BeforeInstallPromptEvent;
+let defferedPromptPwa;
 
 const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const classes = useStyles({});
@@ -149,9 +149,11 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
         );
 
         if (process.env.LOCALSTORAGE_CART) {
-          const cart = JSON.parse(process.env.LOCALSTORAGE_CART);
+          let cart = localStorage.getItem(process.env.LOCALSTORAGE_CART);
           if (cart) {
+            cart = JSON.parse(cart);
             dispatch(setCart(cart));
+            console.log('salvou cart');
           }
         }
 
@@ -245,7 +247,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   }, [user.id]);
 
   useEffect(() => {
-    window.addEventListener('beforeinstallprompt', (event: BeforeInstallPromptEvent) => {
+    window.addEventListener('beforeinstallprompt', event => {
       event.preventDefault();
       defferedPromptPwa = event;
       setReadyToInstall(true);

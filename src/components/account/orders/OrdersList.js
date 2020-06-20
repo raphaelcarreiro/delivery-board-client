@@ -5,7 +5,6 @@ import { parseISO, formatDistanceStrict } from 'date-fns';
 import ptbr from 'date-fns/locale/pt-BR';
 import PropTypes from 'prop-types';
 import Link from 'src/components/link/Link';
-import WatchLaterIcon from '@material-ui/icons/WatchLater';
 
 const useStyles = makeStyles(theme => ({
   list: {
