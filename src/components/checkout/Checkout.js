@@ -285,7 +285,10 @@ export default function Checkout() {
       .post('/orders', order)
       .then(response => {
         setCreatedOrder(response.data);
-        // dispatch(setShipmentAddress({}));
+
+        if (response.data.picpay_payment) {
+          window.open(response.data.picpay_payment.payment_url, '_blank');
+        }
         dispatch(setChange(0));
         dispatch(clearCard());
         dispatch(clearCart());

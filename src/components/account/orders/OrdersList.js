@@ -51,6 +51,7 @@ const useStyles = makeStyles(theme => ({
   total: {
     marginTop: 10,
   },
+  p: { backgroundColor: '#17a2b8', color: '#fff' },
   o: { backgroundColor: '#ffc107' },
   a: { backgroundColor: '#8BC34A', color: '#fff' },
   d: { backgroundColor: '#007bff', color: '#fff' },

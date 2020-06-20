@@ -1,4 +1,5 @@
 export const orderStatus = {
+  p: 'Aguardando pagamento',
   o: 'Aberto',
   a: 'Aprovado',
   d: 'Saiu para entrega',
