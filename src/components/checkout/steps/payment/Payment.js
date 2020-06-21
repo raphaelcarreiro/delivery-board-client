@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { AppContext } from 'src/App';
 import PaymentCreditCard from './PaymentCreditCard';
 import { useSelector } from 'react-redux';
+import PaymentOtherList from './PaymentOtherList';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -22,16 +23,25 @@ Payment.propTypes = {
 export default function Payment({ handleSetPaymentMethod, paymentMethods, paymentMethodId }) {
   const [tab, setTab] = useState(0);
   const [onlinePayment, setOnlinePayment] = useState(false);
+  const [othersOnline, setOthersOnline] = useState(false);
   const classes = useStyles();
   const app = useContext(AppContext);
   const order = useSelector(state => state.order);
   const { configs } = useSelector(state => state.restaurant);
 
   useEffect(() => {
-    // if (!app.isMobile && app.windowWidth >= 960) app.handleCartVisibility(true);
+    const paymentMethod = paymentMethods.find(method => method.id === paymentMethodId);
     const online = paymentMethods.find(method => method.kind === 'online_payment');
+    const othersOnline = paymentMethods.find(method => method.kind === 'picpay');
+
     setOnlinePayment(!!online);
-    if (online) if (online.id === paymentMethodId) setTab(1);
+    setOthersOnline(!!othersOnline);
+
+    if (paymentMethod) {
+      if (paymentMethod.kind === 'online_payment') setTab(1);
+      else if (paymentMethod.kind === 'picpay' && !online) setTab(1);
+      else if (paymentMethod.kind === 'picpay' && othersOnline) setTab(2);
+    }
   }, [paymentMethods, paymentMethodId]);
 
   useEffect(() => {
@@ -44,27 +54,43 @@ export default function Payment({ handleSetPaymentMethod, paymentMethods, paymen
     if (value === 0) {
       if (order.change > 0) handleSetPaymentMethod(paymentMethods.find(method => method.kind === 'money'));
       else handleSetPaymentMethod(paymentMethods[0]);
-    }
-    if (value === 1) {
-      handleSetPaymentMethod(paymentMethods.find(method => method.kind === 'online_payment'));
-    }
+    } else if (value === 1) {
+      if (onlinePayment) handleSetPaymentMethod(paymentMethods.find(method => method.kind === 'online_payment'));
+    } else handleSetPaymentMethod(paymentMethods[0]);
   }
 
   return (
     <>
-      <Tabs textColor="primary" indicatorColor="primary" value={tab} onChange={handleTabChange}>
-        <Tab label="Pague na entrega" />
-        {onlinePayment && <Tab label="Pague online" />}
+      <Tabs textColor="primary" indicatorColor="primary" value={tab} onChange={handleTabChange} variant="scrollable">
+        <Tab label="Na entrega" />
+        {onlinePayment && <Tab label="Online" />}
+        {othersOnline && <Tab label="Outros online" />}
       </Tabs>
       <div className={classes.container}>
-        {tab === 0 && paymentMethods && (
+        {tab === 0 && paymentMethods ? (
           <PaymentList
             paymentMethodId={paymentMethodId}
             paymentMethods={paymentMethods}
             handleSetPaymentMethod={handleSetPaymentMethod}
           />
+        ) : tab === 1 && onlinePayment ? (
+          <PaymentCreditCard />
+        ) : tab === 1 && othersOnline ? (
+          <PaymentOtherList
+            paymentMethodId={paymentMethodId}
+            paymentMethods={paymentMethods}
+            handleSetPaymentMethod={handleSetPaymentMethod}
+          />
+        ) : (
+          tab === 2 &&
+          othersOnline && (
+            <PaymentOtherList
+              paymentMethodId={paymentMethodId}
+              paymentMethods={paymentMethods}
+              handleSetPaymentMethod={handleSetPaymentMethod}
+            />
+          )
         )}
-        {tab === 1 && <PaymentCreditCard />}
       </div>
     </>
   );

@@ -51,7 +51,7 @@ export default function ShipmentCollectSchedule({ onExited }) {
   const [scheduledAt, setScheduledAt] = useState(
     order.shipment.scheduled_at
       ? order.shipment.scheduled_at
-      : addMinutes(currentTime, restaurant.configs.delivery_time)
+      : addMinutes(currentTime, restaurant.configs.delivery_time + 1)
   );
   const classes = useStyles();
 

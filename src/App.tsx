@@ -153,7 +153,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
           if (cart) {
             cart = JSON.parse(cart);
             dispatch(setCart(cart));
-            console.log('salvou cart');
           }
         }
 

@@ -10,13 +10,13 @@ const useStyles = makeStyles({
   listItem: {
     display: 'flex',
     backgroundColor: '#fff',
-    // border: '1px solid #eee',
+    borderBottom: '1px solid #eee',
     borderRadius: 4,
     position: 'relative',
     alignItems: 'center',
     minHeight: 60,
     marginBottom: 4,
-    boxShadow: '1px 1px 9px 1px #eee',
+    // boxShadow: '1px 1px 9px 1px #eee',
   },
   list: {
     paddingBottom: 20,

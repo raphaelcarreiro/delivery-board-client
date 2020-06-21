@@ -86,7 +86,7 @@ export default function ProductList({ products, handleProductClick, handleOpenIm
                   <Typography variant="body1" color="textSecondary" className={classes.oldPrice}>
                     {product.formattedPrice}
                   </Typography>
-                  <Typography variant="h6" color="secondary">
+                  <Typography variant="h6" color="primary">
                     {product.formattedSpecialPrice}
                   </Typography>
                 </div>

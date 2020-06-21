@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography, Button } from '@material-ui/core';
 import PageHeader from 'src/components/pageHeader/PageHeader';
 import { formatId } from 'src/helpers/formatOrderId';
 import { api } from 'src/services/api';
-import Loading from 'src/components/loading/Loading';
+import InsideLoading from 'src/components/loading/InsideLoading';
 import { format, parseISO } from 'date-fns';
 import ptbr from 'date-fns/locale/pt-BR';
 import { makeStyles } from '@material-ui/core/styles';
@@ -23,22 +23,30 @@ import Link from 'src/components/link/Link';
 import OrderStatusList from './OrderStatusList';
 import OrderShipment from './OrderShipment';
 import OrderPayment from './OrderPayment';
+import OrderTotals from './OrderTotals';
 
 const useStyles = makeStyles(theme => ({
   section: {
     marginBottom: 15,
-    padding: 10,
+    padding: 20,
     border: '1px solid #eee',
     borderRadius: 4,
-    backgroundColor: '#f5f5f5',
-    maxWidth: 900,
+    backgroundColor: '#fff',
+    maxWidth: 600,
     width: '100%',
+    [theme.breakpoints.down('sm')]: {
+      padding: 10,
+    },
+  },
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
   },
   containerGrid2: {
     display: 'grid',
     gridTemplateColumns: 'repeat(1, 1fr)',
     gridGap: 6,
-    width: '100%',
+    flex: 1,
     [theme.breakpoints.down('md')]: {
       gridTemplateColumns: '1fr',
     },
@@ -104,11 +112,7 @@ export default function Order({ cryptId }) {
     };
   }, [order]);
 
-  useEffect(() => {
-    handleSetOrders();
-  }, []);
-
-  function handleSetOrders() {
+  const handleSetOrders = useCallback(() => {
     setLoading(true);
     api()
       .get(`orders/${cryptId}`)
@@ -172,7 +176,11 @@ export default function Order({ cryptId }) {
       .finally(() => {
         setLoading(false);
       });
-  }
+  }, [cryptId]); // eslint-disable-line
+
+  useEffect(() => {
+    handleSetOrders();
+  }, [handleSetOrders]);
 
   return (
     <>
@@ -189,41 +197,42 @@ export default function Order({ cryptId }) {
         }
       />
       {loading ? (
-        <Loading />
+        <InsideLoading />
       ) : order ? (
-        <Grid container>
-          {!app.fmHasToken && isSupported() && user.id && (
-            <div className={classes.activeNotifications}>
-              <Typography variant="body2" color="textSecondary" align="center">
-                Ative notificações para acompanhar esse pedido
-              </Typography>
-              <Button
-                color="primary"
-                onClick={app.handleRequestPermissionMessaging}
-                variant="contained"
-                size="small"
-                startIcon={<NotificationsActiveIcon />}
-              >
-                Ativar
-              </Button>
-            </div>
-          )}
+        <>
           <PageHeader title={`Pedido ${order.formattedId}`} description={`Pedido gerado em ${order.formattedDate}`} />
-          <div>
+          <div className={classes.container}>
+            {!app.fmHasToken && isSupported() && user.id && (
+              <div className={classes.activeNotifications}>
+                <Typography variant="body2" color="textSecondary" align="center">
+                  Ative notificações para acompanhar esse pedido
+                </Typography>
+                <Button
+                  color="primary"
+                  onClick={app.handleRequestPermissionMessaging}
+                  variant="contained"
+                  size="small"
+                  startIcon={<NotificationsActiveIcon />}
+                >
+                  Ativar
+                </Button>
+              </div>
+            )}
             <OrderStatusList order={order} />
+            <div className={classes.containerGrid2}>
+              <div className={classes.section}>
+                <OrderShipment order={order} />
+              </div>
+              <div className={classes.section}>
+                <OrderPayment order={order} />
+              </div>
+              <div className={classes.section}>
+                <OrderProductList products={order.products} />
+                <OrderTotals order={order} />
+              </div>
+            </div>
           </div>
-          <div className={classes.containerGrid2}>
-            <div className={classes.section}>
-              <OrderShipment order={order} />
-            </div>
-            <div className={classes.section}>
-              <OrderPayment order={order} />
-            </div>
-            <div className={classes.section}>
-              <OrderProductList products={order.products} />
-            </div>
-          </div>
-        </Grid>
+        </>
       ) : (
         <div className={classes.orderNotFound}>
           <Typography variant="h5" color="textSecondary" gutterBottom>

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography } from '@material-ui/core';
+import { Typography, Link } from '@material-ui/core';
 
 OrderPayment.propTypes = {
   order: PropTypes.object.isRequired,
@@ -19,8 +19,8 @@ export default function OrderPayment({ order }) {
       ) : (
         <>
           <Typography>Pagamento na entrega</Typography>
-          <Typography>
-            {order.payment_method.method}
+          <div>
+            <Typography>{order.payment_method.method}</Typography>
             {order.change > 0 && (
               <Typography
                 color="textSecondary"
@@ -28,7 +28,14 @@ export default function OrderPayment({ order }) {
                 variant="body1"
               >{`, troco para ${order.formattedChange}`}</Typography>
             )}
-          </Typography>
+            {order.picpay_payment && order.status === 'p' && (
+              <div>
+                <Link color="primary" variant="body1" href={order.picpay_payment.payment_url} target="blank">
+                  Fazer pagamento
+                </Link>
+              </div>
+            )}
+          </div>
         </>
       )}
     </>

@@ -19,9 +19,11 @@ export default function OrderAction({ user, hasToken, isSupported, handleRefresh
   return (
     <>
       <Tooltip title="Atualizar">
-        <IconButton onClick={handleRefresh} color="inherit" disabled={loading}>
-          <RefreshIcon />
-        </IconButton>
+        <span>
+          <IconButton onClick={handleRefresh} color="inherit" disabled={loading}>
+            <RefreshIcon />
+          </IconButton>
+        </span>
       </Tooltip>
       {user && !hasToken && isSupported && (
         <Tooltip title="Salvar">

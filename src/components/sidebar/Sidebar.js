@@ -81,6 +81,7 @@ const useStyles = makeStyles(theme => ({
   restaurantName: ({ restaurantIsOpen }) => ({
     display: 'flex',
     alignItems: 'center',
+    fontSize: 20,
   }),
   installApp: {
     position: 'absolute',
@@ -127,6 +128,12 @@ const useStyles = makeStyles(theme => ({
       color: restaurantIsOpen ? '#28a745' : '#dc3545',
     },
   }),
+  headerTitle: {
+    whiteSpace: 'wrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    width: 150,
+  },
 }));
 
 Sidebar.propTypes = {
@@ -191,7 +198,7 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
               {restaurant.name}
             </Typography>
             <div className={classes.restaurantStatus}>
-              <StatusIcon /> <Typography variant="body2">{restaurant.is_open ? 'Aberto' : 'Fechado'}</Typography>
+              <StatusIcon />
             </div>
           </>
         )}

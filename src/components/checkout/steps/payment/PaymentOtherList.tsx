@@ -1,15 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { List, ListItem, Typography } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CreditCardIcon from '@material-ui/icons/CreditCard';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import { CheckoutContext } from 'src/components/checkout/Checkout';
-import PropTypes from 'prop-types';
-import PaymentChange from 'src/components/checkout/steps/payment/PaymentChange';
-import { useDispatch, useSelector } from 'react-redux';
-import { moneyFormat } from 'src/helpers/numberFormat';
 import PaymentCpf from './PaymentCpf';
+import { useSelector } from 'src/store/redux/selector';
+import PicPayIcon from 'src/components/icons/PicPayIcon';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -75,38 +71,32 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-PaymentList.propTypes = {
-  paymentMethods: PropTypes.array.isRequired,
-  handleSetPaymentMethod: PropTypes.func.isRequired,
-  paymentMethodId: PropTypes.number,
-};
+interface PaymentOtherListProps {
+  paymentMethods: Array<any>;
+  handleSetPaymentMethod(paymentMethod: any): void;
+  paymentMethodId: number;
+}
 
-export default function PaymentList({ paymentMethods, handleSetPaymentMethod, paymentMethodId }) {
+const PaymentOtherList: React.FC<PaymentOtherListProps> = ({
+  paymentMethods,
+  handleSetPaymentMethod,
+  paymentMethodId,
+}) => {
   const classes = useStyles();
   const checkout = useContext(CheckoutContext);
-  const [dialogChange, setDialogChange] = useState(false);
   const [dialogCpf, setDialogCpf] = useState(false);
-  const order = useSelector(state => state.order);
   const user = useSelector(state => state.user);
 
   function handleClick(paymentMethod) {
     handleSetPaymentMethod(paymentMethod);
 
-    if (paymentMethod.kind === 'money') {
-      setDialogChange(true);
-      return;
-    } else if (paymentMethod.kind === 'picpay') {
+    if (paymentMethod.kind === 'picpay') {
       if (!user.customer.cpf) {
         setDialogCpf(true);
         return;
       }
     }
 
-    checkout.handleStepNext();
-  }
-
-  function handleCloseDialog() {
-    setDialogChange(false);
     checkout.handleStepNext();
   }
 
@@ -120,13 +110,11 @@ export default function PaymentList({ paymentMethods, handleSetPaymentMethod, pa
 
   return (
     <>
-      {dialogChange && <PaymentChange onExited={handleCloseDialog} />}
       {dialogCpf && <PaymentCpf onExited={handleCloseDialogCpf} />}
       <List className={classes.list}>
         {paymentMethods.map(
           paymentMethod =>
-            paymentMethod.kind !== 'online_payment' &&
-            paymentMethod.kind !== 'picpay' && (
+            paymentMethod.kind === 'picpay' && (
               <ListItem
                 onClick={() => handleClick(paymentMethod)}
                 button
@@ -135,19 +123,11 @@ export default function PaymentList({ paymentMethods, handleSetPaymentMethod, pa
               >
                 <div className={classes.iconContainer}>
                   <div className={classes.icon}>
-                    {paymentMethod.kind === 'payment_card' && <CreditCardIcon color="primary" />}
-                    {paymentMethod.kind === 'money' && <AttachMoneyIcon color="primary" />}
+                    <PicPayIcon />
                   </div>
                 </div>
                 <div className={classes.method}>
                   <Typography>{paymentMethod.method}</Typography>
-                  {order.paymentMethod && (
-                    <>
-                      {order.change > 0 && paymentMethod.kind === 'money' && (
-                        <Typography color="textSecondary">Troco para {moneyFormat(order.change)}</Typography>
-                      )}
-                    </>
-                  )}
                 </div>
                 {paymentMethod.id === paymentMethodId && (
                   <CheckCircleIcon color="primary" className={classes.checkIcon} />
@@ -158,4 +138,6 @@ export default function PaymentList({ paymentMethods, handleSetPaymentMethod, pa
       </List>
     </>
   );
-}
+};
+
+export default PaymentOtherList;

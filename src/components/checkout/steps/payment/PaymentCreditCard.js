@@ -35,7 +35,7 @@ export default function PaymentCreditCard() {
     else if (checkout.cardValidation.expiration_date) inputs.expiration_date.focus();
     else if (checkout.cardValidation.cvv) inputs.cvv.focus();
     else if (checkout.cardValidation.cpf) inputs.cpf.focus();
-  }, [checkout.cardValidation]);
+  }, [checkout.cardValidation]); // eslint-disable-line
 
   function handleChange(index, value) {
     dispatch(changeCreditCard(index, value));

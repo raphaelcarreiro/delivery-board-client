@@ -33,6 +33,7 @@ const useStyles = makeStyles(theme => ({
   historyList: {
     marginBottom: 20,
     padding: 0,
+    maxWidth: 350,
   },
   historyListItem: {
     '&:last-child span::after': {

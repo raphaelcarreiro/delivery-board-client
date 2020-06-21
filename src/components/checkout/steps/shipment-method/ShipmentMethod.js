@@ -5,8 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CheckoutContext } from '../../Checkout';
 import { setShipmentMethod, setSchedule } from 'src/store/redux/modules/order/actions';
 import ShipmentCollectSchedule from './ShipmentCollectSchedule';
-import StoreIcon from '@material-ui/icons/Store';
-import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 
 const useStyles = makeStyles(theme => ({
   container: {
