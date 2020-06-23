@@ -12,32 +12,28 @@ export default function OrderPayment({ order }) {
       <Typography variant="h5" gutterBottom>
         Forma de pagamento
       </Typography>
-      {order.payment_method.kind === 'online_payment' ? (
-        <>
-          <Typography>{order.payment_method.method}</Typography>
-        </>
+      {order.payment_method.mode === 'online' ? (
+        <Typography>Pagamento online </Typography>
       ) : (
-        <>
-          <Typography>Pagamento na entrega</Typography>
-          <div>
-            <Typography>{order.payment_method.method}</Typography>
-            {order.change > 0 && (
-              <Typography
-                color="textSecondary"
-                display="inline"
-                variant="body1"
-              >{`, troco para ${order.formattedChange}`}</Typography>
-            )}
-            {order.picpay_payment && order.status === 'p' && (
-              <div>
-                <Link color="primary" variant="body1" href={order.picpay_payment.payment_url} target="blank">
-                  Fazer pagamento
-                </Link>
-              </div>
-            )}
-          </div>
-        </>
+        <Typography>Pagamento na entrega</Typography>
       )}
+      <div>
+        <Typography>{order.payment_method.method}</Typography>
+        {order.change > 0 && (
+          <Typography
+            color="textSecondary"
+            display="inline"
+            variant="body1"
+          >{`, troco para ${order.formattedChange}`}</Typography>
+        )}
+        {order.picpay_payment && order.status === 'p' && (
+          <div>
+            <Link color="primary" variant="body1" href={order.picpay_payment.payment_url} target="blank">
+              Fazer pagamento
+            </Link>
+          </div>
+        )}
+      </div>
     </>
   );
 }
