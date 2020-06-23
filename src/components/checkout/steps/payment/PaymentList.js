@@ -79,7 +79,6 @@ const useStyles = makeStyles(theme => ({
 
 PaymentList.propTypes = {
   paymentMethods: PropTypes.array.isRequired,
-  handleSetPaymentMethod: PropTypes.func.isRequired,
   paymentMethodId: PropTypes.number,
 };
 
@@ -87,10 +86,7 @@ export default function PaymentList({ paymentMethods, paymentMethodId }) {
   const classes = useStyles();
   const checkout = useContext(CheckoutContext);
   const [dialogChange, setDialogChange] = useState(false);
-  const [dialogCpf, setDialogCpf] = useState(false);
-  const [dialogCard, setDialogCard] = useState(false);
   const order = useSelector(state => state.order);
-  const user = useSelector(state => state.user);
   const dispatch = useDispatch();
 
   function handleClick(paymentMethod) {
@@ -99,37 +95,19 @@ export default function PaymentList({ paymentMethods, paymentMethodId }) {
     if (paymentMethod.kind === 'money') {
       setDialogChange(true);
       return;
-    } else if (paymentMethod.kind === 'picpay') {
-      if (!user.customer.cpf) {
-        setDialogCpf(true);
-        return;
-      }
-    } else if (paymentMethod.kind === 'card' && paymentMethod.mode === 'online') {
-      setDialogCard(true);
-      return;
     }
 
-    checkout.handleStepNext();
+    checkout.handleSetStepById('STEP_CONFIRM');
   }
 
   function handleCloseDialog() {
     setDialogChange(false);
-    checkout.handleStepNext();
-  }
-
-  function handleCloseDialogCpf() {
-    setDialogCpf(false);
-    if (user.customer.cpf) checkout.handleStepNext();
-    else {
-      dispatch(setPaymentMethod(null));
-    }
+    checkout.handleSetStepById('STEP_CONFIRM');
   }
 
   return (
     <>
       {dialogChange && <PaymentChange onExited={handleCloseDialog} />}
-      {dialogCpf && <PaymentCpf onExited={handleCloseDialogCpf} />}
-      {dialogCard && <PaymentCreditCard onExited={() => setDialogCard(false)} />}
       <List className={classes.list}>
         {paymentMethods.map(
           paymentMethod =>

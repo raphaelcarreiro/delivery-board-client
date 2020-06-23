@@ -77,7 +77,6 @@ const useStyles = makeStyles(theme => ({
 
 PaymentOnlineList.propTypes = {
   paymentMethods: PropTypes.array.isRequired,
-  handleSetPaymentMethod: PropTypes.func.isRequired,
   paymentMethodId: PropTypes.number,
 };
 
@@ -103,12 +102,12 @@ export default function PaymentOnlineList({ paymentMethods, paymentMethodId }) {
       return;
     }
 
-    checkout.handleStepNext();
+    checkout.handleSetStepById('STEP_CONFIRM');
   }
 
   function handleCloseDialogCpf() {
     setDialogCpf(false);
-    if (user.customer.cpf) checkout.handleStepNext();
+    if (user.customer.cpf) checkout.handleSetStepById('STEP_CONFIRM');
     else {
       dispatch(setPaymentMethod(null));
     }
@@ -116,7 +115,7 @@ export default function PaymentOnlineList({ paymentMethods, paymentMethodId }) {
 
   function handleCloseDialogCard() {
     setDialogCard(false);
-    if (!checkout.cardValidation.approved) dispatch(setPaymentMethod(paymentMethods[0]));
+    if (!checkout.isCardValid) dispatch(setPaymentMethod(null));
   }
 
   return (
@@ -144,7 +143,7 @@ export default function PaymentOnlineList({ paymentMethods, paymentMethodId }) {
                 </div>
                 <div className={classes.method}>
                   <Typography>{paymentMethod.method}</Typography>
-                  {paymentMethod.kind === 'card' && checkout.cardValidation.approved && (
+                  {paymentMethod.kind === 'card' && checkout.isCardValid && (
                     <Typography>**** **** **** {order.creditCard.number.substr(-4)}</Typography>
                   )}
                 </div>

@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   paper: props => ({
     backgroundColor: props.backgroundColor ? props.backgroundColor : '#fff',
     [theme.breakpoints.up('md')]: {
-      height: '100vh',
+      height: props.height,
     },
   }),
   content: ({ title, displayBottomActions }) => ({
@@ -67,10 +67,12 @@ export default function CustomDialog({
   backgroundColor,
   hideBackdrop,
   displayBottomActions,
+  maxWidth,
+  height,
 }) {
   const [open, setOpen] = useState(true);
   const app = useContext(AppContext);
-  const styleProps = { backgroundColor, title: !!title, displayBottomActions };
+  const styleProps = { backgroundColor, title: !!title, displayBottomActions, height };
   const classes = useStyles(styleProps);
 
   function handleClose() {
@@ -90,7 +92,7 @@ export default function CustomDialog({
       onClose={handleClose}
       fullWidth
       fullScreen={app.isMobile || app.windowWidth < 960}
-      maxWidth="md"
+      maxWidth={maxWidth}
       onExited={() => handleModalState()}
     >
       {title && (
@@ -119,6 +121,8 @@ export default function CustomDialog({
 CustomDialog.defaultProps = {
   hideBackdrop: false,
   displayBottomActions: false,
+  maxWidth: 'md',
+  height: '100vh',
 };
 
 CustomDialog.propTypes = {
@@ -129,6 +133,8 @@ CustomDialog.propTypes = {
   backgroundColor: PropTypes.string,
   hideBackdrop: PropTypes.bool,
   displayBottomActions: PropTypes.bool,
+  maxWidth: PropTypes.string,
+  height: PropTypes.string,
 };
 
 export const DialogConsumer = CustomDialogContext.Consumer;

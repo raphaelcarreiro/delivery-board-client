@@ -36,6 +36,7 @@ import { cpfValidation } from 'src/helpers/cpfValidation';
 import ShipmentMethod from './steps/shipment-method/ShipmentMethod';
 import { useRouter } from 'next/router';
 import { cardBrandValidation } from 'src/helpers/cardBrandValidation';
+import InsideLoading from '../loading/InsideLoading';
 
 const cartWidth = 450;
 
@@ -119,10 +120,12 @@ export const CheckoutContext = React.createContext({
   handleSubmitOrder: () => {},
   handleSetStep: () => {},
   handleSetStepById: () => {},
+  setIsCardValid: () => {},
   createdOrder: null,
   step: null,
   cardValidation: {},
   saving: false,
+  isCardValid: false,
 });
 
 export default function Checkout() {
@@ -141,7 +144,7 @@ export default function Checkout() {
   const [createdOrder, setCreatedOrder] = useState(null);
   const classes = useStyles({ step, isCartVisible: app.isCartVisible });
   const [steps, setSteps] = useState(defaultSteps);
-  const [cardValidation, setCardValidation] = useState({ approved: false });
+  const [isCardValid, setIsCardValid] = useState(false);
 
   const currentStep = useMemo(() => {
     return steps.find(item => item.order === step);
@@ -153,11 +156,11 @@ export default function Checkout() {
     handleSubmitOrder: handleSubmitOrder,
     handleSetStep: handleSetStep,
     handleSetStepById: handleSetStepById,
-    setCardValidation: setCardValidation,
+    setIsCardValid: setIsCardValid,
+    isCardValid,
     saving,
     createdOrder,
     step,
-    cardValidation,
   };
 
   useEffect(() => {
@@ -262,7 +265,10 @@ export default function Checkout() {
       .get('/order/paymentMethods')
       .then(response => {
         setPaymentMethods(response.data);
-        dispatch(setPaymentMethod(response.data[0]));
+        const paymentMethods = response.data;
+        // const online = paymentMethods.some(method => method.mode === 'online');
+        const offline = paymentMethods.some(method => method.mode === 'offline');
+        if (offline) dispatch(setPaymentMethod(response.data[0]));
       })
       .catch(err => {
         if (err.response) messaging.handleOpen(err.response.data.error, null, { marginBottom: 47 });
@@ -311,12 +317,8 @@ export default function Checkout() {
       }
     } else if (currentStep.id === 'STEP_PAYMENT') {
       if (!order.paymentMethod) {
-        messaging.handleOpen('Selecione uma forma de pagamento');
+        messaging.handleOpen('Selecione uma forma de pagamento', null, { marginBottom: 47 });
         return;
-      }
-      if (order.paymentMethod.kind === 'card' && order.paymentMethod.mode === 'online') {
-        const validation = await handleCardValidation(order.creditCard);
-        if (!validation) return;
       }
     }
     setStep(step + 1);
@@ -334,55 +336,6 @@ export default function Checkout() {
   function handleSetStepById(id) {
     const order = steps.find(s => s.id === id).order;
     if (order) setStep(order);
-  }
-
-  async function handleCardValidation(card) {
-    const schema = yup.object().shape({
-      cpf: yup
-        .string()
-        .transform((value, originalValue) => {
-          return originalValue ? originalValue.replace(/\D/g, '') : '';
-        })
-        .test('cpfValidation', 'CPF inválido', value => {
-          return cpfValidation(value);
-        })
-        .required('CPF é obrigatório'),
-      cvv: yup
-        .string()
-        .min(3, 'O código de segurança deve ter 3 digitos')
-        .required('O código de segurança é obrigatório'),
-      expiration_date: yup
-        .string()
-        .transform((value, originalValue) => {
-          return originalValue.replace(/\D/g, '');
-        })
-        .min(4, 'Data de validade inválida')
-        .required('A data de validade do cartão é obrigatória'),
-      name: yup.string().required('O nome e sobrenome são obrigatórios'),
-      number: yup
-        .string()
-        .transform((value, originalValue) => {
-          return originalValue.replace(/\D/g, '');
-        })
-        .min(12, 'Número do cartão inválido')
-        .test('cardValidation', 'Infelizmente não trabalhamos com essa bandeira de cartão', value => {
-          return cardBrandValidation(value);
-        })
-        .required('O número do cartão é obrigatório'),
-    });
-
-    try {
-      await schema.validate(card);
-      setCardValidation({ approved: true });
-      return true;
-    } catch (err) {
-      console.log(err.message);
-      setCardValidation({
-        [err.path]: err.message,
-        approvred: false,
-      });
-      return false;
-    }
   }
 
   return (
@@ -408,7 +361,7 @@ export default function Checkout() {
       />
       {saving && <Loading background="rgba(250,250,250,0.5)" />}
       {loading ? (
-        <Loading />
+        <InsideLoading />
       ) : currentStep.id === 'STEP_SUCCESS' ? (
         <CheckoutContext.Provider value={checkoutContextValue}>
           <CheckoutSuccess />
@@ -433,6 +386,8 @@ export default function Checkout() {
                 <Payment
                   paymentMethods={paymentMethods}
                   paymentMethodId={order.paymentMethod && order.paymentMethod.id}
+                  isCardValid={isCardValid}
+                  setIsCardValid={setIsCardValid}
                 />
               ) : (
                 currentStep.id === 'STEP_CONFIRM' && <Confirm />

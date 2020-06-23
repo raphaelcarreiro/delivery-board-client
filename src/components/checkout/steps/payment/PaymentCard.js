@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useEffect } from 'react';
+import React, { useContext, useRef, useEffect, useState } from 'react';
 import { Grid, TextField, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,10 +10,14 @@ import CardNumber from 'src/components/masked-input/CardNumber';
 import { CheckoutContext } from '../../Checkout';
 import CustomDialog, { CustomDialogContext } from 'src/components/dialog/CustomDialog';
 import PaymentCardActions from './PaymentCardActions';
+import * as yup from 'yup';
+import { cpfValidation } from 'src/helpers/cpfValidation';
+import { cardBrandValidation } from 'src/helpers/cardBrandValidation';
 
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
+    justifyContent: 'center',
   },
   actions: {
     position: 'absolute',
@@ -36,30 +40,76 @@ export default function PaymentCard({ onExited }) {
   const order = useSelector(state => state.order);
   const dispatch = useDispatch();
   const checkout = useContext(CheckoutContext);
+  const [validation, setValidation] = useState({});
 
   const inputs = {
-    number: useRef(),
-    name: useRef(),
-    expiration_date: useRef(),
-    cvv: useRef(),
-    cpf: useRef(),
+    number: useRef(null),
+    name: useRef(null),
+    expiration_date: useRef(null),
+    cvv: useRef(null),
+    cpf: useRef(null),
   };
 
   useEffect(() => {
-    if (checkout.cardValidation.number && inputs.number.current) inputs.number.current.focus();
-    else if (checkout.cardValidation.name && inputs.name.current) inputs.name.current.focus();
-    else if (checkout.cardValidation.expiration_date && inputs.expiration_date.current)
-      inputs.expiration_date.current.focus();
-    else if (checkout.cardValidation.cvv && inputs.cvv.current) inputs.cvv.current.focus();
-    else if (checkout.cardValidation.cpf && inputs.cpf.current) inputs.cpf.current.focus();
-  }, [checkout.cardValidation, inputs]);
+    if (validation.number) inputs.number.focus();
+    else if (validation.name) inputs.name.focus();
+    else if (validation.expiration_date) inputs.expiration_date.focus();
+    else if (validation.cvv) inputs.cvv.focus();
+    else if (validation.cpf) inputs.cpf.focus();
+  }, [validation]); //eslint-disable-line
 
   function handleChange(index, value) {
     dispatch(changeCreditCard(index, value));
   }
 
-  function handleSubmit() {
-    checkout.handleStepNext();
+  function handleCardValidation() {
+    const schema = yup.object().shape({
+      cpf: yup
+        .string()
+        .transform((value, originalValue) => {
+          return originalValue ? originalValue.replace(/\D/g, '') : '';
+        })
+        .test('cpfValidation', 'CPF inválido', value => {
+          return cpfValidation(value);
+        })
+        .required('CPF é obrigatório'),
+      cvv: yup
+        .string()
+        .min(3, 'O código de segurança deve ter 3 digitos')
+        .required('O código de segurança é obrigatório'),
+      expiration_date: yup
+        .string()
+        .transform((value, originalValue) => {
+          return originalValue.replace(/\D/g, '');
+        })
+        .min(4, 'Data de validade inválida')
+        .required('A data de validade do cartão é obrigatória'),
+      name: yup.string().required('O nome e sobrenome são obrigatórios'),
+      number: yup
+        .string()
+        .transform((value, originalValue) => {
+          return originalValue.replace(/\D/g, '');
+        })
+        .min(12, 'Número do cartão inválido')
+        .test('cardValidation', 'Infelizmente não trabalhamos com essa bandeira de cartão', value => {
+          return cardBrandValidation(value);
+        })
+        .required('O número do cartão é obrigatório'),
+    });
+
+    schema
+      .validate(order.creditCard)
+      .then(() => {
+        setValidation({});
+        checkout.setIsCardValid(true);
+        checkout.handleStepNext();
+      })
+      .catch(err => {
+        checkout.setIsCardValid(false);
+        setValidation({
+          [err.path]: err.message,
+        });
+      });
   }
 
   return (
@@ -67,16 +117,18 @@ export default function PaymentCard({ onExited }) {
       title="Cartão"
       handleModalState={onExited}
       displayBottomActions
-      componentActions={<PaymentCardActions handleSubmit={handleSubmit} />}
+      componentActions={<PaymentCardActions handleSubmit={handleCardValidation} />}
+      maxWidth="sm"
+      height="70vh"
     >
       <CustomDialogContext.Consumer>
         {({ handleCloseDialog }) => (
           <Grid container className={classes.container}>
-            <Grid item xl={4} lg={4} md={6} xs={12}>
+            <Grid item xl={9} lg={10} md={8} xs={12}>
               <TextField
-                ref={inputs.number}
-                error={!!checkout.cardValidation.number}
-                helperText={checkout.cardValidation.number}
+                inputRef={ref => (inputs.number = ref)}
+                error={!!validation.number}
+                helperText={validation.number}
                 label="Número do cartão"
                 margin="normal"
                 placeholder="Número do cartão"
@@ -90,12 +142,10 @@ export default function PaymentCard({ onExited }) {
                 }}
               />
               <TextField
-                ref={inputs.name}
+                inputRef={ref => (inputs.name = ref)}
                 label="Nome e sobrenome"
-                error={!!checkout.cardValidation.name}
-                helperText={
-                  checkout.cardValidation.name ? checkout.cardValidation.name : 'Assim como está escrito no cartão'
-                }
+                error={!!validation.name}
+                helperText={validation.name ? validation.name : 'Assim como está escrito no cartão'}
                 margin="normal"
                 placeholder="Nome e sobrenome"
                 value={order.creditCard.name}
@@ -106,11 +156,9 @@ export default function PaymentCard({ onExited }) {
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <TextField
-                    ref={inputs.expiration_date}
-                    error={!!checkout.cardValidation.expiration_date}
-                    helperText={
-                      checkout.cardValidation.expiration_date ? checkout.cardValidation.expiration_date : 'MM/AA'
-                    }
+                    inputRef={ref => (inputs.expiration_date = ref)}
+                    error={!!validation.expiration_date}
+                    helperText={validation.expiration_date ? validation.expiration_date : 'MM/AA'}
                     label="Vencimento"
                     margin="normal"
                     placeholder="Vencimento do cartão"
@@ -125,14 +173,10 @@ export default function PaymentCard({ onExited }) {
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
-                    ref={inputs.cvv}
+                    inputRef={ref => (inputs.cvv = ref)}
                     label="Código"
-                    error={!!checkout.cardValidation.cvv}
-                    helperText={
-                      checkout.cardValidation.cvv
-                        ? checkout.cardValidation.cvv
-                        : 'Últimos três número do verso do seu cartão'
-                    }
+                    error={!!validation.cvv}
+                    helperText={validation.cvv ? validation.cvv : 'Últimos três número do verso do seu cartão'}
                     margin="normal"
                     placeholder="Código de segurança"
                     value={order.creditCard.cvv}
@@ -146,9 +190,9 @@ export default function PaymentCard({ onExited }) {
                 </Grid>
               </Grid>
               <TextField
-                ref={inputs.cpf}
-                error={!!checkout.cardValidation.cpf}
-                helperText={checkout.cardValidation.cpf}
+                inputRef={ref => (inputs.cpf = ref)}
+                error={!!validation.cpf}
+                helperText={validation.cpf}
                 label="CPF do titular do cartão"
                 margin="normal"
                 placeholder="CPF do titular do cartão"
@@ -160,7 +204,7 @@ export default function PaymentCard({ onExited }) {
                 }}
               />
               <div className={classes.actions}>
-                <Button type="submit" variant="contained" color="primary" onClick={handleSubmit}>
+                <Button type="submit" variant="contained" color="primary" onClick={handleCardValidation}>
                   Confirmar
                 </Button>
               </div>
