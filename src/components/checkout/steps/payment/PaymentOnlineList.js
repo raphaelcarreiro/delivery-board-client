@@ -2,13 +2,11 @@ import React, { useContext, useState } from 'react';
 import { List, ListItem, Typography } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import SmartphoneIcon from '@material-ui/icons/Smartphone';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import { CheckoutContext } from 'src/components/checkout/Checkout';
 import PropTypes from 'prop-types';
-import PaymentChange from 'src/components/checkout/steps/payment/PaymentChange';
 import { useSelector, useDispatch } from 'react-redux';
-import { moneyFormat } from 'src/helpers/numberFormat';
 import PaymentCpf from './PaymentCpf';
 import PaymentCreditCard from './PaymentCard';
 import { setPaymentMethod } from 'src/store/redux/modules/order/actions';
@@ -77,43 +75,34 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-PaymentList.propTypes = {
+PaymentOnlineList.propTypes = {
   paymentMethods: PropTypes.array.isRequired,
   handleSetPaymentMethod: PropTypes.func.isRequired,
   paymentMethodId: PropTypes.number,
 };
 
-export default function PaymentList({ paymentMethods, paymentMethodId }) {
+export default function PaymentOnlineList({ paymentMethods, paymentMethodId }) {
   const classes = useStyles();
   const checkout = useContext(CheckoutContext);
-  const [dialogChange, setDialogChange] = useState(false);
   const [dialogCpf, setDialogCpf] = useState(false);
   const [dialogCard, setDialogCard] = useState(false);
-  const order = useSelector(state => state.order);
   const user = useSelector(state => state.user);
+  const order = useSelector(state => state.order);
   const dispatch = useDispatch();
 
   function handleClick(paymentMethod) {
     dispatch(setPaymentMethod(paymentMethod));
 
-    if (paymentMethod.kind === 'money') {
-      setDialogChange(true);
-      return;
-    } else if (paymentMethod.kind === 'picpay') {
+    if (paymentMethod.kind === 'picpay') {
       if (!user.customer.cpf) {
         setDialogCpf(true);
         return;
       }
-    } else if (paymentMethod.kind === 'card' && paymentMethod.mode === 'online') {
+    } else if (paymentMethod.kind === 'card') {
       setDialogCard(true);
       return;
     }
 
-    checkout.handleStepNext();
-  }
-
-  function handleCloseDialog() {
-    setDialogChange(false);
     checkout.handleStepNext();
   }
 
@@ -125,15 +114,19 @@ export default function PaymentList({ paymentMethods, paymentMethodId }) {
     }
   }
 
+  function handleCloseDialogCard() {
+    setDialogCard(false);
+    if (!checkout.cardValidation.approved) dispatch(setPaymentMethod(paymentMethods[0]));
+  }
+
   return (
     <>
-      {dialogChange && <PaymentChange onExited={handleCloseDialog} />}
       {dialogCpf && <PaymentCpf onExited={handleCloseDialogCpf} />}
-      {dialogCard && <PaymentCreditCard onExited={() => setDialogCard(false)} />}
+      {dialogCard && <PaymentCreditCard onExited={handleCloseDialogCard} />}
       <List className={classes.list}>
         {paymentMethods.map(
           paymentMethod =>
-            paymentMethod.mode === 'offline' && (
+            paymentMethod.mode === 'online' && (
               <ListItem
                 onClick={() => handleClick(paymentMethod)}
                 button
@@ -142,18 +135,17 @@ export default function PaymentList({ paymentMethods, paymentMethodId }) {
               >
                 <div className={classes.iconContainer}>
                   <div className={classes.icon}>
-                    {paymentMethod.kind === 'card' && <CreditCardIcon color="primary" />}
-                    {paymentMethod.kind === 'money' && <AttachMoneyIcon color="primary" />}
+                    {paymentMethod.kind === 'card' ? (
+                      <CreditCardIcon color="primary" />
+                    ) : (
+                      paymentMethod.kind === 'picpay' && <SmartphoneIcon color="primary" />
+                    )}
                   </div>
                 </div>
                 <div className={classes.method}>
                   <Typography>{paymentMethod.method}</Typography>
-                  {order.paymentMethod && (
-                    <>
-                      {order.change > 0 && paymentMethod.kind === 'money' && (
-                        <Typography color="textSecondary">Troco para {moneyFormat(order.change)}</Typography>
-                      )}
-                    </>
+                  {paymentMethod.kind === 'card' && checkout.cardValidation.approved && (
+                    <Typography>**** **** **** {order.creditCard.number.substr(-4)}</Typography>
                   )}
                 </div>
                 {paymentMethod.id === paymentMethodId && (

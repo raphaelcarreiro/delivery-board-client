@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useCallback, useContext } from 'react';
 import { api } from './services/api';
 import { useRouter } from 'next/router';
 import Loading from './components/loading/Loading';
@@ -387,5 +387,11 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     </ThemeProvider>
   );
 };
+
+export function useApp(): AppContextData {
+  const context = useContext(AppContext);
+
+  return context;
+}
 
 export default App;

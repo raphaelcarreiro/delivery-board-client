@@ -149,26 +149,25 @@ export default function Confirm() {
           <Typography variant="h5" className={classes.title}>
             Forma de pagamento
           </Typography>
-          {order.paymentMethod.kind === 'online_payment' ? (
+          {order.paymentMethod.mode === 'online' ? (
+            <Typography>Pagamento on-line</Typography>
+          ) : (
+            <Typography>Pagamento na entrega</Typography>
+          )}
+          {order.paymentMethod.kind === 'card' && order.paymentMethod.mode === 'online' ? (
             <>
-              <Typography>Pagamento on-line</Typography>
-              <Typography variant="body2">Cartão de crédito</Typography>
+              <Typography variant="body2">{order.paymentMethod.method}</Typography>
               <Typography>**** **** **** {order.creditCard.number.substr(-4)}</Typography>
             </>
           ) : (
-            <>
-              <Typography>Pagamento na entrega</Typography>
-              <Typography>
-                <>
-                  {order.paymentMethod.method}
-                  {order.change > 0 && (
-                    <Typography display="inline" variant="body1" color="textSecondary">
-                      {' - '}Troco para {moneyFormat(order.change)}
-                    </Typography>
-                  )}
-                </>
-              </Typography>
-            </>
+            <Typography>
+              {order.paymentMethod.method}
+              {order.change > 0 && (
+                <Typography display="inline" variant="body1" color="textSecondary" component="span">
+                  {' - '}Troco para {moneyFormat(order.change)}
+                </Typography>
+              )}
+            </Typography>
           )}
           <Typography color="primary" className={classes.link} onClick={() => handleChangeStepById('STEP_PAYMENT')}>
             Alterar

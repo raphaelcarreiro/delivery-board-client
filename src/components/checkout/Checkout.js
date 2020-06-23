@@ -141,7 +141,7 @@ export default function Checkout() {
   const [createdOrder, setCreatedOrder] = useState(null);
   const classes = useStyles({ step, isCartVisible: app.isCartVisible });
   const [steps, setSteps] = useState(defaultSteps);
-  const [cardValidation, setCardValidation] = useState({});
+  const [cardValidation, setCardValidation] = useState({ approved: false });
 
   const currentStep = useMemo(() => {
     return steps.find(item => item.order === step);
@@ -153,6 +153,7 @@ export default function Checkout() {
     handleSubmitOrder: handleSubmitOrder,
     handleSetStep: handleSetStep,
     handleSetStepById: handleSetStepById,
+    setCardValidation: setCardValidation,
     saving,
     createdOrder,
     step,
@@ -313,7 +314,7 @@ export default function Checkout() {
         messaging.handleOpen('Selecione uma forma de pagamento');
         return;
       }
-      if (order.paymentMethod.kind === 'online_payment') {
+      if (order.paymentMethod.kind === 'card' && order.paymentMethod.mode === 'online') {
         const validation = await handleCardValidation(order.creditCard);
         if (!validation) return;
       }
@@ -333,10 +334,6 @@ export default function Checkout() {
   function handleSetStepById(id) {
     const order = steps.find(s => s.id === id).order;
     if (order) setStep(order);
-  }
-
-  function handleSetPaymentMethod(method) {
-    dispatch(setPaymentMethod(method));
   }
 
   async function handleCardValidation(card) {
@@ -376,12 +373,13 @@ export default function Checkout() {
 
     try {
       await schema.validate(card);
-      setCardValidation({});
+      setCardValidation({ approved: true });
       return true;
     } catch (err) {
       console.log(err.message);
       setCardValidation({
         [err.path]: err.message,
+        approvred: false,
       });
       return false;
     }
@@ -433,7 +431,6 @@ export default function Checkout() {
                 <Shipment addresses={user.customer ? user.customer.addresses : []} />
               ) : currentStep.id === 'STEP_PAYMENT' ? (
                 <Payment
-                  handleSetPaymentMethod={handleSetPaymentMethod}
                   paymentMethods={paymentMethods}
                   paymentMethodId={order.paymentMethod && order.paymentMethod.id}
                 />
