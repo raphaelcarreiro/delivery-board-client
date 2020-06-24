@@ -95,3 +95,10 @@ export function setDiscount(discount) {
     discount,
   };
 }
+
+export function setCard(card) {
+  return {
+    type: '@order/SET_CARD',
+    card,
+  };
+}

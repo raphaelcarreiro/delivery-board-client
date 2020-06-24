@@ -72,6 +72,16 @@ export default function order(state = INITIAL_STATE, action) {
       };
     }
 
+    case '@order/SET_CARD': {
+      return {
+        ...state,
+        creditCard: {
+          ...state.creditCard,
+          ...action.card,
+        },
+      };
+    }
+
     case '@order/CHANGE_CREDITCARD': {
       return {
         ...state,

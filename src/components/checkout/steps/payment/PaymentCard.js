@@ -1,8 +1,8 @@
 import React, { useContext, useRef, useEffect, useState } from 'react';
-import { Grid, TextField, Button } from '@material-ui/core';
+import { Grid, TextField, Button, useTheme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import { changeCreditCard } from 'src/store/redux/modules/order/actions';
+import { changeCreditCard, setCard } from 'src/store/redux/modules/order/actions';
 import CardSecurityCode from 'src/components/masked-input/CardSecurityCode';
 import CardExpirationDate from 'src/components/masked-input/CardExperitionDate';
 import CpfInput from 'src/components/masked-input/CpfInput';
@@ -13,11 +13,20 @@ import PaymentCardActions from './PaymentCardActions';
 import * as yup from 'yup';
 import { cpfValidation } from 'src/helpers/cpfValidation';
 import { cardBrandValidation } from 'src/helpers/cardBrandValidation';
+import Card from './card/Card';
 
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    padding: 20,
+    [theme.breakpoints.down('sm')]: {
+      padding: 0,
+      flexDirection: 'column-reverse',
+      flexWrap: 'nowrap',
+    },
   },
   actions: {
     position: 'absolute',
@@ -41,6 +50,13 @@ export default function PaymentCard({ onExited }) {
   const dispatch = useDispatch();
   const checkout = useContext(CheckoutContext);
   const [validation, setValidation] = useState({});
+  const [face, setFace] = useState('front');
+  const theme = useTheme();
+  const [name, setName] = useState(order.creditCard.name);
+  const [number, setNumber] = useState(order.creditCard.number);
+  const [cvv, setCvv] = useState(order.creditCard.cvv);
+  const [expirationDate, setExpirationDate] = useState(order.creditCard.expiration_date);
+  const [cpf, setCpf] = useState(order.creditCard.cpf);
 
   const inputs = {
     number: useRef(null),
@@ -97,10 +113,19 @@ export default function PaymentCard({ onExited }) {
         .required('O número do cartão é obrigatório'),
     });
 
+    const card = {
+      number,
+      name,
+      expiration_date: expirationDate,
+      cvv,
+      cpf,
+    };
+
     schema
-      .validate(order.creditCard)
+      .validate(card)
       .then(() => {
         setValidation({});
+        dispatch(setCard(card));
         checkout.setIsCardValid(true);
         checkout.handleStepNext();
       })
@@ -112,19 +137,23 @@ export default function PaymentCard({ onExited }) {
       });
   }
 
+  function handleFocus(face) {
+    setFace(face);
+  }
+
   return (
     <CustomDialog
       title="Cartão"
       handleModalState={onExited}
       displayBottomActions
       componentActions={<PaymentCardActions handleSubmit={handleCardValidation} />}
-      maxWidth="sm"
+      maxWidth="md"
       height="70vh"
     >
       <CustomDialogContext.Consumer>
         {({ handleCloseDialog }) => (
-          <Grid container className={classes.container}>
-            <Grid item xl={9} lg={10} md={8} xs={12}>
+          <div className={classes.container}>
+            <Grid item xl={5} lg={5} md={10} xs={12}>
               <TextField
                 inputRef={ref => (inputs.number = ref)}
                 error={!!validation.number}
@@ -132,14 +161,15 @@ export default function PaymentCard({ onExited }) {
                 label="Número do cartão"
                 margin="normal"
                 placeholder="Número do cartão"
-                value={order.creditCard.number}
-                onChange={e => handleChange('number', e.target.value)}
+                value={number}
+                onChange={e => setNumber(e.target.value)}
                 fullWidth
                 autoFocus
                 autoComplete="cc-number"
                 InputProps={{
                   inputComponent: CardNumber,
                 }}
+                onFocus={() => handleFocus('front')}
               />
               <TextField
                 inputRef={ref => (inputs.name = ref)}
@@ -148,10 +178,11 @@ export default function PaymentCard({ onExited }) {
                 helperText={validation.name ? validation.name : 'Assim como está escrito no cartão'}
                 margin="normal"
                 placeholder="Nome e sobrenome"
-                value={order.creditCard.name}
-                onChange={e => handleChange('name', e.target.value)}
+                value={name}
+                onChange={e => setName(e.target.value)}
                 fullWidth
                 autoComplete="cc-name"
+                onFocus={() => handleFocus('front')}
               />
               <Grid container spacing={2}>
                 <Grid item xs={6}>
@@ -162,13 +193,14 @@ export default function PaymentCard({ onExited }) {
                     label="Vencimento"
                     margin="normal"
                     placeholder="Vencimento do cartão"
-                    value={order.creditCard.expiration_date}
-                    onChange={e => handleChange('expiration_date', e.target.value)}
+                    value={expirationDate}
+                    onChange={e => setExpirationDate(e.target.value)}
                     fullWidth
                     autoComplete="cc-exp"
                     InputProps={{
                       inputComponent: CardExpirationDate,
                     }}
+                    onFocus={() => handleFocus('front')}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -179,13 +211,14 @@ export default function PaymentCard({ onExited }) {
                     helperText={validation.cvv ? validation.cvv : 'Últimos três número do verso do seu cartão'}
                     margin="normal"
                     placeholder="Código de segurança"
-                    value={order.creditCard.cvv}
-                    onChange={e => handleChange('cvv', e.target.value)}
+                    value={cvv}
+                    onChange={e => setCvv(e.target.value)}
                     autoComplete="cc-csc"
                     fullWidth
                     InputProps={{
                       inputComponent: CardSecurityCode,
                     }}
+                    onFocus={() => handleFocus('back')}
                   />
                 </Grid>
               </Grid>
@@ -196,12 +229,13 @@ export default function PaymentCard({ onExited }) {
                 label="CPF do titular do cartão"
                 margin="normal"
                 placeholder="CPF do titular do cartão"
-                value={order.creditCard.cpf}
-                onChange={e => handleChange('cpf', e.target.value)}
+                value={cpf}
+                onChange={e => setCpf(e.target.value)}
                 fullWidth
                 InputProps={{
                   inputComponent: CpfInput,
                 }}
+                onFocus={() => handleFocus('front')}
               />
               <div className={classes.actions}>
                 <Button type="submit" variant="contained" color="primary" onClick={handleCardValidation}>
@@ -209,7 +243,16 @@ export default function PaymentCard({ onExited }) {
                 </Button>
               </div>
             </Grid>
-          </Grid>
+            <Card
+              color={theme.palette.primary.contrastText}
+              background={theme.palette.primary.main}
+              number={number}
+              name={name}
+              expirationDate={expirationDate}
+              cvv={cvv}
+              face={face}
+            />
+          </div>
         )}
       </CustomDialogContext.Consumer>
     </CustomDialog>
