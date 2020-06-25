@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 
 interface CardContainerProps {
   readonly face: string;
@@ -9,11 +9,22 @@ interface CardProps {
   readonly background: string;
 }
 
+const slide = keyframes`
+  from {
+    transform: translateX(-300px);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+`;
+
 export const Scene = styled.div`
   max-width: 350px;
   height: 200px;
   perspective: 600px;
   width: 100%;
+  animation: ${slide} 0.7s linear;
 `;
 
 export const CardContainer = styled.div<CardContainerProps>`
@@ -66,7 +77,6 @@ export const CardNumber = styled.p`
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
-  height: 25px;
 `;
 
 export const CardLineName = styled.div`
@@ -86,8 +96,8 @@ export const CardName = styled.p`
 `;
 
 export const CardLogo = styled.div`
-  width: 70px;
-  height: 50px;
+  width: 55px;
+  height: 35px;
   background: #999;
   border-radius: 4px;
 `;

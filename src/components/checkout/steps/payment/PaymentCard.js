@@ -2,7 +2,7 @@ import React, { useContext, useRef, useEffect, useState } from 'react';
 import { Grid, TextField, Button, useTheme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
-import { changeCreditCard, setCard } from 'src/store/redux/modules/order/actions';
+import { setCard } from 'src/store/redux/modules/order/actions';
 import CardSecurityCode from 'src/components/masked-input/CardSecurityCode';
 import CardExpirationDate from 'src/components/masked-input/CardExperitionDate';
 import CpfInput from 'src/components/masked-input/CpfInput';
@@ -50,7 +50,7 @@ export default function PaymentCard({ onExited }) {
   const dispatch = useDispatch();
   const checkout = useContext(CheckoutContext);
   const [validation, setValidation] = useState({});
-  const [face, setFace] = useState('front');
+  const [face, setFace] = useState('back');
   const theme = useTheme();
   const [name, setName] = useState(order.creditCard.name);
   const [number, setNumber] = useState(order.creditCard.number);
@@ -74,9 +74,9 @@ export default function PaymentCard({ onExited }) {
     else if (validation.cpf) inputs.cpf.focus();
   }, [validation]); //eslint-disable-line
 
-  function handleChange(index, value) {
-    dispatch(changeCreditCard(index, value));
-  }
+  useEffect(() => {
+    setFace('back');
+  }, []);
 
   function handleCardValidation() {
     const schema = yup.object().shape({

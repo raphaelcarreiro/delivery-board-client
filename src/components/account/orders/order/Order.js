@@ -95,14 +95,16 @@ export default function Order({ cryptId }) {
       socket.on('reconnect', () => {
         socket.emit('register', order.id);
       });
-      socket.on('orderStatusChange', status => {
-        const statusOrder = status.reverse().map(status => {
+      socket.on('orderStatusChange', payload => {
+        const statusOrder = payload.orderStatus.reverse().map(status => {
           const statusDate = parseISO(status.created_at);
           status.formattedDate = format(statusDate, "PP 'às' p", { locale: ptbr });
           return status;
         });
         setOrder(oldOrder =>
-          oldOrder.id === statusOrder[0].order_id ? { ...oldOrder, order_status: statusOrder } : oldOrder
+          oldOrder.id === payload.orderId
+            ? { ...oldOrder, order_status: statusOrder, status: payload.status }
+            : oldOrder
         );
       });
     }

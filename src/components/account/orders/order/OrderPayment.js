@@ -18,7 +18,7 @@ export default function OrderPayment({ order }) {
         <Typography>Pagamento na entrega</Typography>
       )}
       <div>
-        <Typography>{order.payment_method.method}</Typography>
+        <Typography display="inline">{order.payment_method.method}</Typography>
         {order.change > 0 && (
           <Typography
             color="textSecondary"
