@@ -199,22 +199,30 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
 
   // set webscoket connection
   useEffect(() => {
+    function getRestaurantState() {
+      api()
+        .get('/restaurant/state')
+        .then(response => {
+          dispatch(setRestaurantIsOpen(response.data.is_open));
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+
+    if (!socket) socket = io.connect(process.env.URL_NODE_SERVER + '/client');
     if (restaurant) {
-      socket = io.connect(process.env.URL_NODE_SERVER + '/client');
       socket.emit('register', restaurant.id);
 
-      socket.on('handleRestaurantState', state => {
+      socket.on('handleRestaurantState', ({ state }: { state: boolean }) => {
         dispatch(setRestaurantIsOpen(state));
       });
 
       socket.on('reconnect', () => {
         socket.emit('register', restaurant.id);
+        getRestaurantState();
       });
     }
-
-    return () => {
-      if (socket) socket.disconnect();
-    };
   }, [dispatch, restaurant]);
 
   const handleRouteChangeComplete = useCallback(() => {
