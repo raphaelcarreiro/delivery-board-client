@@ -89,7 +89,7 @@ export default function Order({ cryptId }) {
   const classes = useStyles();
 
   useEffect(() => {
-    window.addEventListener('focusin', () => {
+    window.addEventListener('focus', () => {
       api()
         .get(`/orders/status/${cryptId}`)
         .then(response => {

@@ -38,6 +38,9 @@ export const CardContainer = styled.div<CardContainerProps>`
   `}
   font-weight: 600;
   color: ${({ color }) => color};
+  & p {
+    margin: 0;
+  }
 `;
 
 export const CardFront = styled.div<CardProps>`
@@ -77,6 +80,8 @@ export const CardNumber = styled.p`
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
 `;
 
 export const CardLineName = styled.div`
