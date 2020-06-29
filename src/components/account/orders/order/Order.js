@@ -89,24 +89,6 @@ export default function Order({ cryptId }) {
   const classes = useStyles();
 
   useEffect(() => {
-    window.addEventListener('focus', () => {
-      api()
-        .get(`/orders/status/${cryptId}`)
-        .then(response => {
-          const orderStatus = response.data.reverse().map(status => {
-            const statusDate = parseISO(status.created_at);
-            status.formattedDate = format(statusDate, "PP 'às' p", { locale: ptbr });
-            return status;
-          });
-          setOrder(oldOrder => ({
-            ...oldOrder,
-            order_status: orderStatus,
-          }));
-        });
-    });
-  }, [cryptId]);
-
-  useEffect(() => {
     const socket = io.connect(process.env.URL_NODE_SERVER + '/client');
     if (order) {
       socket.emit('register', order.id);

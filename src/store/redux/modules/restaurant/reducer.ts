@@ -1,4 +1,3 @@
-import { moneyFormat } from 'src/helpers/numberFormat';
 import { RestaurantActionTypes, SET_RESTAURANT, SET_RESTAURANT_IS_OPEN } from './types';
 
 export interface RestaurantState {
