@@ -327,7 +327,7 @@ export default function cart(state = INITIAL_STATE, action) {
           tax = 0;
           total = subtotal - discount;
         }
-      } else if (configs.tax_mode === 'district') {
+      } else if (configs.tax_mode === 'district' || configs.tax_mode === 'distance') {
         if (action.shipmentMethod === 'delivery') total = subtotal - discount + tax;
         else {
           tax = 0;

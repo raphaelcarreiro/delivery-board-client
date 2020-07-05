@@ -20,6 +20,10 @@ export default function user(state = INITIAL_STATE, action) {
               ...address.area_region,
               formattedTax: moneyFormat(address.area_region.tax),
             };
+            address.tax_distance = address.tax_distance && {
+              ...address.tax_distance,
+              formattedValue: moneyFormat(address.tax_distance.value),
+            };
             return address;
           }),
       };
@@ -75,6 +79,10 @@ export default function user(state = INITIAL_STATE, action) {
                 ...action.address.area_region,
                 formattedTax: moneyFormat(action.address.area_region.tax),
               },
+              tax_distance: action.address.tax_distance && {
+                ...action.address.tax_distance,
+                formattedValue: moneyFormat(action.address.tax_distance.value),
+              },
             },
           ],
         },
@@ -101,6 +109,10 @@ export default function user(state = INITIAL_STATE, action) {
             area_region: action.address.area_region && {
               ...action.address.area_region,
               formattedTax: moneyFormat(action.address.area_region.tax),
+            },
+            tax_distance: action.address.tax_distance && {
+              ...action.address.tax_distance,
+              formattedValue: moneyFormat(action.address.tax_distance.value),
             },
           };
         }

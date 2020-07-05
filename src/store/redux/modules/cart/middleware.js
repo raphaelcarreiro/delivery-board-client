@@ -40,6 +40,11 @@ export const cartMiddlware = store => next => action => {
       if (!area_region) return;
       const tax = area_region.tax;
       store.dispatch(setTax(tax));
+    } else if (restaurant.configs.tax_mode === 'distance') {
+      const { tax_distance } = order.shipment;
+      if (!tax_distance) return;
+      const tax = tax_distance.value;
+      store.dispatch(setTax(tax));
     }
   }
 
@@ -49,6 +54,11 @@ export const cartMiddlware = store => next => action => {
       const { area_region } = action.address;
       if (!area_region) return;
       const tax = area_region.tax;
+      store.dispatch(setTax(tax));
+    } else if (restaurant.configs.tax_mode === 'distance') {
+      const { tax_distance } = action.address;
+      if (!tax_distance) return;
+      const tax = tax_distance.value;
       store.dispatch(setTax(tax));
     }
   }

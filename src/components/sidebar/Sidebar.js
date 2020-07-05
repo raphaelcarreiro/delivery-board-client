@@ -121,7 +121,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     padding: '0 5px',
-    backgroundColor: theme.palette.primary.dark,
     borderRadius: 4,
     margin: 10,
     '& svg': {
@@ -133,6 +132,9 @@ const useStyles = makeStyles(theme => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     width: 150,
+  },
+  statusIcon: {
+    fontSize: 33,
   },
 }));
 
@@ -198,7 +200,7 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
               {restaurant.name}
             </Typography>
             <div className={classes.restaurantStatus}>
-              <StatusIcon />
+              <StatusIcon className={classes.statusIcon} />
             </div>
           </>
         )}

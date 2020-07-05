@@ -180,6 +180,11 @@ export default function ShipmentAddressesList({
                   Será cobrado {address.area_region.formattedTax} de taxa de entrega
                 </Typography>
               )}
+              {restaurant.configs.tax_mode === 'distance' && address.tax_distance && address.tax_distance.value > 0 && (
+                <Typography color="textSecondary" className={classes.tax} variant="body2">
+                  Será cobrado {address.tax_distance.formattedValue} de taxa de entrega
+                </Typography>
+              )}
             </div>
             {address.id === order.shipment.id && <CheckCircleIcon color="primary" className={classes.checkIcon} />}
           </ListItem>

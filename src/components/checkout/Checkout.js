@@ -234,7 +234,7 @@ export default function Checkout() {
           dispatch(setShipmentAddress(address || {}));
         })
         .catch(err => {
-          if (err.response) messaging(err.response.data.error);
+          if (err.response) messaging.handleOpen(err.response.data.error);
         })
         .finally(() => {
           setLoading(false);

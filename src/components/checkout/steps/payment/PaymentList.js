@@ -9,8 +9,6 @@ import PropTypes from 'prop-types';
 import PaymentChange from 'src/components/checkout/steps/payment/PaymentChange';
 import { useSelector, useDispatch } from 'react-redux';
 import { moneyFormat } from 'src/helpers/numberFormat';
-import PaymentCpf from './PaymentCpf';
-import PaymentCreditCard from './PaymentCard';
 import { setPaymentMethod } from 'src/store/redux/modules/order/actions';
 
 const useStyles = makeStyles(theme => ({
