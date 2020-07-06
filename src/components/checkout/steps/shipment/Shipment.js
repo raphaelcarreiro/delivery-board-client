@@ -42,7 +42,7 @@ export default function Shipment({ addresses }) {
           if (restaurant.configs.tax_mode === 'district')
             if (shipmentAddress.area_region) dispatch(setShipmentAddress(shipmentAddress));
         }
-  }, [order]);
+  }, [app, customer.addresses, dispatch, order, restaurant.configs.tax_mode]);
 
   useEffect(() => {
     if (customer)
@@ -51,15 +51,29 @@ export default function Shipment({ addresses }) {
           setDialogNewAddress(true);
           dispatch(setShipmentAddress({}));
         }
-  }, [customer]);
+  }, [customer, dispatch]);
 
   async function handleAddressSubmit(address) {
     try {
       setSavingAddress(true);
       const response = await api().post('/customerAddresses', address);
       setSavingAddress(false);
-      dispatch(setShipmentAddress(response.data));
-      dispatch(addCustomerAddress(response.data));
+      const newAddress = response.data;
+      dispatch(addCustomerAddress(newAddress));
+
+      if (restaurant.delivery_max_distance) {
+        if (!newAddress.distance) {
+          messaging.handleOpen('Não entregamos nesse endereço');
+          return;
+        }
+
+        if (newAddress.distance > restaurant.delivery_max_distance) {
+          messaging.handleOpen('Não entregamos nesse endereço');
+          return;
+        }
+      }
+      dispatch(setShipmentAddress(newAddress));
+
       checkout.handleSetStepById('STEP_PAYMENT');
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
@@ -72,8 +86,22 @@ export default function Shipment({ addresses }) {
       setSavingAddress(true);
       const response = await api().put(`/customerAddresses/${selectedAddress.id}`, address);
       setSavingAddress(false);
-      dispatch(updateCustomerAddress(response.data));
-      dispatch(setShipmentAddress(response.data));
+      const updatedAddress = response.data;
+      dispatch(updateCustomerAddress(updatedAddress));
+
+      if (restaurant.delivery_max_distance) {
+        if (!updatedAddress.distance) {
+          messaging.handleOpen('Não entregamos nesse endereço');
+          return;
+        }
+
+        if (updatedAddress.distance > restaurant.delivery_max_distance) {
+          messaging.handleOpen('Não entregamos nesse endereço');
+          return;
+        }
+      }
+
+      dispatch(setShipmentAddress(updatedAddress));
     } catch (err) {
       setSavingAddress(false);
       if (err.response) messaging.handleOpen(err.response.data.error);
@@ -120,6 +148,19 @@ export default function Shipment({ addresses }) {
       messaging.handleOpen('Por favor, atualize o bairro');
       return;
     }
+
+    if (restaurant.delivery_max_distance) {
+      if (!address.distance) {
+        messaging.handleOpen('Não é possível entregar nesse endereço');
+        return;
+      }
+
+      if (address.distance > restaurant.delivery_max_distance) {
+        messaging.handleOpen('Não entregamos nesse endereço');
+        return;
+      }
+    }
+
     dispatch(setShipmentAddress(address));
     checkout.handleSetStepById('STEP_PAYMENT');
   }

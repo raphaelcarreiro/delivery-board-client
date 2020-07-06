@@ -31,11 +31,8 @@ import IndexAppbarActions from 'src/components/index/IndexAppbarActions';
 import DialogFullscreen from 'src/components/dialog/DialogFullscreen';
 import CheckoutButtons from 'src/components/checkout/CheckoutButtons';
 import CheckoutMobileButtons from 'src/components/checkout/CheckoutMobileButtons';
-import * as yup from 'yup';
-import { cpfValidation } from 'src/helpers/cpfValidation';
 import ShipmentMethod from './steps/shipment-method/ShipmentMethod';
 import { useRouter } from 'next/router';
-import { cardBrandValidation } from 'src/helpers/cardBrandValidation';
 import InsideLoading from '../loading/InsideLoading';
 
 const cartWidth = 450;
@@ -223,11 +220,12 @@ export default function Checkout() {
 
           dispatch(setCustomer(customer));
           if (restaurant.configs.tax_mode === 'district') {
-            if (address) {
-              if (address.area_region) {
-                dispatch(setShipmentAddress(address));
-              }
-            } else dispatch(setShipmentAddress({}));
+            if (address && address.area_region) dispatch(setShipmentAddress(address));
+            else dispatch(setShipmentAddress({}));
+            return;
+          } else if (restaurant.configs.tax_mode === 'distance') {
+            if (address && address.distance <= restaurant.delivery_max_distance) dispatch(setShipmentAddress(address));
+            else dispatch(setShipmentAddress({}));
             return;
           }
 
