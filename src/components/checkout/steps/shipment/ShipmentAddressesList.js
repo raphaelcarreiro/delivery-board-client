@@ -171,8 +171,10 @@ export default function ShipmentAddressesList({
               <Typography color="textSecondary">{address.district}</Typography>
               <Typography color="textSecondary">
                 {address.city}, {address.region}
-                {address.postal_code !== '00000000' && `, ${address.postal_code}`}
               </Typography>
+              {address.postal_code !== '00000000' && (
+                <Typography color="textSecondary">{address.postal_code}</Typography>
+              )}
               {restaurant.configs.tax_mode === 'district' && address.area_region && address.area_region.tax > 0 && (
                 <Typography color="textSecondary" className={classes.tax} variant="body2">
                   Taxa de entrega de {address.area_region.formattedTax}
