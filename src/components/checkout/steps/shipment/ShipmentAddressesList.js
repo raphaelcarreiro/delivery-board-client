@@ -178,7 +178,7 @@ export default function ShipmentAddressesList({
                   Taxa de entrega de {address.area_region.formattedTax}
                 </Typography>
               )}
-              {restaurant.configs.tax_mode === 'distance' && address.distance_tax && address.distance_tax > 0 && (
+              {restaurant.configs.tax_mode === 'distance' && address.distance_tax > 0 && (
                 <Typography color="textSecondary" className={classes.tax} variant="body2">
                   Taxa de entrega de {address.formattedDistanceTax}
                 </Typography>
