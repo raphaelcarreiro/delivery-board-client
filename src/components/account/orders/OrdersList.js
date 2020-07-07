@@ -110,7 +110,7 @@ function OrdersList({ orders }) {
                 {order.formattedDate}
               </Typography>
               {(order.status === 'o' || order.status === 'a') && (
-                <Typography variant="body2" color="secondary" display="inline">
+                <Typography variant="body2" display="inline">
                   {`, ${order.dateDistance} atrás`}
                 </Typography>
               )}

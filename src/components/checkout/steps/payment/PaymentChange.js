@@ -97,7 +97,6 @@ export default function PaymentChange({ onExited }) {
                     placeholder="Digite o valor que você vair pagar ao entregador"
                     margin="normal"
                     fullWidth
-                    variant="outlined"
                     autoFocus
                     value={paymentChange}
                     onChange={event => setPaymentChange(event.target.value)}

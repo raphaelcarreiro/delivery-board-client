@@ -59,29 +59,31 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
   },
   productImage: {
+    width: '100%',
+  },
+  additional: {
+    color: '#4CAF50',
+    marginRight: 7,
+  },
+  ingredients: {
+    color: '#c53328',
+    marginRight: 7,
+  },
+  options: {
+    marginBottom: 10,
+  },
+  productName: {
+    fontWeight: 300,
+  },
+  imageContainer: {
     width: 40,
     height: 40,
     borderRadius: '50%',
     alignItems: 'center',
+    justifyContent: 'center',
     marginRight: 10,
-  },
-  imageZoom: {
-    width: 100,
-    position: 'fixed',
-    borderRadius: 4,
-    zIndex: 15,
-  },
-  additional: {
-    color: '#4CAF50',
-  },
-  ingredients: {
-    color: '#c53328',
-  },
-  options: {
-    padding: '0 0 10px 10px',
-  },
-  productName: {
-    fontWeight: 300,
+    overflow: 'hidden',
+    display: 'flex',
   },
 }));
 
@@ -94,8 +96,6 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
   const classes = useStyles();
   const dispatch = useDispatch();
   const messaging = useContext(MessagingContext);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [showImageZoom, setShowImageZoom] = useState(false);
 
   function handleRestoreCart() {
     dispatch(restoreCart());
@@ -108,44 +108,19 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
     messaging.handleOpen('Produto removido', handleRestoreCart);
   }
 
-  function handleImageMouseEnter(event) {
-    // setShowImageZoom(true);
-  }
-
-  function handleImageMouseLeave() {
-    setShowImageZoom(false);
-  }
-
-  function handleImageMouseMove(productUid) {
-    const productDataPosition = document.getElementById('product-data');
-    const imageZoom = document.getElementById(`image-zoom-${productUid}`);
-    setMousePosition({
-      x: event.clientX - productDataPosition.scrollLeft - imageZoom.scrollWidth - 10,
-      y: event.clientY - productDataPosition.scrollTop - imageZoom.scrollHeight - 10,
-    });
-  }
-
   return (
     <List className={classes.list}>
       {products.map(product => (
         <ListItem disableGutters key={product.uid} className={classes.listItem}>
           <div className={classes.product} id="product-data">
             <div>
-              <img
-                style={{ top: mousePosition.y, left: mousePosition.x, display: showImageZoom ? 'block' : 'none' }}
-                src={product.image.imageUrl}
-                alt={product.name}
-                className={classes.imageZoom}
-                id={`image-zoom-${product.uid}`}
-              />
-              <img
-                onMouseEnter={handleImageMouseEnter}
-                onMouseLeave={handleImageMouseLeave}
-                onMouseMoveCapture={() => handleImageMouseMove(product.uid)}
-                src={product.image.imageThumbUrl ? product.image.imageThumbUrl : product.image.imageUrl}
-                alt={product.name}
-                className={classes.productImage}
-              />
+              <div className={classes.imageContainer}>
+                <img
+                  src={product.image.imageThumbUrl ? product.image.imageThumbUrl : product.image.imageUrl}
+                  alt={product.name}
+                  className={classes.productImage}
+                />
+              </div>
               <div>
                 <Typography variant="h6" className={classes.productName}>
                   {product.amount}x {product.name}
@@ -170,23 +145,27 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
           {(product.ingredients.some(ingredient => !ingredient.selected) ||
             product.additional.some(additional => additional.selected)) && (
             <div className={classes.options}>
-              {product.ingredients.map(
-                ingredient =>
-                  !ingredient.selected && (
-                    <Typography key={ingredient.id} variant="body2" display="block" className={classes.ingredients}>
-                      - {ingredient.name}
-                    </Typography>
-                  )
-              )}
-              {product.additional &&
-                product.additional.map(
-                  additional =>
-                    additional.selected && (
-                      <Typography key={additional.id} variant="body2" display="block" className={classes.additional}>
-                        + {additional.name} {additional.formattedPrice}
+              <div>
+                {product.ingredients.map(
+                  ingredient =>
+                    !ingredient.selected && (
+                      <Typography key={ingredient.id} variant="body2" display="inline" className={classes.ingredients}>
+                        - {ingredient.name}
                       </Typography>
                     )
                 )}
+              </div>
+              <div>
+                {product.additional &&
+                  product.additional.map(
+                    additional =>
+                      additional.selected && (
+                        <Typography key={additional.id} variant="body2" display="inline" className={classes.additional}>
+                          + {additional.name} {additional.formattedPrice}
+                        </Typography>
+                      )
+                  )}
+              </div>
             </div>
           )}
           {!product.promotion && (

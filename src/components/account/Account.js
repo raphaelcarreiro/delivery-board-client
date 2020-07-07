@@ -22,6 +22,7 @@ import Loading from '../loading/Loading';
 import DialogDelete from '../dialog/delete/DialogDelete';
 import PageHeader from 'src/components/pageHeader/PageHeader';
 import AccountActions from 'src/components/account/AccountActions';
+import InsideLoading from '../loading/InsideLoading';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -139,7 +140,7 @@ export default function Account() {
       {saving && <Loading background="rgba(250,250,250, 0.5)" />}
 
       {loading ? (
-        <Loading />
+        <InsideLoading />
       ) : (
         <Grid container>
           <PageHeader title="Minha conta" description="Gerencie os dados e endereços da sua conta" />
