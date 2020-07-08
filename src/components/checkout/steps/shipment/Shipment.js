@@ -34,7 +34,6 @@ export default function Shipment({ addresses }) {
   const restaurant = useSelector(state => state.restaurant);
 
   useEffect(() => {
-    app.handleCartVisibility(false);
     if (order.shipment)
       if (!order.shipment.id)
         if (customer.addresses.length > 0) {

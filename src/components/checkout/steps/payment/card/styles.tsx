@@ -25,6 +25,12 @@ export const Scene = styled.div`
   perspective: 600px;
   width: 100%;
   animation: ${slide} 0.7s linear;
+
+  @media (max-width: 960px) {
+    max-width: 300px;
+    height: 170px;
+    margin-bottom: 15px;
+  }
 `;
 
 export const CardContainer = styled.div<CardContainerProps>`
@@ -82,6 +88,10 @@ export const CardNumber = styled.p`
   white-space: nowrap;
   display: flex;
   align-items: center;
+
+  @media (max-width: 960px) {
+    letter-spacing: 7px;
+  }
 `;
 
 export const CardLineName = styled.div`

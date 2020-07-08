@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)',
     justifyContent: 'center',
     padding: 15,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       position: 'fixed',
     },
   },
@@ -153,7 +153,7 @@ export default function PaymentCard({ onExited }) {
       <CustomDialogContext.Consumer>
         {({ handleCloseDialog }) => (
           <div className={classes.container}>
-            <Grid item xl={5} lg={5} md={10} xs={12}>
+            <Grid item xl={5} lg={5} md={5} xs={12}>
               <TextField
                 inputRef={ref => (inputs.number = ref)}
                 error={!!validation.number}

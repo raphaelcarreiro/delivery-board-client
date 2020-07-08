@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
   modal: {
     overflowY: 'auto',
     padding: '0 30px 40px',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       padding: '0 30px 40px !important',
     },
   },
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   appbar: {
     position: 'absolute',
     zIndex: '1102!important',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       position: 'fixed',
     },
     '@media print': {
@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 15,
     paddingRight: 15,
     overflowY: 'auto',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       marginTop: title ? 56 : 15,
     },
     [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
