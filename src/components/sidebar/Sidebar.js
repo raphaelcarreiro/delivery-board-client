@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { ListItem, ListItemIcon, ListItemText, Typography, Avatar, Button } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
@@ -14,9 +14,7 @@ import Link from '../link/Link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import StatusIcon from '@material-ui/icons/FiberManualRecord';
-import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import { firebaseMessagingIsSupported } from 'src/config/FirebaseConfig';
 import ChatIcon from '@material-ui/icons/Chat';
 import LocalOfferIcons from '@material-ui/icons/LocalOffer';
 
@@ -150,16 +148,11 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
   const restaurant = useSelector(state => state.restaurant);
   const cart = useSelector(state => state.cart);
   const app = useContext(AppContext);
-  const [isSupported, setIsSupported] = useState(false);
   const classes = useStyles({
     cartItems: cart.products.length > 0,
     restaurantIsOpen: restaurant && restaurant.is_open,
     readyToInstall: app.readyToInstall,
   });
-
-  useEffect(() => {
-    setIsSupported(firebaseMessagingIsSupported());
-  }, []);
 
   function handleClick() {
     handleOpenMenu();
@@ -276,22 +269,6 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
             startIcon={<GetAppIcon />}
           >
             Instalar
-          </Button>
-        </div>
-      )}
-      {!app.fmHasToken && isSupported && user.id && (
-        <div className={classes.activeNotifications}>
-          <Typography variant="caption" align="center">
-            Ativar notificações do seus pedidos
-          </Typography>
-          <Button
-            size="small"
-            variant="contained"
-            color="primary"
-            onClick={app.handleRequestPermissionMessaging}
-            startIcon={<NotificationsActiveIcon />}
-          >
-            Ativar
           </Button>
         </div>
       )}

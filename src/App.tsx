@@ -264,23 +264,28 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   function handleGetTokenFirebaseMessaging() {
     try {
       const firebaseMessaging = getFirebaseMessaging();
-      firebaseMessaging.getToken().then(token => {
-        if (token) {
-          setFmHasToken(true);
+      firebaseMessaging
+        .getToken()
+        .then(token => {
+          if (token) {
+            setFmHasToken(true);
 
-          const param = {
-            token: token,
-            device: navigator.platform,
-            type: 'client',
-          };
+            const param = {
+              token: token,
+              device: navigator.platform,
+              type: 'client',
+            };
 
-          api()
-            .post('/pushTokens', param)
-            .catch(err => {
-              console.log(err);
-            });
-        }
-      });
+            api()
+              .post('/pushTokens', param)
+              .catch(err => {
+                console.log(err);
+              });
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
     } catch (err) {
       console.log(err);
     }
