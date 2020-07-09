@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography, Button } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import PageHeader from 'src/components/pageHeader/PageHeader';
 import { formatId } from 'src/helpers/formatOrderId';
 import { api } from 'src/services/api';
