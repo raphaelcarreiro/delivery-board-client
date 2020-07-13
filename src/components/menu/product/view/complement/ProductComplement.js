@@ -8,6 +8,8 @@ import PropTypes from 'prop-types';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import ImagePreview from 'src/components/image-preview/ImagePreview';
+import { api } from 'src/services/api';
+import InsideLoading from 'src/components/loading/InsideLoading';
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
@@ -113,78 +115,90 @@ const useStyles = makeStyles(theme => ({
 
 ProductComplement.propTypes = {
   onExited: PropTypes.func.isRequired,
-  selectedProduct: PropTypes.object.isRequired,
+  productId: PropTypes.number.isRequired,
+  productName: PropTypes.string.isRequired,
   handleAddProductToCart: PropTypes.func.isRequired,
   handlePrepareProduct: PropTypes.func.isRequired,
 };
 
-function ProductComplement({ onExited, selectedProduct, handleAddProductToCart, handlePrepareProduct }) {
+function ProductComplement({ onExited, productId, productName, handleAddProductToCart, handlePrepareProduct }) {
   const [amount, setAmount] = useState(1);
   const [imagePreview, setImagePreview] = useState(false);
-  const [product, setProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
+  const [product, setProduct] = useState(null);
   const messaging = useContext(MessagingContext);
   const classes = useStyles();
   const [complementsPrice, setComplementsPrice] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const categories = product.complement_categories.map(category => {
-      category.product_complement_category_id = category.id;
-      category.complements = category.complements.map((complement, index) => {
-        complement.product_complement_id = complement.id;
-        complement.selected = !!complement.selected;
-        complement.formattedPrice = complement.price && moneyFormat(complement.price);
+    api()
+      .get(`/products/${productId}`)
+      .then(response => {
+        const categories = response.data.complement_categories.map(category => {
+          category.product_complement_category_id = category.id;
+          category.complements = category.complements.map((complement, index) => {
+            complement.product_complement_id = complement.id;
+            complement.selected = !!complement.selected;
+            complement.formattedPrice = complement.price && moneyFormat(complement.price);
 
-        complement.prices = complement.prices.map((price, index) => {
-          price.product_complement_price_id = price.id;
-          price.formattedPrice = price.price && moneyFormat(price.price);
-          price.selected = index === 0;
-          return price;
-        });
+            complement.prices = complement.prices.map((price, index) => {
+              price.product_complement_price_id = price.id;
+              price.formattedPrice = price.price && moneyFormat(price.price);
+              price.selected = index === 0;
+              return price;
+            });
 
-        complement.ingredients = complement.ingredients.map(ingredient => {
-          ingredient.product_complement_ingredient_id = ingredient.id;
-          return ingredient;
-        });
+            complement.ingredients = complement.ingredients.map(ingredient => {
+              ingredient.product_complement_ingredient_id = ingredient.id;
+              return ingredient;
+            });
 
-        complement.additional = complement.additional.map(additional => {
-          additional.product_complement_additional_id = additional.id;
-          additional.prices = additional.prices.map((price, index) => {
-            price.product_complement_additional_price_id = price.id;
-            price.selected = index === 0;
-            price.formattedPrice = price.price && moneyFormat(price.price);
-            return price;
+            complement.additional = complement.additional.map(additional => {
+              additional.product_complement_additional_id = additional.id;
+              additional.prices = additional.prices.map((price, index) => {
+                price.product_complement_additional_price_id = price.id;
+                price.selected = index === 0;
+                price.formattedPrice = price.price && moneyFormat(price.price);
+                return price;
+              });
+              return additional;
+            });
+            return complement;
           });
-          return additional;
+          return category;
         });
-        return complement;
+
+        const ready = response.data.complement_categories.every(category => {
+          if (category.is_required) {
+            const selectedAmount = category.complements.reduce((sum, complement) => {
+              return complement.selected ? sum + 1 : sum;
+            }, 0);
+
+            return category.min_quantity <= selectedAmount;
+          }
+          return true;
+        });
+
+        setProduct({
+          ...response.data,
+          ready,
+          complement_categories: categories,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
       });
-      return category;
-    });
-
-    const ready = product.complement_categories.every(category => {
-      if (category.is_required) {
-        const selectedAmount = category.complements.reduce((sum, complement) => {
-          return complement.selected ? sum + 1 : sum;
-        }, 0);
-
-        return category.min_quantity <= selectedAmount;
-      }
-      return true;
-    });
-
-    setProduct({
-      ...product,
-      ready,
-      complement_categories: categories,
-    });
-  }, []);
+  }, [productId]);
 
   useEffect(() => {
+    if (!product) return;
+
     handlePrepareProduct(product, amount);
-    // eslint-disable-next-line
-  }, [amount]);
+  }, [amount, product, handlePrepareProduct]);
 
   useEffect(() => {
+    if (!product) return;
+
     setComplementsPrice(
       product.complement_categories.reduce((value, category) => {
         const categoryPrice = category.complements.reduce((sum, complement) => {
@@ -194,7 +208,7 @@ function ProductComplement({ onExited, selectedProduct, handleAddProductToCart, 
       }, 0)
     );
     handlePrepareProduct(product, amount);
-  }, [product]);
+  }, [amount, handlePrepareProduct, product]);
 
   function handleAmountUp() {
     if (!product.ready) {
@@ -276,83 +290,89 @@ function ProductComplement({ onExited, selectedProduct, handleAddProductToCart, 
     <CustomDialog
       backgroundColor="#fafafa"
       handleModalState={onExited}
-      title={`${product.name} - Complementos`}
+      title={`${productName} complementos`}
       displayBottomActions
     >
       {imagePreview && product.image && (
         <ImagePreview src={product.image.imageUrl} description={product.name} onExited={handleImagePreview} />
       )}
-      <Grid container className={classes.container}>
-        <Grid item xs={12}>
-          <div className={classes.productData}>
-            <div className={classes.imageWrapper}>
-              <div className={classes.imageContainer}>
-                <img
-                  onClick={handleImagePreview}
-                  className={classes.image}
-                  src={product.image && product.image.imageUrl}
-                  alt={product.name}
-                />
-              </div>
-            </div>
-            <div className={classes.productDescription}>
-              <Typography variant="h6">{product.name}</Typography>
-              <Typography>{product.description}</Typography>
-            </div>
-          </div>
-        </Grid>
-        <Grid item xs={12}>
-          {product.complement_categories.map(category => (
-            <section className={classes.category} key={category.id}>
-              <div className={classes.header}>
-                <div>
-                  <Typography className={classes.categoryName} variant="h6">
-                    {category.name}
-                  </Typography>
-                  {category.max_quantity === 1 ? (
-                    <Typography color="textSecondary" variant="body2">
-                      Escolha 1 opção.
-                    </Typography>
-                  ) : (
-                    <Typography color="textSecondary" variant="body2">
-                      Escolha até {category.max_quantity} opções.
-                    </Typography>
-                  )}
+      {loading ? (
+        <InsideLoading />
+      ) : (
+        <>
+          <Grid container className={classes.container}>
+            <Grid item xs={12}>
+              <div className={classes.productData}>
+                <div className={classes.imageWrapper}>
+                  <div className={classes.imageContainer}>
+                    <img
+                      onClick={handleImagePreview}
+                      className={classes.image}
+                      src={product.image && product.image.imageUrl}
+                      alt={product.name}
+                    />
+                  </div>
                 </div>
-                <div>{category.is_required && <span className={classes.chip}>Obrigatório</span>}</div>
+                <div className={classes.productDescription}>
+                  <Typography variant="h6">{product.name}</Typography>
+                  <Typography>{product.description}</Typography>
+                </div>
               </div>
-              <ProductComplementItem
-                productId={product.id}
-                complementCategoryId={category.id}
-                handleClickComplements={handleClickComplements}
-                complements={category.complements}
+            </Grid>
+            <Grid item xs={12}>
+              {product.complement_categories.map(category => (
+                <section className={classes.category} key={category.id}>
+                  <div className={classes.header}>
+                    <div>
+                      <Typography className={classes.categoryName} variant="h6">
+                        {category.name}
+                      </Typography>
+                      {category.max_quantity === 1 ? (
+                        <Typography color="textSecondary" variant="body2">
+                          Escolha 1 opção.
+                        </Typography>
+                      ) : (
+                        <Typography color="textSecondary" variant="body2">
+                          Escolha até {category.max_quantity} opções.
+                        </Typography>
+                      )}
+                    </div>
+                    <div>{category.is_required && <span className={classes.chip}>Obrigatório</span>}</div>
+                  </div>
+                  <ProductComplementItem
+                    productId={product.id}
+                    complementCategoryId={category.id}
+                    handleClickComplements={handleClickComplements}
+                    complements={category.complements}
+                  />
+                </section>
+              ))}
+            </Grid>
+            <Grid item xs={12} className={classes.annotationContainer}>
+              <TextField
+                variant="outlined"
+                multiline
+                rows={4}
+                label="Tem alguma observação?"
+                placeholder="Por exemplo, carne do hamburguer bem passada"
+                fullWidth
+                margin="normal"
+                value={product.annotation}
+                onChange={event => setProduct({ ...product, annotation: event.target.value })}
               />
-            </section>
-          ))}
-        </Grid>
-        <Grid item xs={12} className={classes.annotationContainer}>
-          <TextField
-            variant="outlined"
-            multiline
-            rows={4}
-            label="Tem alguma observação?"
-            placeholder="Por exemplo, carne do hamburguer bem passada"
-            fullWidth
-            margin="normal"
-            value={product.annotation}
-            onChange={event => setProduct({ ...product, annotation: event.target.value })}
+            </Grid>
+          </Grid>
+          <ProductComplementAction
+            amount={amount}
+            complementsPrice={complementsPrice}
+            handleAmountDown={handleAmountDown}
+            handleAmountUp={handleAmountUp}
+            handleConfirmProduct={handleConfirmProduct}
+            product={product}
+            isReady={product.ready || false}
           />
-        </Grid>
-      </Grid>
-      <ProductComplementAction
-        amount={amount}
-        complementsPrice={complementsPrice}
-        handleAmountDown={handleAmountDown}
-        handleAmountUp={handleAmountUp}
-        handleConfirmProduct={handleConfirmProduct}
-        product={product}
-        isReady={product.ready || false}
-      />
+        </>
+      )}
     </CustomDialog>
   );
 }
