@@ -110,6 +110,8 @@ export default function ProductView({ onExited, handlePrepareProduct, handleAddP
 
         setProduct({
           ...response.data,
+          formattedPrice: moneyFormat(response.data.price),
+          formattedSpecialPrice: moneyFormat(response.data.special_price),
           additional,
           ingredients,
         });
