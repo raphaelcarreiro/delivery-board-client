@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import ImagePreview from '../../image-preview/ImagePreview';
 import PropTypes from 'prop-types';
 import ProductView from './view/simple/ProductView';
@@ -48,10 +48,11 @@ const useStyles = makeStyles(theme => ({
 
 Product.propTypes = {
   products: PropTypes.array.isRequired,
-  category: PropTypes.object.isRequired,
+  categoryName: PropTypes.string,
+  categoryUrl: PropTypes.string,
 };
 
-export default function Product({ products, category }) {
+export default function Product({ products, categoryName, categoryUrl }) {
   const classes = useStyles();
   const app = useContext(AppContext);
   const messaging = useContext(MessagingContext);
@@ -67,43 +68,39 @@ export default function Product({ products, category }) {
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [search, setSearch] = useState('');
 
-  const handleProductClick = useCallback(
-    product => {
-      setSelectedProduct(product);
-      messaging.handleClose();
-
-      if (category.has_complement) {
-        setDialogProductComplement(true);
-        return false;
-      }
-
-      setDialogProductView(true);
-    },
-    [category.has_complement, messaging]
-  );
-
-  const handlePrepareProduct = useCallback(
-    (product, amount) => {
-      dispatch(prepareProduct(product, amount));
-    },
-    [dispatch]
-  );
-
   useEffect(() => {
     if (products.length === 1) {
       const product = products[0];
-      if (category.is_pizza) handleProductClick(product);
+      if (product.category.is_pizza) handleProductClick(product);
     }
-  }, [handleProductClick, products, category.is_pizza]);
+  }, []);
 
   useEffect(() => {
-    if (selectedProduct && restaurant) {
+    if (selectedProduct) {
       if (restaurant.configs.facebook_pixel_id) fbq('track', 'ViewContent');
     }
-  }, [selectedProduct, restaurant]);
+  }, [selectedProduct]);
+
+  function handleProductClick(product) {
+    setSelectedProduct(product);
+    messaging.handleClose();
+
+    if (product.category.has_complement) {
+      setDialogProductComplement(true);
+      return false;
+    }
+
+    setDialogProductView(true);
+  }
 
   function handleOpenImagePreview(event, product) {
+    // event.stopPropagation();
     setSelectedProduct(product);
+    // setImagePreview(true);
+  }
+
+  function handlePrepareProduct(product, amount) {
+    dispatch(prepareProduct(product, amount));
   }
 
   function handleAddProductToCart() {
@@ -111,7 +108,7 @@ export default function Product({ products, category }) {
     app.handleCartVisibility(true);
     handleCancelSearch();
     if (restaurant.configs.facebook_pixel_id) fbq('track', 'AddToCart');
-    if (category.url !== 'offers') router.push('/menu');
+    if (categoryUrl !== '/offers') router.push('/menu');
   }
 
   function handleSearch(searchValue) {
@@ -139,7 +136,7 @@ export default function Product({ products, category }) {
       <Grid item xs={12} className={classes.pageHeader}>
         <div>
           <Typography variant="h5" color="primary">
-            {category.name}
+            {categoryName}
           </Typography>
           {filteredProducts.length > 0 ? (
             <Typography variant="body1" color="textSecondary">
@@ -176,7 +173,7 @@ export default function Product({ products, category }) {
       <CustomAppbar
         cancel={isSearching}
         cancelAction={handleCancelSearch}
-        title={isSearching ? '' : category.name}
+        title={isSearching ? '' : categoryName}
         actionComponent={
           <ProductAction
             isSearching={isSearching}
@@ -197,26 +194,24 @@ export default function Product({ products, category }) {
           handlePrepareProduct={handlePrepareProduct}
           handleAddProductToCart={handleAddProductToCart}
           onExited={() => setDialogProductView(false)}
-          productId={selectedProduct.id}
+          selectedProduct={selectedProduct}
         />
       )}
       {dialogProductComplement && (
         <>
-          {category.is_pizza ? (
+          {selectedProduct.category.is_pizza ? (
             <ProductPizzaComplement
               onExited={() => setDialogProductComplement(false)}
               handleAddProductToCart={handleAddProductToCart}
               handlePrepareProduct={handlePrepareProduct}
-              productId={selectedProduct.id}
-              productName={selectedProduct.name}
+              selectedProduct={selectedProduct}
             />
           ) : (
             <ProductComplement
               onExited={() => setDialogProductComplement(false)}
               handleAddProductToCart={handleAddProductToCart}
               handlePrepareProduct={handlePrepareProduct}
-              productId={selectedProduct.id}
-              productName={selectedProduct.name}
+              selectedProduct={selectedProduct}
             />
           )}
         </>
@@ -226,7 +221,6 @@ export default function Product({ products, category }) {
           products={filteredProducts}
           handleProductClick={handleProductClick}
           handleOpenImagePreview={handleOpenImagePreview}
-          category={category}
         />
       ) : (
         <NoData message="Nenhum produto para exibir" />

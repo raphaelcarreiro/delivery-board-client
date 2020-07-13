@@ -68,7 +68,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ProductList({ products, handleProductClick, handleOpenImagePreview, category }) {
+export default function ProductList({ products, handleProductClick, handleOpenImagePreview }) {
   const classes = useStyles();
 
   return (
@@ -97,7 +97,7 @@ export default function ProductList({ products, handleProductClick, handleOpenIm
                   </Typography>
                 )
               )}
-              {category.has_complement && <Typography color="primary">Monte esse produto</Typography>}
+              {product.category.has_complement && <Typography color="primary">Monte esse produto</Typography>}
             </div>
             {product.image && (
               <div className={classes.imageWrapper}>
@@ -120,5 +120,4 @@ ProductList.propTypes = {
   products: PropTypes.array.isRequired,
   handleProductClick: PropTypes.func.isRequired,
   handleOpenImagePreview: PropTypes.func.isRequired,
-  category: PropTypes.object.isRequired,
 };

@@ -12,8 +12,6 @@ import CustomDialog from 'src/components/dialog/CustomDialog';
 import ProductPizzaComplementHeader from './ProductPizzaComplementHeader';
 import { useSelector } from 'react-redux';
 import ImagePreview from 'src/components/image-preview/ImagePreview';
-import { api } from 'src/services/api';
-import InsideLoading from 'src/components/loading/InsideLoading';
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
@@ -65,21 +63,19 @@ ProductPizzaComplement.propTypes = {
   onExited: PropTypes.func.isRequired,
   handleAddProductToCart: PropTypes.func.isRequired,
   handlePrepareProduct: PropTypes.func.isRequired,
-  productId: PropTypes.number.isRequired,
-  productName: PropTypes.string.isRequired,
+  selectedProduct: PropTypes.object.isRequired,
 };
 
 export default function ProductPizzaComplement({
   onExited,
-  productId,
-  productName,
+  selectedProduct,
   handleAddProductToCart,
   handlePrepareProduct,
 }) {
   const classes = useStyles();
   const [amount, setAmount] = useState(1);
-  const [product, setProduct] = useState(null);
-  const [filteredProduct, setFilteredProduct] = useState(null);
+  const [product, setProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
+  const [filteredProduct, setFilteredProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
   const [complementsPrice, setComplementsPrice] = useState(0);
   const [dialogIngredients, setDialogIngredients] = useState(false);
   const [dialogAdditional, setDialogAdditional] = useState(false);
@@ -91,79 +87,69 @@ export default function ProductPizzaComplement({
   const [searchedCategoryId, setSearchedCategoryId] = useState(null);
   const [searchedValue, setSearchedValue] = useState('');
   const [imagePreview, setImagePreview] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let sizeSelected = {};
 
-    api()
-      .get(`/products/${productId}`)
-      .then(response => {
-        const categories = response.data.complement_categories.map(category => {
-          category.product_complement_category_id = category.id;
-          category.complements = category.complements.map((complement, index) => {
-            complement.product_complement_id = complement.id;
-            complement.formattedPrice = complement.price && moneyFormat(complement.price);
-            if (category.is_pizza_size && category.complements.length === 1) {
-              complement.selected = true;
-              sizeSelected = complement;
-              setComplementSizeSelected(complement);
-            } else {
-              complement.selected = !!complement.selected;
-            }
+    const categories = product.complement_categories.map(category => {
+      category.product_complement_category_id = category.id;
+      category.complements = category.complements.map((complement, index) => {
+        complement.product_complement_id = complement.id;
+        complement.formattedPrice = complement.price && moneyFormat(complement.price);
+        if (category.is_pizza_size && category.complements.length === 1) {
+          complement.selected = true;
+          sizeSelected = complement;
+          setComplementSizeSelected(complement);
+        } else {
+          complement.selected = !!complement.selected;
+        }
 
-            complement.prices = complement.prices.map((price, index) => {
-              price.product_complement_price_id = price.id;
-              price.formattedPrice = price.price && moneyFormat(price.price);
-              price.selected = index === 0;
-              return price;
-            });
+        complement.prices = complement.prices.map((price, index) => {
+          price.product_complement_price_id = price.id;
+          price.formattedPrice = price.price && moneyFormat(price.price);
+          price.selected = index === 0;
+          return price;
+        });
 
-            complement.ingredients = complement.ingredients.map(ingredient => {
-              ingredient.product_complement_ingredient_id = ingredient.id;
-              return ingredient;
-            });
+        complement.ingredients = complement.ingredients.map(ingredient => {
+          ingredient.product_complement_ingredient_id = ingredient.id;
+          return ingredient;
+        });
 
-            complement.additional = complement.additional.map(additional => {
-              additional.product_complement_additional_id = additional.id;
-              additional.prices = additional.prices.map((price, index) => {
-                price.product_complement_additional_price_id = price.id;
-                price.selected = price.product_complement_size_id === sizeSelected.id;
-                price.formattedPrice = price.price && moneyFormat(price.price);
-                return price;
-              });
-              return additional;
-            });
-            return complement;
+        complement.additional = complement.additional.map(additional => {
+          additional.product_complement_additional_id = additional.id;
+          additional.prices = additional.prices.map((price, index) => {
+            price.product_complement_additional_price_id = price.id;
+            price.selected = price.product_complement_size_id === sizeSelected.id;
+            price.formattedPrice = price.price && moneyFormat(price.price);
+            return price;
           });
-          return category;
+          return additional;
         });
-
-        setProduct({
-          ...response.data,
-          ready: false,
-          complement_categories: categories,
-        });
-
-        setFilteredProduct({
-          ...response.data,
-          ready: false,
-          complement_categories: categories,
-        });
-      })
-      .finally(() => {
-        setLoading(false);
+        return complement;
       });
-  }, [productId]);
+      return category;
+    });
+
+    setProduct({
+      ...product,
+      ready: false,
+      complement_categories: categories,
+    });
+
+    setFilteredProduct({
+      ...product,
+      ready: false,
+      complement_categories: categories,
+    });
+  }, []);
 
   useEffect(() => {
-    if (!product) return;
     handlePrepareProduct(product, amount);
-  }, [amount, product, handlePrepareProduct]);
+    // eslint-disable-next-line
+  }, [amount]);
 
   useEffect(() => {
-    if (!product) return;
-
     // Calcula o valor total dos complements selecionados
     let sumPrices = 0;
     let counterTaste = 0;
@@ -199,7 +185,7 @@ export default function ProductPizzaComplement({
 
     setComplementsPrice(sumPrices + additionalPrice);
     handlePrepareProduct(product, amount);
-  }, [amount, handlePrepareProduct, product, restaurant]);
+  }, [product]);
 
   function handleAmountUp() {
     if (!product.ready) {
@@ -372,7 +358,7 @@ export default function ProductPizzaComplement({
     <CustomDialog
       backgroundColor="#fafafa"
       handleModalState={onExited}
-      title={`${productName} complementos`}
+      title={`${product.name} - Complementos`}
       displayBottomActions
     >
       {dialogAdditional && (
@@ -396,77 +382,71 @@ export default function ProductPizzaComplement({
       {imagePreview && (
         <ImagePreview onExited={handleImagePreview} src={product.image.imageUrl} description={product.name} />
       )}
-      {loading ? (
-        <InsideLoading />
-      ) : (
-        <>
-          <Grid container className={classes.container} justify="center">
-            <Grid item xs={12}>
-              <div className={classes.productData}>
-                <div className={classes.imageWrapper}>
-                  <div className={classes.imageContainer}>
-                    <img
-                      onClick={handleImagePreview}
-                      className={classes.image}
-                      src={product.image && product.image.imageUrl}
-                      alt={product.name}
-                    />
-                  </div>
-                </div>
-                <div className={classes.productDescription}>
-                  <Typography variant="h6">{product.name}</Typography>
-                  <Typography>{product.description}</Typography>
-                </div>
+      <Grid container className={classes.container} justify="center">
+        <Grid item xs={12}>
+          <div className={classes.productData}>
+            <div className={classes.imageWrapper}>
+              <div className={classes.imageContainer}>
+                <img
+                  onClick={handleImagePreview}
+                  className={classes.image}
+                  src={product.image && product.image.imageUrl}
+                  alt={product.name}
+                />
               </div>
-            </Grid>
-            <Grid item xs={12}>
-              {filteredProduct.complement_categories.map(category => (
-                <section className={classes.category} key={category.id}>
-                  <ProductPizzaComplementHeader
-                    category={category}
-                    complementSizeSelected={complementSizeSelected}
-                    handleSearch={handleSearch}
-                  />
-                  {(category.is_pizza_size || complementSizeSelected.id) && (
-                    <ProductPizzaComplementItem
-                      category={category}
-                      productId={product.id}
-                      handleClickPizzaComplements={handleClickPizzaComplements}
-                      complements={category.complements}
-                      setComplementCategoryIdSelected={setComplementCategoryIdSelected}
-                      setComplementIdSelected={setComplementIdSelected}
-                      openDialogAdditional={() => setDialogAdditional(true)}
-                      openDialogIngredients={() => setDialogIngredients(true)}
-                    />
-                  )}
-                </section>
-              ))}
-            </Grid>
-            <Grid item xs={12} className={classes.annotationContainer}>
-              <TextField
-                variant="outlined"
-                multiline
-                rows={4}
-                label="Tem alguma observação?"
-                placeholder="Por exemplo, carne do hamburguer bem passada"
-                fullWidth
-                margin="normal"
-                value={product.annotation}
-                onChange={event => setProduct({ ...product, annotation: event.target.value })}
+            </div>
+            <div className={classes.productDescription}>
+              <Typography variant="h6">{product.name}</Typography>
+              <Typography>{product.description}</Typography>
+            </div>
+          </div>
+        </Grid>
+        <Grid item xs={12}>
+          {filteredProduct.complement_categories.map(category => (
+            <section className={classes.category} key={category.id}>
+              <ProductPizzaComplementHeader
+                category={category}
+                complementSizeSelected={complementSizeSelected}
+                handleSearch={handleSearch}
               />
-            </Grid>
-          </Grid>
-          <ProductPizzaComplementAction
-            amount={amount}
-            complementsPrice={complementsPrice}
-            handleAmountDown={handleAmountDown}
-            handleAmountUp={handleAmountUp}
-            handleConfirmProduct={handleConfirmProduct}
-            product={product}
-            isReady={product.ready || false}
+              {(category.is_pizza_size || complementSizeSelected.id) && (
+                <ProductPizzaComplementItem
+                  category={category}
+                  productId={product.id}
+                  handleClickPizzaComplements={handleClickPizzaComplements}
+                  complements={category.complements}
+                  setComplementCategoryIdSelected={setComplementCategoryIdSelected}
+                  setComplementIdSelected={setComplementIdSelected}
+                  openDialogAdditional={() => setDialogAdditional(true)}
+                  openDialogIngredients={() => setDialogIngredients(true)}
+                />
+              )}
+            </section>
+          ))}
+        </Grid>
+        <Grid item xs={12} className={classes.annotationContainer}>
+          <TextField
+            variant="outlined"
+            multiline
+            rows={4}
+            label="Tem alguma observação?"
+            placeholder="Por exemplo, carne do hamburguer bem passada"
+            fullWidth
+            margin="normal"
+            value={product.annotation}
+            onChange={event => setProduct({ ...product, annotation: event.target.value })}
           />
-        </>
-      )}
+        </Grid>
+      </Grid>
+      <ProductPizzaComplementAction
+        amount={amount}
+        complementsPrice={complementsPrice}
+        handleAmountDown={handleAmountDown}
+        handleAmountUp={handleAmountUp}
+        handleConfirmProduct={handleConfirmProduct}
+        product={product}
+        isReady={product.ready || false}
+      />
     </CustomDialog>
   );
 }

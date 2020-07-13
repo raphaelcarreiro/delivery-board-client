@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useContext } from 'react';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import Snackbar from '@material-ui/core/Snackbar';
 import PropTypes from 'prop-types';
@@ -35,31 +35,28 @@ function Messaging({ children }) {
   const [options, setOptions] = useState(null);
   const appContext = useContext(AppContext);
 
-  const handleClose = useCallback((event, reason) => {
+  function handleClose(event, reason) {
     if (reason === 'clickaway') return false;
 
     setOpen(false);
-  }, []);
+  }
 
-  const handleOpen = useCallback(
-    (_message, _action, _options = null) => {
-      setOptions(_options);
+  function handleOpen(_message, _action, _options = null) {
+    setOptions(_options);
 
-      if (open) {
-        setOpen(false);
-        setTimeout(() => {
-          setAction(_action ? { do: _action } : null);
-          setOpen(true);
-          setMessage(_message);
-        }, 350);
-      } else {
+    if (open) {
+      setOpen(false);
+      setTimeout(() => {
         setAction(_action ? { do: _action } : null);
         setOpen(true);
         setMessage(_message);
-      }
-    },
-    [open]
-  );
+      }, 350);
+    } else {
+      setAction(_action ? { do: _action } : null);
+      setOpen(true);
+      setMessage(_message);
+    }
+  }
 
   function handleAction() {
     if (typeof action.do === 'function') {
