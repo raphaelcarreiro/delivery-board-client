@@ -23,7 +23,7 @@ export default function Category({ category }) {
         <meta property="og:description" content={category.description} />
         <meta property="og:image" content={category.image.imageUrl} />
       </Head>
-      <Product products={category.products} category={category} />
+      <Product products={category.products} categoryName={category.name} categoryUrl={category.url} />
     </>
   );
 }

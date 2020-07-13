@@ -48,10 +48,11 @@ const useStyles = makeStyles(theme => ({
 
 Product.propTypes = {
   products: PropTypes.array.isRequired,
-  category: PropTypes.object.isRequired,
+  categoryName: PropTypes.string.isRequired,
+  categoryUrl: PropTypes.string.isRequired,
 };
 
-export default function Product({ products, category }) {
+export default function Product({ products, categoryName, categoryUrl }) {
   const classes = useStyles();
   const app = useContext(AppContext);
   const messaging = useContext(MessagingContext);
@@ -72,14 +73,14 @@ export default function Product({ products, category }) {
       setSelectedProduct(product);
       messaging.handleClose();
 
-      if (category.has_complement) {
+      if (product.category.has_complement) {
         setDialogProductComplement(true);
         return false;
       }
 
       setDialogProductView(true);
     },
-    [category.has_complement, messaging]
+    [messaging]
   );
 
   const handlePrepareProduct = useCallback(
@@ -92,9 +93,9 @@ export default function Product({ products, category }) {
   useEffect(() => {
     if (products.length === 1) {
       const product = products[0];
-      if (category.is_pizza) handleProductClick(product);
+      if (product.category.is_pizza) handleProductClick(product);
     }
-  }, [handleProductClick, products, category.is_pizza]);
+  }, [handleProductClick, products]);
 
   useEffect(() => {
     if (selectedProduct && restaurant) {
@@ -111,7 +112,7 @@ export default function Product({ products, category }) {
     app.handleCartVisibility(true);
     handleCancelSearch();
     if (restaurant.configs.facebook_pixel_id) fbq('track', 'AddToCart');
-    if (category.url !== 'offers') router.push('/menu');
+    if (selectedProduct.category.url !== 'offers') router.push('/menu');
   }
 
   function handleSearch(searchValue) {
@@ -139,7 +140,7 @@ export default function Product({ products, category }) {
       <Grid item xs={12} className={classes.pageHeader}>
         <div>
           <Typography variant="h5" color="primary">
-            {category.name}
+            {categoryName}
           </Typography>
           {filteredProducts.length > 0 ? (
             <Typography variant="body1" color="textSecondary">
@@ -176,7 +177,7 @@ export default function Product({ products, category }) {
       <CustomAppbar
         cancel={isSearching}
         cancelAction={handleCancelSearch}
-        title={isSearching ? '' : category.name}
+        title={isSearching ? '' : categoryName}
         actionComponent={
           <ProductAction
             isSearching={isSearching}
@@ -202,7 +203,7 @@ export default function Product({ products, category }) {
       )}
       {dialogProductComplement && (
         <>
-          {category.is_pizza ? (
+          {selectedProduct.category.is_pizza ? (
             <ProductPizzaComplement
               onExited={() => setDialogProductComplement(false)}
               handleAddProductToCart={handleAddProductToCart}
@@ -226,7 +227,6 @@ export default function Product({ products, category }) {
           products={filteredProducts}
           handleProductClick={handleProductClick}
           handleOpenImagePreview={handleOpenImagePreview}
-          category={category}
         />
       ) : (
         <NoData message="Nenhum produto para exibir" />
