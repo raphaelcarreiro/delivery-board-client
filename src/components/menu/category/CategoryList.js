@@ -55,7 +55,6 @@ export default function CategoryList({ categories }) {
     <List className={classes.list}>
       {categories.map(
         item =>
-          item.available_products_amount > 0 &&
           item.activated && (
             <ListItem
               href={'/menu/[url]'}
@@ -69,9 +68,7 @@ export default function CategoryList({ categories }) {
                 <div>
                   <Typography variant="h6">{item.name}</Typography>
                   <Typography variant="body2" color="textSecondary">
-                    {item.available_products_amount === 1
-                      ? `${item.available_products_amount} produto`
-                      : `${item.available_products_amount} produtos`}
+                    {item.description}
                   </Typography>
                   <Typography color="textSecondary">{item.price}</Typography>
                   {item.factor && <Typography color="textSecondary">Até {item.factor} sabores</Typography>}
