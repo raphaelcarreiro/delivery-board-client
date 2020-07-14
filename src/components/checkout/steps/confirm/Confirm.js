@@ -98,13 +98,10 @@ export default function Confirm() {
               Endereço de entrega
             </Typography>
             <Typography>
-              {order.shipment.address}, {order.shipment.number}
+              {order.shipment.address}, {order.shipment.number}, {order.shipment.district}
+              {order.shipment.address_complement && `, ${order.shipment.address_complement}`}
+              {order.shipment.postal_code !== '00000000' && `, ${order.shipment.postal_code}`}
             </Typography>
-            <Typography>{order.shipment.district}</Typography>
-            <Typography>{order.shipment.address_complement}</Typography>
-            {order.shipment.postal_code !== '00000000' && (
-              <Typography color="textSecondary">{order.shipment.postal_code}</Typography>
-            )}
             {restaurant.configs.delivery_time && (
               <div className={classes.deliveryTime}>
                 <Typography color="textSecondary" variant="body2">

@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 AccountImage.propTypes = {
-  image: PropTypes.object.isRequired,
+  image: PropTypes.object,
   setImage: PropTypes.func.isRequired,
   setIsImageSelected: PropTypes.func.isRequired,
   handleImageDelete: PropTypes.func.isRequired,
@@ -117,7 +117,12 @@ function AccountImage({ image, setImage, isImageSelected, setIsImageSelected, ha
           <div className={classes.imageContainer} onClick={() => setIsImageSelected(!isImageSelected)}>
             <Zoom in={isImageSelected}>
               <div className={classes.imageWrapper}>
-                <Button variant="contained" color="primary" onClick={event => handleImageDeleteClick(event)}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  onClick={event => handleImageDeleteClick(event)}
+                >
                   Trocar foto
                 </Button>
               </div>

@@ -7,7 +7,6 @@ import {
   userChange,
   customerChange,
   selectImage,
-  deleteImage,
   deleteCustomerAddress,
 } from '../../store/redux/modules/user/actions';
 import { MessagingContext } from '../messaging/Messaging';
@@ -78,10 +77,6 @@ export default function Account() {
 
   function handleImageSelect() {
     dispatch(selectImage());
-  }
-
-  function handleImageDelete() {
-    dispatch(deleteImage());
   }
 
   function handleDeleteAddress(address) {
@@ -156,7 +151,6 @@ export default function Account() {
                 handleUserChange={handleUserChange}
                 handleCustomerChange={handleCustomerChange}
                 handleImageSelect={handleImageSelect}
-                handleImageDelete={handleImageDelete}
                 handleSubmit={handleSubmit}
                 saving={saving}
               />

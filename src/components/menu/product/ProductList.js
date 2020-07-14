@@ -38,6 +38,7 @@ const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
     borderRadius: 4,
     position: 'relative',
+    flexShrink: 0,
   },
   productData: {
     display: 'flex',

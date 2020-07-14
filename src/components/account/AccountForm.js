@@ -7,6 +7,9 @@ import PhoneInput from '../masked-input/PhoneInput';
 import CpfInput from '../masked-input/CpfInput';
 import * as Yup from 'yup';
 import { cpfValidation } from '../../helpers/cpfValidation';
+import { useAccount } from './Account';
+import { deleteImage, userChange } from 'src/store/redux/modules/user/actions';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -31,7 +34,6 @@ export default function AccountForm({
   handleUserChange,
   handleCustomerChange,
   handleImageSelect,
-  handleImageDelete,
   handleSubmit,
   saving,
 }) {
@@ -88,6 +90,11 @@ export default function AccountForm({
           [err.path]: err.message,
         });
       });
+  }
+
+  function handleImageDelete() {
+    setImage(null);
+    setIsImageSelected(false);
   }
 
   return (
@@ -170,7 +177,6 @@ AccountForm.propTypes = {
   handleUserChange: PropTypes.func.isRequired,
   handleCustomerChange: PropTypes.func.isRequired,
   handleImageSelect: PropTypes.func.isRequired,
-  handleImageDelete: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   saving: PropTypes.bool.isRequired,
 };
