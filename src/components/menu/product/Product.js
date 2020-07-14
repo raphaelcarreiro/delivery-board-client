@@ -80,7 +80,7 @@ export default function Product({ products, categoryName, categoryUrl }) {
 
       setDialogProductView(true);
     },
-    [messaging]
+    [] // eslint-disable-line
   );
 
   const handlePrepareProduct = useCallback(

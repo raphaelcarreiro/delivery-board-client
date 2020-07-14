@@ -67,6 +67,9 @@ const useStyles = makeStyles(theme => ({
     left: 10,
     color: theme.palette.secondary.main,
   },
+  productName: {
+    fontWeight: 300,
+  },
 }));
 
 export default function ProductList({ products, handleProductClick, handleOpenImagePreview }) {
@@ -78,7 +81,9 @@ export default function ProductList({ products, handleProductClick, handleOpenIm
         {products.map(product => (
           <ListItem onClick={() => handleProductClick(product)} button className={classes.listItem} key={product.id}>
             <div className={classes.productData}>
-              <Typography variant="h6">{product.name}</Typography>
+              <Typography variant="h6" className={classes.productName}>
+                {product.name}
+              </Typography>
               <Typography variant="body2" color="textSecondary">
                 {product.description}
               </Typography>

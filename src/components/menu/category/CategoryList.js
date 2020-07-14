@@ -44,6 +44,9 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 4,
     width: '100%',
   },
+  productName: {
+    fontWeight: 300,
+  },
 }));
 
 CategoryList.propTypes = {
@@ -68,7 +71,9 @@ export default function CategoryList({ categories }) {
             >
               <div className={classes.content}>
                 <div>
-                  <Typography variant="h6">{item.name}</Typography>
+                  <Typography variant="h6" className={classes.productName}>
+                    {item.name}
+                  </Typography>
                   <Typography variant="body2" color="textSecondary">
                     {item.description}
                   </Typography>
