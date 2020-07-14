@@ -3,6 +3,7 @@ import { Typography, List, ListItem, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 import PhoneIcon from '@material-ui/icons/Phone';
+import { FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
 
 const useStyles = makeStyles(theme => ({
   footer: {
@@ -11,6 +12,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     padding: '0 15px',
+    backgroundColor: theme.palette.primary.dark,
+    color: theme.palette.primary.contrastText,
   },
   container: {
     maxWidth: 1366,
@@ -41,11 +44,14 @@ const useStyles = makeStyles(theme => ({
     padding: 0,
   },
   links: {
-    marginTop: 10,
+    marginTop: 15,
     display: 'flex',
     '& a': {
-      marginRight: 15,
+      marginRight: 20,
     },
+  },
+  socialIcons: {
+    fontSize: 20,
   },
 }));
 
@@ -58,22 +64,22 @@ function Footer() {
     <footer className={classes.footer}>
       <div className={classes.container}>
         <div className={classes.restaurantData}>
-          <Typography variant="h6" color="primary">
+          <Typography variant="h5" color="secondary">
             Informações
           </Typography>
           {restaurant && (
-            <Typography variant="body2">
+            <Typography variant="body1" color="inherit">
               {restaurant.corporate_name ? restaurant.corporate_name : restaurant.name}
             </Typography>
           )}
           {restaurant && (
-            <Typography color="textSecondary" variant="body2">
+            <Typography variant="body2" color="inherit">
               CNPJ: {restaurant.cnpj}
             </Typography>
           )}
           {mainAddress && (
             <>
-              <Typography color="textSecondary" variant="body2">
+              <Typography variant="body2" color="inherit">
                 {mainAddress.address}, {mainAddress.number}, {mainAddress.district} {mainAddress.city}-
                 {mainAddress.region}, CEP {mainAddress.postal_code}
               </Typography>
@@ -81,22 +87,34 @@ function Footer() {
           )}
           {restaurant && (
             <div className={classes.links}>
-              {restaurant.facebook_link && <Link href={restaurant.facebook_link}>Facebook</Link>}
-              {restaurant.instagram_link && <Link href={restaurant.instagram_link}>Instagram</Link>}
-              {restaurant.twitter_link && <Link href={restaurant.twitter_link}>Twitter</Link>}
+              {restaurant.facebook_link && (
+                <Link color="inherit" href={restaurant.facebook_link}>
+                  <FaFacebookF className={classes.socialIcons} />
+                </Link>
+              )}
+              {restaurant.instagram_link && (
+                <Link color="inherit" href={restaurant.instagram_link}>
+                  <FaInstagram className={classes.socialIcons} />
+                </Link>
+              )}
+              {restaurant.twitter_link && (
+                <Link color="inherit" href={restaurant.twitter_link}>
+                  <FaTwitter className={classes.socialIcons} />
+                </Link>
+              )}
             </div>
           )}
         </div>
         <div className={classes.phone}>
-          <Typography variant="h6" color="primary">
+          <Typography variant="h5" color="secondary">
             Peça pelo telefone
           </Typography>
           <List>
             {restaurant &&
               restaurant.phones.map(phone => (
                 <ListItem key={phone.id} className={classes.listItem}>
-                  <Typography className={classes.textIcon}>
-                    <PhoneIcon color="primary" /> {phone.phone}
+                  <Typography className={classes.textIcon} color="inherit">
+                    <PhoneIcon color="inherit" /> {phone.phone}
                   </Typography>
                 </ListItem>
               ))}
