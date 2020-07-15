@@ -89,13 +89,13 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
           );
         })
         .catch(() => {
-          messaging.handleOpen('Não foi possível carregar os bairros');
+          console.log('Não foi possível carregar os bairros');
         })
         .finally(() => {
           setLoading(false);
         });
     }
-  }, []);
+  }, [restaurant]);
 
   function handleChangeCep(value) {
     setPostalCode(value);
@@ -224,6 +224,8 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
       async
       componentActions={<AccountAddressesAction saving={saving} />}
       displayBottomActions
+      maxWidth="sm"
+      height="70vh"
     >
       {(saving || loading) && (
         <div className={classes.loading}>
@@ -231,7 +233,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
         </div>
       )}
       {restaurant.configs.use_postalcode && (
-        <Grid item xs={12} xl={3} md={5} lg={3} style={{ flexBasis: 0 }}>
+        <Grid item xs={12} xl={4} md={6} lg={4} style={{ flexBasis: 0 }}>
           <TextField
             label="CEP"
             placeholder="Digite o CEP"
@@ -249,7 +251,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
           />
         </Grid>
       )}
-      <Grid item xs={12} xl={6} lg={6} md={8}>
+      <Grid item xs={12} xl={7} lg={7} md={9}>
         {cepValidation && (
           <div className={classes.form}>
             <div>

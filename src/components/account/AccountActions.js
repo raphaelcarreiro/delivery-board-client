@@ -5,14 +5,15 @@ import PropTypes from 'prop-types';
 
 AccountActions.propTypes = {
   tabIndex: PropTypes.number.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  handleValidation: PropTypes.func.isRequired,
+  saving: PropTypes.bool.isRequired,
 };
 
-export default function AccountActions({ tabIndex, handleSubmit }) {
+export default function AccountActions({ tabIndex, handleValidation, saving }) {
   return (
     <>
       {tabIndex === 0 && (
-        <IconButton onClick={handleSubmit} color="inherit">
+        <IconButton onClick={handleValidation} color="inherit" disabled={saving}>
           <DoneIcon />
         </IconButton>
       )}

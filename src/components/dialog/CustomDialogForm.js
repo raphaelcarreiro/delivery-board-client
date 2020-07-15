@@ -3,7 +3,6 @@ import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/co
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { makeStyles } from '@material-ui/core/styles/index';
-import { CustomDialogContext } from './CustomDialog';
 import { AppContext } from 'src/App';
 
 const useStyles = makeStyles(theme => ({
@@ -34,17 +33,17 @@ const useStyles = makeStyles(theme => ({
   paper: props => ({
     backgroundColor: props.backgroundColor ? props.backgroundColor : '#fff',
     [theme.breakpoints.up('md')]: {
-      height: '100vh',
+      height: props.height,
     },
   }),
-  content: ({ title, displayBottomActions }) => ({
+  content: {
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
     paddingTop: 15,
     paddingLeft: 15,
     paddingRight: 15,
-  }),
+  },
   form: ({ title, displayBottomActions }) => ({
     overflowY: 'auto',
     marginTop: title ? 64 : 15,
@@ -58,7 +57,7 @@ const useStyles = makeStyles(theme => ({
   }),
 }));
 
-export const DialogFullscreenFormContext = React.createContext({
+export const CustomDialogFormContext = React.createContext({
   handleCloseDialog: () => {},
 });
 
@@ -72,9 +71,11 @@ export default function CustomDialogForm({
   children,
   backgroundColor,
   displayBottomActions,
+  maxWidth,
+  height,
 }) {
   const [open, setOpen] = useState(true);
-  const classes = useStyles({ backgroundColor, title: !!title, displayBottomActions });
+  const classes = useStyles({ backgroundColor, title: !!title, displayBottomActions, height });
   const app = useContext(AppContext);
 
   function handleClose() {
@@ -109,7 +110,7 @@ export default function CustomDialogForm({
       onClose={handleClose}
       fullScreen={app.isMobile || app.windowWidth < 960}
       fullWidth
-      maxWidth="md"
+      maxWidth={maxWidth}
       onExited={() => handleModalState()}
     >
       <form onSubmit={_handleSubmit} className={classes.form}>
@@ -128,18 +129,24 @@ export default function CustomDialogForm({
           </AppBar>
         )}
         <div className={classes.content}>
-          <CustomDialogContext.Provider
+          <CustomDialogFormContext.Provider
             value={{
               handleCloseDialog: handleClose,
             }}
           >
             {children}
-          </CustomDialogContext.Provider>
+          </CustomDialogFormContext.Provider>
         </div>
       </form>
     </Dialog>
   );
 }
+
+CustomDialogForm.defaultProps = {
+  displayBottomActions: false,
+  maxWidth: 'md',
+  height: '100vh',
+};
 
 CustomDialogForm.propTypes = {
   handleModalState: PropTypes.func.isRequired,
@@ -151,4 +158,6 @@ CustomDialogForm.propTypes = {
   async: PropTypes.bool,
   backgroundColor: PropTypes.string,
   displayBottomActions: PropTypes.bool,
+  maxWidth: PropTypes.string,
+  height: PropTypes.string,
 };

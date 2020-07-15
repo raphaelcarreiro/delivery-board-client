@@ -86,13 +86,13 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
           );
         })
         .catch(() => {
-          messaging.handleOpen('Não foi possível carregar os bairros');
+          console.log('Não foi possível carregar os bairros');
         })
         .finally(() => {
           setLoading(false);
         });
     }
-  }, []);
+  }, [restaurant]);
 
   async function handleValidation() {
     const schema = yup.object().shape({
@@ -170,6 +170,8 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
       async
       componentActions={<AccountAddressesAction saving={saving} />}
       displayBottomActions
+      maxWidth="sm"
+      height="70vh"
     >
       {(saving || loading) && (
         <div className={classes.loading}>
@@ -177,7 +179,7 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
         </div>
       )}
       {restaurant.configs.use_postalcode && (
-        <Grid item xs={12} xl={3} md={5} lg={3} style={{ flexBasis: 0 }}>
+        <Grid item xs={12} xl={4} md={6} lg={4} style={{ flexBasis: 0 }}>
           <TextField
             label="CEP"
             placeholder="Digite o CEP"
@@ -192,7 +194,7 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
           />
         </Grid>
       )}
-      <Grid item xs={12} xl={6} lg={6} md={8}>
+      <Grid item xs={12} xl={7} lg={7} md={9}>
         <TextField
           label="Endereço"
           placeholder="Digite o endereço"

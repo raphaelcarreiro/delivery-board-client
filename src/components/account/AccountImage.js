@@ -1,15 +1,15 @@
 import React, { useContext, useState } from 'react';
 import AddPhotoIcon from '@material-ui/icons/AddAPhoto';
-import { CircularProgress, Zoom, Typography, Button } from '@material-ui/core';
+import { CircularProgress, Zoom, Button } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
 import { MessagingContext } from '../messaging/Messaging';
 import { api } from '../../services/api';
+import { useAccount } from './Account';
+import { userChange, imageDelete } from 'src/store/context-api/modules/user-customer/actions';
 
 const useStyles = makeStyles(theme => ({
   image: {
     width: '100%',
-    // height: 195,
     borderRadius: 4,
     backgroundColor: '#eee',
   },
@@ -53,18 +53,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-AccountImage.propTypes = {
-  image: PropTypes.object,
-  setImage: PropTypes.func.isRequired,
-  setIsImageSelected: PropTypes.func.isRequired,
-  handleImageDelete: PropTypes.func.isRequired,
-  isImageSelected: PropTypes.bool.isRequired,
-};
-
-function AccountImage({ image, setImage, isImageSelected, setIsImageSelected, handleImageDelete }) {
+function AccountImage() {
   const messaging = useContext(MessagingContext);
   const [loading, setLoading] = useState(false);
   const classes = useStyles();
+  const { dispatch, userCustomer } = useAccount();
 
   function handleChange(image) {
     const form = new FormData();
@@ -75,7 +68,7 @@ function AccountImage({ image, setImage, isImageSelected, setIsImageSelected, ha
     api()
       .post('/images', form)
       .then(response => {
-        setImage(response.data);
+        dispatch(userChange('image', response.data));
       })
       .catch(() => {
         messaging.handleOpen('Não foi possível carregar a imagem');
@@ -87,7 +80,11 @@ function AccountImage({ image, setImage, isImageSelected, setIsImageSelected, ha
 
   function handleImageDeleteClick(event) {
     event.stopPropagation();
-    handleImageDelete();
+    dispatch(imageDelete());
+  }
+
+  function handleIsImageSelected() {
+    dispatch(userChange('isImageSelected', !userCustomer.isImageSelected));
   }
 
   return (
@@ -96,7 +93,7 @@ function AccountImage({ image, setImage, isImageSelected, setIsImageSelected, ha
         <div className={classes.imageContainer}>
           <CircularProgress color="primary" />
         </div>
-      ) : !image ? (
+      ) : !userCustomer.image ? (
         <>
           <input
             type="file"
@@ -114,8 +111,8 @@ function AccountImage({ image, setImage, isImageSelected, setIsImageSelected, ha
         </>
       ) : (
         <>
-          <div className={classes.imageContainer} onClick={() => setIsImageSelected(!isImageSelected)}>
-            <Zoom in={isImageSelected}>
+          <div className={classes.imageContainer} onClick={handleIsImageSelected}>
+            <Zoom in={userCustomer.isImageSelected}>
               <div className={classes.imageWrapper}>
                 <Button
                   variant="contained"
@@ -127,7 +124,7 @@ function AccountImage({ image, setImage, isImageSelected, setIsImageSelected, ha
                 </Button>
               </div>
             </Zoom>
-            <img alt="Foto do produto" className={classes.image} src={image.imageUrl} />
+            <img alt="Foto do produto" className={classes.image} src={userCustomer.image.imageUrl} />
           </div>
         </>
       )}

@@ -1,15 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { TextField, Grid, Button, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AccountImage from './AccountImage';
 import PhoneInput from '../masked-input/PhoneInput';
 import CpfInput from '../masked-input/CpfInput';
-import * as Yup from 'yup';
-import { cpfValidation } from '../../helpers/cpfValidation';
-import { useAccount } from './Account';
-import { deleteImage, userChange } from 'src/store/redux/modules/user/actions';
-import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -29,85 +24,19 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function AccountForm({
-  user,
-  handleUserChange,
-  handleCustomerChange,
-  handleImageSelect,
-  handleSubmit,
-  saving,
-}) {
+export default function AccountForm({ userCustomer, handleValidation, saving, validation, handleUserCustomerChange }) {
   const classes = useStyles();
-  const [validation, setValidation] = useState({});
-  const [name, setName] = useState(user.customer ? user.customer.name : '');
-  const [phone, setPhone] = useState(user.customer ? user.customer.phone : '');
-  const [cpf, setCpf] = useState(user.customer ? user.customer.cpf : '');
-  const [image, setImage] = useState(user.image);
-  const [isImageSelected, setIsImageSelected] = useState(false);
 
-  function accountFormHandleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
-
-    setValidation({});
-
-    const schema = Yup.object().shape({
-      cpf: Yup.string()
-        .transform((value, originalValue) => {
-          return originalValue ? originalValue.replace(/\D/g, '') : '';
-        })
-        .test('cpfValidation', 'CPF inválido', value => {
-          return cpfValidation(value);
-        })
-        .required('CPF é obrigatório'),
-      phone: Yup.string()
-        .transform((value, originalValue) => {
-          return originalValue ? originalValue.replace(/\D/g, '') : '';
-        })
-        .min(10, 'Telefone inválido')
-        .required('O telefone é obrigatório'),
-      name: Yup.string()
-        .min(3, 'Nome inválido')
-        .required('O nome é obrigatório'),
-    });
-
-    const form = {
-      name,
-      phone,
-      cpf,
-      image,
-      customer: {
-        cpf,
-      },
-    };
-
-    schema
-      .validate(form)
-      .then(() => {
-        handleSubmit(form);
-      })
-      .catch(err => {
-        setValidation({
-          [err.path]: err.message,
-        });
-      });
-  }
-
-  function handleImageDelete() {
-    setImage(null);
-    setIsImageSelected(false);
+    handleValidation();
   }
 
   return (
-    <form onSubmit={accountFormHandleSubmit}>
+    <form onSubmit={handleSubmit}>
       <Grid container>
         <div className={classes.accountImage}>
-          <AccountImage
-            image={image}
-            setImage={setImage}
-            isImageSelected={isImageSelected}
-            setIsImageSelected={setIsImageSelected}
-            handleImageDelete={handleImageDelete}
-          />
+          <AccountImage />
           <Typography variant="body2" color="textSecondary">
             Foto do perfil
           </Typography>
@@ -118,7 +47,7 @@ export default function AccountForm({
             label="E-mail"
             placeholder="E-mail"
             margin="normal"
-            value={user.email}
+            value={userCustomer.email}
             fullWidth
             disabled
           />
@@ -129,9 +58,9 @@ export default function AccountForm({
             label="Nome"
             placeholder="Nome"
             margin="normal"
-            value={name}
+            value={userCustomer.name}
             fullWidth
-            onChange={event => setName(event.target.value)}
+            onChange={event => handleUserCustomerChange('name', event.target.value)}
           />
           <TextField
             error={!!validation.phone}
@@ -140,8 +69,8 @@ export default function AccountForm({
             label="Telefone"
             placeholder="Telefone"
             margin="normal"
-            value={phone}
-            onChange={event => setPhone(event.target.value)}
+            value={userCustomer.phone}
+            onChange={event => handleUserCustomerChange('phone', event.target.value)}
             fullWidth
             InputProps={{
               inputComponent: PhoneInput,
@@ -154,8 +83,8 @@ export default function AccountForm({
             label="CPF"
             placeholder="CPF"
             margin="normal"
-            value={cpf}
-            onChange={event => setCpf(event.target.value)}
+            value={userCustomer.cpf}
+            onChange={event => handleUserCustomerChange('cpf', event.target.value)}
             fullWidth
             InputProps={{
               inputComponent: CpfInput,
@@ -173,10 +102,9 @@ export default function AccountForm({
 }
 
 AccountForm.propTypes = {
-  user: PropTypes.object.isRequired,
-  handleUserChange: PropTypes.func.isRequired,
-  handleCustomerChange: PropTypes.func.isRequired,
-  handleImageSelect: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
+  userCustomer: PropTypes.object.isRequired,
+  validation: PropTypes.object.isRequired,
+  handleValidation: PropTypes.func.isRequired,
+  handleUserCustomerChange: PropTypes.func.isRequired,
   saving: PropTypes.bool.isRequired,
 };
