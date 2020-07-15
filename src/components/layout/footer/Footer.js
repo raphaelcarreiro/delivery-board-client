@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     padding: '0 15px',
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.secondary.dark,
     color: theme.palette.primary.contrastText,
   },
   container: {
@@ -64,12 +64,9 @@ function Footer() {
     <footer className={classes.footer}>
       <div className={classes.container}>
         <div className={classes.restaurantData}>
-          <Typography variant="h5" color="secondary">
-            Informações
-          </Typography>
           {restaurant && (
-            <Typography variant="body1" color="inherit">
-              {restaurant.corporate_name ? restaurant.corporate_name : restaurant.name}
+            <Typography variant="h5" color="inherit" gutterBottom>
+              {restaurant.name}
             </Typography>
           )}
           {restaurant && (
@@ -106,7 +103,7 @@ function Footer() {
           )}
         </div>
         <div className={classes.phone}>
-          <Typography variant="h5" color="secondary">
+          <Typography variant="h5" color="inherit">
             Peça pelo telefone
           </Typography>
           <List>

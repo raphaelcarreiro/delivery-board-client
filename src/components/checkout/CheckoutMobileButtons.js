@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.secondary.light,
     color: theme.palette.primary.contrastText,
   },
   mobileButtonPrior: {
@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.secondary.light,
     color: theme.palette.primary.contrastText,
   },
   mobileButtonMore: {

@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
   },
   cart: ({ isCartVisible }: { isCartVisible: boolean }) => ({
     transition: 'transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms',
-    transform: isCartVisible ? 'none' : `translateX(${cartWidth}px)`,
+    transform: isCartVisible ? 'none' : `translateX(${cartWidth + 10}px)`,
     position: 'fixed',
     top: 80,
     width: cartWidth,
