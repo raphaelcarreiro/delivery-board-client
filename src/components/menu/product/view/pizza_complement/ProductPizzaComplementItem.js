@@ -78,9 +78,11 @@ const useStyles = makeStyles(theme => ({
   },
   additional: {
     color: '#4CAF50',
+    marginRight: 7,
   },
   ingredients: {
     color: '#c53328',
+    marginRight: 7,
   },
 }));
 
@@ -188,34 +190,35 @@ export default function ProductPizzaComplementItem({
                 <Typography variant="body2" color="textSecondary">
                   {complement.description}
                 </Typography>
-                {complement.ingredients &&
-                  complement.ingredients.map(
-                    ingredient =>
-                      !ingredient.selected && (
-                        <Typography
-                          key={ingredient.id}
-                          variant="caption"
-                          display="block"
-                          className={classes.ingredients}
-                        >
-                          - {ingredient.name}
-                        </Typography>
-                      )
-                  )}
-                {complement.additional &&
-                  complement.additional.map(
-                    additional =>
-                      additional.selected && (
-                        <Typography
-                          key={additional.id}
-                          variant="caption"
-                          display="block"
-                          className={classes.additional}
-                        >
-                          + {additional.name} {additional.prices.find(price => price.selected).formattedPrice}
-                        </Typography>
-                      )
-                  )}
+                {complement.ingredients && complement.ingredients.some(i => !i.selected) > 0 && (
+                  <div>
+                    {complement.ingredients.map(
+                      ingredient =>
+                        !ingredient.selected && (
+                          <Typography key={ingredient.id} variant="caption" className={classes.ingredients}>
+                            - {ingredient.name}
+                          </Typography>
+                        )
+                    )}
+                  </div>
+                )}
+                {complement.additional && complement.additional.some(a => a.selected) && (
+                  <div>
+                    {complement.additional.map(
+                      additional =>
+                        additional.selected && (
+                          <Typography
+                            key={additional.id}
+                            variant="caption"
+                            display="block"
+                            className={classes.additional}
+                          >
+                            + {additional.name} {additional.prices.find(price => price.selected).formattedPrice}
+                          </Typography>
+                        )
+                    )}
+                  </div>
+                )}
                 {complement.prices.map(
                   price =>
                     price.selected &&
