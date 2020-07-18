@@ -41,7 +41,7 @@ export default function Shipment({ addresses }) {
           if (restaurant.configs.tax_mode === 'district')
             if (shipmentAddress.area_region) dispatch(setShipmentAddress(shipmentAddress));
         }
-  }, [app, customer.addresses, dispatch, order, restaurant.configs.tax_mode]);
+  }, [app, customer.addresses, dispatch, order, restaurant]);
 
   useEffect(() => {
     if (customer)

@@ -210,6 +210,21 @@ export default function Checkout() {
 
   useEffect(() => {
     app.handleCartVisibility(false);
+
+    function setAddress(address) {
+      if (restaurant.configs.tax_mode === 'district') {
+        if (address && address.area_region) dispatch(setShipmentAddress(address));
+        else dispatch(setShipmentAddress({}));
+        return;
+      } else if (restaurant.configs.tax_mode === 'distance') {
+        if (address && address.distance <= restaurant.delivery_max_distance) dispatch(setShipmentAddress(address));
+        else dispatch(setShipmentAddress({}));
+        return;
+      }
+
+      dispatch(setShipmentAddress(address || {}));
+    }
+
     if (user.loadedFromStorage) {
       api()
         .get(`/users/${user.id}`)
@@ -219,17 +234,8 @@ export default function Checkout() {
           const address = customer && customer.addresses.find(address => address.is_main);
 
           dispatch(setCustomer(customer));
-          if (restaurant.configs.tax_mode === 'district') {
-            if (address && address.area_region) dispatch(setShipmentAddress(address));
-            else dispatch(setShipmentAddress({}));
-            return;
-          } else if (restaurant.configs.tax_mode === 'distance') {
-            if (address && address.distance <= restaurant.delivery_max_distance) dispatch(setShipmentAddress(address));
-            else dispatch(setShipmentAddress({}));
-            return;
-          }
 
-          dispatch(setShipmentAddress(address || {}));
+          setAddress(address);
         })
         .catch(err => {
           if (err.response) messaging.handleOpen(err.response.data.error);
@@ -242,18 +248,8 @@ export default function Checkout() {
       const address = customer.addresses.find(address => address.is_main);
 
       dispatch(setCustomer(customer));
+      setAddress(address);
 
-      if (restaurant.configs.tax_mode === 'district') {
-        if (address) {
-          if (address.area_region) {
-            dispatch(setShipmentAddress(address));
-          }
-        } else dispatch(setShipmentAddress({}));
-        setLoading(false);
-        return;
-      }
-
-      dispatch(setShipmentAddress(address || {}));
       setLoading(false);
     }
   }, []); // eslint-disable-line
