@@ -207,12 +207,7 @@ export default function ProductPizzaComplementItem({
                     {complement.additional.map(
                       additional =>
                         additional.selected && (
-                          <Typography
-                            key={additional.id}
-                            variant="caption"
-                            display="block"
-                            className={classes.additional}
-                          >
+                          <Typography key={additional.id} variant="caption" className={classes.additional}>
                             + {additional.name} {additional.prices.find(price => price.selected).formattedPrice}
                           </Typography>
                         )
