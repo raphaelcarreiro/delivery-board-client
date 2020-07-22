@@ -81,7 +81,7 @@ export default function Cart() {
   const router = useRouter();
   const dispatch = useDispatch();
   const messaging = useContext(MessagingContext);
-  const app = useContext(AppContext);
+  const { handleCartVisibility, setRedirect } = useContext(AppContext);
   const restaurant = useSelector(state => state.restaurant);
   const [dialogUpdateSimpleProduct, setDialogUpdateSimpleProduct] = useState(false);
   const [dialogUpdateComplementProduct, setDialogUpdateComplementProduct] = useState(false);
@@ -103,11 +103,11 @@ export default function Cart() {
     if (!isAuthenticated()) {
       if (restaurant.configs.require_login) {
         router.push('/login');
-        app.setRedirect('/checkout');
+        setRedirect('/checkout');
         return;
       }
       router.push('/guest-register');
-      app.setRedirect('/checkout');
+      setRedirect('/checkout');
       return;
     }
 
@@ -133,7 +133,7 @@ export default function Cart() {
   }
 
   function handleBuyingClick() {
-    app.handleCartVisibility(false);
+    handleCartVisibility(false);
   }
 
   return (

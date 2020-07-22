@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { List, ListItem, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { removeFromCart, restoreCart } from 'src/store/redux/modules/cart/actions';
 import CartProductListComplements from './CartProductListComplements';
 import { MessagingContext } from 'src/components/messaging/Messaging';
+import { useApp } from 'src/App';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -100,7 +101,6 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
   function handleRestoreCart() {
     dispatch(restoreCart());
     messaging.handleClose();
-    // messaging.handleOpen('Carrinho recuperado');
   }
 
   function handleRemoveFromCart(productUid) {

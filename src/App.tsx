@@ -175,10 +175,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    setInitialLoading(true);
-  }, []);
-
-  useEffect(() => {
     reactotronInitialize();
   }, []);
 
