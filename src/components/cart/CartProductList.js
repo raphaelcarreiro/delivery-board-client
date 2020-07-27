@@ -85,6 +85,7 @@ const useStyles = makeStyles(theme => ({
     marginRight: 10,
     overflow: 'hidden',
     display: 'flex',
+    backgroundColor: '#eee',
   },
 }));
 
@@ -115,11 +116,13 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
           <div className={classes.product} id="product-data">
             <div>
               <div className={classes.imageContainer}>
-                <img
-                  src={product.image.imageThumbUrl ? product.image.imageThumbUrl : product.image.imageUrl}
-                  alt={product.name}
-                  className={classes.productImage}
-                />
+                {product.image && (
+                  <img
+                    src={product.image.imageThumbUrl ? product.image.imageThumbUrl : product.image.imageUrl}
+                    alt={product.name}
+                    className={classes.productImage}
+                  />
+                )}
               </div>
               <div>
                 <Typography variant="h6" className={classes.productName}>
