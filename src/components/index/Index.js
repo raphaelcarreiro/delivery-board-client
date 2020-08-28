@@ -152,7 +152,7 @@ export default function Index() {
                 </div>
               )}
               {restaurant.configs.order_minimum_value > 0 && restaurant.configs.tax_mode !== 'order_value' && (
-                <Typography color="textSecondary" variant="h6" className={classes.infoItem}>
+                <Typography variant="h6" className={classes.infoItem}>
                   {restaurant.configs.formattedOrderMinimumValue} mínimo
                 </Typography>
               )}
