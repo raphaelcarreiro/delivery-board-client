@@ -5,50 +5,35 @@ import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
 import Link from '../link/Link';
+import StatusIcon from '@material-ui/icons/FiberManualRecord';
+import ScheduleIcon from '@material-ui/icons/Schedule';
 
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
-  },
-  closedRestaurant: {
-    backgroundColor: theme.palette.error.main,
-    padding: 15,
-    color: theme.palette.error.contrastText,
-    borderRadius: 4,
-    width: '100%',
-  },
-  message: {
-    display: 'flex',
-    alignItems: 'center',
-    '& svg': {
-      marginRight: 10,
-    },
-  },
-  restaurant: {
     [theme.breakpoints.down('sm')]: {
-      marginTop: 10,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
     },
   },
-  menu: {
-    margin: '20px 0',
-  },
-  closed: {
-    padding: 10,
-    color: theme.palette.secondary.contrastText,
-    backgroundColor: theme.palette.secondary.main,
-    borderRadius: 4,
-    marginBottom: 15,
+  action: {
+    margin: '40px 0',
   },
   logo: {
-    maxWidth: 100,
+    maxWidth: 80,
     borderRadius: 4,
     zIndex: 2,
     padding: 2,
     backgroundColor: '#fff',
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
     [theme.breakpoints.down('sm')]: {
-      maxWidth: 100,
+      maxWidth: 60,
     },
   },
   cover: {
@@ -76,32 +61,70 @@ const useStyles = makeStyles(theme => ({
     right: -1,
     zIndex: 2,
   }),
-  textInfo: {
-    color: '#fff',
-    zIndex: 2,
-  },
   info: {
     display: 'flex',
-    justifyContent: 'flex-end',
-    marginTop: 6,
+    justifyContent: 'space-around',
+    width: '100%',
     '&>h5': {
-      marginLeft: 15,
       [theme.breakpoints.down('sm')]: {
         marginLeft: 0,
         fontSize: 20,
       },
     },
+  },
+  headerRestaurantName: {
+    position: 'absolute',
+    color: '#fff',
+    zIndex: 2,
+    top: '40%',
+    left: '10%',
     [theme.breakpoints.down('sm')]: {
-      justifyContent: 'space-between',
-      marginLeft: 0,
-      fontSize: 20,
+      top: 0,
+      left: 0,
+      padding: 20,
+    },
+  },
+  main: {
+    padding: '5px 15px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  working: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '10px 0',
+  },
+  restaurantStatus: ({ restaurantIsOpen }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    padding: '0 5px',
+    borderRadius: 4,
+    '& svg': {
+      color: restaurantIsOpen ? '#28a745' : '#dc3545',
+      marginRight: 5,
+    },
+    '& p': {
+      fontWeight: 600,
+    },
+  }),
+  deliveryTime: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    '& svg': {
+      marginRight: 7,
     },
   },
 }));
 
 export default function Index() {
   const restaurant = useSelector(state => state.restaurant);
-  const classes = useStyles({ coverUrl: restaurant && restaurant.cover && restaurant.cover.imageUrl });
+  const classes = useStyles({
+    coverUrl: restaurant && restaurant.cover && restaurant.cover.imageUrl,
+    restaurantIsOpen: restaurant ? restaurant.is_open : false,
+  });
 
   return (
     <>
@@ -110,31 +133,44 @@ export default function Index() {
         <div className={classes.container}>
           <div className={classes.cover}>
             <div className={classes.background} />
-            <Typography variant="body1" className={classes.textInfo}>
-              {restaurant.working_hours}
-            </Typography>
+            <div className={classes.headerRestaurantName}>
+              <Typography variant="h4" color="inherit">
+                {restaurant.name}
+              </Typography>
+              <Typography color="inherit">{restaurant.description}</Typography>
+            </div>
             {restaurant.image && <img src={restaurant.image.imageUrl} alt={restaurant.name} className={classes.logo} />}
           </div>
-          <div className={classes.info}>
-            {restaurant.configs.delivery_time > 0 && (
-              <Typography color="textSecondary" variant="h5" className={classes.infoItem}>
-                {restaurant.configs.delivery_time} minutos
+          <div className={classes.main}>
+            <div className={classes.info}>
+              {restaurant.configs.delivery_time > 0 && (
+                <div className={classes.deliveryTime}>
+                  <ScheduleIcon />
+                  <Typography variant="h6" className={classes.infoItem}>
+                    {restaurant.configs.delivery_time} minutos
+                  </Typography>
+                </div>
+              )}
+              {restaurant.configs.order_minimum_value > 0 && restaurant.configs.tax_mode !== 'order_value' && (
+                <Typography color="textSecondary" variant="h6" className={classes.infoItem}>
+                  {restaurant.configs.formattedOrderMinimumValue} mínimo
+                </Typography>
+              )}
+            </div>
+            <div className={classes.action}>
+              <Button variant="contained" size="large" color="primary" component={Link} href="/menu">
+                Acessar cardápio
+              </Button>
+            </div>
+            <div className={classes.working}>
+              <div className={classes.restaurantStatus}>
+                <StatusIcon />
+                <Typography>{restaurant.is_open ? 'Aberto' : 'Fechado'}</Typography>
+              </div>
+              <Typography color="textSecondary" align="center" variant="body1">
+                {restaurant.working_hours}
               </Typography>
-            )}
-            {restaurant.configs.order_minimum_value > 0 && restaurant.configs.tax_mode !== 'order_value' && (
-              <Typography color="textSecondary" variant="h5" className={classes.infoItem}>
-                {restaurant.configs.formattedOrderMinimumValue} mínimo
-              </Typography>
-            )}
-          </div>
-          <div className={classes.restaurant}>
-            <Typography variant="h4">{restaurant.name}</Typography>
-            <Typography variant="body1">{restaurant.description}</Typography>
-          </div>
-          <div className={classes.menu}>
-            <Button variant="contained" size="large" color="primary" component={Link} href="/menu">
-              Acessar cardápio
-            </Button>
+            </div>
           </div>
         </div>
       )}

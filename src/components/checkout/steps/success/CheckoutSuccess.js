@@ -9,6 +9,7 @@ import Link from 'src/components/link/Link';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
+import { FiCheck } from 'react-icons/fi';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -17,10 +18,6 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    [theme.breakpoints.down('xs')]: {
-      justifyContent: 'flex-start',
-      // alignItems: 'flex-start',
-    },
   },
   actions: {
     marginTop: 20,
@@ -43,7 +40,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     marginBottom: 10,
     flexDirection: 'column',
-    border: '1px solid #eee',
+    // border: '1px solid #eee',
     '& button': {
       marginTop: 10,
     },
@@ -61,14 +58,17 @@ export default function CheckoutSuccess() {
   useEffect(() => {
     app.handleCartVisibility(false);
     if (configs.facebook_pixel_id) fbq('track', 'Purchase', { value: order.total, currency: 'BRL' });
-  }, []);
+  }, [app, configs.facebook_pixel_id, order.total]);
 
   return (
     <div className={classes.container}>
-      <Typography gutterBottom variant="h4">
+      <FiCheck color="#3ac359" size={66} />
+      <Typography gutterBottom variant="h5" align="center">
         {user.name}, recebemos seu pedido!
       </Typography>
-      <Typography variant="h6">O número do pedido é {formatId(order.id)}</Typography>
+      <Typography>
+        O número do pedido é <strong>{formatId(order.id)}</strong>
+      </Typography>
       <div className={classes.actions}>
         <Link href="account/orders/[id]" as={`account/orders/${order.encrypted_id}`} color="primary">
           Acompanhar pedido
@@ -89,7 +89,9 @@ export default function CheckoutSuccess() {
         )}
         {!app.fmHasToken && isSupported && user.id && (
           <div className={classes.contentAction}>
-            <Typography>Ativar notificações para acompanhar esse pedido</Typography>
+            <Typography align="center" variant="body2">
+              Ativar notificações para acompanhar esse pedido
+            </Typography>
             <Button
               color="primary"
               onClick={app.handleRequestPermissionMessaging}

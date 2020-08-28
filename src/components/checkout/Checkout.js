@@ -94,6 +94,7 @@ const useStyles = makeStyles(theme => ({
     overflowY: 'auto',
   }),
   stepDescription: {
+    fontSize: 18,
     [theme.breakpoints.down('xs')]: {
       fontSize: 18,
     },
@@ -136,9 +137,9 @@ export default function Checkout() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [paymentMethods, setPaymentMethods] = useState([]);
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(5);
   const [saving, setSaving] = useState(false);
-  const [createdOrder, setCreatedOrder] = useState(null);
+  const [createdOrder, setCreatedOrder] = useState({ id: 100 });
   const classes = useStyles({ step, isCartVisible: app.isCartVisible });
   const [steps, setSteps] = useState(defaultSteps);
   const [isCardValid, setIsCardValid] = useState(false);

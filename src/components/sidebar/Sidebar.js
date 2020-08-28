@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { ListItem, ListItemIcon, ListItemText, Typography, Avatar, Button, useTheme } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import InputIcon from '@material-ui/icons/Input';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import HomeIcon from '@material-ui/icons/Home';
@@ -116,16 +115,7 @@ const useStyles = makeStyles(theme => ({
       marginTop: 10,
     },
   }),
-  restaurantStatus: ({ restaurantIsOpen }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    padding: '0 5px',
-    borderRadius: 4,
-    margin: 10,
-    '& svg': {
-      color: restaurantIsOpen ? '#28a745' : '#dc3545',
-    },
-  }),
+
   headerTitle: {
     whiteSpace: 'wrap',
     textOverflow: 'ellipsis',

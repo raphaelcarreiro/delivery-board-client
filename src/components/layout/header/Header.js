@@ -9,7 +9,6 @@ import Link from '../../link/Link';
 import { useRouter } from 'next/router';
 import { AppContext } from '../../../App';
 import { useSelector } from 'react-redux';
-import HeaderWorkingTime from './HeaderWorkingTime';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -98,21 +97,6 @@ const useStyles = makeStyles(theme => ({
   linkHome: {
     lineHeight: 0,
   },
-  statusContent: ({ restaurantIsOpen }) => ({
-    padding: 5,
-    backgroundColor: restaurantIsOpen ? '#28a745' : '#dc3545',
-    borderRadius: 4,
-    color: '#fff',
-    width: 120,
-    cursor: 'pointer',
-    '& div': {
-      width: '100%',
-      textTransform: 'uppercase',
-      fontWeight: 600,
-      letterSpacing: 3,
-      textAlign: 'center',
-    },
-  }),
   avatar: {
     border: `2px solid ${theme.palette.primary.main}`,
   },
@@ -129,7 +113,6 @@ export default function Header() {
     cartItems: cart.products.length > 0,
     restaurantIsOpen: restaurant && restaurant.is_open,
   });
-  const [dialogWorkingTime, setDialogWorkingTime] = useState(false);
 
   function handleCloseMenu() {
     setAnchorEl(null);
@@ -154,13 +137,8 @@ export default function Header() {
     appContext.handleCartVisibility();
   }
 
-  function handleClickDialogWorkingTime() {
-    setDialogWorkingTime(!dialogWorkingTime);
-  }
-
   return (
     <>
-      {dialogWorkingTime && <HeaderWorkingTime onExited={() => setDialogWorkingTime(false)} />}
       <header className={classes.header}>
         <div className={classes.container}>
           <div className={classes.logo}>
@@ -172,11 +150,6 @@ export default function Header() {
               <span>Carregando...</span>
             )}
           </div>
-          {!restaurant.is_open && (
-            <div className={classes.statusContent}>
-              <div onClick={handleClickDialogWorkingTime}> Fechado</div>
-            </div>
-          )}
           <div className={classes.headerLinks}>
             <div>
               <Link href="/offers" className={classes.link}>
