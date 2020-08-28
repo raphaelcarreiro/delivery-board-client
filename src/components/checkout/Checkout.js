@@ -341,7 +341,7 @@ export default function Checkout() {
       ) : (
         <>
           {app.isCartVisible && (
-            <DialogFullscreen title="Carrinho" handleModalState={() => app.handleCartVisibility(false)}>
+            <DialogFullscreen title="carrinho" handleModalState={() => app.handleCartVisibility(false)}>
               <div className={classes.cartContent}>
                 <Cart />
               </div>
@@ -350,7 +350,7 @@ export default function Checkout() {
         </>
       )}
       <CustomAppbar
-        title={currentStep.id === 'STEP_SUCCESS' ? 'Pedido recebido' : 'Finalizar pedido'}
+        title={currentStep.id === 'STEP_SUCCESS' ? 'pedido recebido' : 'finalizar pedido'}
         actionComponent={<IndexAppbarActions />}
       />
       {saving && <Loading background="rgba(250,250,250,0.5)" />}

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ListItem, ListItemIcon, ListItemText, Typography, Avatar, Button } from '@material-ui/core';
+import { ListItem, ListItemIcon, ListItemText, Typography, Avatar, Button, useTheme } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import InputIcon from '@material-ui/icons/Input';
@@ -13,10 +13,10 @@ import { menuWidth, AppContext } from '../../App';
 import Link from '../link/Link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import StatusIcon from '@material-ui/icons/FiberManualRecord';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ChatIcon from '@material-ui/icons/Chat';
 import LocalOfferIcons from '@material-ui/icons/LocalOffer';
+import { FiLogIn, FiLogOut } from 'react-icons/fi';
 
 const useStyles = makeStyles(theme => ({
   drawerPaper: {
@@ -64,17 +64,18 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     right: 15,
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary.main,
     borderRadius: '50%',
     height: 23,
     width: 23,
     fontSize: 12,
     color: '#FFF',
-    border: `2px solid ${theme.palette.secondary.contrastText}`,
+    border: `2px solid ${theme.palette.primary.dark}`,
   }),
   avatar: {
-    width: 30,
-    height: 30,
+    width: 44,
+    height: 44,
+    border: `2px solid ${theme.palette.primary.dark}`,
   },
   restaurantName: ({ restaurantIsOpen }) => ({
     display: 'flex',
@@ -148,6 +149,7 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
   const restaurant = useSelector(state => state.restaurant);
   const cart = useSelector(state => state.cart);
   const app = useContext(AppContext);
+  const theme = useTheme();
   const classes = useStyles({
     cartItems: cart.products.length > 0,
     restaurantIsOpen: restaurant && restaurant.is_open,
@@ -192,9 +194,6 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
             <Typography color="inherit" variant="body2" className={classes.restaurantName}>
               {restaurant.name}
             </Typography>
-            <div className={classes.restaurantStatus}>
-              <StatusIcon className={classes.statusIcon} />
-            </div>
           </>
         )}
       </div>
@@ -202,32 +201,32 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
         <ListItemIcon className={classes.listItemIcon}>
           <HomeIcon />
         </ListItemIcon>
-        <ListItemText classes={{ primary: classes.listItemText }} primary="Início" />
+        <ListItemText classes={{ primary: classes.listItemText }} primary="início" />
       </ListItem>
       <ListItem component={Link} href="/offers" onClick={handleClick} button>
         <ListItemIcon className={classes.listItemIcon}>
           <LocalOfferIcons />
         </ListItemIcon>
-        <ListItemText classes={{ primary: classes.listItemText }} primary="Ofertas" />
+        <ListItemText classes={{ primary: classes.listItemText }} primary="ofertas" />
       </ListItem>
       <ListItem component={Link} href="/menu" onClick={handleClick} button>
         <ListItemIcon className={classes.listItemIcon}>
           <MenuBookIcon />
         </ListItemIcon>
-        <ListItemText classes={{ primary: classes.listItemText }} primary="Cardápio" />
+        <ListItemText classes={{ primary: classes.listItemText }} primary="cardápio" />
       </ListItem>
       <ListItem component={Link} href="/cart" onClick={handleClick} button>
         {cart.products.length > 0 && <span className={classes.cartBadge}>{cart.products.length}</span>}
         <ListItemIcon className={classes.listItemIcon}>
           <ShoppingCartIcon />
         </ListItemIcon>
-        <ListItemText classes={{ primary: classes.listItemText }} primary="Carrinho" />
+        <ListItemText classes={{ primary: classes.listItemText }} primary="carrinho" />
       </ListItem>
       <ListItem component={Link} href="/contact" onClick={handleClick} button>
         <ListItemIcon className={classes.listItemIcon}>
           <ChatIcon />
         </ListItemIcon>
-        <ListItemText classes={{ primary: classes.listItemText }} primary="Contato" />
+        <ListItemText classes={{ primary: classes.listItemText }} primary="fala comigo" />
       </ListItem>
       {user.id ? (
         <>
@@ -235,7 +234,7 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
             <ListItemIcon className={classes.listItemIcon}>
               <AssignmentIcon />
             </ListItemIcon>
-            <ListItemText classes={{ primary: classes.listItemText }} primary="Meus pedidos" />
+            <ListItemText classes={{ primary: classes.listItemText }} primary="meus pedidos" />
           </ListItem>
           <ListItem button onClick={handleAccountClick}>
             <ListItemIcon className={classes.listItemIcon}>
@@ -245,17 +244,17 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
           </ListItem>
           <ListItem button onClick={handleLogoutClick}>
             <ListItemIcon className={classes.listItemIcon}>
-              <InputIcon />
+              <FiLogOut size={22} color={theme.palette.primary.main} />
             </ListItemIcon>
-            <ListItemText classes={{ primary: classes.listItemText }} primary="Sair" />
+            <ListItemText classes={{ primary: classes.listItemText }} primary="sair" />
           </ListItem>
         </>
       ) : (
         <ListItem onClick={handleLoginClick} button>
           <ListItemIcon className={classes.listItemIcon}>
-            <InputIcon />
+            <FiLogIn size={22} />
           </ListItemIcon>
-          <ListItemText classes={{ primary: classes.listItemText }} primary="Entrar" />
+          <ListItemText classes={{ primary: classes.listItemText }} primary="entrar" />
         </ListItem>
       )}
       {app.readyToInstall && (

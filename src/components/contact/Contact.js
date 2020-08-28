@@ -31,9 +31,8 @@ export default function Contact() {
 
   return (
     <>
-      <CustomAppbar title="Contato" />
-      <PageHeader title="Contato" />
-      <Typography gutterBottom>Será um prazer lhe atender</Typography>
+      <CustomAppbar title="contato" />
+      <PageHeader title="contato" />
       {restaurant.phones && (
         <Card className={classes.card}>
           <CardContent>

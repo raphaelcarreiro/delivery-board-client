@@ -113,6 +113,9 @@ const useStyles = makeStyles(theme => ({
       textAlign: 'center',
     },
   }),
+  avatar: {
+    border: `2px solid ${theme.palette.primary.main}`,
+  },
 }));
 
 export default function Header() {
@@ -177,18 +180,18 @@ export default function Header() {
           <div className={classes.headerLinks}>
             <div>
               <Link href="/offers" className={classes.link}>
-                <LocalOfferIcons color="primary" /> Ofertas
+                <LocalOfferIcons color="primary" /> ofertas
               </Link>
             </div>
             <div>
               <Link href="/menu" className={classes.link}>
-                <MenuBookIcon color="primary" /> Cardápio
+                <MenuBookIcon color="primary" /> cardápio
               </Link>
             </div>
             <div>
               <Typography onClick={handleCartClick} className={classes.cartLink}>
                 {cart.products.length > 0 && <span className={classes.cartBadge}>{cart.products.length}</span>}
-                <ShoppingCartIcon color="primary" /> Carrinho
+                <ShoppingCartIcon color="primary" /> carrinho
               </Typography>
             </div>
             <div>
@@ -199,7 +202,7 @@ export default function Header() {
                       href={restaurant.configs.require_login ? '/login' : '/guest-register'}
                       className={classes.link}
                     >
-                      <InputIcon color="primary" /> Entrar
+                      <InputIcon color="primary" /> entrar
                     </Link>
                   )}
                 </>
@@ -219,12 +222,16 @@ export default function Header() {
                     open={Boolean(anchorEl)}
                     onClose={handleCloseMenu}
                   >
-                    <MenuItem onClick={handleMyAccountClick}>Minha conta</MenuItem>
-                    <MenuItem onClick={handleMyOrdersClick}>Meus pedidos</MenuItem>
-                    <MenuItem onClick={handleLogoutClick}>Sair</MenuItem>
+                    <MenuItem onClick={handleMyAccountClick}>minha conta</MenuItem>
+                    <MenuItem onClick={handleMyOrdersClick}>meus pedidos</MenuItem>
+                    <MenuItem onClick={handleLogoutClick}>sair</MenuItem>
                   </Menu>
                   <IconButton className={classes.btnAvatar} onClick={event => setAnchorEl(event.currentTarget)}>
-                    {user.image ? <Avatar src={user.image.imageUrl} /> : <Avatar>{user.name[0]}</Avatar>}
+                    {user.image ? (
+                      <Avatar src={user.image.imageUrl} className={classes.avatar} />
+                    ) : (
+                      <Avatar>{user.name[0]}</Avatar>
+                    )}
                   </IconButton>
                 </>
               )}

@@ -144,11 +144,11 @@ export default function Product({ products, categoryName, categoryUrl }) {
           </Typography>
           {filteredProducts.length > 0 ? (
             <Typography variant="body1" color="textSecondary">
-              Exibindo {filteredProducts.length} {filteredProducts.length > 1 ? 'produtos' : 'produto'}
+              exibindo {filteredProducts.length} {filteredProducts.length > 1 ? 'produtos' : 'produto'}
             </Typography>
           ) : (
             <Typography variant="body1" color="textSecondary">
-              Sem produtos
+              sem produtos
             </Typography>
           )}
         </div>
@@ -158,8 +158,8 @@ export default function Product({ products, categoryName, categoryUrl }) {
           onChange={event => handleSearch(event.target.value)}
           value={search}
           autoFocus
-          label="Buscar"
-          placeholder="Digite sua busca"
+          label="buscar"
+          placeholder="digite sua busca"
           variant="outlined"
           InputProps={{
             endAdornment: (

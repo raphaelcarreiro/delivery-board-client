@@ -89,7 +89,7 @@ const Default: React.FC<DefaultProps> = ({ pageProps, component: Component, isMo
       ) : (
         <>
           {app.isCartVisible && (
-            <DialogFullscreen title="Carrinho" handleModalState={() => app.handleCartVisibility(false)}>
+            <DialogFullscreen title="carrinho" handleModalState={() => app.handleCartVisibility(false)}>
               <div className={classes.cartContent}>
                 <Cart />
               </div>

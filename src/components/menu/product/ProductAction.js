@@ -98,7 +98,7 @@ export default function ProductAction({ isSearching, openSearchBox, handleSearch
 
   useEffect(() => {
     handleSearch(search);
-  }, [search]);
+  }, [search]); //eslint-disable-line
 
   function handleInputChange(event) {
     setSearch(event.target.value);
@@ -116,7 +116,7 @@ export default function ProductAction({ isSearching, openSearchBox, handleSearch
           <TextField
             inputRef={ref}
             value={search}
-            placeholder="Pesquisar..."
+            placeholder="pesquisar..."
             fullWidth
             autoFocus
             onChange={handleInputChange}

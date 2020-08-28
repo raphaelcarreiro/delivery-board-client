@@ -35,12 +35,12 @@ export default function Menu() {
     return () => {
       if (request) source.cancel();
     };
-  }, []);
+  }, [messaging]);
   return (
     <>
-      <CustomAppbar title="Cardápio" actionComponent={<IndexAppbarActions />} />
+      <CustomAppbar title="cardápio" actionComponent={<IndexAppbarActions />} />
       <PageHeader
-        title="Cardápio"
+        title="cardápio"
         description={
           productsAmount > 1
             ? `${productsAmount} produtos disponíveis`

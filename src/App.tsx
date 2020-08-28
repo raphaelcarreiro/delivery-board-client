@@ -71,7 +71,7 @@ interface BeforeInstallPromptEvent extends Event {
 
 export const AppContext = createContext({} as AppContextData);
 
-export const menuWidth = 240;
+export const menuWidth = 260;
 let socket: SocketIOClient.Socket;
 let defferedPromptPwa;
 

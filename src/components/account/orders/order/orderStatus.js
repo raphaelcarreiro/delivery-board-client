@@ -1,16 +1,16 @@
 export const orderStatus = {
-  p: 'Aguardando pagamento',
-  o: 'Aberto',
-  a: 'Aprovado',
-  d: 'Saiu para entrega',
-  c: 'Completo',
-  x: 'Cancelado',
+  p: 'aguardando pagamento',
+  o: 'aberto',
+  a: 'aprovado',
+  d: 'saiu para entrega',
+  c: 'completo',
+  x: 'cancelado',
 };
 
 export function orderStatusName(shipmentMethod, status) {
   if (status === 'd') {
-    if (shipmentMethod === 'delivery') return 'Saiu para entrega';
-    else return 'Pronto para retirada';
+    if (shipmentMethod === 'delivery') return 'saiu para entrega';
+    else return 'pronto para retirada';
   }
 
   return orderStatus[status];

@@ -90,7 +90,7 @@ export default function CheckoutHeader() {
           <div>
             <Typography color="primary" onClick={handleCartClick} className={classes.cartLink}>
               {cart.products.length > 0 && <span className={classes.cartBadge}>{cart.products.length}</span>}
-              <ShoppingCartIcon color="primary" /> Carrinho
+              <ShoppingCartIcon color="primary" /> carrinho
             </Typography>
           </div>
         </div>

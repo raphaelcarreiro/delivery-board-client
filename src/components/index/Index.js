@@ -105,7 +105,7 @@ export default function Index() {
 
   return (
     <>
-      <CustomAppbar title="Início" actionComponent={<IndexAppbarActions />} />
+      <CustomAppbar title="início" actionComponent={<IndexAppbarActions />} />
       {restaurant && (
         <div className={classes.container}>
           <div className={classes.cover}>

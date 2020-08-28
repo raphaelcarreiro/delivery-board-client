@@ -49,8 +49,8 @@ function Orders() {
 
   return (
     <>
-      <CustomAppbar title="Meus pedidos" />
-      <PageHeader title="Meus pedidos" description="Acompanhe seus pedidos" />
+      <CustomAppbar title="meus pedidos" />
+      <PageHeader title="meus pedidos" description="acompanhe seus pedidos" />
       {loading ? (
         <InsideLoading />
       ) : (

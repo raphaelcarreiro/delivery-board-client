@@ -138,7 +138,7 @@ export default function Cart() {
 
   return (
     <>
-      {router.route === '/cart' && <CustomAppbar title="Carrinho" />}
+      {router.route === '/cart' && <CustomAppbar title="carrinho" />}
       {dialogClosedRestaurant && <CartClosedRestaurant onExited={() => setDialogClosedRestaurant(false)} />}
       {dialogUpdateSimpleProduct && (
         <ProductSimple
@@ -171,7 +171,7 @@ export default function Cart() {
       ) : cart.products.length > 0 ? (
         <div className={classes.cart}>
           <Typography className={classes.title} variant="h5" color="primary">
-            Carrinho
+            carrinho
           </Typography>
           <CartProductList handleClickUpdateProduct={handleClickUpdateProduct} products={cart.products} />
           <CartCouponButton setCouponView={setCouponView} />

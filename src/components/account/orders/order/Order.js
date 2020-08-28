@@ -187,7 +187,7 @@ export default function Order({ cryptId }) {
   return (
     <>
       <CustomAppbar
-        title={order ? `Pedido ${order.formattedId}` : 'Carregando...'}
+        title={order ? `pedido ${order.formattedId}` : 'carregando...'}
         actionComponent={
           <OrderAction
             hasToken={app.fmHasToken}
@@ -202,7 +202,7 @@ export default function Order({ cryptId }) {
         <InsideLoading />
       ) : order ? (
         <>
-          <PageHeader title={`Pedido ${order.formattedId}`} description={`Pedido gerado em ${order.formattedDate}`} />
+          <PageHeader title={`pedido ${order.formattedId}`} description={`pedido gerado em ${order.formattedDate}`} />
           <div className={classes.container}>
             {!app.fmHasToken && isSupported() && user.id && (
               <div className={classes.activeNotifications}>

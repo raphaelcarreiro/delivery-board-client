@@ -102,7 +102,7 @@ function OrdersList({ orders }) {
           >
             <span className={`${classes.status} ${classes[order.status]}`}>{order.statusName}</span>
             <Typography variant="body1" color="primary">
-              Pedido {order.formattedId}
+              pedido {order.formattedId}
             </Typography>
             <Typography className={classes.customerName}>{order.customer.name}</Typography>
             <div>
