@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageHeader from '../pageHeader/PageHeader';
 import CustomAppbar from '../appbar/CustomAppbar';
 import { api, getCancelTokenSource } from '../../services/api';
-import { MessagingContext } from '../messaging/Messaging';
 import { Grid } from '@material-ui/core';
 import CategoryList from './category/CategoryList';
 import MenuLoading from './MenuLoading';
 import IndexAppbarActions from 'src/components/index/IndexAppbarActions';
+import { useMessaging } from 'src/hooks/messaging';
 
 export default function Menu() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const messaging = useContext(MessagingContext);
+  const { handleOpen } = useMessaging();
   const [productsAmount, setProductsAmount] = useState(0);
 
   useEffect(() => {
     const source = getCancelTokenSource();
-
+    setLoading(true);
     let request = true;
     api()
       .get('/categories', { cancelToken: source.token })
@@ -25,7 +25,7 @@ export default function Menu() {
         if (request) setCategories(response.data);
       })
       .catch(err => {
-        if (err.response) messaging.handleOpen(err.response.data.error);
+        if (err.response) handleOpen(err.response.data.error);
       })
       .finally(() => {
         if (request) setLoading(false);
@@ -35,7 +35,7 @@ export default function Menu() {
     return () => {
       if (request) source.cancel();
     };
-  }, []); //eslint-disable-line
+  }, [handleOpen]);
 
   return (
     <>

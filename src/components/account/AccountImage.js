@@ -2,10 +2,10 @@ import React, { useContext, useState } from 'react';
 import AddPhotoIcon from '@material-ui/icons/AddAPhoto';
 import { CircularProgress, Zoom, Button } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
-import { MessagingContext } from '../messaging/Messaging';
 import { api } from '../../services/api';
 import { useAccount } from './Account';
 import { userChange, imageDelete } from 'src/store/context-api/modules/user-customer/actions';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   image: {
@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function AccountImage() {
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const [loading, setLoading] = useState(false);
   const classes = useStyles();
   const { dispatch, userCustomer } = useAccount();

@@ -1,12 +1,12 @@
-import React, { useState, useContext, Fragment, useEffect } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { Typography, Grid, TextField } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
-import { MessagingContext } from 'src/components/messaging/Messaging';
 import ProductComplementItem from './ProductComplementItem';
 import ProductComplementAction from './ProductComplementAction';
 import PropTypes from 'prop-types';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import ImagePreview from 'src/components/image-preview/ImagePreview';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
@@ -118,7 +118,7 @@ ProductComplement.propTypes = {
 
 export default function ProductComplement({ onExited, selectedProduct, handleUpdateCartProduct }) {
   const [amount, setAmount] = useState(selectedProduct.amount);
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const classes = useStyles({ isSelected: selectedProduct.selected });
   const [product, setProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
   const [complementsPrice, setComplementsPrice] = useState(0);

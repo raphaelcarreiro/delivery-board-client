@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Typography, Button, TextField } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import DialogInput, { DialogInputConsumer } from 'src/components/dialog/DialogInput';
@@ -6,10 +6,10 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { customerChange } from 'src/store/redux/modules/user/actions';
 import { api } from 'src/services/api';
-import { MessagingContext } from 'src/components/messaging/Messaging';
 import CpfInput from '../../../masked-input/CpfInput';
 import * as yup from 'yup';
 import { cpfValidation } from '../../../../helpers/cpfValidation';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -49,7 +49,7 @@ export default function PaymentCpf({ onExited }) {
   const [cpf, setCpf] = useState('');
   const classes = useStyles();
   const [saving, setSaving] = useState(false);
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const user = useSelector(state => state.user);
   const [validation, setValidation] = useState({});
   const input = useRef(null);

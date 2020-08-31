@@ -75,7 +75,9 @@ export default function CheckoutSuccess() {
         </Link>
         {app.readyToInstall && (
           <div className={classes.contentAction}>
-            <Typography>Que tal instalar esse aplicativo?</Typography>
+            <Typography align="center" variant="body2">
+              Que tal instalar esse aplicativo?
+            </Typography>
             <Button
               color="primary"
               onClick={app.handleInstallApp}

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import CartTotal from 'src/components/cart/CartTotal';
 import { makeStyles } from '@material-ui/core/styles';
@@ -6,11 +6,11 @@ import ProductSimple from 'src/components/cart/edit/simple/ProductSimple';
 import ProductComplement from 'src/components/cart/edit/complements/ProductComplement';
 import ProductPizzaComplement from 'src/components/cart/edit/pizza_complement/ProductPizzaComplement';
 import { updateProductFromCart } from 'src/store/redux/modules/cart/actions';
-import { MessagingContext } from 'src/components/messaging/Messaging';
 import CartProductList from 'src/components/cart/CartProductList';
 import { Typography } from '@material-ui/core';
 import Coupon from 'src/components/cart/coupon/Coupon';
 import CartCouponButton from 'src/components/cart/CartCouponButton';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -41,7 +41,7 @@ export default function Cart() {
   const cart = useSelector(state => state.cart);
   const classes = useStyles();
   const dispatch = useDispatch();
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const [dialogUpdateSimpleProduct, setDialogUpdateSimpleProduct] = useState(false);
   const [dialogUpdateComplementProduct, setDialogUpdateComplementProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);

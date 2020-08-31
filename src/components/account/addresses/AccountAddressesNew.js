@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Grid, Button, CircularProgress, MenuItem } from '@material-ui/core';
 import PostalCodeInput from '../../masked-input/PostalCodeInput';
-import { MessagingContext } from '../../messaging/Messaging';
 import PropTypes from 'prop-types';
 import AccountAddressesAction from './AccountAddressesAction';
 import { postalCodeSearch } from 'src/services/postalCodeSearch';
@@ -11,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { api } from 'src/services/api';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import * as yup from 'yup';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -72,7 +72,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
   const [cepValidation, setCepValidation] = useState(!restaurant.configs.use_postalcode);
   const [cepValidationText, setCepValidationText] = useState('');
   const [validation, setValidation] = useState({});
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const classes = useStyles();
 
   useEffect(() => {

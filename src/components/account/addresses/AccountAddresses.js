@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useContext } from 'react';
+import React, { Fragment, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { ListItem, List, Typography, Menu, MenuItem, IconButton, Tooltip } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -8,13 +8,13 @@ import AccountAddressesNew from './AccountAddressesNew';
 import AccountAddressesEdit from './AccountAddressesEdit';
 import { api } from '../../../services/api';
 import { useDispatch } from 'react-redux';
-import { MessagingContext } from '../../messaging/Messaging';
 import {
   addCustomerAddress,
   updateCustomerAddress,
   setMainCustomerAddress,
 } from '../../../store/redux/modules/user/actions';
 import Loading from 'src/components/loading/Loading';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -69,7 +69,7 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
   const [dialogEditAddress, setDialogEditAddress] = useState(false);
   const [saving, setSaving] = useState(false);
   const [savingAddress, setSavingAddress] = useState(false);
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const classes = useStyles();
   const dispatch = useDispatch();
 

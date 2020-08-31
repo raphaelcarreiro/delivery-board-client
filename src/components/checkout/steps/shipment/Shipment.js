@@ -7,12 +7,12 @@ import AccountAddressesEdit from 'src/components/account/addresses/AccountAddres
 import { useDispatch, useSelector } from 'react-redux';
 import { addCustomerAddress, updateCustomerAddress, deleteCustomerAddress } from 'src/store/redux/modules/user/actions';
 import { setShipmentAddress } from 'src/store/redux/modules/order/actions';
-import { MessagingContext } from 'src/components/messaging/Messaging';
 import { api } from 'src/services/api';
 import DialogDelete from 'src/components/dialog/delete/DialogDelete';
 import { Grid } from '@material-ui/core';
 import { CheckoutContext } from '../../Checkout';
 import { AppContext } from 'src/App';
+import { useMessaging } from 'src/hooks/messaging';
 
 Shipment.propTypes = {
   addresses: PropTypes.array.isRequired,
@@ -22,7 +22,7 @@ export default function Shipment({ addresses }) {
   const dispatch = useDispatch();
   const [saving, setSaving] = useState(false);
   const [savingAddress, setSavingAddress] = useState(false);
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const checkout = useContext(CheckoutContext);
   const [selectedAddress, setSelectedAddress] = useState(false);
   const [dialogNewAddress, setDialogNewAddress] = useState(false);

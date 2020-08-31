@@ -11,7 +11,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import io from 'socket.io-client';
-import { MessagingContext } from 'src/components/messaging/Messaging';
 import { useSelector } from 'react-redux';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import { AppContext } from 'src/App';
@@ -24,6 +23,7 @@ import OrderStatusList from './OrderStatusList';
 import OrderShipment from './OrderShipment';
 import OrderPayment from './OrderPayment';
 import OrderTotals from './OrderTotals';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   section: {
@@ -85,7 +85,7 @@ export default function Order({ cryptId }) {
   const [loading, setLoading] = useState(true);
   const user = useSelector(state => state.user);
   const app = useContext(AppContext);
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const classes = useStyles();
 
   useEffect(() => {

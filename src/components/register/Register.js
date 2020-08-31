@@ -3,7 +3,6 @@ import { Grid, Button, LinearProgress, CircularProgress } from '@material-ui/cor
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '../link/Link';
 import { api } from '../../services/api';
-import { MessagingContext } from '../messaging/Messaging';
 import RegisterForm from './RegisterForm';
 import * as yup from 'yup';
 import userReducer, { INITIAL_STATE as userInitiaState } from '../../store/context-api/modules/user/reducer';
@@ -14,6 +13,7 @@ import { AppContext } from 'src/App';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'src/store/redux/modules/user/actions';
 import PropTypes from 'prop-types';
+import { useMessaging } from 'src/hooks/messaging';
 
 Register.propTypes = {
   name: PropTypes.string,
@@ -65,7 +65,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export function Register({ name, email }) {
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const [user, dispatch] = useReducer(userReducer, userInitiaState);
   const [created, setCreated] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -78,7 +78,7 @@ export function Register({ name, email }) {
   useEffect(() => {
     if (name) dispatch(userChange('name', name));
     if (email) dispatch(userChange('email', email));
-  }, []);
+  }, [email, name]);
 
   function handleChange(index, value) {
     dispatch(userChange(index, value));

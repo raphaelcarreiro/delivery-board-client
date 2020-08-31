@@ -1,8 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Grid, Button, CircularProgress, MenuItem } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import AccountAddressesAction from './AccountAddressesAction';
-import { MessagingContext } from '../../messaging/Messaging';
 import PostalCodeInput from '../../masked-input/PostalCodeInput';
 import CustomDialogForm from 'src/components/dialog/CustomDialogForm';
 import { useSelector } from 'react-redux';
@@ -10,6 +9,7 @@ import * as yup from 'yup';
 import { api } from 'src/services/api';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { makeStyles } from '@material-ui/core/styles';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -62,7 +62,7 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
   const [district, setDistrict] = useState(selectedAddress.district);
   const [city] = useState(selectedAddress.city);
   const [region] = useState(selectedAddress.region);
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const classes = useStyles();
   const restaurant = useSelector(state => state.restaurant);
   const [validation, setValidation] = useState({});

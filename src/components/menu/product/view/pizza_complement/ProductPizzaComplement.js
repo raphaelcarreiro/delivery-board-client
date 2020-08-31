@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Grid, TextField, Typography } from '@material-ui/core';
-import { makeStyles, fade } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import ProductPizzaComplementItem from './ProductPizzaComplementItem';
-import { MessagingContext } from '../../../../messaging/Messaging';
 import ProductPizzaComplementAction from './ProductPizzaComplementAction';
 import ProductPizzaComplementAdditional from './ProductPizzaComplementAdditional';
 import ProductPizzaComplementIngredient from './ProductPizzaComplementIngredient';
@@ -14,6 +13,7 @@ import { useSelector } from 'react-redux';
 import ImagePreview from 'src/components/image-preview/ImagePreview';
 import { api } from 'src/services/api';
 import InsideLoading from 'src/components/loading/InsideLoading';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
@@ -86,7 +86,7 @@ export default function ProductPizzaComplement({
   const [complementIdSelected, setComplementIdSelected] = useState(null);
   const [complementCategoryIdSelected, setComplementCategoryIdSelected] = useState(null);
   const [complementSizeSelected, setComplementSizeSelected] = useState({});
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const restaurant = useSelector(state => state.restaurant);
   const [searchedCategoryId, setSearchedCategoryId] = useState(null);
   const [searchedValue, setSearchedValue] = useState('');

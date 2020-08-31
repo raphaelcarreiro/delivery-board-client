@@ -13,7 +13,6 @@ import {
 } from 'src/store/redux/modules/order/actions';
 import Shipment from './steps/shipment/Shipment';
 import { setUser } from 'src/store/redux/modules/user/actions';
-import { MessagingContext } from '../messaging/Messaging';
 import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
 import { steps as defaultSteps } from './steps/steps';
@@ -34,6 +33,7 @@ import CheckoutMobileButtons from 'src/components/checkout/CheckoutMobileButtons
 import ShipmentMethod from './steps/shipment-method/ShipmentMethod';
 import { useRouter } from 'next/router';
 import InsideLoading from '../loading/InsideLoading';
+import { useMessaging } from 'src/hooks/messaging';
 
 const cartWidth = 450;
 
@@ -127,7 +127,7 @@ export const CheckoutContext = React.createContext({
 });
 
 export default function Checkout() {
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const app = useContext(AppContext);
   const dispatch = useDispatch();
   const user = useSelector(state => state.user);

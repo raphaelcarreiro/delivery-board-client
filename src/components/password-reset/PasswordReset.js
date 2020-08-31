@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, TextField, Button, LinearProgress } from '@material-ui/core';
-import { MessagingContext } from '../messaging/Messaging';
 import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
 import { AppContext } from 'src/App';
@@ -9,6 +8,7 @@ import { useSelector } from 'react-redux';
 import NextLink from 'next/link';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -77,7 +77,7 @@ export default function PasswordReset({ token }) {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [validation, setValidation] = useState({ email: [], password: [] });
   const [loading, setLoading] = useState(false);
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const app = useContext(AppContext);
   const restaurant = useSelector(state => state.restaurant);
   const classes = useStyles();

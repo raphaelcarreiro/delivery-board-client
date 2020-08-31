@@ -1,32 +1,32 @@
 import React, { createContext, useState, useEffect, useCallback, useContext } from 'react';
 import { api } from './services/api';
 import { useRouter } from 'next/router';
-import Loading from './components/loading/Loading';
-import Messaging from './components/messaging/Messaging';
-import OnlyMain from './components/layout/OnlyMain';
-import Default from './components/layout/Default';
 import { mobileCheck } from './helpers/MobileCheck';
 import { useDispatch } from 'react-redux';
 import { setRestaurant, setRestaurantIsOpen } from './store/redux/modules/restaurant/actions';
 import { setUser, removeUser } from './store/redux/modules/user/actions';
 import { verifyToken } from './helpers/verifyToken';
-import Sidebar from './components/sidebar/Sidebar';
-import InitialLoading from './components/loading/InitialLoading';
-import Checkout from './components/layout/Checkout';
 import { setCart } from 'src/store/redux/modules/cart/actions';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import { createTheme } from 'src/helpers/createTheme';
-import defaultTheme from './theme';
-import io from 'socket.io-client';
-import { LinearProgress } from '@material-ui/core';
-import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
-import { getFirebaseMessaging, firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
-import reactGA from 'react-ga';
 import { moneyFormat } from './helpers/numberFormat';
 import { setPromotions } from './store/redux/modules/promotion/actions';
 import { NextComponentType } from 'next';
 import { useSelector } from './store/redux/selector';
+import { LinearProgress } from '@material-ui/core';
+import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
+import { getFirebaseMessaging, firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
+import Loading from './components/loading/Loading';
+import OnlyMain from './components/layout/OnlyMain';
+import Default from './components/layout/Default';
+import Sidebar from './components/sidebar/Sidebar';
+import InitialLoading from './components/loading/InitialLoading';
+import Checkout from './components/layout/Checkout';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import defaultTheme from './theme';
+import io from 'socket.io-client';
+import reactGA from 'react-ga';
+import MessagingProvider from './hooks/messaging';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -383,7 +383,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
 
         <Sidebar handleLogout={handleLogout} handleOpenMenu={handleOpenMenu} isOpenMenu={isOpenMenu} />
 
-        <Messaging>
+        <MessagingProvider>
           {paths.includes(router.route) ? (
             <OnlyMain pageProps={pageProps} component={Component} />
           ) : checkoutPaths.includes(router.route) ? (
@@ -391,7 +391,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
           ) : (
             <Default pageProps={pageProps} component={Component} isMobile={isMobile} windowWidth={windowWidth} />
           )}
-        </Messaging>
+        </MessagingProvider>
       </AppContext.Provider>
     </ThemeProvider>
   );

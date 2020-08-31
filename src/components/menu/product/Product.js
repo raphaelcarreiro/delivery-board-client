@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import ProductView from './view/simple/ProductView';
 import { useDispatch, useSelector } from 'react-redux';
 import { prepareProduct, addToCart } from 'src/store/redux/modules/cart/actions';
-import { MessagingContext } from '../../messaging/Messaging';
 import ProductPizzaComplement from './view/pizza_complement/ProductPizzaComplement';
 import ProductComplement from './view/complement/ProductComplement';
 import ProductList from './ProductList';
@@ -17,6 +16,7 @@ import { Grid, Typography, TextField, InputAdornment } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
 import { useRouter } from 'next/router';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   pageHeader: {
@@ -55,7 +55,7 @@ Product.propTypes = {
 export default function Product({ products, categoryName, categoryUrl }) {
   const classes = useStyles();
   const app = useContext(AppContext);
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const dispatch = useDispatch();
   const ref = useRef();
   const router = useRouter();

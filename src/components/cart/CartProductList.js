@@ -1,12 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { List, ListItem, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { removeFromCart, restoreCart } from 'src/store/redux/modules/cart/actions';
 import CartProductListComplements from './CartProductListComplements';
-import { MessagingContext } from 'src/components/messaging/Messaging';
-import { useApp } from 'src/App';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -97,7 +96,7 @@ CartProductList.propTypes = {
 export default function CartProductList({ products, handleClickUpdateProduct }) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
 
   function handleRestoreCart() {
     dispatch(restoreCart());

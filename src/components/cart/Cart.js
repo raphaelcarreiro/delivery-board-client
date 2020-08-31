@@ -6,7 +6,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import ProductSimple from './edit/simple/ProductSimple';
-import { MessagingContext } from '../messaging/Messaging';
 import ProductComplement from './edit/complements/ProductComplement';
 import ProductPizzaComplement from './edit/pizza_complement/ProductPizzaComplement';
 import { updateProductFromCart } from 'src/store/redux/modules/cart/actions';
@@ -18,6 +17,7 @@ import Coupon from './coupon/Coupon';
 import CartCouponButton from './CartCouponButton';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -80,7 +80,7 @@ export default function Cart() {
   const classes = useStyles();
   const router = useRouter();
   const dispatch = useDispatch();
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const { handleCartVisibility, setRedirect } = useContext(AppContext);
   const restaurant = useSelector(state => state.restaurant);
   const [dialogUpdateSimpleProduct, setDialogUpdateSimpleProduct] = useState(false);

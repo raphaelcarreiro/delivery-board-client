@@ -10,9 +10,9 @@ import { setUser } from 'src/store/redux/modules/user/actions';
 import PropTypes from 'prop-types';
 import { api } from 'src/services/api';
 import userReducer, { INITIAL_STATE as userInitiaState } from 'src/store/context-api/modules/user/reducer';
-import { MessagingContext } from 'src/components/messaging/Messaging';
 import Link from 'src/components/link/Link';
 import { userChange } from 'src/store/context-api/modules/user/actions';
+import { useMessaging } from 'src/hooks/messaging';
 
 GuestRegister.propTypes = {
   name: PropTypes.string,
@@ -64,7 +64,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function GuestRegister() {
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const [user, dispatch] = useReducer(userReducer, userInitiaState);
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({});

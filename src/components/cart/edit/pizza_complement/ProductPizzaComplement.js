@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Grid, TextField } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import ProductPizzaComplementItem from './ProductPizzaComplementItem';
-import { MessagingContext } from 'src/components/messaging/Messaging';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import ProductPizzaComplementAction from './ProductPizzaComplementAction';
 import ProductPizzaComplementAdditional from './ProductPizzaComplementAdditional';
@@ -11,6 +10,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import ProductPizzaComplementHeader from './ProductPizzaComplementHeader';
 import ImagePreview from 'src/components/image-preview/ImagePreview';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
@@ -87,7 +87,7 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
   const [amount, setAmount] = useState(selectedProduct.amount);
   const [product, setProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
   const [filteredProduct, setFilteredProduct] = useState(JSON.parse(JSON.stringify(selectedProduct)));
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const classes = useStyles();
   const [complementsPrice, setComplementsPrice] = useState(0);
   const categoryComplementSize = product.complement_categories.find(category => category.is_pizza_size);
@@ -139,7 +139,7 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
     }
 
     setComplementsPrice(sumPrices + additionalPrice);
-  }, [product]);
+  }, [product, restaurant.configs.pizza_calculate]);
 
   function handleAmountUp() {
     if (!product.ready) {

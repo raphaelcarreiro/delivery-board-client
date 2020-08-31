@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Typography, Grid, TextField } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import ProductComplementItem from './ProductComplementItem';
-import { MessagingContext } from '../../../../messaging/Messaging';
 import ProductComplementAction from './ProductComplementAction';
 import PropTypes from 'prop-types';
 import CustomDialog from 'src/components/dialog/CustomDialog';
@@ -10,6 +9,7 @@ import { moneyFormat } from 'src/helpers/numberFormat';
 import ImagePreview from 'src/components/image-preview/ImagePreview';
 import { api } from 'src/services/api';
 import InsideLoading from 'src/components/loading/InsideLoading';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
@@ -125,7 +125,7 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
   const [amount, setAmount] = useState(1);
   const [imagePreview, setImagePreview] = useState(false);
   const [product, setProduct] = useState(null);
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const classes = useStyles();
   const [complementsPrice, setComplementsPrice] = useState(0);
   const [loading, setLoading] = useState(true);

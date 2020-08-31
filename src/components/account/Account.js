@@ -3,7 +3,6 @@ import { Grid } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import { api } from '../../services/api';
 import { setUser, deleteCustomerAddress } from '../../store/redux/modules/user/actions';
-import { MessagingContext } from '../messaging/Messaging';
 import CustomAppbar from '../appbar/CustomAppbar';
 import { makeStyles } from '@material-ui/core/styles';
 import AccountForm from './AccountForm';
@@ -25,6 +24,7 @@ import {
 } from 'src/store/context-api/modules/user-customer/actions';
 import * as yup from 'yup';
 import { cpfValidation } from 'src/helpers/cpfValidation';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -49,7 +49,7 @@ export function useAccount() {
 export default function Account() {
   const user = useSelector(state => state.user);
   const dispatch = useDispatch();
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const { isMobile, windowWidth } = useContext(AppContext);
   const [userCustomer, contextDispatch] = useReducer(userReducer, userCustomerInitialState);
   const [loading, setLoading] = useState(true);

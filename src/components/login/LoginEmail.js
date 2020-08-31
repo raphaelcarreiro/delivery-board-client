@@ -6,7 +6,6 @@ import NextLink from 'next/link';
 import NavigateBoforeIcon from '@material-ui/icons/ArrowBack';
 import { Grid, Button, Typography, LinearProgress, IconButton } from '@material-ui/core';
 import { api } from '../../services/api';
-import { MessagingContext } from '../messaging/Messaging';
 import { useRouter } from 'next/router';
 import { isAuthenticated } from '../../services/auth';
 import { makeStyles } from '@material-ui/core/styles';
@@ -15,6 +14,7 @@ import { setUser } from '../../store/redux/modules/user/actions';
 import { AppContext } from 'src/App';
 import Loading from '../loading/Loading';
 import PropTypes from 'prop-types';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -95,7 +95,7 @@ function LoginEmail({ emailParam, phoneParam }) {
   const [step, setStep] = useState('email');
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const router = useRouter();
   const dispatch = useDispatch();
   const restaurant = useSelector(state => state.restaurant);
@@ -103,11 +103,11 @@ function LoginEmail({ emailParam, phoneParam }) {
 
   useEffect(() => {
     if (isAuthenticated()) router.push('/account');
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (email) handleSubmit();
-  }, []);
+  }, [email, handleSubmit]);
 
   function handleSubmit(event) {
     if (event) event.preventDefault();

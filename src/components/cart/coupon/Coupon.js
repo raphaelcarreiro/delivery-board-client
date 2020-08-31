@@ -1,11 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { TextField, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCoupon } from 'src/store/redux/modules/cart/actions';
 import { api } from 'src/services/api';
-import { MessagingContext } from 'src/components/messaging/Messaging';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles({
   container: {
@@ -32,7 +32,7 @@ export default function Coupon({ setClosedCouponView }) {
   const cart = useSelector(state => state.cart);
   const dispatch = useDispatch();
   const [cartCoupon, setCartCoupon] = useState(cart.coupon ? cart.coupon.name : '');
-  const messaging = useContext(MessagingContext);
+  const messaging = useMessaging();
   const [loading, setLoading] = useState(false);
 
   function handleSetCoupon(event) {
