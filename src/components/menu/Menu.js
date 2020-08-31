@@ -35,7 +35,8 @@ export default function Menu() {
     return () => {
       if (request) source.cancel();
     };
-  }, [messaging]);
+  }, []); //eslint-disable-line
+
   return (
     <>
       <CustomAppbar title="cardápio" actionComponent={<IndexAppbarActions />} />

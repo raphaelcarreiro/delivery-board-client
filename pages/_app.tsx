@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import App from '../src/App';
 import { store } from '../src/store/redux';
 import { AppProps } from 'next/app';
+import '../src/styles/global.css';
 
 const _App: React.FC<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
