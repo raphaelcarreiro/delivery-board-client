@@ -82,20 +82,23 @@ const useStyles = makeStyles(theme => ({
     fontSize: 20,
   }),
   installApp: {
-    position: 'absolute',
+    // position: 'absolute',
     bottom: 0,
     borderRadius: 4,
     padding: '10px 15px',
     width: 'calc(100% - 20px)',
     display: 'flex',
-    alignItems: 'center',
+    // alignItems: 'center',
     margin: 10,
     flexDirection: 'column',
     color: theme.palette.secondary.contrastText,
-    backgroundColor: fade(theme.palette.primary.main, 0.5),
-    border: `1px dashed ${theme.palette.primary.dark}`,
+    // backgroundColor: fade(theme.palette.primary.main, 0.5),
+    // border: `1px dashed ${theme.palette.primary.dark}`,
     '& button': {
       marginTop: 10,
+    },
+    '& a': {
+      color: theme.palette.primary.main,
     },
   },
   activeNotifications: ({ readyToInstall }) => ({
@@ -247,20 +250,10 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
           <ListItemText classes={{ primary: classes.listItemText }} primary="entrar" />
         </ListItem>
       )}
-      {app.readyToInstall && (
-        <div className={classes.installApp}>
-          <Typography variant="caption">Que tal instalar esse aplicativo?</Typography>
-          <Button
-            color="primary"
-            size="small"
-            variant="contained"
-            onClick={app.handleInstallApp}
-            startIcon={<GetAppIcon />}
-          >
-            Instalar
-          </Button>
-        </div>
-      )}
+      <div className={classes.installApp}>
+        <Typography variant="body2">Quer ter um app como esse?</Typography>
+        <a href="#">Entrar em contato</a>
+      </div>
     </Drawer>
   );
 }
