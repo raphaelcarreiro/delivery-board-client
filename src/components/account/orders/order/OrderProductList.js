@@ -75,7 +75,7 @@ export default function OrderProductList({ products }) {
         </>
       )}
       {dialogProduct && <ProductSimple onExited={() => setDialogProduct(false)} selectedProduct={selectedProduct} />}
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         Itens
       </Typography>
       <List className={classes.list}>

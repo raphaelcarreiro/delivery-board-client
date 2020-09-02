@@ -9,7 +9,7 @@ OrderPayment.propTypes = {
 export default function OrderPayment({ order }) {
   return (
     <>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         Forma de pagamento
       </Typography>
       {order.payment_method.mode === 'online' ? (

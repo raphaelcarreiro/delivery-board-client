@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     padding: 15,
     flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
-      padding: 0,
+      padding: '0 0 30px',
     },
   },
   total: {

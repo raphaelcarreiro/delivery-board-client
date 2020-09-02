@@ -24,7 +24,7 @@ export default function OrderShipment({ order }) {
 
   return (
     <>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         {order.shipment.shipment_method === 'delivery' ? 'Endereço de entrega' : 'Endereço para retirada'}
       </Typography>
       <Typography>
