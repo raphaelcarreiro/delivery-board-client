@@ -107,7 +107,7 @@ function LoginEmail({ emailParam, phoneParam }) {
 
   useEffect(() => {
     if (email) handleSubmit();
-  }, [email, handleSubmit]);
+  }, []); // eslint-disable-line
 
   function handleSubmit(event) {
     if (event) event.preventDefault();
