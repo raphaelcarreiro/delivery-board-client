@@ -28,20 +28,15 @@ const MessagingProvider: React.FC = ({ children }) => {
     (_message: string, actionParam: null | CallbackFunction = null, optionParam: Options | null = null) => {
       setOptions(optionParam);
 
-      if (open) {
-        setOpen(false);
-        setTimeout(() => {
-          action = actionParam;
-          setMessage(_message);
-          setOpen(true);
-        }, 350);
-      } else {
+      setOpen(false);
+
+      setTimeout(() => {
         action = actionParam;
         setMessage(_message);
         setOpen(true);
-      }
+      }, 150);
     },
-    [open]
+    []
   );
 
   function handleAction() {
