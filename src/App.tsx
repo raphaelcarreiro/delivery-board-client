@@ -96,6 +96,10 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const restaurant = useSelector(state => state.restaurant);
   const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
 
+  const handleCartVisibility = useCallback(() => {
+    setIsCartVisible(oldValue => !oldValue);
+  }, []);
+
   const appProviderValue: AppContextData = {
     isMobile,
     windowWidth,
@@ -379,10 +383,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
 
   function handleOpenMenu() {
     setIsOpenMenu(!isOpenMenu);
-  }
-
-  function handleCartVisibility(state = !isCartVisible) {
-    setIsCartVisible(state);
   }
 
   function handleSetRedirect(uri: string) {

@@ -127,7 +127,7 @@ export const CheckoutContext = React.createContext({
 
 export default function Checkout() {
   const messaging = useMessaging();
-  const app = useContext(AppContext);
+  const { isCartVisible, handleCartVisibility, isMobile, windowWidth } = useContext(AppContext);
   const dispatch = useDispatch();
   const user = useSelector(state => state.user);
   const cart = useSelector(state => state.cart);
@@ -139,7 +139,7 @@ export default function Checkout() {
   const [step, setStep] = useState(1);
   const [saving, setSaving] = useState(false);
   const [createdOrder, setCreatedOrder] = useState(null);
-  const classes = useStyles({ step, isCartVisible: app.isCartVisible });
+  const classes = useStyles({ step, isCartVisible: isCartVisible });
   const [steps, setSteps] = useState(defaultSteps);
   const [isCardValid, setIsCardValid] = useState(false);
 
@@ -211,7 +211,7 @@ export default function Checkout() {
   useEffect(() => {
     if (!user.id) return;
 
-    app.handleCartVisibility(false);
+    handleCartVisibility(false);
 
     function setAddress(address) {
       if (restaurant.configs.tax_mode === 'district') {
@@ -234,7 +234,7 @@ export default function Checkout() {
     setAddress(address);
 
     setLoading(false);
-  }, [user, app, dispatch, restaurant.configs, restaurant.delivery_max_distance]);
+  }, [user, dispatch, handleCartVisibility, restaurant.configs, restaurant.delivery_max_distance]);
 
   useEffect(() => {
     api()
@@ -316,14 +316,14 @@ export default function Checkout() {
 
   return (
     <>
-      {!app.isMobile && app.windowWidth >= 960 ? (
+      {!isMobile && windowWidth >= 960 ? (
         <div className={classes.cart}>
           <Cart />
         </div>
       ) : (
         <>
-          {app.isCartVisible && (
-            <DialogFullscreen title="carrinho" handleModalState={() => app.handleCartVisibility(false)}>
+          {isCartVisible && (
+            <DialogFullscreen title="carrinho" handleModalState={() => handleCartVisibility(false)}>
               <div className={classes.cartContent}>
                 <Cart />
               </div>

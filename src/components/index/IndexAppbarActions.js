@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { IconButton } from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
-import { AppContext } from 'src/App';
+import { useApp } from 'src/App';
 
 const useStyles = makeStyles(theme => ({
   cartBadge: ({ cartItems }) => ({
@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 export default function IndexAppbarActions() {
   const cart = useSelector(state => state.cart);
   const classes = useStyles({ cartItems: cart.products.length > 0 });
-  const app = useContext(AppContext);
+  const app = useApp();
 
   return (
     <>

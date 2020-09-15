@@ -88,8 +88,8 @@ export default function CheckoutSuccess() {
         )}
         {app.readyToInstall && (
           <div className={classes.contentAction}>
-            <Typography align="center" variant="body2">
-              Que tal instalar esse aplicativo?
+            <Typography align="center" variant="body1" color="textSecondary">
+              Adicione esse app a area de trabalho do seu celular
             </Typography>
             <Button
               color="primary"
@@ -98,7 +98,7 @@ export default function CheckoutSuccess() {
               size="medium"
               startIcon={<GetAppIcon />}
             >
-              Instalar
+              Adicionar
             </Button>
           </div>
         )}
