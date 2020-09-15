@@ -18,6 +18,7 @@ const useStyles = makeStyles(theme => ({
       top: 0,
       left: 0,
       right: 0,
+      bottom: 0,
     },
   },
   action: {
@@ -89,6 +90,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    flex: 1,
+    justifyContent: 'space-between',
   },
   working: {
     display: 'flex',

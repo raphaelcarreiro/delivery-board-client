@@ -12,7 +12,6 @@ import {
   setDiscount,
 } from 'src/store/redux/modules/order/actions';
 import Shipment from './steps/shipment/Shipment';
-import { setUser } from 'src/store/redux/modules/user/actions';
 import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
 import { steps as defaultSteps } from './steps/steps';
@@ -210,6 +209,8 @@ export default function Checkout() {
   }, [cart.total, restaurant]); // eslint-disable-line
 
   useEffect(() => {
+    if (!user.id) return;
+
     app.handleCartVisibility(false);
 
     function setAddress(address) {
@@ -226,34 +227,14 @@ export default function Checkout() {
       dispatch(setShipmentAddress(address || {}));
     }
 
-    if (user.loadedFromStorage) {
-      api()
-        .get(`/users/${user.id}`)
-        .then(response => {
-          dispatch(setUser(response.data));
-          const customer = response.data.customer;
-          const address = customer && customer.addresses.find(address => address.is_main);
+    const customer = user.customer;
+    const address = customer.addresses.find(address => address.is_main);
 
-          dispatch(setCustomer(customer));
+    dispatch(setCustomer(customer));
+    setAddress(address);
 
-          setAddress(address);
-        })
-        .catch(err => {
-          if (err.response) messaging.handleOpen(err.response.data.error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
-      const customer = user.customer;
-      const address = customer.addresses.find(address => address.is_main);
-
-      dispatch(setCustomer(customer));
-      setAddress(address);
-
-      setLoading(false);
-    }
-  }, []); // eslint-disable-line
+    setLoading(false);
+  }, [user, app, dispatch, restaurant.configs, restaurant.delivery_max_distance]);
 
   useEffect(() => {
     api()

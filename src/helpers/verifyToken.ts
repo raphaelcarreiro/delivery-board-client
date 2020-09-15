@@ -35,6 +35,8 @@ export function verifyToken(): Payload | null {
     } catch (e) {
       console.log(e);
     }
+
+    return payload;
   }
 
   return payload;

@@ -22,8 +22,8 @@ const useStyles = makeStyles({
   },
   text: {
     position: 'absolute',
-    bottom: 25,
-    fontWeight: 600,
+    bottom: 60,
+    fontWeight: 300,
   },
 });
 
@@ -34,7 +34,7 @@ export default function InitialLoading() {
       <div className={classes.progress}>
         <LinearProgress />
       </div>
-      <Typography className={classes.text} variant="body1" color="textSecondary">
+      <Typography className={classes.text} variant="h6" color="textSecondary">
         SGrande Delivery
       </Typography>
     </div>

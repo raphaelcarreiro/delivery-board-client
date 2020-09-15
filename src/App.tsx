@@ -131,47 +131,69 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
         });
     }
 
-    api()
-      .get('/restaurants')
-      .then(response => {
-        const _restaurant = response.data;
-        const { configs } = _restaurant;
+    function loadRestaurant() {
+      return api()
+        .get('/restaurants')
+        .then(response => {
+          const _restaurant = response.data;
+          const { configs } = _restaurant;
 
-        dispatch(
-          setRestaurant({
-            ..._restaurant,
-            configs: {
-              ..._restaurant.configs,
-              formattedTax: moneyFormat(_restaurant.configs.tax_value),
-              formattedOrderMinimumValue: moneyFormat(_restaurant.configs.order_minimum_value),
-            },
-          })
-        );
+          dispatch(
+            setRestaurant({
+              ..._restaurant,
+              configs: {
+                ..._restaurant.configs,
+                formattedTax: moneyFormat(_restaurant.configs.tax_value),
+                formattedOrderMinimumValue: moneyFormat(_restaurant.configs.order_minimum_value),
+              },
+            })
+          );
 
-        if (process.env.LOCALSTORAGE_CART) {
-          let cart = localStorage.getItem(process.env.LOCALSTORAGE_CART);
-          if (cart) {
-            cart = JSON.parse(cart);
-            dispatch(setCart(cart));
+          if (process.env.LOCALSTORAGE_CART) {
+            let cart = localStorage.getItem(process.env.LOCALSTORAGE_CART);
+            if (cart) {
+              cart = JSON.parse(cart);
+              dispatch(setCart(cart));
+            }
           }
-        }
 
-        setTheme(createTheme(_restaurant.primary_color, _restaurant.secondary_color));
+          setTheme(createTheme(_restaurant.primary_color, _restaurant.secondary_color));
 
-        if (configs.google_analytics_id) {
-          reactGA.initialize(_restaurant.configs.google_analytics_id);
-          reactGA.set({ page: window.location.pathname });
-          reactGA.pageview(window.location.pathname);
-        }
-      })
-      .catch(() => {
-        console.log('Erro ao carregar os dados do restaurante');
-      })
-      .finally(() => {
-        setInitialLoading(false);
-        document.body.classList.add('zoom');
-        loadPromotions(); // load promotion after request for restaurant data was finished
-      });
+          if (configs.google_analytics_id) {
+            reactGA.initialize(_restaurant.configs.google_analytics_id);
+            reactGA.set({ page: window.location.pathname });
+            reactGA.pageview(window.location.pathname);
+          }
+        })
+        .catch(() => {
+          console.log('Erro ao carregar os dados do restaurante');
+        })
+        .finally(() => {
+          loadPromotions();
+        });
+    }
+
+    function loadUser() {
+      const payload = verifyToken();
+      if (payload) {
+        return api()
+          .get(`/users/${payload.id}`)
+          .then(response => {
+            dispatch(setUser(response.data));
+          })
+          .catch(err => {
+            console.error(err.response.data.error);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    }
+
+    Promise.all([loadRestaurant(), loadUser()]).then(() => {
+      setInitialLoading(false);
+      document.body.classList.add('zoom');
+    });
   }, [dispatch]);
 
   useEffect(() => {
@@ -179,15 +201,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   }, []);
 
   useEffect(() => {
-    const payload = verifyToken();
-    if (payload)
-      dispatch(
-        setUser({
-          loadedFromStorage: true,
-          ...payload,
-        })
-      );
-
     window.addEventListener('resize', handleResize);
     setIsMobile(mobileCheck());
     setWindowWidth(window.innerWidth);

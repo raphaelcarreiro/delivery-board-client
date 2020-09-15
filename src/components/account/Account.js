@@ -61,7 +61,7 @@ export default function Account() {
   const classes = useStyles();
 
   useEffect(() => {
-    if (user.loadedFromStorage) return;
+    if (!user.id) return;
     contextDispatch(
       setUserCustomer({
         name: user.name,
@@ -73,24 +73,6 @@ export default function Account() {
       })
     );
   }, [contextDispatch, user]);
-
-  useEffect(() => {
-    if (user.loadedFromStorage) {
-      api()
-        .get(`/users/${user.id}`)
-        .then(response => {
-          dispatch(setUser(response.data));
-        })
-        .catch(err => {
-          if (err.response) messaging(err.response.data.error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
-      setLoading(false);
-    }
-  }, []); // eslint-disable-line
 
   function handleTabChange(event, value) {
     setTabIndex(value);
@@ -203,35 +185,31 @@ export default function Account() {
       )}
       {saving && <Loading background="rgba(250,250,250, 0.5)" />}
 
-      {loading ? (
-        <InsideLoading />
-      ) : (
-        <Grid container>
-          <PageHeader title="Minha conta" description="Gerencie os dados e endereços da sua conta" />
-          {!isMobile && windowWidth >= 960 && (
-            <Grid item xs={12} container>
-              <AccountTabs tabIndex={tabIndex} handleTabChange={handleTabChange} />
-            </Grid>
+      <Grid container>
+        <PageHeader title="Minha conta" description="Gerencie os dados e endereços da sua conta" />
+        {!isMobile && windowWidth >= 960 && (
+          <Grid item xs={12} container>
+            <AccountTabs tabIndex={tabIndex} handleTabChange={handleTabChange} />
+          </Grid>
+        )}
+        <div className={classes.container}>
+          {tabIndex === 0 ? (
+            <AccountContext.Provider value={{ userCustomer, dispatch: contextDispatch }}>
+              <AccountForm
+                userCustomer={userCustomer}
+                handleUserCustomerChange={handleUserCustomerChange}
+                handleValidation={handleValidation}
+                saving={saving}
+                validation={validation}
+              />
+            </AccountContext.Provider>
+          ) : (
+            tabIndex === 1 && (
+              <AccountAddresses handleDeleteAddress={handleDeleteAddress} addresses={user.customer.addresses} />
+            )
           )}
-          <div className={classes.container}>
-            {tabIndex === 0 ? (
-              <AccountContext.Provider value={{ userCustomer, dispatch: contextDispatch }}>
-                <AccountForm
-                  userCustomer={userCustomer}
-                  handleUserCustomerChange={handleUserCustomerChange}
-                  handleValidation={handleValidation}
-                  saving={saving}
-                  validation={validation}
-                />
-              </AccountContext.Provider>
-            ) : (
-              tabIndex === 1 && (
-                <AccountAddresses handleDeleteAddress={handleDeleteAddress} addresses={user.customer.addresses} />
-              )
-            )}
-          </div>
-        </Grid>
-      )}
+        </div>
+      </Grid>
     </>
   );
 }
