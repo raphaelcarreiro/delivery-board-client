@@ -76,9 +76,11 @@ export default function ProductViewAdditional({ additional, handleClickAdditiona
           >
             <div>
               <Typography>{item.name}</Typography>
-              <Typography color="primary" className={classes.price}>
-                + {item.formattedPrice}
-              </Typography>
+              {item.price > 0 && (
+                <Typography color="primary" className={classes.price}>
+                  + {item.formattedPrice}
+                </Typography>
+              )}
             </div>
             {item.selected && <CheckCircleIcon className={classes.icon} color="primary" />}
           </ListItem>

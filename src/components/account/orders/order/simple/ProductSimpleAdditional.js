@@ -68,9 +68,11 @@ export default function ProductSimpleAdditional({ additional }) {
           <ListItem button className={item.selected ? classes.selected : classes.listItem} key={item.id}>
             <div>
               <Typography>{item.name}</Typography>
-              <Typography color="primary" className={classes.price}>
-                + {item.formattedPrice}
-              </Typography>
+              {item.price > 0 && (
+                <Typography color="primary" className={classes.price}>
+                  + {item.formattedPrice}
+                </Typography>
+              )}
             </div>
             {item.selected && <CheckCircleIcon className={classes.icon} color="primary" />}
           </ListItem>
