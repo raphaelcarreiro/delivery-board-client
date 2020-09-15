@@ -53,6 +53,8 @@ interface AppContextData {
   handleCartVisibility(state: boolean): void;
   handleInstallApp(): void;
   handleRequestPermissionMessaging(): void;
+  shownPlayStoreBanner: boolean;
+  handleShowPlayStoreBanner(): void;
 }
 
 interface AppProps {
@@ -69,7 +71,7 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
-export const AppContext = createContext({} as AppContextData);
+export const AppContext = createContext<AppContextData>({} as AppContextData);
 
 export const menuWidth = 260;
 let socket: SocketIOClient.Socket;
@@ -92,8 +94,9 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const [readyToInstall, setReadyToInstall] = useState(false);
   const [fmHasToken, setFmHasToken] = useState(false);
   const restaurant = useSelector(state => state.restaurant);
+  const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
 
-  const appProviderValue = {
+  const appProviderValue: AppContextData = {
     isMobile,
     windowWidth,
     isOpenMenu,
@@ -102,12 +105,14 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     socket,
     readyToInstall,
     fmHasToken,
+    shownPlayStoreBanner,
     handleLogout: handleLogout,
     handleOpenMenu: handleOpenMenu,
     handleCartVisibility: handleCartVisibility,
     setRedirect: handleSetRedirect,
     handleInstallApp: handleInstallApp,
     handleRequestPermissionMessaging: handleRequestPermissionMessaging,
+    handleShowPlayStoreBanner: handleShowPlayStoreBanner,
   };
 
   // paginas que não precisam no cabeçalho e rodapé padrões
@@ -382,6 +387,10 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
 
   function handleSetRedirect(uri: string) {
     setRedirect(uri);
+  }
+
+  function handleShowPlayStoreBanner() {
+    setShownPlayStoreBanner(!shownPlayStoreBanner);
   }
 
   return (

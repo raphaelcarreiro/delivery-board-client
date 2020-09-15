@@ -22,6 +22,7 @@ export interface RestaurantState {
   cover_id: number;
   working_hours: string;
   minimum_order: number;
+  play_store_link: string;
   configs: {
     id: number;
     restaurant_id: number;

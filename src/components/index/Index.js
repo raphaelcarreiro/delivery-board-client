@@ -7,6 +7,8 @@ import { Typography, Button } from '@material-ui/core';
 import Link from '../link/Link';
 import StatusIcon from '@material-ui/icons/FiberManualRecord';
 import ScheduleIcon from '@material-ui/icons/Schedule';
+import DialogInput, { DialogInputContext } from '../dialog/DialogInput';
+import { useApp } from 'src/App';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -120,10 +122,24 @@ const useStyles = makeStyles(theme => ({
       marginRight: 7,
     },
   },
+  playStoreImg: {
+    width: 150,
+  },
+  playStoreBanner: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& a': {
+      diplay: 'inline-flex',
+      margin: '15px 0',
+    },
+  },
 }));
 
 export default function Index() {
   const restaurant = useSelector(state => state.restaurant);
+  const app = useApp();
   const classes = useStyles({
     coverUrl: restaurant && restaurant.cover && restaurant.cover.imageUrl,
     restaurantIsOpen: restaurant ? restaurant.is_open : false,
@@ -131,6 +147,25 @@ export default function Index() {
 
   return (
     <>
+      {restaurant && restaurant.play_store_link && app.isMobile && app.shownPlayStoreBanner && (
+        <DialogInput onExited={() => app.handleShowPlayStoreBanner()}>
+          <DialogInputContext.Consumer>
+            {({ handleCloseDialog }) => (
+              <div className={classes.playStoreBanner}>
+                <Typography align="center" gutterBottom variant="h5">
+                  Baixe o aplicativo {restaurant.name}, gratuíto para celular
+                </Typography>
+                <a href={restaurant.play_store_link} target="blank">
+                  <img className={classes.playStoreImg} src="/images/play_store.png" alt="Google Play Store" />
+                </a>
+                <Button color="primary" variant="text" onClick={handleCloseDialog}>
+                  Agora não
+                </Button>
+              </div>
+            )}
+          </DialogInputContext.Consumer>
+        </DialogInput>
+      )}
       <CustomAppbar title="início" actionComponent={<IndexAppbarActions />} />
       {restaurant && (
         <div className={classes.container}>

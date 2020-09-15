@@ -45,6 +45,9 @@ const useStyles = makeStyles(theme => ({
       marginTop: 10,
     },
   },
+  playStoreImg: {
+    width: 150,
+  },
 }));
 
 export default function CheckoutSuccess() {
@@ -53,12 +56,12 @@ export default function CheckoutSuccess() {
   const order = checkout.createdOrder;
   const classes = useStyles();
   const app = useContext(AppContext);
-  const { configs } = useSelector(state => state.restaurant);
+  const restaurant = useSelector(state => state.restaurant);
 
   useEffect(() => {
     app.handleCartVisibility(false);
-    if (configs.facebook_pixel_id) fbq('track', 'Purchase', { value: order.total, currency: 'BRL' });
-  }, [app, configs.facebook_pixel_id, order.total]);
+    if (restaurant.configs.facebook_pixel_id) fbq('track', 'Purchase', { value: order.total, currency: 'BRL' });
+  }, [app, restaurant.configs.facebook_pixel_id, order.total]);
 
   return (
     <div className={classes.container}>
@@ -73,6 +76,16 @@ export default function CheckoutSuccess() {
         <Link href="account/orders/[id]" as={`account/orders/${order.encrypted_id}`} color="primary">
           Acompanhar pedido
         </Link>
+        {restaurant && restaurant.play_store_link && app.isMobile && (
+          <div className={classes.contentAction}>
+            <Typography variant="body1" color="textSecondary" gutterBottom align="center">
+              Baixe o aplicativo {restaurant.name}, gratuíto para celular
+            </Typography>
+            <a href={restaurant.play_store_link}>
+              <img className={classes.playStoreImg} src="/images/play_store.png" alt="Google Play Store" />
+            </a>
+          </div>
+        )}
         {app.readyToInstall && (
           <div className={classes.contentAction}>
             <Typography align="center" variant="body2">
