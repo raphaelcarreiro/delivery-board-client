@@ -5,9 +5,8 @@ import { LinearProgress, Typography } from '@material-ui/core';
 const useStyles = makeStyles({
   container: {
     display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
     position: 'fixed',
+    alignItems: 'center',
     top: 0,
     bottom: 0,
     right: 0,
@@ -17,7 +16,8 @@ const useStyles = makeStyles({
     flexDirection: 'column',
   },
   progress: {
-    width: 250,
+    marginTop: 30,
+    width: 200,
     textAlign: 'center',
   },
   text: {
@@ -25,14 +25,28 @@ const useStyles = makeStyles({
     bottom: 60,
     fontWeight: 300,
   },
+  content: {
+    top: '30%',
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '& .logo': {
+      width: 100,
+    },
+  },
 });
 
 export default function InitialLoading() {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <div className={classes.progress}>
-        <LinearProgress />
+      <div className={classes.content}>
+        <img className="logo" src="/images/logo192.png" alt="Logo Sgrande Delivery" />
+        <div className={classes.progress}>
+          <LinearProgress />
+        </div>
       </div>
       <Typography className={classes.text} variant="h6" color="textSecondary">
         SGrande Delivery
