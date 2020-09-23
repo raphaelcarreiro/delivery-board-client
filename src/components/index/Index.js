@@ -135,6 +135,9 @@ const useStyles = makeStyles(theme => ({
       margin: '15px 0',
     },
   },
+  infoItem: {
+    fontWeight: 300,
+  },
 }));
 
 export default function Index() {

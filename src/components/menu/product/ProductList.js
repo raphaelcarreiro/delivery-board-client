@@ -51,6 +51,7 @@ const useStyles = makeStyles(theme => ({
   },
   oldPrice: {
     textDecoration: 'line-through',
+    marginRight: 10,
   },
   specialPrice: {
     color: '#2ca52a',

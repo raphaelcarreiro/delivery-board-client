@@ -25,7 +25,6 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     '& a': {
       display: 'block',
-      marginBottom: 15,
       textAlign: 'center',
       fontSize: 18,
     },
@@ -35,18 +34,19 @@ const useStyles = makeStyles(theme => ({
   },
   contentAction: {
     borderRadius: 4,
-    padding: 15,
     display: 'flex',
     alignItems: 'center',
-    marginBottom: 10,
+    marginTop: 20,
     flexDirection: 'column',
-    // border: '1px solid #eee',
     '& button': {
       marginTop: 10,
     },
   },
   playStoreImg: {
     width: 150,
+  },
+  followOrder: {
+    marginBottom: 20,
   },
 }));
 
@@ -73,12 +73,17 @@ export default function CheckoutSuccess() {
         O número do pedido é <strong>{formatId(order.id)}</strong>
       </Typography>
       <div className={classes.actions}>
-        <Link href="account/orders/[id]" as={`account/orders/${order.encrypted_id}`} color="primary">
+        <Link
+          className={classes.followOrder}
+          href="account/orders/[id]"
+          as={`account/orders/${order.encrypted_id}`}
+          color="primary"
+        >
           Acompanhar pedido
         </Link>
         {restaurant && restaurant.play_store_link && app.isMobile && (
           <div className={classes.contentAction}>
-            <Typography variant="body1" color="textSecondary" gutterBottom align="center">
+            <Typography variant="body2" color="textSecondary" align="center">
               Baixe o aplicativo {restaurant.name}, gratuíto para celular
             </Typography>
             <a href={restaurant.play_store_link}>
@@ -88,13 +93,13 @@ export default function CheckoutSuccess() {
         )}
         {app.readyToInstall && (
           <div className={classes.contentAction}>
-            <Typography align="center" variant="body1" color="textSecondary">
-              Adicione esse app a area de trabalho do seu celular
+            <Typography align="center" variant="body2" color="textSecondary">
+              Adicione esse app à área de trabalho do seu celular
             </Typography>
             <Button
               color="primary"
               onClick={app.handleInstallApp}
-              variant="contained"
+              variant="text"
               size="medium"
               startIcon={<GetAppIcon />}
             >
@@ -104,13 +109,13 @@ export default function CheckoutSuccess() {
         )}
         {!app.fmHasToken && isSupported && user.id && (
           <div className={classes.contentAction}>
-            <Typography align="center" variant="body2">
-              Ativar notificações para acompanhar esse pedido
+            <Typography align="center" variant="body2" color="textSecondary">
+              Ative notificações para acompanhar esse pedido
             </Typography>
             <Button
               color="primary"
               onClick={app.handleRequestPermissionMessaging}
-              variant="contained"
+              variant="text"
               size="medium"
               startIcon={<NotificationsActiveIcon />}
             >
