@@ -100,6 +100,45 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     setIsCartVisible(oldValue => (state === undefined ? !oldValue : state));
   }, []);
 
+  const handleOpenMenu = useCallback(() => {
+    setIsOpenMenu(oldValue => !oldValue);
+  }, []);
+
+  const handleSetRedirect = useCallback((uri: string) => {
+    setRedirect(uri);
+  }, []);
+
+  const handleShowPlayStoreBanner = useCallback(() => {
+    setShownPlayStoreBanner(oldValue => !oldValue);
+  }, []);
+
+  const handleLogout = useCallback(() => {
+    setLoading(true);
+
+    api()
+      .post('/logout')
+      .then(() => {
+        if (process.env.TOKEN_NAME) localStorage.removeItem(process.env.TOKEN_NAME);
+        dispatch(removeUser());
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [dispatch]);
+
+  // function to pwa installation
+  const handleInstallApp = useCallback(() => {
+    defferedPromptPwa.prompt();
+    defferedPromptPwa.userChoice.then(choiceResult => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('User accepted the A2HS prompt');
+      } else {
+        console.log('User dismissed the A2HS prompt');
+      }
+      defferedPromptPwa = null;
+    });
+  }, []);
+
   const appProviderValue: AppContextData = {
     isMobile,
     windowWidth,
@@ -110,11 +149,11 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     readyToInstall,
     fmHasToken,
     shownPlayStoreBanner,
-    handleLogout: handleLogout,
-    handleOpenMenu: handleOpenMenu,
-    handleCartVisibility: handleCartVisibility,
+    handleLogout,
+    handleOpenMenu,
+    handleCartVisibility,
     setRedirect: handleSetRedirect,
-    handleInstallApp: handleInstallApp,
+    handleInstallApp,
     handleRequestPermissionMessaging: handleRequestPermissionMessaging,
     handleShowPlayStoreBanner: handleShowPlayStoreBanner,
   };
@@ -338,19 +377,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     }
   }
 
-  // function to pwa installation
-  function handleInstallApp() {
-    defferedPromptPwa.prompt();
-    defferedPromptPwa.userChoice.then(choiceResult => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('User accepted the A2HS prompt');
-      } else {
-        console.log('User dismissed the A2HS prompt');
-      }
-      defferedPromptPwa = null;
-    });
-  }
-
   function handleRouteChangeStart() {
     setIsProgressBarVisible(true);
   }
@@ -359,38 +385,12 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     setIsProgressBarVisible(false);
   }
 
-  function handleLogout() {
-    setLoading(true);
-
-    api()
-      .post('/logout')
-      .then(() => {
-        if (process.env.TOKEN_NAME) localStorage.removeItem(process.env.TOKEN_NAME);
-        dispatch(removeUser());
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }
-
   function handleResize() {
     const _isMobile = mobileCheck();
     const width = window.innerWidth;
 
     setIsMobile(_isMobile);
     setWindowWidth(width);
-  }
-
-  function handleOpenMenu() {
-    setIsOpenMenu(!isOpenMenu);
-  }
-
-  function handleSetRedirect(uri: string) {
-    setRedirect(uri);
-  }
-
-  function handleShowPlayStoreBanner() {
-    setShownPlayStoreBanner(!shownPlayStoreBanner);
   }
 
   return (
