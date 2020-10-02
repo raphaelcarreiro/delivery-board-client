@@ -1,7 +1,10 @@
 {
-  "name": "next-mui",
-  "version": "1.0.0",
+  "name": "delivery-client",
+  "version": "2.0.0",
   "main": "index.js",
+  "engines": {
+    "node": ">=12.14.0"
+  },
   "license": "MIT",
   "dependencies": {
     "@date-io/date-fns": "^1.3.5",
