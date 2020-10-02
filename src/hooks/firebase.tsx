@@ -1,10 +1,10 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { useApp } from 'src/App';
 import {
   firebaseMessagingIsSupported,
   getFirebaseMessaging,
   initialize as firebaseInitialize,
 } from 'src/config/FirebaseConfig';
+import { api } from 'src/services/api';
 import { useSelector } from 'src/store/redux/selector';
 
 type FirebaseContextValue = {
@@ -21,7 +21,6 @@ export function useFirebase(): FirebaseContextValue {
 }
 
 const FirebaseProvider: React.FC = ({ children }) => {
-  const { api } = useApp();
   const [fmHasToken, setFmHasToken] = useState(false);
   const user = useSelector(state => state.user);
 
@@ -51,7 +50,7 @@ const FirebaseProvider: React.FC = ({ children }) => {
     } catch (err) {
       console.log(err);
     }
-  }, [api]);
+  }, []);
 
   useEffect(() => {
     if (process.browser) firebaseInitialize();
@@ -87,7 +86,7 @@ const FirebaseProvider: React.FC = ({ children }) => {
     } catch (error) {
       console.error(error);
     }
-  }, [api]);
+  }, []);
 
   return (
     <FirebaseContext.Provider value={{ getTokenFirebaseMessaging, requestPermissionMessaging, fmHasToken }}>
