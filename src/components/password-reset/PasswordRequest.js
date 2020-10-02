@@ -81,7 +81,7 @@ function PasswordRequest() {
 
     setLoading(true);
 
-    api()
+    api
       .post('password/email', { email })
       .then(response => {
         return response.data;

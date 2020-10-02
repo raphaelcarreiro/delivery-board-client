@@ -1,3 +1,4 @@
+import { Image } from 'src/types/image';
 import { RestaurantActionTypes, SET_RESTAURANT, SET_RESTAURANT_IS_OPEN } from './types';
 
 export interface RestaurantState {
@@ -23,6 +24,7 @@ export interface RestaurantState {
   working_hours: string;
   minimum_order: number;
   play_store_link: string;
+  image: Image;
   configs: {
     id: number;
     restaurant_id: number;
@@ -43,6 +45,7 @@ export interface RestaurantState {
     google_analytics_id: string;
     facebook_pixel_id: string;
     google_login: boolean;
+    facebook_login: boolean;
   };
 }
 

@@ -17,7 +17,7 @@ function Orders() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api()
+    api
       .get('/orders')
       .then(response => {
         setOrders(handleSetOrders(response.data.data));

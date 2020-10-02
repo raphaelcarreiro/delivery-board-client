@@ -12,12 +12,12 @@ import { updateProductFromCart } from 'src/store/redux/modules/cart/actions';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import CartClosedRestaurant from 'src/components/cart/CartClosedRestaurant';
 import { AppContext } from 'src/App';
-import { isAuthenticated } from 'src/services/auth';
 import Coupon from './coupon/Coupon';
 import CartCouponButton from './CartCouponButton';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import { useMessaging } from 'src/hooks/messaging';
+import { useAuth } from 'src/hooks/auth';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -88,6 +88,7 @@ export default function Cart() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [dialogClosedRestaurant, setDialogClosedRestaurant] = useState(false);
   const [couponView, setCouponView] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   function handleCheckoutClick() {
     if (!restaurant.is_open) {
@@ -100,7 +101,7 @@ export default function Cart() {
       return;
     }
 
-    if (!isAuthenticated()) {
+    if (!isAuthenticated) {
       if (restaurant.configs.require_login) {
         router.push('/login');
         setRedirect('/checkout');

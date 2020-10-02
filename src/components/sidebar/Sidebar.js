@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { ListItem, ListItemIcon, ListItemText, Typography, Avatar, Button, useTheme } from '@material-ui/core';
+import React from 'react';
+import { ListItem, ListItemIcon, ListItemText, Typography, Avatar, useTheme } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
@@ -8,14 +8,14 @@ import HomeIcon from '@material-ui/icons/Home';
 import Drawer from '@material-ui/core/Drawer';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
-import { menuWidth, AppContext } from '../../App';
+import { menuWidth, useApp } from '../../App';
 import Link from '../link/Link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
-import GetAppIcon from '@material-ui/icons/GetApp';
 import ChatIcon from '@material-ui/icons/Chat';
 import LocalOfferIcons from '@material-ui/icons/LocalOffer';
 import { FiLogIn, FiLogOut } from 'react-icons/fi';
+import { useAuth } from 'src/hooks/auth';
 
 const useStyles = makeStyles(theme => ({
   drawerPaper: {
@@ -133,21 +133,21 @@ const useStyles = makeStyles(theme => ({
 Sidebar.propTypes = {
   handleOpenMenu: PropTypes.func.isRequired,
   isOpenMenu: PropTypes.bool.isRequired,
-  handleLogout: PropTypes.func.isRequired,
 };
 
-function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
+function Sidebar({ handleOpenMenu, isOpenMenu }) {
   const router = useRouter();
   const user = useSelector(state => state.user);
   const restaurant = useSelector(state => state.restaurant);
   const cart = useSelector(state => state.cart);
-  const app = useContext(AppContext);
+  const { readyToInstall } = useApp();
   const theme = useTheme();
   const classes = useStyles({
     cartItems: cart.products.length > 0,
     restaurantIsOpen: restaurant && restaurant.is_open,
-    readyToInstall: app.readyToInstall,
+    readyToInstall: readyToInstall,
   });
+  const { logout } = useAuth();
 
   function handleClick() {
     handleOpenMenu();
@@ -169,7 +169,7 @@ function Sidebar({ handleOpenMenu, isOpenMenu, handleLogout }) {
   }
 
   function handleLogoutClick() {
-    app.handleLogout();
+    logout();
     handleOpenMenu();
   }
 

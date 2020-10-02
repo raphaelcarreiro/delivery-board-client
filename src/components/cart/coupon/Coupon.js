@@ -38,7 +38,7 @@ export default function Coupon({ setClosedCouponView }) {
   function handleSetCoupon(event) {
     event.preventDefault();
     setLoading(true);
-    api()
+    api
       .get(`/coupons/${cartCoupon}`)
       .then(response => {
         dispatch(setCoupon(response.data));

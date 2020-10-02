@@ -96,7 +96,7 @@ export default function ProductPizzaComplement({
   useEffect(() => {
     let sizeSelected = {};
 
-    api()
+    api
       .get(`/products/${productId}`)
       .then(response => {
         const categories = response.data.complement_categories.map(category => {

@@ -1,8 +1,9 @@
 import React from 'react';
 import Head from 'next/head';
-import Cart from '../src/components/cart/Cart';
+import Cart from 'src/components/cart/Cart';
+import { NextPage } from 'next';
 
-function CartPage() {
+const CartPage: NextPage = () => {
   return (
     <>
       <Head>
@@ -11,6 +12,6 @@ function CartPage() {
       <Cart />
     </>
   );
-}
+};
 
 export default CartPage;

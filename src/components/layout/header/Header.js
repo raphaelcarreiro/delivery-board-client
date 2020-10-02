@@ -7,8 +7,9 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import LocalOfferIcons from '@material-ui/icons/LocalOffer';
 import Link from '../../link/Link';
 import { useRouter } from 'next/router';
-import { AppContext } from '../../../App';
+import { AppContext, useApp } from '../../../App';
 import { useSelector } from 'react-redux';
+import { useAuth } from 'src/hooks/auth';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -103,7 +104,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Header() {
-  const appContext = useContext(AppContext);
+  const { handleCartVisibility } = useApp();
+  const { logout } = useAuth();
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const restaurant = useSelector(state => state.restaurant) || {};
@@ -125,7 +127,7 @@ export default function Header() {
 
   function handleLogoutClick() {
     handleCloseMenu();
-    appContext.handleLogout();
+    logout();
   }
 
   function handleMyOrdersClick() {
@@ -134,7 +136,7 @@ export default function Header() {
   }
 
   function handleCartClick() {
-    appContext.handleCartVisibility();
+    handleCartVisibility();
   }
 
   return (

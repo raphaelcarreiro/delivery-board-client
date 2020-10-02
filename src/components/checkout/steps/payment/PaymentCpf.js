@@ -94,7 +94,7 @@ export default function PaymentCpf({ onExited }) {
     };
 
     setSaving(true);
-    api()
+    api
       .put(`customers/${user.customer.id}`, form)
       .then(response => {
         dispatch(customerChange('cpf', response.data.cpf));

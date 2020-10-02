@@ -1,8 +1,9 @@
 import React from 'react';
 import Head from 'next/head';
-import Contact from '../src/components/contact/Contact';
+import Contact from 'src/components/contact/Contact';
+import { NextPage } from 'next';
 
-function ContactPage() {
+const ContactPage: NextPage = () => {
   return (
     <>
       <Head>
@@ -11,6 +12,6 @@ function ContactPage() {
       <Contact />
     </>
   );
-}
+};
 
 export default ContactPage;

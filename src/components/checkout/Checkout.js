@@ -237,7 +237,7 @@ export default function Checkout() {
   }, [user, dispatch, handleCartVisibility, restaurant.configs, restaurant.delivery_max_distance]);
 
   useEffect(() => {
-    api()
+    api
       .get('/order/paymentMethods')
       .then(response => {
         setPaymentMethods(response.data);
@@ -264,7 +264,7 @@ export default function Checkout() {
       return;
     }
     setSaving(true);
-    api()
+    api
       .post('/orders', order)
       .then(response => {
         setCreatedOrder(response.data);

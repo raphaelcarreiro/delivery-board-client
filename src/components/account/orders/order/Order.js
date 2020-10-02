@@ -89,7 +89,7 @@ export default function Order({ cryptId }) {
   const classes = useStyles();
 
   useEffect(() => {
-    const socket = io.connect(process.env.URL_NODE_SERVER + '/client');
+    const socket = io.connect(process.env.NEXT_PUBLIC_SOCKET + '/client');
     if (order) {
       socket.emit('register', order.id);
       socket.on('reconnect', () => {
@@ -116,7 +116,7 @@ export default function Order({ cryptId }) {
 
   const handleSetOrders = useCallback(() => {
     setLoading(true);
-    api()
+    api
       .get(`orders/${cryptId}`)
       .then(response => {
         const _order = response.data;

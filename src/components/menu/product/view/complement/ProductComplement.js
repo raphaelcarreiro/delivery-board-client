@@ -131,7 +131,7 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api()
+    api
       .get(`/products/${productId}`)
       .then(response => {
         const categories = response.data.complement_categories.map(category => {

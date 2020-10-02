@@ -3,7 +3,7 @@ const fs = require('fs');
 const builder = require('xmlbuilder');
 
 function sitemapGenerator() {
-  const restaurantId = process.env.RESTAURANT_ID;
+  const restaurantId = process.env.NEXT_PUBLIC_RESTAURANT_ID;
 
   const sitemap = builder
     .create('urlset')
@@ -11,7 +11,7 @@ function sitemapGenerator() {
     .att('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
 
   axios
-    .get(`${process.env.BASEURL_API}restaurants`, {
+    .get(`${process.env.NEXT_PUBLIC_API}restaurants`, {
       headers: {
         RestaurantId: restaurantId,
       },
@@ -40,7 +40,7 @@ function sitemapGenerator() {
           .txt(`${restaurant.url}/login`);
 
         axios
-          .get(`${process.env.BASEURL_API}categories`, {
+          .get(`${process.env.NEXT_PUBLIC_API}categories`, {
             headers: {
               RestaurantId: restaurantId,
             },

@@ -65,7 +65,7 @@ function AccountImage() {
 
     setLoading(true);
 
-    api()
+    api
       .post('/images', form)
       .then(response => {
         dispatch(userChange('image', response.data));

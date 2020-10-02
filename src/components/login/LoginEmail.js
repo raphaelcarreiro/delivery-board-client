@@ -1,20 +1,18 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoginEmailStep from './LoginEmailStep';
 import LoginPasswordStep from './LoginPasswordStep';
 import Link from '../link/Link';
 import NextLink from 'next/link';
 import NavigateBoforeIcon from '@material-ui/icons/ArrowBack';
 import { Grid, Button, Typography, LinearProgress, IconButton } from '@material-ui/core';
-import { api } from '../../services/api';
 import { useRouter } from 'next/router';
-import { isAuthenticated } from '../../services/auth';
 import { makeStyles } from '@material-ui/core/styles';
-import { useSelector, useDispatch } from 'react-redux';
-import { setUser } from '../../store/redux/modules/user/actions';
-import { AppContext } from 'src/App';
+import { useSelector } from 'react-redux';
+import { useApp } from 'src/App';
 import Loading from '../loading/Loading';
 import PropTypes from 'prop-types';
 import { useMessaging } from 'src/hooks/messaging';
+import { useAuth } from 'src/hooks/auth';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -97,13 +95,13 @@ function LoginEmail({ emailParam, phoneParam }) {
   const [name, setName] = useState('');
   const messaging = useMessaging();
   const router = useRouter();
-  const dispatch = useDispatch();
   const restaurant = useSelector(state => state.restaurant);
-  const app = useContext(AppContext);
+  const { redirect, setRedirect, isMobile, windowWidth } = useApp();
+  const { checkAuth, checkEmail, login } = useAuth();
 
   useEffect(() => {
-    if (isAuthenticated()) router.push('/account');
-  }, [router]);
+    if (checkAuth()) router.push('account');
+  }, [router, checkAuth]);
 
   useEffect(() => {
     if (email) handleSubmit();
@@ -115,19 +113,13 @@ function LoginEmail({ emailParam, phoneParam }) {
     if (step === 'email') {
       setLoading(true);
 
-      api()
-        .get(`/user/show/${email}`)
-        .then(response => {
-          setName(response.data.name);
+      checkEmail(email)
+        .then(user => {
+          setName(user.name);
           setStep('password');
-          // messaging.handleClose();
         })
         .catch(err => {
-          if (err.response) {
-            if (err.response.status === 401) {
-              messaging.handleOpen(`E-mail não encontrado`);
-            }
-          } else messaging.handleOpen(err.message);
+          messaging.handleOpen(err.message);
         })
         .finally(() => {
           setLoading(false);
@@ -135,20 +127,15 @@ function LoginEmail({ emailParam, phoneParam }) {
     } else {
       setLoading(true);
 
-      api()
-        .post('/login', { email, password })
-        .then(response => {
-          localStorage.setItem(process.env.TOKEN_NAME, response.data.token);
-          dispatch(setUser(response.data.user));
-          if (app.redirect) {
-            router.push(app.redirect);
-            app.setRedirect(null);
+      login(email, password)
+        .then(() => {
+          if (redirect) {
+            router.push(redirect);
+            setRedirect(null);
           } else router.push('/');
         })
         .catch(err => {
-          if (err.response)
-            if (err.response.status === 401) messaging.handleOpen('Usuário ou senha incorretos');
-            else messaging.handleOpen(err.message);
+          messaging.handleOpen(err.message);
           setLoading(false);
         });
     }
@@ -167,7 +154,7 @@ function LoginEmail({ emailParam, phoneParam }) {
               )}
               {loading && (
                 <>
-                  {app.isMobile || app.windowWidth < 960 ? (
+                  {isMobile || windowWidth < 960 ? (
                     <Loading background="rgba(250,250,250,0.5)" />
                   ) : (
                     <div className={classes.loading}>

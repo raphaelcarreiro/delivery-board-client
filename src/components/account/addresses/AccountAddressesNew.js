@@ -78,7 +78,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
   useEffect(() => {
     if (restaurant.configs.tax_mode === 'district') {
       setLoading(true);
-      api()
+      api
         .get('/areas')
         .then(response => {
           setRegions(

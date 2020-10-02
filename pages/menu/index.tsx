@@ -1,8 +1,8 @@
 import React from 'react';
 import Head from 'next/head';
-import Menu from '../../src/components/menu/Menu';
+import Menu from 'src/components/menu/Menu';
 
-export default function MenuPage() {
+const MenuPage: React.FC = () => {
   return (
     <>
       <Head>
@@ -12,4 +12,6 @@ export default function MenuPage() {
       <Menu />
     </>
   );
-}
+};
+
+export default MenuPage;

@@ -257,7 +257,7 @@ export default function cart(state = INITIAL_STATE, action) {
     }
 
     case '@cart/CLEAR_CART': {
-      localStorage.removeItem(process.env.LOCALSTORAGE_CART);
+      localStorage.removeItem(process.env.NEXT_PUBLIC_LOCALSTORAGE_CART);
       return {
         ...INITIAL_STATE,
         configs: {

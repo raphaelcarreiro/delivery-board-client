@@ -95,7 +95,7 @@ export default function PasswordReset({ token }) {
       token,
     };
 
-    api()
+    api
       .post('/password/reset/' + token, data)
       .then(response => {
         return response.data;

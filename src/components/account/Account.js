@@ -85,7 +85,7 @@ export default function Account() {
 
   function handleConfirmDelete(addressId) {
     setSaving(true);
-    api()
+    api
       .delete(`/customerAddresses/${selectedAddress.id}`)
       .then(() => {
         messaging.handleOpen('Excluído');
@@ -101,7 +101,7 @@ export default function Account() {
 
   function handleSubmit(data) {
     setSaving(true);
-    api()
+    api
       .put(`users/${user.id}`, data)
       .then(response => {
         dispatch(setUser(response.data));

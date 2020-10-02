@@ -55,7 +55,7 @@ export default function Shipment({ addresses }) {
   async function handleAddressSubmit(address) {
     try {
       setSavingAddress(true);
-      const response = await api().post('/customerAddresses', address);
+      const response = await api.post('/customerAddresses', address);
       setSavingAddress(false);
       const newAddress = response.data;
       dispatch(addCustomerAddress(newAddress));
@@ -83,7 +83,7 @@ export default function Shipment({ addresses }) {
   async function handleAddressUpdateSubmit(address) {
     try {
       setSavingAddress(true);
-      const response = await api().put(`/customerAddresses/${selectedAddress.id}`, address);
+      const response = await api.put(`/customerAddresses/${selectedAddress.id}`, address);
       setSavingAddress(false);
       const updatedAddress = response.data;
       dispatch(updateCustomerAddress(updatedAddress));
@@ -114,7 +114,7 @@ export default function Shipment({ addresses }) {
 
   function handleConfirmDelete(addressId) {
     setSaving(true);
-    api()
+    api
       .delete(`/customerAddresses/${selectedAddress.id}`)
       .then(() => {
         messaging.handleOpen('Excluído');

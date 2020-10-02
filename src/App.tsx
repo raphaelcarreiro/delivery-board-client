@@ -4,8 +4,6 @@ import { useRouter } from 'next/router';
 import { mobileCheck } from './helpers/MobileCheck';
 import { useDispatch } from 'react-redux';
 import { setRestaurant, setRestaurantIsOpen } from './store/redux/modules/restaurant/actions';
-import { setUser, removeUser } from './store/redux/modules/user/actions';
-import { verifyToken } from './helpers/verifyToken';
 import { setCart } from 'src/store/redux/modules/cart/actions';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import { createTheme } from 'src/helpers/createTheme';
@@ -15,8 +13,6 @@ import { NextComponentType } from 'next';
 import { useSelector } from './store/redux/selector';
 import { LinearProgress } from '@material-ui/core';
 import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
-import { getFirebaseMessaging, firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
-import Loading from './components/loading/Loading';
 import OnlyMain from './components/layout/OnlyMain';
 import Default from './components/layout/Default';
 import Sidebar from './components/sidebar/Sidebar';
@@ -27,6 +23,10 @@ import defaultTheme from './theme';
 import io from 'socket.io-client';
 import reactGA from 'react-ga';
 import MessagingProvider from './hooks/messaging';
+import AuthProvider from './hooks/auth';
+import FirebaseProvider from './hooks/firebase';
+import GoogleLoginProvider from './hooks/googleLogin';
+import FacebookLoginProvider from './hooks/facebookLogin';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -46,13 +46,10 @@ interface AppContextData {
   redirect: string | null;
   socket: SocketIOClient.Socket | null;
   readyToInstall: boolean;
-  fmHasToken: boolean;
-  setRedirect(uri: string): void;
-  handleLogout(): void;
+  setRedirect(uri: string | null): void;
   handleOpenMenu(): void;
   handleCartVisibility(state: boolean): void;
   handleInstallApp(): void;
-  handleRequestPermissionMessaging(): void;
   shownPlayStoreBanner: boolean;
   handleShowPlayStoreBanner(): void;
 }
@@ -74,25 +71,22 @@ interface BeforeInstallPromptEvent extends Event {
 export const AppContext = createContext<AppContextData>({} as AppContextData);
 
 export const menuWidth = 260;
-let socket: SocketIOClient.Socket;
+export const socket: SocketIOClient.Socket = io.connect(process.env.NEXT_PUBLIC_SOCKET + '/client');
 let defferedPromptPwa;
 
 const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const classes = useStyles({});
-  const user = useSelector(state => state.user);
   const router = useRouter();
   const dispatch = useDispatch();
   const [isMobile, setIsMobile] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1500);
-  const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [isCartVisible, setIsCartVisible] = useState(false);
   const [redirect, setRedirect] = useState<string | null>(null);
   const [isProgressBarVisible, setIsProgressBarVisible] = useState(false);
   const [theme, setTheme] = useState(defaultTheme);
   const [readyToInstall, setReadyToInstall] = useState(false);
-  const [fmHasToken, setFmHasToken] = useState(false);
   const restaurant = useSelector(state => state.restaurant);
   const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
 
@@ -111,20 +105,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const handleShowPlayStoreBanner = useCallback(() => {
     setShownPlayStoreBanner(oldValue => !oldValue);
   }, []);
-
-  const handleLogout = useCallback(() => {
-    setLoading(true);
-
-    api()
-      .post('/logout')
-      .then(() => {
-        if (process.env.TOKEN_NAME) localStorage.removeItem(process.env.TOKEN_NAME);
-        dispatch(removeUser());
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [dispatch]);
 
   // function to pwa installation
   const handleInstallApp = useCallback(() => {
@@ -147,14 +127,11 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     redirect,
     socket,
     readyToInstall,
-    fmHasToken,
     shownPlayStoreBanner,
-    handleLogout,
     handleOpenMenu,
     handleCartVisibility,
     setRedirect: handleSetRedirect,
     handleInstallApp,
-    handleRequestPermissionMessaging: handleRequestPermissionMessaging,
     handleShowPlayStoreBanner: handleShowPlayStoreBanner,
   };
 
@@ -169,18 +146,15 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   ];
   const checkoutPaths = ['/checkout'];
 
-  // load restaurant data from server
   useEffect(() => {
     function loadPromotions() {
-      api()
-        .get('/promotions')
-        .then(response => {
-          dispatch(setPromotions(response.data));
-        });
+      api.get('/promotions').then(response => {
+        dispatch(setPromotions(response.data));
+      });
     }
 
     function loadRestaurant() {
-      return api()
+      return api
         .get('/restaurants')
         .then(response => {
           const _restaurant = response.data;
@@ -197,8 +171,8 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
             })
           );
 
-          if (process.env.LOCALSTORAGE_CART) {
-            let cart = localStorage.getItem(process.env.LOCALSTORAGE_CART);
+          if (process.env.NEXT_PUBLIC_LOCALSTORAGE_CART) {
+            let cart = localStorage.getItem(process.env.NEXT_PUBLIC_LOCALSTORAGE_CART);
             if (cart) {
               cart = JSON.parse(cart);
               dispatch(setCart(cart));
@@ -221,24 +195,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
         });
     }
 
-    function loadUser() {
-      const payload = verifyToken();
-      if (payload) {
-        return api()
-          .get(`/users/${payload.id}`)
-          .then(response => {
-            dispatch(setUser(response.data));
-          })
-          .catch(err => {
-            console.error(err.response.data.error);
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      }
-    }
-
-    Promise.all([loadRestaurant(), loadUser()]).then(() => {
+    loadRestaurant().then(() => {
       setInitialLoading(false);
       document.body.classList.add('zoom');
     });
@@ -257,7 +214,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   // set webscoket connection
   useEffect(() => {
     function getRestaurantState() {
-      api()
+      api
         .get('/restaurant/state')
         .then(response => {
           dispatch(setRestaurantIsOpen(response.data.is_open));
@@ -267,7 +224,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
         });
     }
 
-    if (!socket) socket = io.connect(process.env.URL_NODE_SERVER + '/client');
     if (restaurant) {
       socket.emit('register', restaurant.id);
 
@@ -299,17 +255,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     router.events.on('routeChangeError', handleRouteChangeError);
   }, [handleRouteChangeComplete, restaurant, router.events]);
 
-  /*
-  handle request permission for firebase messaging if is not server,
-  user has been loaded and firebase messaging is supported.
-  */
-  useEffect(() => {
-    if (process.browser)
-      if (user.id && isSupported()) {
-        handleGetTokenFirebaseMessaging();
-      }
-  }, [user.id]);
-
   useEffect(() => {
     window.addEventListener('beforeinstallprompt', event => {
       event.preventDefault();
@@ -317,65 +262,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
       setReadyToInstall(true);
     });
   }, []);
-
-  function handleGetTokenFirebaseMessaging() {
-    try {
-      const firebaseMessaging = getFirebaseMessaging();
-      firebaseMessaging
-        .getToken()
-        .then(token => {
-          if (token) {
-            setFmHasToken(true);
-
-            const param = {
-              token: token,
-              device: navigator.platform,
-              type: 'client',
-            };
-
-            api()
-              .post('/pushTokens', param)
-              .catch(err => {
-                console.log(err);
-              });
-          }
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  // request permission for push notification
-  function handleRequestPermissionMessaging() {
-    try {
-      const firebaseMessaging = getFirebaseMessaging();
-      firebaseMessaging
-        .requestPermission()
-        .then(async () => {
-          const token = await firebaseMessaging.getToken();
-          setFmHasToken(true);
-          const param = {
-            token: token,
-            device: navigator.platform,
-            type: 'client',
-          };
-
-          api()
-            .post('/pushTokens', param)
-            .catch(err => {
-              console.log(err);
-            });
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   function handleRouteChangeStart() {
     setIsProgressBarVisible(true);
@@ -398,22 +284,36 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
       <CssBaseline />
       <AppContext.Provider value={appProviderValue}>
         {initialLoading && <InitialLoading />}
-
-        {loading && <Loading background="rgba(250,250,250,0.5)" />}
-
         {isProgressBarVisible && <LinearProgress color="secondary" className={classes.progressBar} />}
 
-        <Sidebar handleLogout={handleLogout} handleOpenMenu={handleOpenMenu} isOpenMenu={isOpenMenu} />
-
-        <MessagingProvider>
-          {paths.includes(router.route) ? (
-            <OnlyMain pageProps={pageProps} component={Component} />
-          ) : checkoutPaths.includes(router.route) ? (
-            <Checkout pageProps={pageProps} component={Component} isMobile={isMobile} windowWidth={windowWidth} />
-          ) : (
-            <Default pageProps={pageProps} component={Component} isMobile={isMobile} windowWidth={windowWidth} />
-          )}
-        </MessagingProvider>
+        <AuthProvider>
+          <FirebaseProvider>
+            <MessagingProvider>
+              <GoogleLoginProvider>
+                <FacebookLoginProvider>
+                  <Sidebar handleOpenMenu={handleOpenMenu} isOpenMenu={isOpenMenu} />
+                  {paths.includes(router.route) ? (
+                    <OnlyMain pageProps={pageProps} component={Component} />
+                  ) : checkoutPaths.includes(router.route) ? (
+                    <Checkout
+                      pageProps={pageProps}
+                      component={Component}
+                      isMobile={isMobile}
+                      windowWidth={windowWidth}
+                    />
+                  ) : (
+                    <Default
+                      pageProps={pageProps}
+                      component={Component}
+                      isMobile={isMobile}
+                      windowWidth={windowWidth}
+                    />
+                  )}
+                </FacebookLoginProvider>
+              </GoogleLoginProvider>
+            </MessagingProvider>
+          </FirebaseProvider>
+        </AuthProvider>
       </AppContext.Provider>
     </ThemeProvider>
   );

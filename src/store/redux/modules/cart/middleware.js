@@ -3,7 +3,7 @@ import { createHistory, setConfigs, updateTotal, setTax } from './actions';
 import checkPromotion from './promotion/checkPromotion';
 
 const saveCartAtLocalStorage = cart => {
-  localStorage.setItem(process.env.LOCALSTORAGE_CART, JSON.stringify(cart));
+  localStorage.setItem(process.env.NEXT_PUBLIC_LOCALSTORAGE_CART, JSON.stringify(cart));
 };
 
 export const cartMiddlware = store => next => action => {

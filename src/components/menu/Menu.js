@@ -18,7 +18,7 @@ export default function Menu() {
     const source = getCancelTokenSource();
     setLoading(true);
     let request = true;
-    api()
+    api
       .get('/categories', { cancelToken: source.token })
       .then(response => {
         setProductsAmount(response.data.reduce((sum, category) => sum + category.available_products_amount, 0));

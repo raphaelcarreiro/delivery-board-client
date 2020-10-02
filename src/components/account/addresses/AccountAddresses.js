@@ -91,7 +91,7 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
   async function handleAddressSubmit(address) {
     try {
       setSavingAddress(true);
-      const response = await api().post('/customerAddresses', address);
+      const response = await api.post('/customerAddresses', address);
       dispatch(addCustomerAddress(response.data));
       messaging.handleOpen('Endereço incluído');
     } catch (err) {
@@ -105,7 +105,7 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
   async function handleAddressUpdateSubmit(address) {
     try {
       setSavingAddress(true);
-      const response = await api().put(`/customerAddresses/${selectedAddress.id}`, address);
+      const response = await api.put(`/customerAddresses/${selectedAddress.id}`, address);
       dispatch(updateCustomerAddress(response.data));
       messaging.handleOpen('Endereço alterado');
     } catch (err) {
@@ -118,7 +118,7 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
   function handleUpdateIsMainAddress() {
     setSaving(true);
 
-    api()
+    api
       .put(`customer/addresses/main/${selectedAddress.id}`)
       .then(() => {
         dispatch(setMainCustomerAddress(selectedAddress.id));

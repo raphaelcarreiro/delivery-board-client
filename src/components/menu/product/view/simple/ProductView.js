@@ -92,7 +92,7 @@ export default function ProductView({ onExited, handlePrepareProduct, handleAddP
   const classes = useStyles();
 
   useEffect(() => {
-    api()
+    api
       .get(`/products/${productId}`)
       .then(response => {
         const additional = response.data.additional.map(additional => {

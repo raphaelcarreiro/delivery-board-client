@@ -1,11 +1,20 @@
-import React from 'react';
-import Document, { Head, Main, NextScript } from 'next/document';
+import React, { ReactElement } from 'react';
+import Document, { Head, Main, NextScript, Html } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import axios from 'axios';
 import fs from 'fs';
 
-export default class MyDocument extends Document {
-  setGoogleTags() {
+type DocumentProps = {
+  gaId: string;
+  pixelId: string;
+  themeColor: string;
+  googleLogin: boolean;
+  facebookLogin: boolean;
+  restaurantId: string;
+};
+
+export default class MyDocument extends Document<DocumentProps> {
+  setGoogleTags(): { __html: string } {
     return {
       __html: `
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -18,7 +27,7 @@ export default class MyDocument extends Document {
     };
   }
 
-  setFacebookPixel() {
+  setFacebookPixel(): { __html: string } {
     return {
       __html: `!function(f,b,e,v,n,t,s)
       {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -33,7 +42,7 @@ export default class MyDocument extends Document {
     };
   }
 
-  setFacebokScript() {
+  setFacebokScript(): { __html: string } {
     return {
       __html: `<img
         height="1"
@@ -44,16 +53,15 @@ export default class MyDocument extends Document {
     };
   }
 
-  render() {
+  render(): ReactElement {
     const { themeColor, gaId, pixelId, googleLogin, facebookLogin } = this.props;
     return (
-      <html lang="pt-BR">
+      <Html lang="pt-BR">
         <Head>
-          {gaId && (
-            <>
-              <script dangerouslySetInnerHTML={this.setGoogleTags()} />
-            </>
-          )}
+          <link rel="icon" href="/images/favicon.png" />
+          <link rel="manifest" href="/manifest.json" />
+          {themeColor && <meta name="theme-color" content={themeColor} />}
+          {gaId && <script dangerouslySetInnerHTML={this.setGoogleTags()} />}
           {pixelId && (
             <>
               <script dangerouslySetInnerHTML={this.setFacebookPixel()}></script>
@@ -67,11 +75,6 @@ export default class MyDocument extends Document {
               </noscript>
             </>
           )}
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
-          <link rel="icon" href="/images/favicon.png" />
-          {themeColor && <meta name="theme-color" content={themeColor} />}
-          <link rel="manifest" href="/manifest.json" />
         </Head>
         <body>
           {facebookLogin && (
@@ -86,7 +89,7 @@ export default class MyDocument extends Document {
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     );
   }
 }
@@ -103,8 +106,8 @@ MyDocument.getInitialProps = async ctx => {
   const initialProps = await Document.getInitialProps(ctx);
 
   const api = axios.create({
-    baseURL: process.env.BASEURL_API,
-    headers: { RestaurantId: process.env.RESTAURANT_ID },
+    baseURL: process.env.NEXT_PUBLIC_API,
+    headers: { RestaurantId: process.env.NEXT_PUBLIC_RESTAURANT_ID },
   });
 
   const response = await api.get('restaurants');
