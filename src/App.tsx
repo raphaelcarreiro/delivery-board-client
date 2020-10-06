@@ -148,9 +148,14 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
 
   useEffect(() => {
     function loadPromotions() {
-      api.get('/promotions').then(response => {
-        dispatch(setPromotions(response.data));
-      });
+      api
+        .get('/promotions')
+        .then(response => {
+          dispatch(setPromotions(response.data));
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
 
     function loadRestaurant() {
