@@ -126,9 +126,8 @@ export const CheckoutContext = React.createContext({
 });
 
 export default function Checkout() {
-  const messaging = useMessaging();
+  const { handleOpen } = useMessaging();
   const { isCartVisible, handleCartVisibility, isMobile, windowWidth } = useContext(AppContext);
-  const dispatch = useDispatch();
   const user = useSelector(state => state.user);
   const cart = useSelector(state => state.cart);
   const order = useSelector(state => state.order);
@@ -137,11 +136,12 @@ export default function Checkout() {
   const [loading, setLoading] = useState(true);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [step, setStep] = useState(1);
+  const classes = useStyles({ step, isCartVisible: isCartVisible });
   const [saving, setSaving] = useState(false);
   const [createdOrder, setCreatedOrder] = useState(null);
-  const classes = useStyles({ step, isCartVisible: isCartVisible });
   const [steps, setSteps] = useState(defaultSteps);
   const [isCardValid, setIsCardValid] = useState(false);
+  const dispatch = useDispatch();
 
   const currentStep = useMemo(() => {
     return steps.find(item => item.order === step);
@@ -161,55 +161,53 @@ export default function Checkout() {
   };
 
   useEffect(() => {
-    if (restaurant.id)
-      if (restaurant.configs.facebook_pixel_id) {
-        fbq('track', 'InitiateCheckout');
-      }
+    if (!restaurant) return;
+    if (restaurant.configs.facebook_pixel_id) fbq('track', 'InitiateCheckout');
   }, [restaurant]);
 
   useEffect(() => {
-    if (restaurant.id) {
-      const { configs } = restaurant;
+    if (!restaurant) return;
 
-      let stepId = 0;
-      let newSteps = defaultSteps.slice();
+    const { configs } = restaurant;
 
-      if (!configs.customer_collect) {
-        newSteps = newSteps.filter(s => s.id !== 'STEP_SHIPMENT_METHOD');
-      }
+    let stepId = 0;
+    let newSteps = defaultSteps.slice();
 
-      if (order.shipment.shipment_method === 'customer_collect') {
-        newSteps = newSteps.filter(s => s.id !== 'STEP_SHIPMENT');
-      }
-
-      setSteps(
-        newSteps.map(step => {
-          stepId++;
-          step.order = stepId;
-          return step;
-        })
-      );
+    if (!configs.customer_collect) {
+      newSteps = newSteps.filter(s => s.id !== 'STEP_SHIPMENT_METHOD');
     }
+
+    if (order.shipment.shipment_method === 'customer_collect') {
+      newSteps = newSteps.filter(s => s.id !== 'STEP_SHIPMENT');
+    }
+
+    setSteps(
+      newSteps.map(step => {
+        stepId++;
+        step.order = stepId;
+        return step;
+      })
+    );
   }, [restaurant, order.shipment.shipment_method]);
 
   useEffect(() => {
-    if (restaurant.id) {
-      dispatch(setTax(cart.tax));
-      dispatch(setDiscount(cart.discount));
-      if (
-        cart.subtotal < restaurant.configs.order_minimum_value &&
-        restaurant.configs.tax_mode !== 'order_value' &&
-        currentStep.id !== 'STEP_SUCCESS' &&
-        cart.products.length > 0
-      ) {
-        messaging.handleOpen(`Valor mínimo do pedido deve ser ${restaurant.configs.formattedOrderMinimumValue}`);
-        router.push('/menu');
-      }
+    if (!restaurant) return;
+
+    dispatch(setTax(cart.tax));
+    dispatch(setDiscount(cart.discount));
+    if (
+      cart.subtotal < restaurant.configs.order_minimum_value &&
+      restaurant.configs.tax_mode !== 'order_value' &&
+      currentStep.id !== 'STEP_SUCCESS' &&
+      cart.products.length > 0
+    ) {
+      handleOpen(`Valor mínimo do pedido deve ser ${restaurant.configs.formattedOrderMinimumValue}`);
+      router.push('/menu');
     }
   }, [cart.total, restaurant]); // eslint-disable-line
 
   useEffect(() => {
-    if (!user.id) return;
+    if (!user.id || !restaurant || !cart.configs) return;
 
     handleCartVisibility(false);
 
@@ -234,7 +232,7 @@ export default function Checkout() {
     setAddress(address);
 
     setLoading(false);
-  }, [user, dispatch, handleCartVisibility, restaurant.configs, restaurant.delivery_max_distance]);
+  }, [user, dispatch, handleCartVisibility, restaurant, cart.configs]);
 
   useEffect(() => {
     api
@@ -242,14 +240,13 @@ export default function Checkout() {
       .then(response => {
         setPaymentMethods(response.data);
         const paymentMethods = response.data;
-        // const online = paymentMethods.some(method => method.mode === 'online');
         const offline = paymentMethods.some(method => method.mode === 'offline');
         if (offline) dispatch(setPaymentMethod(response.data[0]));
       })
       .catch(err => {
-        if (err.response) messaging.handleOpen(err.response.data.error, null, { marginBottom: 47 });
+        if (err.response) handleOpen(err.response.data.error, null, { marginBottom: 47 });
       });
-  }, []); // eslint-disable-line
+  }, [dispatch, handleOpen]);
 
   useEffect(() => {
     dispatch(setProducts(cart.products));
@@ -258,7 +255,7 @@ export default function Checkout() {
 
   function handleSubmitOrder() {
     if (cart.subtotal < restaurant.configs.order_minimum_value && restaurant.configs.tax_mode !== 'order_value') {
-      messaging.handleOpen(`Valor mínimo do pedido deve ser ${restaurant.configs.formattedOrderMinimumValue}`, null, {
+      handleOpen(`Valor mínimo do pedido deve ser ${restaurant.configs.formattedOrderMinimumValue}`, null, {
         marginBottom: 47,
       });
       return;
@@ -278,7 +275,7 @@ export default function Checkout() {
         handleStepNext();
       })
       .catch(err => {
-        if (err.response) messaging.handleOpen(err.response.data.error, null, { marginBottom: 47 });
+        if (err.response) handleOpen(err.response.data.error, null, { marginBottom: 47 });
       })
       .finally(() => {
         setSaving(false);
@@ -288,12 +285,12 @@ export default function Checkout() {
   async function handleStepNext() {
     if (currentStep.id === 'STEP_SHIPMENT') {
       if (!order.shipment.id) {
-        messaging.handleOpen('Informe o endereço', null, { marginBottom: 47 });
+        handleOpen('Informe o endereço', null, { marginBottom: 47 });
         return;
       }
     } else if (currentStep.id === 'STEP_PAYMENT') {
       if (!order.paymentMethod) {
-        messaging.handleOpen('Selecione uma forma de pagamento', null, { marginBottom: 47 });
+        handleOpen('Selecione uma forma de pagamento', null, { marginBottom: 47 });
         return;
       }
     }
