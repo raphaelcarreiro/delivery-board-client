@@ -176,14 +176,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
             })
           );
 
-          if (process.env.NEXT_PUBLIC_LOCALSTORAGE_CART) {
-            let cart = localStorage.getItem(process.env.NEXT_PUBLIC_LOCALSTORAGE_CART);
-            if (cart) {
-              cart = JSON.parse(cart);
-              dispatch(setCart(cart));
-            }
-          }
-
           setTheme(createTheme(_restaurant.primary_color, _restaurant.secondary_color));
 
           if (configs.google_analytics_id) {
@@ -205,6 +197,18 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
       document.body.classList.add('zoom');
     });
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!restaurant) return;
+
+    if (process.env.NEXT_PUBLIC_LOCALSTORAGE_CART) {
+      let cart = localStorage.getItem(process.env.NEXT_PUBLIC_LOCALSTORAGE_CART);
+      if (cart) {
+        cart = JSON.parse(cart);
+        dispatch(setCart(cart));
+      }
+    }
+  }, [dispatch, restaurant]);
 
   useEffect(() => {
     reactotronInitialize();

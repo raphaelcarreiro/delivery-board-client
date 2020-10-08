@@ -149,7 +149,7 @@ export default function Shipment({ addresses }) {
     }
 
     if (restaurant.delivery_max_distance) {
-      if (!address.distance) {
+      if (address.distance === null) {
         messaging.handleOpen('Não é possível entregar nesse endereço');
         return;
       }

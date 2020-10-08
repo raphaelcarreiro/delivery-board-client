@@ -218,8 +218,8 @@ export default function Checkout() {
         if (address && address.area_region) dispatch(setShipmentAddress(address));
         else dispatch(setShipmentAddress({}));
         return;
-      } else if (restaurant.configs.tax_mode === 'distance') {
-        if (address && address.distance <= restaurant.delivery_max_distance) dispatch(setShipmentAddress(address));
+      } else if (restaurant.delivery_max_distance && address) {
+        if (address.distance <= restaurant.delivery_max_distance) dispatch(setShipmentAddress(address));
         else dispatch(setShipmentAddress({}));
         return;
       }
