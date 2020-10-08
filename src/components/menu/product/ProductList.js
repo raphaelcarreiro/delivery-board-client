@@ -45,6 +45,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     flex: '1 1',
     alignItems: 'flex-start',
+    marginRight: 10,
   },
   price: {
     fontWeight: 300,

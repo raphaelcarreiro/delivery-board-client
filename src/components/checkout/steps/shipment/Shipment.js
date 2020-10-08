@@ -61,8 +61,8 @@ export default function Shipment({ addresses }) {
       dispatch(addCustomerAddress(newAddress));
 
       if (restaurant.delivery_max_distance) {
-        if (!newAddress.distance) {
-          messaging.handleOpen('Não entregamos nesse endereço');
+        if (newAddress.distance === null) {
+          messaging.handleOpen('Não é possível entregar nesse endereço');
           return;
         }
 
@@ -89,8 +89,8 @@ export default function Shipment({ addresses }) {
       dispatch(updateCustomerAddress(updatedAddress));
 
       if (restaurant.delivery_max_distance) {
-        if (!updatedAddress.distance) {
-          messaging.handleOpen('Não entregamos nesse endereço');
+        if (updatedAddress.distance === null) {
+          messaging.handleOpen('Não é possível entregar nesse endereço');
           return;
         }
 

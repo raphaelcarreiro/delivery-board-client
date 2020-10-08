@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
     borderRadius: 4,
     flexShrink: 0,
-    marginLeft: 5,
+    marginLeft: 10,
   },
   image: {
     borderRadius: 4,
