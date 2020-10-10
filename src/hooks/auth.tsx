@@ -2,7 +2,6 @@ import React, { useCallback, useContext, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import jwt from 'jsonwebtoken';
 import { removeUser, setUser } from 'src/store/redux/modules/user/actions';
-import { useApp } from 'src/App';
 import { User } from 'src/types/user';
 import { api } from 'src/services/api';
 

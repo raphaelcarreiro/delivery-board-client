@@ -83,7 +83,7 @@ export default function ShipmentMethod() {
             )}
           </ListItem>
           <ListItem button className={classes.button} onClick={handleSetDelivery}>
-            <Typography variant="h6">Quero receber em casa</Typography>
+            <Typography variant="h6">Quero receber</Typography>
           </ListItem>
         </div>
       </div>

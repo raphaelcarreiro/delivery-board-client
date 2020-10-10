@@ -19,7 +19,7 @@ const LoginPage: NextPage = () => {
     }
 
     if (!restaurant.configs.require_login) router.push('/guest-register');
-  }, [restaurant, router, checkAuth, isAuthenticated]);
+  }, [restaurant, router, checkAuth]);
 
   return (
     <>
