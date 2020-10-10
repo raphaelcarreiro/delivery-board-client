@@ -14,7 +14,7 @@ const LoginPage: NextPage = () => {
   useEffect(() => {
     if (!restaurant) return;
     if (checkAuth()) {
-      // router.push('/');
+      router.push('/');
       return;
     }
 
