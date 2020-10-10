@@ -25,12 +25,11 @@ api.interceptors.response.use(
     return config;
   },
   err => {
-    const token = localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_NAME || '');
-    if (token)
-      if (err.response && err.response.status === 401) {
-        localStorage.removeItem(token);
-        return;
-      }
+    if (process.env.NEXT_PUBLIC_TOKEN_NAME) {
+      const token = localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_NAME);
+      if (token)
+        if (err.response && err.response.status === 401) localStorage.removeItem(process.env.NEXT_PUBLIC_TOKEN_NAME);
+    }
     return Promise.reject(err);
   }
 );
