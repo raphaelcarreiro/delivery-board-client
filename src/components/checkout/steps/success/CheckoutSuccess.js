@@ -91,22 +91,20 @@ export default function CheckoutSuccess() {
             </a>
           </div>
         )}
-        {app.readyToInstall && (
-          <div className={classes.contentAction}>
-            <Typography align="center" variant="body2" color="textSecondary">
-              Adicione esse app à área de trabalho do seu celular
-            </Typography>
-            <Button
-              color="primary"
-              onClick={app.handleInstallApp}
-              variant="text"
-              size="medium"
-              startIcon={<GetAppIcon />}
-            >
-              Adicionar
-            </Button>
-          </div>
-        )}
+        <div className={classes.contentAction}>
+          <Typography align="center" variant="body2" color="textSecondary">
+            Adicione esse app à área de trabalho do seu celular
+          </Typography>
+          <Button
+            color="primary"
+            onClick={app.handleInstallApp}
+            variant="text"
+            size="medium"
+            startIcon={<GetAppIcon />}
+          >
+            Adicionar
+          </Button>
+        </div>
         {!app.fmHasToken && isSupported && user.id && (
           <div className={classes.contentAction}>
             <Typography align="center" variant="body2" color="textSecondary">

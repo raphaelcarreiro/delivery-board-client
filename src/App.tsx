@@ -46,11 +46,11 @@ interface AppContextData {
   redirect: string | null;
   socket: SocketIOClient.Socket | null;
   readyToInstall: boolean;
+  shownPlayStoreBanner: boolean;
   setRedirect(uri: string | null): void;
   handleOpenMenu(): void;
   handleCartVisibility(state: boolean): void;
   handleInstallApp(): void;
-  shownPlayStoreBanner: boolean;
   handleShowPlayStoreBanner(): void;
 }
 
@@ -86,7 +86,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const [redirect, setRedirect] = useState<string | null>(null);
   const [isProgressBarVisible, setIsProgressBarVisible] = useState(false);
   const [theme, setTheme] = useState(defaultTheme);
-  const [readyToInstall, setReadyToInstall] = useState(false);
+  const [readyToInstall, setReadyToInstall] = useState(true);
   const restaurant = useSelector(state => state.restaurant);
   const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
 
@@ -118,6 +118,16 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
       defferedPromptPwa = null;
     });
   }, []);
+
+  const handleRouteChangeComplete = useCallback(() => {
+    setIsProgressBarVisible(false);
+
+    if (restaurant)
+      if (restaurant.configs.google_analytics_id) {
+        reactGA.set({ page: window.location.pathname });
+        reactGA.pageview(window.location.pathname);
+      }
+  }, [restaurant]);
 
   const appProviderValue: AppContextData = {
     isMobile,
@@ -247,16 +257,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     }
   }, [dispatch, restaurant]);
 
-  const handleRouteChangeComplete = useCallback(() => {
-    setIsProgressBarVisible(false);
-
-    if (restaurant)
-      if (restaurant.configs.google_analytics_id) {
-        reactGA.set({ page: window.location.pathname });
-        reactGA.pageview(window.location.pathname);
-      }
-  }, [restaurant]);
-
   // set actions on router changes, to display loading
   useEffect(() => {
     router.events.on('routeChangeStart', handleRouteChangeStart);
@@ -266,9 +266,9 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
 
   useEffect(() => {
     window.addEventListener('beforeinstallprompt', event => {
-      event.preventDefault();
-      defferedPromptPwa = event;
+      // event.preventDefault();
       setReadyToInstall(true);
+      defferedPromptPwa = event;
     });
   }, []);
 
