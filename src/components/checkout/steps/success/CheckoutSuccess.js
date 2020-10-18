@@ -4,12 +4,13 @@ import { Typography, Button } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { formatId } from 'src/helpers/formatOrderId';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppContext } from 'src/App';
+import { useApp } from 'src/App';
 import Link from 'src/components/link/Link';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
 import { FiCheck } from 'react-icons/fi';
+import { useFirebase } from 'src/hooks/firebase';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -55,13 +56,14 @@ export default function CheckoutSuccess() {
   const user = useSelector(state => state.user);
   const order = checkout.createdOrder;
   const classes = useStyles();
-  const app = useContext(AppContext);
+  const { isMobile, handleInstallApp, handleCartVisibility, readyToInstall } = useApp();
   const restaurant = useSelector(state => state.restaurant);
+  const fm = useFirebase();
 
   useEffect(() => {
-    app.handleCartVisibility(false);
+    handleCartVisibility(false);
     if (restaurant.configs.facebook_pixel_id) fbq('track', 'Purchase', { value: order.total, currency: 'BRL' });
-  }, [app, restaurant.configs.facebook_pixel_id, order.total]);
+  }, [restaurant.configs.facebook_pixel_id, order.total, handleCartVisibility]);
 
   return (
     <div className={classes.container}>
@@ -81,7 +83,7 @@ export default function CheckoutSuccess() {
         >
           Acompanhar pedido
         </Link>
-        {restaurant && restaurant.play_store_link && app.isMobile && (
+        {restaurant && restaurant.play_store_link && isMobile && (
           <div className={classes.contentAction}>
             <Typography variant="body2" color="textSecondary" align="center">
               Baixe o aplicativo {restaurant.name}, gratuíto para celular
@@ -91,28 +93,24 @@ export default function CheckoutSuccess() {
             </a>
           </div>
         )}
-        <div className={classes.contentAction}>
-          <Typography align="center" variant="body2" color="textSecondary">
-            Adicione esse app à área de trabalho do seu celular
-          </Typography>
-          <Button
-            color="primary"
-            onClick={app.handleInstallApp}
-            variant="text"
-            size="medium"
-            startIcon={<GetAppIcon />}
-          >
-            Adicionar
-          </Button>
-        </div>
-        {!app.fmHasToken && isSupported && user.id && (
+        {readyToInstall && (
+          <div className={classes.contentAction}>
+            <Typography align="center" variant="body2" color="textSecondary">
+              Adicione esse app à área de trabalho do seu celular
+            </Typography>
+            <Button color="primary" onClick={handleInstallApp} variant="text" size="medium" startIcon={<GetAppIcon />}>
+              Adicionar
+            </Button>
+          </div>
+        )}
+        {!fm.fmHasToken && isSupported() && user.id && (
           <div className={classes.contentAction}>
             <Typography align="center" variant="body2" color="textSecondary">
               Ative notificações para acompanhar esse pedido
             </Typography>
             <Button
               color="primary"
-              onClick={app.handleRequestPermissionMessaging}
+              onClick={fm.requestPermissionMessaging}
               variant="text"
               size="medium"
               startIcon={<NotificationsActiveIcon />}

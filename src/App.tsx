@@ -86,7 +86,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const [redirect, setRedirect] = useState<string | null>(null);
   const [isProgressBarVisible, setIsProgressBarVisible] = useState(false);
   const [theme, setTheme] = useState(defaultTheme);
-  const [readyToInstall, setReadyToInstall] = useState(true);
+  const [readyToInstall, setReadyToInstall] = useState(false);
   const restaurant = useSelector(state => state.restaurant);
   const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
 
@@ -266,7 +266,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
 
   useEffect(() => {
     window.addEventListener('beforeinstallprompt', event => {
-      // event.preventDefault();
+      event.preventDefault();
       setReadyToInstall(true);
       defferedPromptPwa = event;
     });

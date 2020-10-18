@@ -13,7 +13,6 @@ import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import { AppContext } from 'src/App';
 import { firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
 import OrderAction from './OrderAction';
 import OrderProductList from './OrderProductList';
@@ -24,6 +23,7 @@ import OrderShipment from './OrderShipment';
 import OrderPayment from './OrderPayment';
 import OrderTotals from './OrderTotals';
 import { useMessaging } from 'src/hooks/messaging';
+import { useFirebase } from 'src/hooks/firebase';
 
 const useStyles = makeStyles(theme => ({
   section: {
@@ -84,9 +84,9 @@ export default function Order({ cryptId }) {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const user = useSelector(state => state.user);
-  const app = useContext(AppContext);
   const messaging = useMessaging();
   const classes = useStyles();
+  const { requestPermissionMessaging, fmHasToken } = useFirebase();
 
   useEffect(() => {
     const socket = io.connect(process.env.NEXT_PUBLIC_SOCKET + '/client');
@@ -188,15 +188,7 @@ export default function Order({ cryptId }) {
     <>
       <CustomAppbar
         title={order ? `pedido ${order.formattedId}` : 'carregando...'}
-        actionComponent={
-          <OrderAction
-            hasToken={app.fmHasToken}
-            isSupported={isSupported()}
-            user={!!user.id}
-            handleRefresh={handleSetOrders}
-            loading={loading}
-          />
-        }
+        actionComponent={<OrderAction handleRefresh={handleSetOrders} loading={loading} />}
       />
       {loading ? (
         <InsideLoading />
@@ -204,14 +196,14 @@ export default function Order({ cryptId }) {
         <>
           <PageHeader title={`pedido ${order.formattedId}`} description={`pedido gerado em ${order.formattedDate}`} />
           <div className={classes.container}>
-            {!app.fmHasToken && isSupported() && user.id && (
+            {!fmHasToken && isSupported() && user.id && (
               <div className={classes.activeNotifications}>
                 <Typography variant="body2" color="textSecondary" align="center">
                   Ative notificações para acompanhar esse pedido
                 </Typography>
                 <Button
                   color="primary"
-                  onClick={app.handleRequestPermissionMessaging}
+                  onClick={requestPermissionMessaging}
                   variant="contained"
                   size="small"
                   startIcon={<NotificationsActiveIcon />}
