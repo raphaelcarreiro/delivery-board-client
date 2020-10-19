@@ -33,6 +33,7 @@ import ShipmentMethod from './steps/shipment-method/ShipmentMethod';
 import { useRouter } from 'next/router';
 import InsideLoading from '../loading/InsideLoading';
 import { useMessaging } from 'src/hooks/messaging';
+import { useAuth } from 'src/hooks/auth';
 
 const cartWidth = 450;
 
@@ -133,7 +134,6 @@ export default function Checkout() {
   const order = useSelector(state => state.order);
   const restaurant = useSelector(state => state.restaurant);
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [step, setStep] = useState(1);
   const classes = useStyles({ step, isCartVisible: isCartVisible });
@@ -142,6 +142,7 @@ export default function Checkout() {
   const [steps, setSteps] = useState(defaultSteps);
   const [isCardValid, setIsCardValid] = useState(false);
   const dispatch = useDispatch();
+  const auth = useAuth();
 
   const currentStep = useMemo(() => {
     return steps.find(item => item.order === step);
@@ -209,6 +210,8 @@ export default function Checkout() {
   useEffect(() => {
     if (!user.id || !restaurant || !cart.configs) return;
 
+    if (order.shipment.id) return;
+
     handleCartVisibility(false);
 
     function setAddress(address) {
@@ -230,9 +233,7 @@ export default function Checkout() {
 
     dispatch(setCustomer(customer));
     setAddress(address);
-
-    setLoading(false);
-  }, [user, dispatch, handleCartVisibility, restaurant, cart.configs]);
+  }, [user, dispatch, cart.configs, handleCartVisibility, restaurant]); //eslint-disable-line
 
   useEffect(() => {
     api
@@ -333,7 +334,7 @@ export default function Checkout() {
         actionComponent={<IndexAppbarActions />}
       />
       {saving && <Loading background="rgba(250,250,250,0.5)" />}
-      {loading ? (
+      {auth.isLoading ? (
         <InsideLoading />
       ) : currentStep.id === 'STEP_SUCCESS' ? (
         <CheckoutContext.Provider value={checkoutContextValue}>
