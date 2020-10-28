@@ -73,7 +73,7 @@ export default function Shipment({ addresses }) {
       }
       dispatch(setShipmentAddress(newAddress));
 
-      checkout.handleSetStepById('STEP_PAYMENT');
+      // checkout.handleSetStepById('STEP_PAYMENT');
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
       setSavingAddress(false);

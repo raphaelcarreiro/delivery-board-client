@@ -210,8 +210,6 @@ export default function Checkout() {
   useEffect(() => {
     if (!user.id || !restaurant || !cart.configs) return;
 
-    if (order.shipment.id) return;
-
     handleCartVisibility(false);
 
     function setAddress(address) {
@@ -229,11 +227,11 @@ export default function Checkout() {
     }
 
     const customer = user.customer;
-    const address = customer.addresses.find(address => address.is_main);
-
     dispatch(setCustomer(customer));
-    setAddress(address);
-  }, [user, dispatch, cart.configs, handleCartVisibility, restaurant]); //eslint-disable-line
+
+    const address = customer.addresses.find(address => address.is_main);
+    if (address) setAddress(address);
+  }, [user, dispatch, cart.configs, handleCartVisibility, restaurant]);
 
   useEffect(() => {
     api
