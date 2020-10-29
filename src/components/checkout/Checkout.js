@@ -167,7 +167,7 @@ export default function Checkout() {
   }, [restaurant]);
 
   useEffect(() => {
-    handleCartVisibility();
+    handleCartVisibility(false);
   }, [handleCartVisibility]);
 
   useEffect(() => {
