@@ -167,6 +167,10 @@ export default function Checkout() {
   }, [restaurant]);
 
   useEffect(() => {
+    handleCartVisibility();
+  }, [handleCartVisibility]);
+
+  useEffect(() => {
     if (!restaurant) return;
 
     const { configs } = restaurant;
@@ -208,30 +212,11 @@ export default function Checkout() {
   }, [cart.total, restaurant]); // eslint-disable-line
 
   useEffect(() => {
-    if (!user.id || !restaurant || !cart.configs) return;
-
-    handleCartVisibility(false);
-
-    function setAddress(address) {
-      if (restaurant.configs.tax_mode === 'district') {
-        if (address && address.area_region) dispatch(setShipmentAddress(address));
-        else dispatch(setShipmentAddress({}));
-        return;
-      } else if (restaurant.delivery_max_distance && address) {
-        if (address.distance <= restaurant.delivery_max_distance) dispatch(setShipmentAddress(address));
-        else dispatch(setShipmentAddress({}));
-        return;
-      }
-
-      dispatch(setShipmentAddress(address || {}));
-    }
+    if (!user.id) return;
 
     const customer = user.customer;
     dispatch(setCustomer(customer));
-
-    const address = customer.addresses.find(address => address.is_main);
-    if (address) setAddress(address);
-  }, [user, dispatch, cart.configs, handleCartVisibility, restaurant]);
+  }, [user, dispatch]);
 
   useEffect(() => {
     api
