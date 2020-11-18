@@ -374,6 +374,7 @@ export default function ProductPizzaComplement({
       handleModalState={onExited}
       title={`${productName} complementos`}
       displayBottomActions
+      maxWidth="sm"
     >
       {dialogAdditional && (
         <ProductPizzaComplementAdditional

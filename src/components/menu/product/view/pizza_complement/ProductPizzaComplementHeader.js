@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   chip: {
     display: 'inline-block',
     padding: '3px 5px',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
     fontSize: 10,

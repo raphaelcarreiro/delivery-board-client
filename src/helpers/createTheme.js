@@ -34,7 +34,15 @@ export function createTheme(primaryColor, secondaryColor) {
         '"Segoe UI Symbol"',
       ].join(','),
     },
+    shape: {
+      borderRadius: 0,
+    },
     overrides: {
+      MuiButton: {
+        contained: {
+          boxShadow: 'none',
+        },
+      },
       MuiInput: {
         root: {
           fontWeight: 300,

@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
   chip: {
     display: 'inline-block',
     padding: '3px 5px',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     backgroundColor: theme.palette.primary.dark,
     color: theme.palette.primary.contrastText,
     fontSize: 10,
@@ -297,6 +297,7 @@ export default function ProductPizzaComplement({ selectedProduct, onExited, hand
       handleModalState={onExited}
       title={`${product.name} - Complementos`}
       displayBottomActions
+      maxWidth="sm"
     >
       {dialogAdditional && (
         <ProductPizzaComplementAdditional

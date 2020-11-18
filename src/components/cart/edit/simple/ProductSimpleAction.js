@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     border: '1px solid #eee',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     marginRight: 10,
     height: 40,
   },

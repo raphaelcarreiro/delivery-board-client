@@ -12,7 +12,7 @@ export default function LoginEmailStep({ email, setEmail }) {
         placeholder="Seu e-mail ou telefone"
         autoFocus
         fullWidth
-        value={email}
+        value={email || ''}
         onChange={event => setEmail(event.target.value)}
         required
         margin="normal"
@@ -23,6 +23,6 @@ export default function LoginEmailStep({ email, setEmail }) {
 }
 
 LoginEmailStep.propTypes = {
-  email: PropTypes.string.isRequired,
+  email: PropTypes.string,
   setEmail: PropTypes.func.isRequired,
 };

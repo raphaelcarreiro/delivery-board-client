@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
   chip: {
     display: 'inline-block',
     padding: '3px 5px',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
     fontSize: 10,
@@ -292,6 +292,7 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
       handleModalState={onExited}
       title={`${productName} complementos`}
       displayBottomActions
+      maxWidth="sm"
     >
       {imagePreview && product.image && (
         <ImagePreview src={product.image.imageUrl} description={product.name} onExited={handleImagePreview} />

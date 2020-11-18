@@ -172,7 +172,13 @@ export default function ProductView({ onExited, handlePrepareProduct, handleAddP
   }
 
   return (
-    <CustomDialog title="adicionar produto" backgroundColor="#fafafa" handleModalState={onExited} displayBottomActions>
+    <CustomDialog
+      maxWidth="sm"
+      title="adicionar produto"
+      backgroundColor="#fafafa"
+      handleModalState={onExited}
+      displayBottomActions
+    >
       {imagePreview && product.image && (
         <ImagePreview src={product.image.imageUrl} description={product.name} onExited={handleImagePreview} />
       )}

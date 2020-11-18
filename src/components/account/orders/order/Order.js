@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 15,
     padding: 20,
     border: '1px solid #eee',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     backgroundColor: '#fff',
     maxWidth: 600,
     width: '100%',

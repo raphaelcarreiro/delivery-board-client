@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
   chip: {
     display: 'inline-block',
     padding: '3px 5px',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     backgroundColor: theme.palette.primary.dark,
     color: theme.palette.primary.contrastText,
     fontSize: 10,
@@ -83,7 +83,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     border: '1px solid #eee',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     marginRight: 10,
     height: 40,
   },
@@ -204,6 +204,7 @@ export default function ProductComplement({ onExited, selectedProduct, handleUpd
       handleModalState={onExited}
       title={`${product.name} - Complementos`}
       displayBottomActions
+      maxWidth="sm"
     >
       {imagePreview && product.image && (
         <ImagePreview src={product.image.imageUrl} description={product.name} onExited={handleImagePreview} />

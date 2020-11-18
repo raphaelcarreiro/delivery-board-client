@@ -123,7 +123,13 @@ export default function ProductSimple({ onExited, selectedProduct, handleUpdateC
   }
 
   return (
-    <CustomDialog title="Atualizar produto" backgroundColor="#fafafa" handleModalState={onExited} displayBottomActions>
+    <CustomDialog
+      maxWidth="sm"
+      title="Atualizar produto"
+      backgroundColor="#fafafa"
+      handleModalState={onExited}
+      displayBottomActions
+    >
       {imagePreview && product.image && (
         <ImagePreview src={product.image.imageUrl} description={product.name} onExited={handleImagePreview} />
       )}

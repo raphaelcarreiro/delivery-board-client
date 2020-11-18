@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'flex-start',
     padding: 10,
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     backgroundColor: '#fff',
     boxShadow: '1px 1px 9px 1px #eee',
   },
@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'flex-start',
     padding: 10,
     boxShadow: '1px 1px 9px 1px #eee',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.primary.main, 0.2),
     position: 'relative',
     '&:focus': {

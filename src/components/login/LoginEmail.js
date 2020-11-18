@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     padding: '35px',
     margin: '0 15px',
     justifyContent: 'space-between',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     position: 'relative',
     backgroundColor: '#fff',
     [theme.breakpoints.down('md')]: {
@@ -57,7 +57,6 @@ const useStyles = makeStyles(theme => ({
   linearProgress: {
     width: '99%',
     marginTop: '-3px',
-    borderRadius: 4,
   },
   content: {
     display: 'flex',

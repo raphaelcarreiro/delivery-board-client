@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     display: 'block',
     backgroundColor: '#fff',
     boxShadow: '1px 1px 9px 1px #eee',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
   },
   listItemNewAddress: {
     display: 'flex',
@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
     minHeight: 120,
     backgroundColor: '#fff',
     boxShadow: '1px 1px 9px 1px #eee',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     border: `2px dashed ${theme.palette.primary.main}`,
   },
   list: {

@@ -33,10 +33,18 @@ const theme = createMuiTheme({
       '"Segoe UI Symbol"',
     ].join(','),
   },
+  shape: {
+    borderRadius: 0,
+  },
   overrides: {
     MuiInput: {
       root: {
         fontWeight: 300,
+      },
+    },
+    MuiButton: {
+      contained: {
+        boxShadow: 'none',
       },
     },
     MuiTypography: {

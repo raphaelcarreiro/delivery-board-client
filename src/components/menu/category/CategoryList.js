@@ -19,8 +19,8 @@ const useStyles = makeStyles(theme => ({
   listItem: {
     display: 'flex',
     backgroundColor: '#fff',
-    boxShadow: '1px 1px 9px 1px #eee',
-    borderRadius: 4,
+    border: '1px solid #eee',
+    borderRadius: theme.shape.borderRadius,
     minHeight: 120,
   },
   content: {

@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     backgroundColor: '#fff',
     border: '1px solid #eee',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     position: 'relative',
     alignItems: 'center',
     height: 120,

@@ -24,14 +24,14 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'flex-start',
     backgroundColor: '#fff',
     boxShadow: '1px 1px 9px 1px #eee',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
   },
   status: {
     position: 'absolute',
     top: 10,
     right: 10,
     padding: '4px 10px',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     fontSize: 12,
   },
 

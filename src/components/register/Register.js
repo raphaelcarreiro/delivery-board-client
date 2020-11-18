@@ -23,7 +23,7 @@ Register.propTypes = {
 const useStyles = makeStyles(theme => ({
   paper: {
     padding: '35px',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
     minHeight: 600,
     display: 'flex',
     flexDirection: 'column',
@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
   linearProgress: {
     width: '99%',
     marginTop: '-3px',
-    borderRadius: 4,
+    borderRadius: theme.shape.borderRadius,
   },
 }));
 
