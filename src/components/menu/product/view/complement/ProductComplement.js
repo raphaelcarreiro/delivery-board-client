@@ -237,7 +237,7 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
     handleAddProductToCart();
   }
 
-  function handleClickComplements(productId, complementCategoryId, complementId) {
+  function handleClickComplements(productId, complementCategoryId, complementId, amount) {
     const categories = product.complement_categories.map(category => {
       if (category.id === complementCategoryId) {
         const selectedAmount = category.complements.reduce((sum, complement) => {
@@ -247,6 +247,7 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
         category.complements = category.complements.map(complement => {
           if (category.max_quantity === 1) {
             complement.selected = complement.id === complementId && !complement.selected;
+            complement.amount = complement + amount;
           } else {
             if (complement.id === complementId) {
               if (complement.selected) complement.selected = !complement.selected;
