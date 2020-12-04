@@ -345,6 +345,7 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
                     complementCategoryId={category.id}
                     handleClickComplements={handleClickComplements}
                     complements={category.complements}
+                    maxQuantity={category.max_quantity}
                   />
                 </section>
               ))}

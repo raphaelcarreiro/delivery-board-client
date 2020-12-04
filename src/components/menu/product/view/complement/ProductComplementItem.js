@@ -3,6 +3,7 @@ import { List, ListItem, Typography } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import PropTypes from 'prop-types';
+import { Add, Remove } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -44,6 +45,12 @@ const useStyles = makeStyles(theme => ({
   price: {
     fontWeight: 500,
   },
+  amountControl: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: 70,
+  },
 }));
 
 ProductComplementItem.propTypes = {
@@ -51,6 +58,7 @@ ProductComplementItem.propTypes = {
   handleClickComplements: PropTypes.func.isRequired,
   productId: PropTypes.number.isRequired,
   complementCategoryId: PropTypes.number.isRequired,
+  maxQuantity: PropTypes.number.isRequired,
 };
 
 export default function ProductComplementItem({
@@ -58,6 +66,7 @@ export default function ProductComplementItem({
   handleClickComplements,
   productId,
   complementCategoryId,
+  maxQuantity,
 }) {
   const classes = useStyles();
 
@@ -83,7 +92,15 @@ export default function ProductComplementItem({
               </Typography>
             )}
           </div>
-
+          {maxQuantity >= 2 && (
+            <div className={classes.amountControl}>
+              <Remove color="primary"></Remove>
+              <Typography variant="body1" display="inline">
+                0
+              </Typography>
+              <Add color="primary"></Add>
+            </div>
+          )}
           {complement.selected && <CheckCircleIcon className={classes.icon} color="primary" />}
         </ListItem>
       ))}
