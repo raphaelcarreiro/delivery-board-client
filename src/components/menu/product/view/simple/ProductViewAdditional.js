@@ -3,6 +3,7 @@ import { ListItem, List, Typography } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import PropTypes from 'prop-types';
+import ProductViewAmountControl from './ProductViewAmountControl';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -68,12 +69,7 @@ export default function ProductViewAdditional({ additional, handleClickAdditiona
       </div>
       <List className={classes.list}>
         {additional.map(item => (
-          <ListItem
-            onClick={() => handleClickAdditional(item.id)}
-            button
-            className={item.selected ? classes.selected : classes.listItem}
-            key={item.id}
-          >
+          <ListItem button className={item.selected ? classes.selected : classes.listItem} key={item.id}>
             <div>
               <Typography>{item.name}</Typography>
               {item.price > 0 && (
@@ -82,7 +78,7 @@ export default function ProductViewAdditional({ additional, handleClickAdditiona
                 </Typography>
               )}
             </div>
-            {item.selected && <CheckCircleIcon className={classes.icon} color="primary" />}
+            <ProductViewAmountControl additionalId={item.id} handleClickAdditional={handleClickAdditional} />
           </ListItem>
         ))}
       </List>

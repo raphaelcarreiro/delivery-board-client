@@ -46,13 +46,11 @@ ul {
   /* Track */
   ::-webkit-scrollbar-track {
     background: transparent;
-    border-radius: 10px;
   }
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
     background: #c6c6c6;
-    border-radius: 10px;
   }
 
   /* Handle on hover */

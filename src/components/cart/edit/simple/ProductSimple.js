@@ -79,9 +79,11 @@ export default function ProductSimple({ onExited, selectedProduct, handleUpdateC
 
   useEffect(() => {
     setAdditionalPrice(
-      product.additional.reduce((value, additional) => (additional.selected ? value + additional.price : value), 0)
+      product.additional.reduce(
+        (value, additional) => (additional.selected ? value + additional.price * additional.amount : value),
+        0
+      )
     );
-    // eslint-disable-next-line
   }, [product.additional]);
 
   function handleAmountUp() {
@@ -104,11 +106,14 @@ export default function ProductSimple({ onExited, selectedProduct, handleUpdateC
     });
   }
 
-  function handleClickAdditional(additionalId) {
+  function handleClickAdditional(additionalId, amount) {
     setProduct({
       ...product,
       additional: product.additional.map(additional => {
-        if (additional.id === additionalId) additional.selected = !additional.selected;
+        if (additional.id === additionalId) {
+          additional.selected = amount > 0;
+          additional.amount = amount;
+        }
         return additional;
       }),
     });

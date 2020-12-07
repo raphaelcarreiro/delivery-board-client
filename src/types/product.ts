@@ -8,6 +8,7 @@ export interface Additional {
   price: number;
   formattedPrice: string;
   selected: boolean;
+  amount: number;
 }
 
 export interface Ingredient {
@@ -113,7 +114,7 @@ export interface CreatedOrderProduct {
   promotion_activated: boolean;
   image: Image;
   category: Category;
-  additional: Additional[];
+  additional: OrderProductAdditional[];
   ingredients: Ingredient[];
   annotation: string;
   complement_categories: ComplementCategory[];
@@ -121,5 +122,9 @@ export interface CreatedOrderProduct {
   final_price: number;
   formattedFinalPrice: string;
   formattedProductPrice: string;
+  amount: number;
+}
+
+export interface OrderProductAdditional extends Additional {
   amount: number;
 }

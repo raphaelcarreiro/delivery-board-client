@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles, List, ListItem, Typography } from '@material-ui/core';
-
 import PropTypes from 'prop-types';
-import ProductPizzaComplement from './pizza_complement/ProductPizzaComplement';
-import ProductComplement from './complements/ProductComplement';
-import ProductSimple from './simple/ProductSimple';
+import OrderProductAdditional from './OrderProductAdditional';
+import OrderProductIngredients from './OrderProductIngredients';
+import OrderProductComplements from './OrderProductComplements';
 
 const useStyles = makeStyles({
   listItem: {
@@ -13,10 +12,10 @@ const useStyles = makeStyles({
     borderBottom: '1px solid #eee',
     borderRadius: 4,
     position: 'relative',
-    alignItems: 'center',
     minHeight: 60,
     marginBottom: 4,
-    // boxShadow: '1px 1px 9px 1px #eee',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
   },
   list: {
     paddingBottom: 20,
@@ -34,6 +33,7 @@ const useStyles = makeStyles({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
+    marginBottom: 7,
   },
   productName: {
     fontSize: 18,
@@ -46,41 +46,15 @@ OrderProductList.propTypes = {
 
 export default function OrderProductList({ products }) {
   const classes = useStyles();
-  const [dialogProductComplement, setDialogProductComplement] = useState(false);
-  const [dialogProduct, setDialogProduct] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-
-  function handleClick(product) {
-    setSelectedProduct(product);
-    if (product.category.has_complement) {
-      setDialogProductComplement(true);
-      return false;
-    }
-
-    setDialogProduct(true);
-  }
 
   return (
     <>
-      {dialogProductComplement && (
-        <>
-          {selectedProduct.category.is_pizza ? (
-            <ProductPizzaComplement
-              onExited={() => setDialogProductComplement(false)}
-              selectedProduct={selectedProduct}
-            />
-          ) : (
-            <ProductComplement onExited={() => setDialogProductComplement(false)} selectedProduct={selectedProduct} />
-          )}
-        </>
-      )}
-      {dialogProduct && <ProductSimple onExited={() => setDialogProduct(false)} selectedProduct={selectedProduct} />}
       <Typography variant="h6" gutterBottom>
         Itens
       </Typography>
       <List className={classes.list}>
         {products.map(product => (
-          <ListItem button key={product.id} className={classes.listItem} onClick={() => handleClick(product)}>
+          <ListItem key={product.id} className={classes.listItem}>
             <div className={classes.productData}>
               <div>
                 <Typography variant="body1" className={classes.productName}>
@@ -92,6 +66,11 @@ export default function OrderProductList({ products }) {
               </div>
               <Typography variant="h5">{product.formattedFinalPrice}</Typography>
             </div>
+            {product.additional.length > 0 && <OrderProductAdditional additional={product.additional} />}
+            {product.ingredients.length > 0 && <OrderProductIngredients ingredients={product.ingredients} />}
+            {product.complement_categories.length > 0 && (
+              <OrderProductComplements complementCategories={product.complement_categories} />
+            )}
           </ListItem>
         ))}
       </List>

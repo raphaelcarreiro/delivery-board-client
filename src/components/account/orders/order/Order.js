@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import { firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
 import OrderAction from './OrderAction';
-import OrderProductList from './OrderProductList';
+import OrderProductList from './products/OrderProductList';
 import Link from 'src/components/link/Link';
 
 import OrderStatusList from './OrderStatusList';

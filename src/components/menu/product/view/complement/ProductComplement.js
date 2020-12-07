@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { Typography, Grid, TextField } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import ProductComplementItem from './ProductComplementItem';
@@ -140,6 +140,7 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
             complement.product_complement_id = complement.id;
             complement.selected = !!complement.selected;
             complement.formattedPrice = complement.price && moneyFormat(complement.price);
+            complement.amount = 0;
 
             complement.prices = complement.prices.map((price, index) => {
               price.product_complement_price_id = price.id;
@@ -237,21 +238,25 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
     handleAddProductToCart();
   }
 
-  function handleClickComplements(productId, complementCategoryId, complementId, amount) {
+  function handleClickComplements(complementCategoryId, complementId, amount) {
     const categories = product.complement_categories.map(category => {
       if (category.id === complementCategoryId) {
         const selectedAmount = category.complements.reduce((sum, complement) => {
-          return complement.selected ? sum + 1 : sum;
+          return complement.selected ? sum + complement.amount : sum;
         }, 0);
 
         category.complements = category.complements.map(complement => {
           if (category.max_quantity === 1) {
             complement.selected = complement.id === complementId && !complement.selected;
-            complement.amount = complement + amount;
+            complement.amount = 1;
           } else {
             if (complement.id === complementId) {
-              if (complement.selected) complement.selected = !complement.selected;
-              else if (category.max_quantity > selectedAmount) complement.selected = !complement.selected;
+              // if (complement.selected) complement.selected = !complement.selected;
+              // else if (category.max_quantity > selectedAmount) complement.selected = !complement.selected;
+              if (category.max_quantity > selectedAmount || amount === 0) {
+                complement.amount = amount;
+                complement.selected = amount > 0;
+              }
             }
           }
 
@@ -264,13 +269,15 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
     const ready = product.complement_categories.every(category => {
       if (category.is_required) {
         const selectedAmount = category.complements.reduce((sum, complement) => {
-          return complement.selected ? sum + 1 : sum;
+          return complement.selected ? sum + complement.amount : sum;
         }, 0);
 
         return category.min_quantity <= selectedAmount;
       }
       return true;
     });
+
+    console.log(categories);
 
     const newProduct = {
       ...product,
@@ -342,11 +349,11 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
                     <div>{category.is_required && <span className={classes.chip}>Obrigatório</span>}</div>
                   </div>
                   <ProductComplementItem
-                    productId={product.id}
                     complementCategoryId={category.id}
                     handleClickComplements={handleClickComplements}
                     complements={category.complements}
                     maxQuantity={category.max_quantity}
+                    amountSelected={category.complements.reduce((sum, complement) => sum + complement.amount, 0)}
                   />
                 </section>
               ))}

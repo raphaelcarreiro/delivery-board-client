@@ -152,7 +152,7 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
                   ingredient =>
                     !ingredient.selected && (
                       <Typography key={ingredient.id} variant="body2" display="inline" className={classes.ingredients}>
-                        - {ingredient.name}
+                        s/ {ingredient.name}
                       </Typography>
                     )
                 )}
@@ -163,7 +163,7 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
                     additional =>
                       additional.selected && (
                         <Typography key={additional.id} variant="body2" display="inline" className={classes.additional}>
-                          + {additional.name} {additional.formattedPrice}
+                          c/ {additional.amount}x {additional.name}
                         </Typography>
                       )
                   )}
