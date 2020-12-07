@@ -62,13 +62,7 @@ ProductComplementItem.propTypes = {
   amountSelected: PropTypes.number.isRequired,
 };
 
-export default function ProductComplementItem({
-  complements,
-  handleClickComplements,
-  complementCategoryId,
-  maxQuantity,
-  amountSelected,
-}) {
+export default function ProductComplementItem({ complements, handleClickComplements, complementCategoryId }) {
   const classes = useStyles();
 
   return (
