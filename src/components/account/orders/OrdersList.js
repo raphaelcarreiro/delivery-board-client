@@ -28,8 +28,8 @@ const useStyles = makeStyles(theme => ({
   },
   status: {
     position: 'absolute',
-    top: 10,
-    right: 10,
+    top: 0,
+    right: 0,
     padding: '4px 10px',
     borderRadius: theme.shape.borderRadius,
     fontSize: 12,

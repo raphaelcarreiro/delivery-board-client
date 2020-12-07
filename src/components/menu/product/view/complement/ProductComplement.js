@@ -251,12 +251,12 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
             complement.amount = 1;
           } else {
             if (complement.id === complementId) {
-              // if (complement.selected) complement.selected = !complement.selected;
-              // else if (category.max_quantity > selectedAmount) complement.selected = !complement.selected;
-              if (category.max_quantity > selectedAmount || amount === 0) {
+              if (complement.selected) complement.selected = !complement.selected;
+              else if (category.max_quantity > selectedAmount) complement.selected = !complement.selected;
+              /* if (category.max_quantity > selectedAmount || amount === 0) {
                 complement.amount = amount;
                 complement.selected = amount > 0;
-              }
+              } */
             }
           }
 
