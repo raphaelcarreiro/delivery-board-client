@@ -169,9 +169,8 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
       closeOnSubmit
       async
       componentActions={<AccountAddressesAction saving={saving} />}
-      displayBottomActions
       maxWidth="sm"
-      height="70vh"
+      height="80vh"
     >
       {(saving || loading) && (
         <div className={classes.loading}>
@@ -194,7 +193,7 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
           />
         </Grid>
       )}
-      <Grid item xs={12} xl={7} lg={7} md={9}>
+      <Grid item xs={12}>
         <TextField
           label="Endereço"
           placeholder="Digite o endereço"
@@ -273,11 +272,6 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
           disabled
           required
         />
-        <div className={classes.actions}>
-          <Button disabled={saving} type="submit" variant="contained" color="primary">
-            Confirmar endereço
-          </Button>
-        </div>
       </Grid>
     </CustomDialogForm>
   );

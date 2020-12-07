@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TextField, Grid, Button, CircularProgress, MenuItem } from '@material-ui/core';
 import PostalCodeInput from '../../masked-input/PostalCodeInput';
 import PropTypes from 'prop-types';
@@ -69,11 +69,15 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
   const [city, setCity] = useState(mainAddress.city);
   const [region, setRegion] = useState(mainAddress.region);
   const [areaRegionId, setAreaRegionId] = useState('');
-  const [cepValidation, setCepValidation] = useState(!restaurant.configs.use_postalcode);
-  const [cepValidationText, setCepValidationText] = useState('');
   const [validation, setValidation] = useState({});
   const messaging = useMessaging();
   const classes = useStyles();
+  const [postalCodeValidation, setPostalCodeValidation] = useState({
+    error: false,
+    message: '',
+    hasData: false,
+  });
+  const inputRefNumber = useRef(null);
 
   useEffect(() => {
     if (restaurant.configs.tax_mode === 'district') {
@@ -97,10 +101,13 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
     }
   }, [restaurant]);
 
+  useEffect(() => {
+    if (!postalCodeValidation.error && postalCodeValidation.hasData) inputRefNumber.current.focus();
+  }, [postalCodeValidation]); //eslint-disable-line
+
   function handleChangeCep(value) {
     setPostalCode(value);
-    setCepValidation(false);
-    setCepValidationText('');
+    setPostalCodeValidation({ error: false, message: '', hasData: false });
 
     const newPostalCode = value.replace(/\D/g, '');
 
@@ -109,8 +116,11 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
     if (newPostalCode.length === 0) return false;
 
     if (newPostalCode.length < 8) {
-      setCepValidation(false);
-      setCepValidationText('CEP inválido');
+      setPostalCodeValidation({
+        error: true,
+        message: 'CEP inválido',
+        hasData: false,
+      });
     }
 
     if (newPostalCode.length === 8)
@@ -119,8 +129,11 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
         postalCodeSearch(newPostalCode)
           .then(response => {
             if (response.data.erro) {
-              setCepValidationText('CEP inexistente');
-              setCepValidation(false);
+              setPostalCodeValidation({
+                error: true,
+                message: 'CEP inexistente',
+                hasData: false,
+              });
             } else {
               const { data } = response;
               setAddress(data.logradouro);
@@ -128,15 +141,15 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
               setRegion(data.uf);
               setCity(data.localidade);
               setComplement(data.complemento);
-              setCepValidation(true);
-              setCepValidationText('');
+              setPostalCodeValidation({ error: false, message: '', hasData: true });
             }
           })
           .catch(err => {
-            setCepValidation(false);
-            if (err.response) {
-              alert(err.response.data.erro);
-            }
+            setPostalCodeValidation({
+              error: true,
+              message: err.message,
+              hasData: false,
+            });
           })
           .finally(() => {
             setLoading(false);
@@ -184,7 +197,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
   }
 
   async function handleSubmit() {
-    if (!cepValidation) {
+    if (postalCodeValidation.error) {
       throw new Error('CEP inválido');
     }
 
@@ -223,11 +236,10 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
       closeOnSubmit
       async
       componentActions={<AccountAddressesAction saving={saving} />}
-      displayBottomActions
       maxWidth="sm"
-      height="70vh"
+      height="80vh"
     >
-      {(saving || loading) && (
+      {saving && (
         <div className={classes.loading}>
           <CircularProgress color="primary" />
         </div>
@@ -241,8 +253,9 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
             fullWidth
             value={postalCode}
             onChange={event => handleChangeCep(event.target.value)}
-            helperText={cepValidationText}
-            error={!cepValidation && cepValidationText !== ''}
+            error={postalCodeValidation.error}
+            helperText={loading ? 'Pesquisando...' : postalCodeValidation.message && postalCodeValidation.message}
+            disabled={loading}
             InputProps={{
               inputComponent: PostalCodeInput,
             }}
@@ -251,8 +264,8 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
           />
         </Grid>
       )}
-      <Grid item xs={12} xl={7} lg={7} md={9}>
-        {cepValidation && (
+      <Grid item xs={12}>
+        {!postalCodeValidation.error && postalCodeValidation.hasData && (
           <div className={classes.form}>
             <div>
               <TextField
@@ -266,6 +279,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
                 onChange={event => setAddress(event.target.value)}
               />
               <TextField
+                inputRef={inputRefNumber}
                 error={!!validation.number}
                 helperText={!!validation.number && validation.number}
                 label="Número"
@@ -323,11 +337,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
                 value={region}
                 disabled
               />
-            </div>
-            <div className={classes.actions}>
-              <Button disabled={saving} type="submit" variant="contained" color="primary">
-                Confirmar endereço
-              </Button>
+              <button type="submit" style={{ display: 'none' }} />
             </div>
           </div>
         )}
