@@ -51,7 +51,13 @@ const AuthProvider: React.FC = ({ children }) => {
           dispatch(setUser(response.data));
         })
         .catch(err => {
-          if (err.response) console.log(err.response.data.error);
+          if (err.response) {
+            console.error(err.response.data.error);
+            if (err.response.status === 401 && process.env.NEXT_PUBLIC_TOKEN_NAME) {
+              localStorage.removeItem(process.env.NEXT_PUBLIC_TOKEN_NAME);
+              setIsAuthenticated(false);
+            }
+          }
         })
         .finally(() => {
           setIsLoading(false);
@@ -132,6 +138,8 @@ const AuthProvider: React.FC = ({ children }) => {
         return true;
       } catch (e) {
         console.log(e);
+        localStorage.removeItem(process.env.NEXT_PUBLIC_TOKEN_NAME);
+        setIsAuthenticated(false);
       }
     }
 
