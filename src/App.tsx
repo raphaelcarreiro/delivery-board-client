@@ -40,7 +40,7 @@ const useStyles = makeStyles({
 
 interface AppContextData {
   isMobile: boolean;
-  windowWidth: number | null;
+  windowWidth: number;
   isOpenMenu: boolean;
   isCartVisible: boolean;
   redirect: string | null;
@@ -80,7 +80,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const dispatch = useDispatch();
   const [isMobile, setIsMobile] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(1500);
+  const [windowWidth, setWindowWidth] = useState(0);
   const [initialLoading, setInitialLoading] = useState(true);
   const [isCartVisible, setIsCartVisible] = useState(false);
   const [redirect, setRedirect] = useState<string | null>(null);
