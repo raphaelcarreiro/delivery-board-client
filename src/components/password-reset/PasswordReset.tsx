@@ -162,7 +162,7 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ token }) => {
                   </NextLink>
                 </div>
               )}
-              <Typography align="center" variant="h6">
+              <Typography align="center" variant="h5">
                 Nova senha
               </Typography>
               <div>
@@ -210,7 +210,7 @@ const PasswordReset: React.FC<PasswordResetProps> = ({ token }) => {
               </div>
             </div>
             <div className={classes.action}>
-              <Button type="submit" variant="contained" color="primary" disabled={loading}>
+              <Button type="submit" variant="contained" color="primary" disabled={loading} fullWidth>
                 Confirmar
               </Button>
             </div>
