@@ -1,9 +1,9 @@
-import React, { useState, useContext, FormEvent } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, TextField, Button, LinearProgress } from '@material-ui/core';
 import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
-import { AppContext, useApp } from 'src/App';
+import { useApp } from 'src/App';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useMessaging } from 'src/hooks/messaging';
