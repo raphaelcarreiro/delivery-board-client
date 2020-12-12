@@ -5,8 +5,10 @@ import Product from 'src/components/menu/product/Product';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
-import { GetServerSideProps, NextPage } from 'next';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { Category as CategoryType } from 'src/types/category';
+import InitialLoading from 'src/components/loading/InitialLoading';
+import { useRouter } from 'next/router';
 
 const useStyles = makeStyles({
   container: {
@@ -22,8 +24,14 @@ type CategoryPageProps = {
   error?: string;
 };
 
-const Category: NextPage<CategoryPageProps> = ({ category, error }) => {
+const CategoryPage: NextPage<CategoryPageProps> = ({ category, error }) => {
   const classes = useStyles();
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <InitialLoading />;
+  }
+
   return (
     <>
       {error ? (
@@ -54,9 +62,34 @@ const Category: NextPage<CategoryPageProps> = ({ category, error }) => {
   );
 };
 
-export default Category;
+export default CategoryPage;
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  const instance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API,
+  });
+
+  try {
+    const response = await instance.get<CategoryType[]>('/categories');
+    const paths = response.data.map(category => ({
+      params: {
+        categoryUrl: category.url,
+      },
+    }));
+
+    return {
+      paths,
+      fallback: true,
+    };
+  } catch (err) {
+    return {
+      paths: [],
+      fallback: true,
+    };
+  }
+};
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
   const axiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API,
     headers: {
@@ -65,7 +98,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   });
 
   try {
-    const response = await axiosInstance.get<CategoryType, AxiosResponse<CategoryType>>(`/categories/${query.url}`);
+    const response = await axiosInstance.get<CategoryType, AxiosResponse<CategoryType>>(`/categories/${params?.url}`);
     const products = response.data.products.map(product => {
       product.formattedPrice = moneyFormat(product.price);
       product.formattedSpecialPrice = moneyFormat(product.special_price);
@@ -81,6 +114,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       props: {
         category,
       },
+      revalidate: 180,
     };
   } catch (err) {
     if (err.response)
