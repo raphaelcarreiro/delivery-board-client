@@ -1,6 +1,6 @@
 {
   "name": "delivery-client",
-  "version": "1.0",
+  "version": "2.0.0",
   "main": "index.js",
   "engines": {
     "node": "14.15.1"
