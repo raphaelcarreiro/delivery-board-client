@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { name, version } from '../../../../../package.json';
 
 const INITIAL_STATE = {
   shipment: {},
@@ -18,6 +19,11 @@ const INITIAL_STATE = {
   coupon: null,
   tax: 0,
   discount: 0,
+  origin: {
+    version,
+    app_name: name,
+    platform: 'web-app',
+  },
 };
 
 export default function order(state = INITIAL_STATE, action) {

@@ -1,4 +1,4 @@
-import axios, { AxiosError, CancelTokenSource } from 'axios';
+import axios, { CancelTokenSource } from 'axios';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API,
@@ -15,15 +15,11 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (err: AxiosError) => {
-    return Promise.reject(err);
-  }
+  err => Promise.reject(err)
 );
 
 api.interceptors.response.use(
-  config => {
-    return config;
-  },
+  config => config,
   err => {
     if (process.env.NEXT_PUBLIC_TOKEN_NAME) {
       const token = localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_NAME);
