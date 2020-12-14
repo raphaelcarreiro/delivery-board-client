@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import CheckoutHeader from './header/CheckoutHeader';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppContext } from 'src/App';
-import { NextComponentType } from 'next';
+import { useApp } from 'src/App';
 
 const cartWidth = 450;
 
@@ -38,42 +37,20 @@ const useStyles = makeStyles(theme => ({
       marginTop: 56,
     },
   },
-  cart: ({ isCartVisible }: { isCartVisible: boolean }) => ({
-    transition: 'transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms',
-    transform: isCartVisible ? 'none' : `translateX(${cartWidth}px)`,
-    position: 'fixed',
-    top: 80,
-    width: cartWidth,
-    bottom: 0,
-    right: 0,
-    backgroundColor: '#fff',
-    boxShadow: '0 0 6px 4px #ddd',
-    padding: 20,
-    zIndex: 9,
-  }),
 }));
 
-interface CheckoutProps {
-  pageProps: any;
-  component: NextComponentType;
-  isMobile: boolean;
-  windowWidth: number;
-}
-
-const Checkout: React.FC<CheckoutProps> = ({ pageProps, component: Component, isMobile, windowWidth }) => {
-  const app = useContext(AppContext);
-  const classes = useStyles({ isCartVisible: app.isCartVisible });
+const CheckoutLayout: React.FC = ({ children }) => {
+  const { isMobile, windowWidth } = useApp();
+  const classes = useStyles();
 
   return (
     <div className={classes.wrapper}>
       {!isMobile && windowWidth >= 960 && <CheckoutHeader />}
       <div className={classes.containerWrapper}>
-        <div className={isMobile || windowWidth < 960 ? classes.mobileContainer : classes.container}>
-          <Component {...pageProps} />
-        </div>
+        <div className={isMobile || windowWidth < 960 ? classes.mobileContainer : classes.container}>{children}</div>
       </div>
     </div>
   );
 };
 
-export default Checkout;
+export default CheckoutLayout;

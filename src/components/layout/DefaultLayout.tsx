@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Header from './header/Header';
 import Footer from './footer/Footer';
 import { makeStyles } from '@material-ui/core/styles';
 import Cart from '../cart/Cart';
-import { AppContext } from 'src/App';
+import { useApp } from 'src/App';
 import DialogFullscreen from 'src/components/dialog/DialogFullscreen';
 import { NextComponentType } from 'next';
 
@@ -68,16 +68,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-interface DefaultProps {
-  pageProps: any;
-  component: NextComponentType;
-  isMobile: boolean;
-  windowWidth: number;
-}
-
-const Default: React.FC<DefaultProps> = ({ pageProps, component: Component, isMobile, windowWidth }) => {
-  const app = useContext(AppContext);
-  const classes = useStyles({ isCartVisible: app.isCartVisible });
+const DefaultLayout: React.FC = ({ children }) => {
+  const { isMobile, windowWidth, isCartVisible, handleCartVisibility } = useApp();
+  const classes = useStyles({ isCartVisible });
 
   return (
     <div className={classes.wrapper}>
@@ -88,8 +81,8 @@ const Default: React.FC<DefaultProps> = ({ pageProps, component: Component, isMo
         </div>
       ) : (
         <>
-          {app.isCartVisible && (
-            <DialogFullscreen title="carrinho" handleModalState={() => app.handleCartVisibility(false)}>
+          {isCartVisible && (
+            <DialogFullscreen title="carrinho" handleModalState={() => handleCartVisibility(false)}>
               <div className={classes.cartContent}>
                 <Cart />
               </div>
@@ -98,13 +91,11 @@ const Default: React.FC<DefaultProps> = ({ pageProps, component: Component, isMo
         </>
       )}
       <div className={classes.containerWrapper}>
-        <div className={isMobile || windowWidth < 960 ? classes.mobileContainer : classes.container}>
-          <Component {...pageProps} />
-        </div>
+        <div className={isMobile || windowWidth < 960 ? classes.mobileContainer : classes.container}>{children}</div>
         {!isMobile && windowWidth >= 960 && <Footer />}
       </div>
     </div>
   );
 };
 
-export default Default;
+export default DefaultLayout;

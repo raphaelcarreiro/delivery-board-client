@@ -13,11 +13,8 @@ import { NextComponentType } from 'next';
 import { useSelector } from './store/redux/selector';
 import { LinearProgress } from '@material-ui/core';
 import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
-import OnlyMain from './components/layout/OnlyMain';
-import Default from './components/layout/Default';
 import Sidebar from './components/sidebar/Sidebar';
 import InitialLoading from './components/loading/InitialLoading';
-import Checkout from './components/layout/Checkout';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import defaultTheme from './theme';
 import io from 'socket.io-client';
@@ -27,6 +24,7 @@ import AuthProvider from './hooks/auth';
 import FirebaseProvider from './hooks/firebase';
 import GoogleLoginProvider from './hooks/googleLogin';
 import FacebookLoginProvider from './hooks/facebookLogin';
+import LayoutHandler from './components/layout/LayoutHandler';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -301,23 +299,9 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
               <GoogleLoginProvider>
                 <FacebookLoginProvider>
                   <Sidebar handleOpenMenu={handleOpenMenu} isOpenMenu={isOpenMenu} />
-                  {paths.includes(router.route) ? (
-                    <OnlyMain pageProps={pageProps} component={Component} />
-                  ) : checkoutPaths.includes(router.route) ? (
-                    <Checkout
-                      pageProps={pageProps}
-                      component={Component}
-                      isMobile={isMobile}
-                      windowWidth={windowWidth}
-                    />
-                  ) : (
-                    <Default
-                      pageProps={pageProps}
-                      component={Component}
-                      isMobile={isMobile}
-                      windowWidth={windowWidth}
-                    />
-                  )}
+                  <LayoutHandler>
+                    <Component {...pageProps} />
+                  </LayoutHandler>
                 </FacebookLoginProvider>
               </GoogleLoginProvider>
             </MessagingProvider>

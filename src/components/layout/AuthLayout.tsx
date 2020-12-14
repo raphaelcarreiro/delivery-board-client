@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { NextComponentType } from 'next';
 
 const useStyles = makeStyles({
   container: {
@@ -23,23 +22,16 @@ const useStyles = makeStyles({
   },
 });
 
-interface OnlyMainProps {
-  pageProps: any;
-  component: NextComponentType;
-}
-
-const OnlyMain: React.FC<OnlyMainProps> = ({ pageProps, component: Component }) => {
+const AuthLayout: React.FC = ({ children }) => {
   const classes = useStyles({});
 
   return (
     <div className={classes.wrapper}>
       <div className={classes.containerWrapper}>
-        <div className={classes.container}>
-          <Component {...pageProps} />
-        </div>
+        <div className={classes.container}>{children}</div>
       </div>
     </div>
   );
 };
 
-export default OnlyMain;
+export default AuthLayout;
