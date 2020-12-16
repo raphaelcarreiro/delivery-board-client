@@ -143,16 +143,13 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     handleShowPlayStoreBanner: handleShowPlayStoreBanner,
   };
 
-  // paginas que não precisam no cabeçalho e rodapé padrões
-  const paths = [
-    '/register',
-    '/login',
-    '/login/email',
-    '/guest-register',
-    '/password-request',
-    '/password-reset/[token]',
-  ];
-  const checkoutPaths = ['/checkout'];
+  useEffect(() => {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for (const registration of registrations) {
+        if (registration.scope.includes('service-worker')) registration.unregister();
+      }
+    });
+  }, []);
 
   useEffect(() => {
     function loadPromotions() {

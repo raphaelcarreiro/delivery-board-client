@@ -2,7 +2,6 @@ const express = require('express');
 const sslRedirect = require('heroku-ssl-redirect');
 const next = require('next');
 const { parse } = require('url');
-const { join } = require('path');
 const sitemapGenerator = require('./sitemapGenerator');
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -24,16 +23,7 @@ app
 
     server.get('*', (req, res) => {
       const parsedUrl = parse(req.url, true);
-      const { pathname } = parsedUrl;
-
-      // handle GET request to /service-worker.js
-      if (pathname === '/service-worker.js') {
-        const filePath = join(__dirname, '.next', pathname);
-
-        app.serveStatic(req, res, filePath);
-      } else {
-        handle(req, res, parsedUrl);
-      }
+      handle(req, res, parsedUrl);
     });
 
     server.listen(port, error => {
