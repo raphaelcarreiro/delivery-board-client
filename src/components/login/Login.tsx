@@ -29,6 +29,7 @@ const useStyles = makeStyles({
   btnGoogleLogin: {
     backgroundColor: '#fff',
     color: '#333',
+    border: '1px solid #ddd',
     '&:hover': {
       backgroundColor: '#fff',
     },
