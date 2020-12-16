@@ -1,7 +1,5 @@
 const withOffline = require('next-offline');
 
-const nextConfig = {
-  generateInDevMode: true,
-};
+const nextConfig = {};
 
 exports.default = withOffline(nextConfig);
