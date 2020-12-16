@@ -4,5 +4,5 @@
 /public/manifest.json
 /public/*sw*
 /public/*workbox*
-/public/sitemap.xml
+public/sitemap.xml
 
