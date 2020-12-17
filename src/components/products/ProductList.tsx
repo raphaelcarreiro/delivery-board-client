@@ -43,7 +43,7 @@ const ProductList: React.FC<ProductListProps> = ({
 
   return (
     <>
-      <List className={listType === 'col' ? classes.listCol : classes.listRow}>
+      <List disablePadding className={listType === 'col' ? classes.listCol : classes.listRow}>
         {products.map(product => (
           <ProductItem
             listType={listType}

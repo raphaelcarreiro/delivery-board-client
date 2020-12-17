@@ -180,7 +180,7 @@ export default function ProductView({ onExited, handlePrepareProduct, handleAddP
   return (
     <CustomDialog
       maxWidth="sm"
-      title="adicionar produto"
+      title="adicionar ao carrinho"
       backgroundColor="#fafafa"
       handleModalState={onExited}
       displayBottomActions

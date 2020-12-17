@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
   },
   productName: {
-    fontWeight: 300,
+    fontWeight: 400,
   },
 }));
 

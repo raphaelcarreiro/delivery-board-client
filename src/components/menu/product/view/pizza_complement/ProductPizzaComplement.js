@@ -372,7 +372,7 @@ export default function ProductPizzaComplement({
     <CustomDialog
       backgroundColor="#fafafa"
       handleModalState={onExited}
-      title={`${productName} complementos`}
+      title={`adicionar ao carrinho`}
       displayBottomActions
       maxWidth="sm"
     >

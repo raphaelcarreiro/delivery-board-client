@@ -287,7 +287,7 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
     <CustomDialog
       backgroundColor="#fafafa"
       handleModalState={onExited}
-      title={`${productName} complementos`}
+      title={`adicionar ao carrinho`}
       displayBottomActions
       maxWidth="sm"
     >

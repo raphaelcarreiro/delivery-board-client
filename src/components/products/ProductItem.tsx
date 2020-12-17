@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius: theme.shape.borderRadius,
     position: 'relative',
     alignItems: 'flex-start',
-    height: 250,
+    height: 269,
     width: props.listType === 'row' ? 230 : '100%',
     padding: 10,
     flexDirection: 'column',
@@ -22,6 +22,10 @@ const useStyles = makeStyles(theme => ({
   }),
   img: {
     height: '100%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      height: 'auto',
+    },
   },
   imageWrapper: {
     display: 'flex',
@@ -73,9 +77,10 @@ const useStyles = makeStyles(theme => ({
   productDescription: {
     display: '-webkit-box',
     overflow: 'hidden',
-    WebkitLineClamp: 2,
+    WebkitLineClamp: 3,
     WebkitBoxOrient: 'vertical',
     wordBreak: 'break-word',
+    marginTop: 3,
   },
 }));
 
@@ -128,7 +133,7 @@ const CategoryProduct: React.FC<CategoryProductProps> = ({
         <Typography variant="body2" color="textSecondary" className={classes.productDescription}>
           {product.description}
         </Typography>
-        {product.category.has_complement && <Typography color="primary">Monte esse produto</Typography>}
+        {/* product.category.has_complement && <Typography color="primary">Monte esse produto</Typography> */}
       </div>
     </ListItem>
   );

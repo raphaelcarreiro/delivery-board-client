@@ -85,6 +85,7 @@ const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
     display: 'flex',
     backgroundColor: '#eee',
+    flexShirink: 0,
   },
 }));
 

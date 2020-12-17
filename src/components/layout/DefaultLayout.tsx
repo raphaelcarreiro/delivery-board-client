@@ -1,11 +1,10 @@
 import React from 'react';
 import Header from './header/Header';
 import Footer from './footer/Footer';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core';
 import Cart from '../cart/Cart';
 import { useApp } from 'src/App';
 import DialogFullscreen from 'src/components/dialog/DialogFullscreen';
-import { NextComponentType } from 'next';
 
 const cartWidth = 450;
 
