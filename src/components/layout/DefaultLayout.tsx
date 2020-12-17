@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     minHeight: 'calc(100vh - 56px)',
-    padding: '20px 20px 30px',
+    padding: '15px 15px 30px',
   },
   wrapper: {
     position: 'absolute',

@@ -43,6 +43,7 @@ function NoData({ message, action, buttonText, secondaryMessage }) {
 
 NoData.propTypes = {
   message: PropTypes.string.isRequired,
+  secondaryMessage: PropTypes.string,
   action: PropTypes.func,
   buttonText: PropTypes.string,
 };

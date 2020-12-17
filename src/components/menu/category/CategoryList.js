@@ -57,7 +57,7 @@ export default function CategoryList({ categories }) {
   const classes = useStyles();
 
   return (
-    <List className={classes.list}>
+    <List className={classes.list} disablePadding>
       {categories.map(
         item =>
           item.activated && (

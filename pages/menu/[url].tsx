@@ -9,6 +9,7 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { Category as CategoryType } from 'src/types/category';
 import InitialLoading from 'src/components/loading/InitialLoading';
 import { useRouter } from 'next/router';
+import Products from 'src/components/products/Product';
 
 const useStyles = makeStyles({
   container: {
@@ -54,7 +55,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, error }) => {
               <meta property="og:description" content={category.description} />
               <meta property="og:image" content={category.image.imageUrl} />
             </Head>
-            <Product products={category.products} categoryName={category.name} categoryUrl={category.url} />
+            <Products products={category.products} categoryName={category.name} categoryUrl={category.url} />
           </>
         )
       )}
