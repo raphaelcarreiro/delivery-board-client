@@ -1,10 +1,10 @@
 import React from 'react';
 import Head from 'next/head';
-import Menu from 'src/components/menu/Menu';
 import { GetStaticProps } from 'next';
 import axios from 'axios';
 import { Category } from 'src/types/category';
 import { Typography } from '@material-ui/core';
+import Categories from 'src/components/category/Categories';
 
 interface MenuPageProps {
   categories: Category[];
@@ -23,7 +23,7 @@ const MenuPage: React.FC<MenuPageProps> = ({ categories, error }) => {
           <Typography>{error}</Typography>
         </div>
       ) : (
-        <Menu categories={categories} />
+        <Categories categories={categories} />
       )}
     </>
   );

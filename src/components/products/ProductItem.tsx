@@ -106,7 +106,7 @@ const CategoryProduct: React.FC<CategoryProductProps> = ({
         <div className={classes.imageWrapper}>
           <img
             className={classes.img}
-            src={product.image.thumbImageUlr ? product.image.thumbImageUlr : product.image.imageUrl}
+            src={product.image.imageThumbUrl ? product.image.imageThumbUrl : product.image.imageUrl}
             alt={product.name}
             onClick={event => handleOpenImagePreview(event, product)}
           />

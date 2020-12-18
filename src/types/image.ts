@@ -1,6 +1,6 @@
 export interface Image {
   id: number;
   imageUrl: string;
-  thumbImageUlr: string;
+  imageThumbUrl: string;
   selected: boolean;
 }
