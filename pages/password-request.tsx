@@ -1,17 +1,31 @@
 import React from 'react';
 import PasswordRequest from 'src/components/password-reset/PasswordRequest';
 import Head from 'next/head';
-import { NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 
-const PasswordRequestPage: NextPage = () => {
+type PasswordRequestPageProps = {
+  user?: string;
+};
+
+const PasswordRequestPage: NextPage<PasswordRequestPageProps> = ({ user }) => {
   return (
     <>
       <Head>
         <title>Solitar nova senha</title>
       </Head>
-      <PasswordRequest />;
+      <PasswordRequest user={user} />;
     </>
   );
 };
 
 export default PasswordRequestPage;
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { user } = query;
+
+  return {
+    props: {
+      user: user ? String(user) : undefined,
+    },
+  };
+};

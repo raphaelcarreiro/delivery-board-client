@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Typography, TextField, InputAdornment, IconButton } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import { makeStyles } from '@material-ui/core/styles';
@@ -14,7 +13,25 @@ const useStyles = makeStyles({
   },
 });
 
-export default function LoginPasswordStep({ password, setPassword, name, phoneParam, emailParam }) {
+type LoginPasswordStepProps = {
+  password: string;
+  setPassword(passowd: string): void;
+  name: string;
+  phoneParam?: string;
+  emailParam?: string;
+  email: string;
+  passwordError: string;
+};
+
+const LoginPasswordStep: React.FC<LoginPasswordStepProps> = ({
+  password,
+  setPassword,
+  name,
+  phoneParam,
+  emailParam,
+  email,
+  passwordError,
+}) => {
   const [showPassword, setShowPassword] = useState(false);
   const classes = useStyles();
 
@@ -29,15 +46,18 @@ export default function LoginPasswordStep({ password, setPassword, name, phonePa
       </Typography>
       {phoneParam && (
         <Typography align="center" variant="body2" className={classes.info}>
-          Encontramos um registro para esse telefone. Você se registrou em outro restaurante que usa o mesmo aplicativo.
+          Esse telefone já está registrado. Informe a senha.
         </Typography>
       )}
       {emailParam && (
         <Typography align="center" variant="body2" className={classes.info}>
-          Encontramos um registro para esse email. Você se registrou em outro restaurante que usa o mesmo aplicativo.
+          Esse e-mail já está registrado. Informe a senha
         </Typography>
       )}
+      <input type="text" style={{ display: 'none' }} value={email} autoComplete="username email" />
       <TextField
+        error={!!passwordError}
+        helperText={passwordError}
         variant="outlined"
         margin="normal"
         label="Sua senha"
@@ -60,12 +80,6 @@ export default function LoginPasswordStep({ password, setPassword, name, phonePa
       />
     </div>
   );
-}
-
-LoginPasswordStep.propTypes = {
-  password: PropTypes.string.isRequired,
-  setPassword: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
-  phoneParam: PropTypes.string,
-  emailParam: PropTypes.string,
 };
+
+export default LoginPasswordStep;

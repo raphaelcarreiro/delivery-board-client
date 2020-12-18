@@ -116,7 +116,10 @@ const AuthProvider: React.FC = ({ children }) => {
         })
         .catch(err => {
           if (err.response) {
-            if (err.response.status === 401) reject(new Error('E-mail não encontrado'));
+            if (err.response.status === 401) {
+              const type = /^\d+$/.test(email) ? 'Telefone' : email.includes('@') ? 'E-mail' : 'E-mail ou telefone';
+              reject(new Error(`${type} não encontrado`));
+            }
           } else reject(new Error(err.message));
         });
     });

@@ -1,8 +1,13 @@
 import React from 'react';
 import { TextField, Typography } from '@material-ui/core';
-import PropTypes from 'prop-types';
 
-export default function LoginEmailStep({ email, setEmail }) {
+type LoginEmailStepProps = {
+  email: String;
+  setEmail(email: string): void;
+  emailError: string;
+};
+
+const LoginEmailStep: React.FC<LoginEmailStepProps> = ({ email, setEmail, emailError }) => {
   return (
     <div>
       <Typography align="center">Informe seu e-mail ou telefone.</Typography>
@@ -12,17 +17,16 @@ export default function LoginEmailStep({ email, setEmail }) {
         placeholder="Seu e-mail ou telefone"
         autoFocus
         fullWidth
-        value={email || ''}
+        value={email}
         onChange={event => setEmail(event.target.value)}
         required
         margin="normal"
         autoComplete="email"
+        error={!!emailError}
+        helperText={emailError}
       />
     </div>
   );
-}
-
-LoginEmailStep.propTypes = {
-  email: PropTypes.string,
-  setEmail: PropTypes.func.isRequired,
 };
+
+export default LoginEmailStep;

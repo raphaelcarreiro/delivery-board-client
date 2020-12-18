@@ -1,13 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, TextField, Button, LinearProgress } from '@material-ui/core';
 import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
-import { AppContext } from 'src/App';
-import { useSelector } from 'react-redux';
-import Link from '../link/Link';
+import { useApp } from 'src/App';
 import NextLink from 'next/link';
 import { useMessaging } from 'src/hooks/messaging';
+import CustomLink from '../link/CustomLink';
+import { useSelector } from 'src/store/redux/selector';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -29,7 +29,10 @@ const useStyles = makeStyles(theme => ({
   },
   action: {
     display: 'flex',
-    justifyContent: 'space-around',
+    flexDirection: 'column',
+    height: 100,
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   loading: {
     top: 0,
@@ -66,16 +69,20 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function PasswordRequest() {
-  const [email, setEmail] = useState('');
+type PasswordRequestProps = {
+  user?: string;
+};
+
+const PasswordRequest: React.FC<PasswordRequestProps> = ({ user }) => {
+  const [email, setEmail] = useState(user || '');
   const [validation, setValidation] = useState({ email: [] });
   const [loading, setLoading] = useState(false);
   const messaging = useMessaging();
-  const app = useContext(AppContext);
-  const restaurant = useSelector(state => state.restaurant);
+  const app = useApp();
   const classes = useStyles();
+  const restaurant = useSelector(state => state.restaurant);
 
-  const handleSubmit = event => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setValidation({ email: [] });
 
@@ -87,7 +94,7 @@ function PasswordRequest() {
         return response.data;
       })
       .then(() => {
-        messaging.handleOpen('Um link foi enviado para o e-mail informado');
+        messaging.handleOpen('Enviamos uma mensagem no seu e-mail');
       })
       .catch(err => {
         if (err.response) {
@@ -120,24 +127,28 @@ function PasswordRequest() {
                 </>
               )}
               <div className={classes.content}>
-                <div className={classes.logoContainer}>
-                  <NextLink href="/">
-                    <a>
-                      <img className={classes.logo} src={restaurant && restaurant.image.imageUrl} alt="Logo" />
-                    </a>
-                  </NextLink>
-                </div>
-                <Typography align="center" variant="h6">
+                {restaurant && (
+                  <div className={classes.logoContainer}>
+                    <NextLink href="/">
+                      <a>
+                        <img className={classes.logo} src={restaurant.image.imageUrl} alt="Logo" />
+                      </a>
+                    </NextLink>
+                  </div>
+                )}
+                <Typography align="center" variant="h6" gutterBottom>
                   Esqueci minha senha
                 </Typography>
-                <Typography variant="body2" align="center">
-                  Você receberá informações de como criar uma nova senha no e-mail informado.
+                <Typography variant="body2" align="center" color="textSecondary">
+                  Você receberá informações de como criar uma nova senha no seu e-mail.
                 </Typography>
                 <div>
                   <TextField
+                    error={validation.email.length > 0}
+                    helperText={validation.email.length > 0 && validation.email[0]}
                     variant="outlined"
-                    label="E-mail"
-                    placeholder="Informe seu email"
+                    label="E-mail ou telefone"
+                    placeholder="Informe seu email ou telefone"
                     autoFocus
                     fullWidth
                     value={email}
@@ -148,12 +159,12 @@ function PasswordRequest() {
                 </div>
               </div>
               <div className={classes.action}>
-                <Button variant="text" color="primary" component={Link} href="/login/email">
-                  Voltar
-                </Button>
                 <Button type="submit" variant="contained" color="primary" disabled={loading}>
                   Enviar
                 </Button>
+                <CustomLink color="primary" href="/login/email">
+                  Voltar
+                </CustomLink>
               </div>
             </div>
           </form>
@@ -161,6 +172,6 @@ function PasswordRequest() {
       </Grid>
     </>
   );
-}
+};
 
 export default PasswordRequest;
