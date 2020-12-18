@@ -43,6 +43,7 @@ const useStyles = makeStyles(theme => ({
     top: 20,
     left: 20,
     zIndex: 1,
+    maxWidth: '80%',
   },
   closeIcon: {
     color: '#fff',
@@ -78,9 +79,7 @@ function ImagePreview({ src, description, onExited }) {
     <Dialog fullScreen open={open} onClose={handleClose} onExited={onExited}>
       <div className={classes.container} />
       <div className={classes.description}>
-        <Typography variant="h6" align="center">
-          {description}
-        </Typography>
+        <Typography variant="h6">{description}</Typography>
       </div>
       <IconButton onClick={handleClose} className={classes.buttonClose}>
         <CloseIcon className={classes.closeIcon} />

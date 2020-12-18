@@ -8,7 +8,8 @@ const useStyles = makeStyles(theme => ({
   listItem: (props: { windowWidth: number; listType: 'col' | 'row' }) => ({
     display: 'flex',
     backgroundColor: '#fff',
-    border: '1px solid #eee',
+    // border: '1px solid #eee',
+    boxShadow: '0 0 3px 1px #eee',
     borderRadius: theme.shape.borderRadius,
     position: 'relative',
     alignItems: 'flex-start',
