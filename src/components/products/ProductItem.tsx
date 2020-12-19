@@ -2,7 +2,7 @@ import React, { MouseEvent } from 'react';
 import { ListItem, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Product } from 'src/types/product';
-import { useApp } from 'src/App';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   listItem: (props: { windowWidth: number; listType: 'col' | 'row' }) => ({
@@ -42,8 +42,9 @@ const useStyles = makeStyles(theme => ({
   productData: {
     display: 'flex',
     flexDirection: 'column',
-    flex: '1 1',
+    flex: 1,
     alignItems: 'flex-start',
+    width: '100%',
   },
   price: {
     fontWeight: 600,
@@ -53,13 +54,11 @@ const useStyles = makeStyles(theme => ({
     marginRight: 10,
   },
   specialPrice: {
-    color: '#2ca52a',
+    fontWeight: 600,
   },
   specialPriceContent: {
     display: 'flex',
     alignItems: 'baseline',
-    justifyContent: 'space-between',
-    minWidth: 135,
   },
   tag: {
     position: 'absolute',
@@ -119,7 +118,7 @@ const CategoryProduct: React.FC<CategoryProductProps> = ({
             <Typography variant="body1" color="textSecondary" className={classes.oldPrice}>
               {product.formattedPrice}
             </Typography>
-            <Typography variant="h6" color="primary">
+            <Typography color="primary" className={classes.specialPrice}>
               {product.formattedSpecialPrice}
             </Typography>
           </div>

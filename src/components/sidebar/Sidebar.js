@@ -8,7 +8,6 @@ import HomeIcon from '@material-ui/icons/Home';
 import Drawer from '@material-ui/core/Drawer';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
-import { menuWidth, useApp } from '../../App';
 import Link from '../link/Link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
@@ -16,10 +15,12 @@ import ChatIcon from '@material-ui/icons/Chat';
 import LocalOfferIcons from '@material-ui/icons/LocalOffer';
 import { FiLogIn, FiLogOut } from 'react-icons/fi';
 import { useAuth } from 'src/hooks/auth';
+import { MENU_WIDTH } from '../constants/constants';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   drawerPaper: {
-    width: menuWidth,
+    width: MENU_WIDTH,
     backgroundColor: theme.palette.secondary.main,
     '@media print': {
       display: 'none',

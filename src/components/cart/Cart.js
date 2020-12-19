@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import CartProductList from './CartProductList';
 import CartTotal from './CartTotal';
@@ -11,13 +11,13 @@ import ProductPizzaComplement from './edit/pizza_complement/ProductPizzaCompleme
 import { updateProductFromCart } from 'src/store/redux/modules/cart/actions';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import CartClosedRestaurant from 'src/components/cart/CartClosedRestaurant';
-import { AppContext } from 'src/App';
 import Coupon from './coupon/Coupon';
 import CartCouponButton from './CartCouponButton';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import { useMessaging } from 'src/hooks/messaging';
 import { useAuth } from 'src/hooks/auth';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -81,7 +81,7 @@ export default function Cart() {
   const router = useRouter();
   const dispatch = useDispatch();
   const messaging = useMessaging();
-  const { handleCartVisibility, setRedirect } = useContext(AppContext);
+  const { handleCartVisibility, setRedirect } = useApp();
   const restaurant = useSelector(state => state.restaurant);
   const [dialogUpdateSimpleProduct, setDialogUpdateSimpleProduct] = useState(false);
   const [dialogUpdateComplementProduct, setDialogUpdateComplementProduct] = useState(false);

@@ -24,7 +24,6 @@ import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import CheckoutSuccess from 'src/components/checkout/steps/success/CheckoutSuccess';
 import { clearCart } from 'src/store/redux/modules/cart/actions';
 import Cart from 'src/components/checkout/cart/Cart';
-import { AppContext } from 'src/App';
 import IndexAppbarActions from 'src/components/index/IndexAppbarActions';
 import DialogFullscreen from 'src/components/dialog/DialogFullscreen';
 import CheckoutButtons from 'src/components/checkout/CheckoutButtons';
@@ -34,6 +33,7 @@ import { useRouter } from 'next/router';
 import InsideLoading from '../loading/InsideLoading';
 import { useMessaging } from 'src/hooks/messaging';
 import { useAuth } from 'src/hooks/auth';
+import { useApp } from 'src/hooks/app';
 
 const cartWidth = 450;
 
@@ -128,7 +128,7 @@ export const CheckoutContext = React.createContext({
 
 export default function Checkout() {
   const { handleOpen } = useMessaging();
-  const { isCartVisible, handleCartVisibility, isMobile, windowWidth } = useContext(AppContext);
+  const { isCartVisible, handleCartVisibility, isMobile, windowWidth } = useApp();
   const user = useSelector(state => state.user);
   const cart = useSelector(state => state.cart);
   const order = useSelector(state => state.order);

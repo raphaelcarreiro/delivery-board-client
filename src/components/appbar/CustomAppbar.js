@@ -6,9 +6,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
-import { menuWidth, AppContext } from '../../App';
-// import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { MENU_WIDTH } from '../constants/constants';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
     left: 0,
   },
   appBarTabsMenuOpen: {
-    left: menuWidth,
+    left: MENU_WIDTH,
   },
   appBarTabsSpace: {
     marginBottom: 45,
@@ -61,7 +61,7 @@ const useStyles = makeStyles(theme => ({
 function CustomAppbar({ actionComponent, title, TabComponent, cancel, cancelAction }) {
   const [appBarTabs] = useState(true);
   const classes = useStyles();
-  const { handleOpenMenu, isMobile, windowWidth } = useContext(AppContext);
+  const { handleOpenMenu, isMobile, windowWidth } = useApp();
 
   return (
     <Fragment>

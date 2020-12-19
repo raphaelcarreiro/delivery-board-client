@@ -1,24 +1,20 @@
-import React, { useState, useContext, useReducer, useEffect } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { Grid, Button, LinearProgress, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from '../link/Link';
 import { api } from '../../services/api';
 import RegisterForm from './RegisterForm';
 import * as yup from 'yup';
-import userReducer, { INITIAL_STATE as userInitiaState } from '../../store/context-api/modules/user/reducer';
 import { userChange } from '../../store/context-api/modules/user/actions';
 import RegisterSucess from './RegisterSuccess';
 import { useRouter } from 'next/router';
-import { AppContext } from 'src/App';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'src/store/redux/modules/user/actions';
-import PropTypes from 'prop-types';
 import { useMessaging } from 'src/hooks/messaging';
-
-Register.propTypes = {
-  name: PropTypes.string,
-  email: PropTypes.string,
-};
+import { useApp } from 'src/hooks/app';
+import { useUserRegisterReducer } from 'src/store/context-api/modules/user/reducer';
+import { useUserRegisterValidation } from './validation/registerValidation';
+import { UserRegister } from 'src/types/userRegister';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -64,94 +60,73 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export function Register({ name, email }) {
+type RegisterProps = {
+  name: string;
+  email: string;
+  phone: string;
+};
+
+const Register: React.FC<RegisterProps> = ({ name, email, phone }) => {
   const messaging = useMessaging();
-  const [user, dispatch] = useReducer(userReducer, userInitiaState);
+  const [user, dispatch] = useUserRegisterReducer();
   const [created, setCreated] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [validation, setValidation] = useState({});
+  const [validation, setValidation, validate] = useUserRegisterValidation();
   const router = useRouter();
-  const app = useContext(AppContext);
+  const app = useApp();
   const reduxDispatch = useDispatch();
   const classes = useStyles();
 
   useEffect(() => {
     if (name) dispatch(userChange('name', name));
     if (email) dispatch(userChange('email', email));
-  }, [email, name]);
+    if (phone) dispatch(userChange('phone', phone));
+  }, [email, name, phone, dispatch]);
 
-  function handleChange(index, value) {
+  function handleChange(index: keyof UserRegister, value: string) {
     dispatch(userChange(index, value));
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  function handleValidation(event: FormEvent<HTMLFormElement>) {
+    event?.preventDefault();
     setValidation({});
 
-    const schema = yup.object().shape({
-      passwordConfirm: yup
-        .string()
-        .min(4, 'A senha deve ter no mínimo 4 caracteres')
-        .oneOf([yup.ref('password'), null], 'As senhas devem ser iguais')
-        .required('A confirmação da senha é obrigatória'),
-      password: yup
-        .string()
-        .min(4, 'A senha deve ter no mínimo 4 caracteres')
-        .required('Senha é obrigatória'),
-      email: yup
-        .string()
-        .transform(value => {
-          return value.replace(' ', '');
-        })
-        .email('Você deve informar um email válido')
-        .required('O e-mail é obrigatório'),
-      phone: yup
-        .string()
-        .transform(value => {
-          return value ? value.replace(/\D/g, '') : '';
-        })
-        .min(10, 'Telefone inválido')
-        .required('O telefone é obrigatório'),
-      name: yup.string().required('O nome é obrigatório'),
-    });
-
-    schema
-      .validate(user)
+    validate(user)
       .then(() => {
-        setLoading(true);
+        handleSubmit();
+      })
+      .catch(err => console.error(err));
+  }
 
-        api
-          .post('/users', user)
-          .then(response => {
-            setLoading(false);
-            localStorage.setItem(process.env.NEXT_PUBLIC_TOKEN_NAME, response.data.token);
-            reduxDispatch(setUser(response.data.user));
-            if (app.redirect) {
-              router.push(app.redirect);
-              app.setRedirect(null);
-            } else setCreated(true);
-          })
-          .catch(err => {
-            if (err.response) {
-              messaging.handleOpen(err.response.data.error);
-              if (err.response.data.code === 'duplicated-phone')
-                router.push(`/login/email?phone=${user.phone.replace(/\D/g, '')}`);
-              if (err.response.data.code === 'duplicated-email') router.push(`/login/email?email=${user.email}`);
-            }
-            setLoading(false);
-          });
+  function handleSubmit() {
+    setLoading(true);
+    api
+      .post('/users', user)
+      .then(response => {
+        setLoading(false);
+        if (process.env.NEXT_PUBLIC_TOKEN_NAME)
+          localStorage.setItem(process.env.NEXT_PUBLIC_TOKEN_NAME, response.data.token);
+        reduxDispatch(setUser(response.data.user));
+        if (app.redirect) {
+          router.push(app.redirect);
+          app.setRedirect(null);
+        } else setCreated(true);
       })
       .catch(err => {
-        setValidation({
-          [err.path]: err.message,
-        });
+        if (err.response) {
+          messaging.handleOpen(err.response.data.error);
+          if (err.response.data.code === 'duplicated-phone')
+            router.push(`/login/email?phone=${user.phone.replace(/\D/g, '')}`);
+          if (err.response.data.code === 'duplicated-email') router.push(`/login/email?email=${user.email}`);
+        }
+        setLoading(false);
       });
   }
 
   return (
     <Grid container alignItems="center" justify="center">
       <Grid item xl={3} lg={4} md={6} xs={12}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleValidation}>
           <div className={classes.paper}>
             {loading && (
               <div className={classes.loading}>
@@ -182,4 +157,6 @@ export function Register({ name, email }) {
       </Grid>
     </Grid>
   );
-}
+};
+
+export default Register;

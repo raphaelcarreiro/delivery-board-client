@@ -8,13 +8,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import AccountForm from './AccountForm';
 import AccountTabs from './AccountTabs';
 import AccountTabsAppbar from './AccountTabsAppbar';
-import { AppContext } from '../../App';
 import AccountAddresses from './addresses/AccountAddresses';
 import Loading from '../loading/Loading';
 import DialogDelete from '../dialog/delete/DialogDelete';
 import PageHeader from 'src/components/pageHeader/PageHeader';
 import AccountActions from 'src/components/account/AccountActions';
-import InsideLoading from '../loading/InsideLoading';
 import userReducer, {
   INITIAL_STATE as userCustomerInitialState,
 } from 'src/store/context-api/modules/user-customer/reducer';
@@ -25,6 +23,7 @@ import {
 import * as yup from 'yup';
 import { cpfValidation } from 'src/helpers/cpfValidation';
 import { useMessaging } from 'src/hooks/messaging';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -50,9 +49,8 @@ export default function Account() {
   const user = useSelector(state => state.user);
   const dispatch = useDispatch();
   const messaging = useMessaging();
-  const { isMobile, windowWidth } = useContext(AppContext);
+  const { isMobile, windowWidth } = useApp();
   const [userCustomer, contextDispatch] = useReducer(userReducer, userCustomerInitialState);
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
   const [dialogDeleteAddress, setDialogDeleteAddress] = useState(false);

@@ -3,7 +3,7 @@ import { IconButton } from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
-import { useApp } from 'src/App';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   cartBadge: ({ cartItems }) => ({

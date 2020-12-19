@@ -4,13 +4,13 @@ import { Typography, Button } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { formatId } from 'src/helpers/formatOrderId';
 import { makeStyles } from '@material-ui/core/styles';
-import { useApp } from 'src/App';
 import Link from 'src/components/link/Link';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
 import { FiCheck } from 'react-icons/fi';
 import { useFirebase } from 'src/hooks/firebase';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   container: {

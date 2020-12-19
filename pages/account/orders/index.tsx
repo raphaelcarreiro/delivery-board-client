@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Orders from 'src/components/account/orders/Orders';
 import { useRouter } from 'next/router';
 import { useAuth } from 'src/hooks/auth';
-import { useApp } from 'src/App';
+import { useApp } from 'src/hooks/app';
 
 const OrdersPage: React.FC = () => {
   const router = useRouter();

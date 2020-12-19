@@ -4,7 +4,6 @@ import { Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { CheckoutContext } from 'src/components/checkout/Checkout';
-import { AppContext } from 'src/App';
 
 const useStyles = makeStyles(theme => ({
   data: {

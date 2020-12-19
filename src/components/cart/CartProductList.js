@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { removeFromCart, restoreCart } from 'src/store/redux/modules/cart/actions';
 import CartProductListComplements from './CartProductListComplements';
 import { useMessaging } from 'src/hooks/messaging';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -85,7 +86,7 @@ const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
     display: 'flex',
     backgroundColor: '#eee',
-    flexShirink: 0,
+    flexShrink: 0,
   },
 }));
 

@@ -1,19 +1,18 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import LoginEmailStep from './LoginEmailStep';
 import LoginPasswordStep from './LoginPasswordStep';
-import Link from '../link/Link';
 import NextLink from 'next/link';
 import NavigateBoforeIcon from '@material-ui/icons/ArrowBack';
 import { Grid, Button, Typography, LinearProgress, IconButton } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
-import { useApp } from 'src/App';
 import Loading from '../loading/Loading';
 import { useMessaging } from 'src/hooks/messaging';
 import { useAuth } from 'src/hooks/auth';
 import { useSelector } from 'src/store/redux/selector';
 import CustomLink from '../link/CustomLink';
 import { User } from 'src/types/user';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   container: {

@@ -1,6 +1,6 @@
 import React, { FunctionComponent, ChangeEvent } from 'react';
 import { Tab, Tabs } from '@material-ui/core';
-import { useApp } from 'src/App';
+import { useApp } from 'src/hooks/app';
 
 interface PaymentTabsProps {
   tab: number;

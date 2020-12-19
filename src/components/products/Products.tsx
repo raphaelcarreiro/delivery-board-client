@@ -1,8 +1,7 @@
-import React, { useState, useContext, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { prepareProduct, addToCart } from 'src/store/redux/modules/cart/actions';
 import ProductList from './ProductList';
-import { AppContext } from 'src/App';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import ProductsActions from './ProductsActions';
 import NoData from 'src/components/nodata/NoData';
@@ -18,6 +17,7 @@ import ProductView from '../menu/product/view/simple/ProductView';
 import ProductPizzaComplement from '../menu/product/view/pizza_complement/ProductPizzaComplement';
 import { useSelector } from 'src/store/redux/selector';
 import ProductComplement from '../menu/product/view/complement/ProductComplement';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   pageHeader: {
@@ -50,12 +50,12 @@ const useStyles = makeStyles(theme => ({
 type ProductsProps = {
   products: Product[];
   categoryName: string;
-  categoryUrl: string;
+  categoryType: 'OFFER' | 'NORMAL';
 };
 
-const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryUrl }) => {
+const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryType }) => {
   const classes = useStyles();
-  const app = useContext(AppContext);
+  const app = useApp();
   const messaging = useMessaging();
   const dispatch = useDispatch();
   const ref = useRef<HTMLInputElement>(null);
@@ -113,7 +113,7 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryUrl
     app.handleCartVisibility(true);
     handleCancelSearch();
     if (restaurant?.configs.facebook_pixel_id) fbq('track', 'AddToCart');
-    if (selectedProduct?.category.url !== 'offers') router.push('/menu');
+    if (categoryType === 'NORMAL') router.push('/menu');
   }
 
   function handleSearch(searchValue) {

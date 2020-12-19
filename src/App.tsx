@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { api } from './services/api';
 import { useRouter } from 'next/router';
 import { mobileCheck } from './helpers/MobileCheck';
@@ -25,6 +25,7 @@ import FirebaseProvider from './hooks/firebase';
 import GoogleLoginProvider from './hooks/googleLogin';
 import FacebookLoginProvider from './hooks/facebookLogin';
 import LayoutHandler from './components/layout/LayoutHandler';
+import { AppProvider, AppContextValue } from './hooks/app';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -35,40 +36,11 @@ const useStyles = makeStyles({
     height: 2,
   },
 });
-
-interface AppContextData {
-  isMobile: boolean;
-  windowWidth: number;
-  isOpenMenu: boolean;
-  isCartVisible: boolean;
-  redirect: string | null;
-  socket: SocketIOClient.Socket | null;
-  readyToInstall: boolean;
-  shownPlayStoreBanner: boolean;
-  setRedirect(uri: string | null): void;
-  handleOpenMenu(): void;
-  handleCartVisibility(state: boolean): void;
-  handleInstallApp(): void;
-  handleShowPlayStoreBanner(): void;
-}
-
 interface AppProps {
   pageProps: any;
   Component: NextComponentType;
 }
 
-interface BeforeInstallPromptEvent extends Event {
-  readonly platforms: Array<string>;
-  readonly userChoice: Promise<{
-    outcome: 'accepted' | 'dismissed';
-    platform: string;
-  }>;
-  prompt(): Promise<void>;
-}
-
-export const AppContext = createContext<AppContextData>({} as AppContextData);
-
-export const menuWidth = 260;
 export const socket: SocketIOClient.Socket = io.connect(process.env.NEXT_PUBLIC_SOCKET + '/client');
 let defferedPromptPwa;
 
@@ -87,6 +59,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const [readyToInstall, setReadyToInstall] = useState(false);
   const restaurant = useSelector(state => state.restaurant);
   const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
+  const cart = useSelector(state => state.cart);
 
   const handleCartVisibility = useCallback((state?: boolean) => {
     setIsCartVisible(oldValue => (state === undefined ? !oldValue : state));
@@ -126,22 +99,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
         reactGA.pageview(window.location.pathname);
       }
   }, [restaurant]);
-
-  const appProviderValue: AppContextData = {
-    isMobile,
-    windowWidth,
-    isOpenMenu,
-    isCartVisible,
-    redirect,
-    socket,
-    readyToInstall,
-    shownPlayStoreBanner,
-    handleOpenMenu,
-    handleCartVisibility,
-    setRedirect: handleSetRedirect,
-    handleInstallApp,
-    handleShowPlayStoreBanner: handleShowPlayStoreBanner,
-  };
 
   useEffect(() => {
     navigator.serviceWorker.getRegistrations().then(function(registrations) {
@@ -283,10 +240,26 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     setWindowWidth(width);
   }
 
+  const appProviderValue: AppContextValue = {
+    isMobile,
+    windowWidth,
+    isOpenMenu,
+    isCartVisible,
+    redirect,
+    socket,
+    readyToInstall,
+    shownPlayStoreBanner,
+    handleOpenMenu,
+    handleCartVisibility,
+    setRedirect: handleSetRedirect,
+    handleInstallApp,
+    handleShowPlayStoreBanner: handleShowPlayStoreBanner,
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppContext.Provider value={appProviderValue}>
+      <AppProvider value={appProviderValue}>
         {initialLoading && <InitialLoading />}
         {isProgressBarVisible && <LinearProgress color="secondary" className={classes.progressBar} />}
 
@@ -304,15 +277,9 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
             </MessagingProvider>
           </FirebaseProvider>
         </AuthProvider>
-      </AppContext.Provider>
+      </AppProvider>
     </ThemeProvider>
   );
 };
-
-export function useApp(): AppContextData {
-  const context = useContext(AppContext);
-
-  return context;
-}
 
 export default App;

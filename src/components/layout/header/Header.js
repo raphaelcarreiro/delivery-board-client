@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { IconButton, Menu, MenuItem, Avatar, Typography } from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
@@ -7,9 +7,9 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import LocalOfferIcons from '@material-ui/icons/LocalOffer';
 import Link from '../../link/Link';
 import { useRouter } from 'next/router';
-import { AppContext, useApp } from '../../../App';
 import { useSelector } from 'react-redux';
 import { useAuth } from 'src/hooks/auth';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   container: {

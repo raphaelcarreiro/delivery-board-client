@@ -1,10 +1,10 @@
 import React from 'react';
 import Head from 'next/head';
-import Offer from 'src/components/promotion/Offer';
+import Offers from 'src/components/offers/Offers';
 import axios, { AxiosResponse } from 'axios';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { Product } from 'src/types/product';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps } from 'next';
 
 type OffersPageProps = {
   products: Product[];
@@ -16,14 +16,14 @@ const OffersPage: React.FC<OffersPageProps> = ({ products }) => {
       <Head>
         <title>Ofertas</title>
       </Head>
-      <Offer products={products} />
+      <Offers products={products} />
     </>
   );
 };
 
 export default OffersPage;
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const axiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API,
     headers: {
@@ -43,5 +43,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
     props: {
       products,
     },
+    revalidate: 300,
   };
 };

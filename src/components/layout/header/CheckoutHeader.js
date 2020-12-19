@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import LinkNext from 'next/link';
 import { useSelector } from 'react-redux';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { Typography } from '@material-ui/core';
-import { AppContext } from 'src/App';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -65,7 +65,7 @@ export default function CheckoutHeader() {
   const cart = useSelector(state => state.cart);
   const classes = useStyles({ cartItems: cart.products.length > 0 });
   const user = useSelector(state => state.user);
-  const app = useContext(AppContext);
+  const app = useApp();
 
   function handleCartClick() {
     app.handleCartVisibility();

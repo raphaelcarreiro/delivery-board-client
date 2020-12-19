@@ -1,10 +1,9 @@
-import React, { useState, useContext, useReducer } from 'react';
+import React, { useState, useReducer } from 'react';
 import { Grid, LinearProgress, Button, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import GuestRegisterForm from './GuestRegisterForm';
 import * as yup from 'yup';
 import { useRouter } from 'next/router';
-import { AppContext } from 'src/App';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'src/store/redux/modules/user/actions';
 import PropTypes from 'prop-types';
@@ -13,6 +12,7 @@ import userReducer, { INITIAL_STATE as userInitiaState } from 'src/store/context
 import Link from 'src/components/link/Link';
 import { userChange } from 'src/store/context-api/modules/user/actions';
 import { useMessaging } from 'src/hooks/messaging';
+import { useApp } from 'src/hooks/app';
 
 GuestRegister.propTypes = {
   name: PropTypes.string,
@@ -69,7 +69,7 @@ export default function GuestRegister() {
   const [loading, setLoading] = useState(false);
   const [validation, setValidation] = useState({});
   const router = useRouter();
-  const app = useContext(AppContext);
+  const app = useApp();
   const reduxDispatch = useDispatch();
   const classes = useStyles();
 

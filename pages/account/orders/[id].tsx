@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import Head from 'next/head';
 import Order from 'src/components/account/orders/order/Order';
 import { useRouter } from 'next/router';
-import { useApp } from 'src/App';
 import { useAuth } from 'src/hooks/auth';
 import { GetServerSideProps } from 'next';
+import { useApp } from 'src/hooks/app';
 
 type OrderPageProps = {
   cryptId: string;

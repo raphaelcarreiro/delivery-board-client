@@ -3,11 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, TextField, Button, LinearProgress } from '@material-ui/core';
 import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
-import { useApp } from 'src/App';
 import NextLink from 'next/link';
 import { useMessaging } from 'src/hooks/messaging';
 import CustomLink from '../link/CustomLink';
 import { useSelector } from 'src/store/redux/selector';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   container: {

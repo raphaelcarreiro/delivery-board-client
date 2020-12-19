@@ -1,9 +1,7 @@
 import React from 'react';
 import CheckoutHeader from './header/CheckoutHeader';
 import { makeStyles } from '@material-ui/core/styles';
-import { useApp } from 'src/App';
-
-const cartWidth = 450;
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   container: {

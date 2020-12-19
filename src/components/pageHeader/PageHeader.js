@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Grid, Typography } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { AppContext } from 'src/App';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles({
   header: {
@@ -12,7 +12,7 @@ const useStyles = makeStyles({
 
 function PageHeader({ title, description }) {
   const classes = useStyles();
-  const app = useContext(AppContext);
+  const app = useApp();
 
   return (
     <>

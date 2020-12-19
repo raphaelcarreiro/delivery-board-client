@@ -54,7 +54,7 @@ const LoginPasswordStep: React.FC<LoginPasswordStepProps> = ({
           Esse e-mail já está registrado. Informe a senha
         </Typography>
       )}
-      <input type="text" style={{ display: 'none' }} value={email} autoComplete="username email" />
+      <input type="text" style={{ display: 'none' }} value={email} readOnly autoComplete="username email" />
       <TextField
         error={!!passwordError}
         helperText={passwordError}

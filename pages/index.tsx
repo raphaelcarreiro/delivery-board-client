@@ -23,7 +23,7 @@ const IndexPage: NextPage<IndexPageProps> = ({ restaurant }) => {
         <meta property="og:description" content={restaurant.description} />
         <meta property="og:image" content={restaurant.image.imageUrl} />
       </Head>
-      <Index />;
+      <Index />
     </>
   );
 };

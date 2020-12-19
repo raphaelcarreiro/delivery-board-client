@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ImagePreview from '../../image-preview/ImagePreview';
 import PropTypes from 'prop-types';
 import ProductView from './view/simple/ProductView';
@@ -7,7 +7,6 @@ import { prepareProduct, addToCart } from 'src/store/redux/modules/cart/actions'
 import ProductPizzaComplement from './view/pizza_complement/ProductPizzaComplement';
 import ProductComplement from './view/complement/ProductComplement';
 import ProductList from './ProductList';
-import { AppContext } from 'src/App';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import ProductAction from './ProductAction';
 import NoData from 'src/components/nodata/NoData';
@@ -17,6 +16,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
 import { useRouter } from 'next/router';
 import { useMessaging } from 'src/hooks/messaging';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   pageHeader: {
@@ -54,7 +54,7 @@ Product.propTypes = {
 
 export default function Product({ products, categoryName, categoryUrl }) {
   const classes = useStyles();
-  const app = useContext(AppContext);
+  const app = useApp();
   const messaging = useMessaging();
   const dispatch = useDispatch();
   const ref = useRef();

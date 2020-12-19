@@ -3,7 +3,7 @@ import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/co
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppContext } from 'src/App';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -71,7 +71,7 @@ export default function CustomDialog({
   height,
 }) {
   const [open, setOpen] = useState(true);
-  const app = useContext(AppContext);
+  const app = useApp();
   const styleProps = { backgroundColor, title: !!title, displayBottomActions, height };
   const classes = useStyles(styleProps);
 

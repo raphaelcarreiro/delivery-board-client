@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     alignItems: 'flex-start',
     backgroundColor: '#fff',
-    boxShadow: '1px 1px 9px 1px #eee',
+    boxShadow: '0 0 3px 1px #eee',
     borderRadius: theme.shape.borderRadius,
   },
   status: {

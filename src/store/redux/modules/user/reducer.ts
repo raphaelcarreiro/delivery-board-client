@@ -1,21 +1,26 @@
 import { moneyFormat } from 'src/helpers/numberFormat';
+import { Customer } from 'src/types/customer';
+import { Image } from 'src/types/image';
+import { User } from 'src/types/user';
+import { UserActionsType } from './types';
 
-export const INITIAL_STATE = {
-  loadedFromStorage: true,
-  id: null,
+export const INITIAL_STATE: User = {
+  id: 0,
+  customer: {} as Customer,
+  email: '',
+  image: {} as Image,
+  name: '',
+  phone: '',
 };
 
-export default function user(state = INITIAL_STATE, action) {
+export default function user(state = INITIAL_STATE, action: UserActionsType): User {
   switch (action.type) {
     case '@user/SET_USER': {
-      const customer = action.user.customer;
-      const addresses = customer && customer.addresses;
-
       return {
         ...action.user,
-        addresses:
-          addresses &&
-          addresses.map(address => {
+        customer: {
+          ...action.user.customer,
+          addresses: action.user.customer.addresses.map(address => {
             address.area_region = address.area_region && {
               ...address.area_region,
               formattedTax: moneyFormat(address.area_region.tax),
@@ -23,8 +28,10 @@ export default function user(state = INITIAL_STATE, action) {
             address.formattedDistanceTax = moneyFormat(address.distance_tax);
             return address;
           }),
+        },
       };
     }
+
     case '@user/REMOVE_USER': {
       return INITIAL_STATE;
     }
@@ -47,13 +54,16 @@ export default function user(state = INITIAL_STATE, action) {
     }
 
     case '@user/SELECT_IMAGE': {
-      return {
-        ...state,
-        image: {
-          ...state.image,
-          selected: !state.image.selected,
-        },
-      };
+      if (state.image)
+        return {
+          ...state,
+          image: {
+            ...state.image,
+            selected: !state.image.selected,
+          },
+        };
+
+      return state;
     }
 
     case '@user/DELETE_IMAGE': {

@@ -3,12 +3,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, TextField, Button, LinearProgress } from '@material-ui/core';
 import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
-import { useApp } from 'src/App';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useMessaging } from 'src/hooks/messaging';
 import { useSelector } from 'src/store/redux/selector';
 import { usePasswordResetValidation } from './validation/passwordResetValidation';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -21,6 +21,9 @@ const useStyles = makeStyles(theme => ({
     right: 0,
     bottom: 0,
     backgroundColor: theme.palette.primary.light,
+    [theme.breakpoints.down('md')]: {
+      backgroundColor: 'transparent',
+    },
   },
   paper: {
     display: 'flex',

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { IconButton, TextField, InputAdornment } from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import SearchIcon from '@material-ui/icons/Search';
@@ -6,7 +6,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import PropTypes from 'prop-types';
 import { MuiThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
-import { AppContext } from 'src/App';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   cartBadge: ({ cartItems }) => ({
@@ -94,7 +94,7 @@ export default function ProductAction({ isSearching, openSearchBox, handleSearch
   const classes = useStyles();
   const [search, setSearch] = useState('');
   const ref = useRef();
-  const app = useContext(AppContext);
+  const app = useApp();
 
   useEffect(() => {
     handleSearch(search);

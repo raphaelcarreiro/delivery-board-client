@@ -9,7 +9,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function RegisterSucess() {
+const RegisterSucess: React.FC = () => {
   const classes = useStyles();
   return (
     <div className={classes.container}>
@@ -19,4 +19,6 @@ export default function RegisterSucess() {
       </Button>
     </div>
   );
-}
+};
+
+export default RegisterSucess;

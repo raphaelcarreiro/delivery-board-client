@@ -11,8 +11,8 @@ import { api } from 'src/services/api';
 import DialogDelete from 'src/components/dialog/delete/DialogDelete';
 import { Grid } from '@material-ui/core';
 import { CheckoutContext } from '../../Checkout';
-import { AppContext } from 'src/App';
 import { useMessaging } from 'src/hooks/messaging';
+import { useApp } from 'src/hooks/app';
 
 Shipment.propTypes = {
   addresses: PropTypes.array.isRequired,
@@ -28,7 +28,7 @@ export default function Shipment({ addresses }) {
   const [dialogNewAddress, setDialogNewAddress] = useState(false);
   const [dialogEditAddress, setDialogEditAddress] = useState(false);
   const [dialogDeleteAddress, setDialogDeleteAddress] = useState(false);
-  const app = useContext(AppContext);
+  const app = useApp();
   const { customer } = useSelector(state => state.user);
   const order = useSelector(state => state.order);
   const restaurant = useSelector(state => state.restaurant);

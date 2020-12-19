@@ -8,10 +8,7 @@
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly",
-    "__SERVER__": "readonly",
-    "FB": true,
-    "gapi": true,
-    "fbq": true
+    "__SERVER__": "readonly"
   },
   "parser": "babel-eslint",
   "parserOptions": {

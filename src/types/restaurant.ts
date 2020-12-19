@@ -20,6 +20,7 @@ export interface RestaurantConfig {
   google_analytics_id: string;
   facebook_pixel_id: string;
   google_login: boolean;
+  facebook_login: boolean;
 }
 
 interface RestaurantAddress {
@@ -65,4 +66,5 @@ export interface Restaurant {
   delivery_max_distance: number;
   addresses: RestaurantAddress[];
   phones: RestaurantPhones[];
+  play_store_link: string;
 }

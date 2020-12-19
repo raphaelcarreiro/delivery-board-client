@@ -3,10 +3,9 @@ import Header from './header/Header';
 import Footer from './footer/Footer';
 import { makeStyles } from '@material-ui/core';
 import Cart from '../cart/Cart';
-import { useApp } from 'src/App';
 import DialogFullscreen from 'src/components/dialog/DialogFullscreen';
-
-const cartWidth = 450;
+import { CART_WIDTH } from '../constants/constants';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -47,10 +46,10 @@ const useStyles = makeStyles(theme => ({
   },
   cart: ({ isCartVisible }: { isCartVisible: boolean }) => ({
     transition: 'transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms',
-    transform: isCartVisible ? 'none' : `translateX(${cartWidth + 10}px)`,
+    transform: isCartVisible ? 'none' : `translateX(${CART_WIDTH + 10}px)`,
     position: 'fixed',
     top: 80,
-    width: cartWidth,
+    width: CART_WIDTH,
     bottom: 0,
     right: 0,
     backgroundColor: '#fff',

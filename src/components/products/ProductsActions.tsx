@@ -3,10 +3,9 @@ import { IconButton, TextField, InputAdornment } from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
-import PropTypes from 'prop-types';
 import { MuiThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
-import { useApp } from 'src/App';
 import { useSelector } from 'src/store/redux/selector';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   cartBadge: {
