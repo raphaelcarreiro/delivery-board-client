@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Typography, Grid, TextField } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import ProductComplementItem from './ProductComplementItem';
-import ProductComplementAction from './ProductComplementAction';
-import PropTypes from 'prop-types';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import ImagePreview from 'src/components/image-preview/ImagePreview';
 import { api } from 'src/services/api';
 import InsideLoading from 'src/components/loading/InsideLoading';
 import { useMessaging } from 'src/hooks/messaging';
+import { useProducts } from 'src/components/products/hooks/useProducts';
+import ProductAdd from '../ProductAdd';
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
@@ -113,15 +113,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-ProductComplement.propTypes = {
-  onExited: PropTypes.func.isRequired,
-  productId: PropTypes.number.isRequired,
-  productName: PropTypes.string.isRequired,
-  handleAddProductToCart: PropTypes.func.isRequired,
-  handlePrepareProduct: PropTypes.func.isRequired,
-};
-
-function ProductComplement({ onExited, productId, productName, handleAddProductToCart, handlePrepareProduct }) {
+function ProductComplement() {
   const [amount, setAmount] = useState(1);
   const [imagePreview, setImagePreview] = useState(false);
   const [product, setProduct] = useState(null);
@@ -129,10 +121,17 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
   const classes = useStyles();
   const [complementsPrice, setComplementsPrice] = useState(0);
   const [loading, setLoading] = useState(true);
+  const { handlePrepareProduct, selectedProduct, handleSelectProduct } = useProducts();
+
+  const total = useMemo(() => {
+    if (!product) return '';
+    const _total = (complementsPrice + product.price) * amount;
+    return moneyFormat(_total);
+  }, [amount, complementsPrice, product]);
 
   useEffect(() => {
     api
-      .get(`/products/${productId}`)
+      .get(`/products/${selectedProduct.id}`)
       .then(response => {
         const categories = response.data.complement_categories.map(category => {
           category.product_complement_category_id = category.id;
@@ -188,7 +187,7 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
       .finally(() => {
         setLoading(false);
       });
-  }, [productId]);
+  }, [selectedProduct]);
 
   useEffect(() => {
     if (!product) return;
@@ -226,15 +225,6 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
     if (amount > 1) {
       setAmount(amount - 1);
     }
-  }
-
-  function handleConfirmProduct() {
-    if (!product.ready) {
-      messaging.handleOpen('Você precisa selecionar os itens obrigatórios');
-      return;
-    }
-    // 2 é a etapa
-    handleAddProductToCart();
   }
 
   function handleClickComplements(complementCategoryId, complementId, amount) {
@@ -286,7 +276,7 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
   return (
     <CustomDialog
       backgroundColor="#fafafa"
-      handleModalState={onExited}
+      handleModalState={() => handleSelectProduct(null)}
       title={`adicionar ao carrinho`}
       displayBottomActions
       maxWidth="sm"
@@ -359,14 +349,12 @@ function ProductComplement({ onExited, productId, productName, handleAddProductT
               />
             </Grid>
           </Grid>
-          <ProductComplementAction
+          <ProductAdd
             amount={amount}
-            complementsPrice={complementsPrice}
             handleAmountDown={handleAmountDown}
             handleAmountUp={handleAmountUp}
-            handleConfirmProduct={handleConfirmProduct}
             product={product}
-            isReady={product.ready || false}
+            total={total}
           />
         </>
       )}

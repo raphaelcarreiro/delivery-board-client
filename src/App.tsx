@@ -59,7 +59,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const [readyToInstall, setReadyToInstall] = useState(false);
   const restaurant = useSelector(state => state.restaurant);
   const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
-  const cart = useSelector(state => state.cart);
 
   const handleCartVisibility = useCallback((state?: boolean) => {
     setIsCartVisible(oldValue => (state === undefined ? !oldValue : state));

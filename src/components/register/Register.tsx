@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Link from '../link/Link';
 import { api } from '../../services/api';
 import RegisterForm from './RegisterForm';
-import * as yup from 'yup';
 import { userChange } from '../../store/context-api/modules/user/actions';
 import RegisterSucess from './RegisterSuccess';
 import { useRouter } from 'next/router';

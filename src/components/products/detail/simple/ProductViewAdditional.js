@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { ListItem, List, Typography } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import PropTypes from 'prop-types';
+import ProductViewAmountControl from './ProductViewAmountControl';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -15,13 +15,13 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
   },
   selected: {
-    position: 'relative',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     borderBottom: '1px solid #eaeaea',
     backgroundColor: fade(theme.palette.primary.main, 0.05),
+    position: 'relative',
     '&:focus': {
       backgroundColor: fade(theme.palette.primary.main, 0.05),
     },
@@ -39,8 +39,10 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 10,
-    // backgroundColor: '#fff8dc',
+    borderRadius: '4px 4px 0 0',
+  },
+  price: {
+    fontWeight: 500,
   },
   icon: {
     backgroundColor: '#fff',
@@ -50,31 +52,31 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-ProductViewIngredients.propTypes = {
-  ingredients: PropTypes.array.isRequired,
-  handleClickIngredient: PropTypes.func.isRequired,
+ProductViewAdditional.propTypes = {
+  additional: PropTypes.array.isRequired,
+  handleClickAdditional: PropTypes.func.isRequired,
 };
 
-export default function ProductViewIngredients({ ingredients, handleClickIngredient }) {
+export default function ProductViewAdditional({ additional, handleClickAdditional }) {
   const classes = useStyles();
 
   return (
     <Fragment>
       <div className={classes.header}>
-        <Typography variant="h6">Ingredientes</Typography>
+        <Typography variant="h6">Adicionais</Typography>
       </div>
       <List className={classes.list}>
-        {ingredients.map(additional => (
-          <ListItem
-            onClick={() => handleClickIngredient(additional.id)}
-            button
-            className={additional.selected ? classes.selected : classes.listItem}
-            key={additional.id}
-          >
+        {additional.map(item => (
+          <ListItem button className={item.selected ? classes.selected : classes.listItem} key={item.id}>
             <div>
-              <Typography>{additional.name}</Typography>
+              <Typography>{item.name}</Typography>
+              {item.price > 0 && (
+                <Typography color="primary" className={classes.price}>
+                  + {item.formattedPrice}
+                </Typography>
+              )}
             </div>
-            {additional.selected && <CheckCircleIcon className={classes.icon} color="primary" />}
+            <ProductViewAmountControl additionalId={item.id} handleClickAdditional={handleClickAdditional} />
           </ListItem>
         ))}
       </List>

@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 type ProductListProps = {
   products: Product[];
   handleProductClick(product: Product): void;
-  handleOpenImagePreview(event: MouseEvent<HTMLImageElement>, product: Product): void;
+  handleOpenImagePreview(product: Product): void;
   listType: 'row' | 'col';
 };
 

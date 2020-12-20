@@ -2,14 +2,14 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ProductViewIngredients from './ProductViewIngredients';
 import ProductViewAdditional from './ProductViewAdditional';
-import ProductViewAction from './ProductViewAction';
 import { Grid, Typography, TextField } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import ImagePreview from 'src/components/image-preview/ImagePreview';
 import { api } from 'src/services/api';
 import InsideLoading from 'src/components/loading/InsideLoading';
+import { useProducts } from 'src/components/products/hooks/useProducts';
+import ProductAdd from '../ProductAdd';
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
@@ -76,24 +76,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-ProductView.propTypes = {
-  onExited: PropTypes.func.isRequired,
-  handlePrepareProduct: PropTypes.func.isRequired,
-  handleAddProductToCart: PropTypes.func.isRequired,
-  productId: PropTypes.number.isRequired,
-};
-
-export default function ProductView({ onExited, handlePrepareProduct, handleAddProductToCart, productId }) {
+export default function ProductView() {
   const [amount, setAmount] = useState(1);
   const [product, setProduct] = useState(null);
   const [additionalPrice, setAdditionalPrice] = useState(0);
   const [imagePreview, setImagePreview] = useState(false);
   const [loading, setLoading] = useState(true);
   const classes = useStyles();
+  const { selectedProduct, handlePrepareProduct, handleSelectProduct } = useProducts();
 
   useEffect(() => {
     api
-      .get(`/products/${productId}`)
+      .get(`/products/${selectedProduct.id}`)
       .then(response => {
         const additional = response.data.additional.map(additional => {
           additional.selected = false;
@@ -114,12 +108,13 @@ export default function ProductView({ onExited, handlePrepareProduct, handleAddP
           formattedSpecialPrice: moneyFormat(response.data.special_price),
           additional,
           ingredients,
+          ready: true,
         });
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [productId]);
+  }, [selectedProduct]);
 
   const total = useMemo(() => {
     if (!product) return 0;
@@ -182,7 +177,7 @@ export default function ProductView({ onExited, handlePrepareProduct, handleAddP
       maxWidth="sm"
       title="adicionar ao carrinho"
       backgroundColor="#fafafa"
-      handleModalState={onExited}
+      handleModalState={() => handleSelectProduct(null)}
       displayBottomActions
     >
       {imagePreview && product.image && (
@@ -257,13 +252,12 @@ export default function ProductView({ onExited, handlePrepareProduct, handleAddP
               </Grid>
             </Grid>
           </Grid>
-          <ProductViewAction
-            handleAmountDown={handleAmountDown}
-            amount={amount}
-            handleAmountUp={handleAmountUp}
-            handleAddProductToCart={handleAddProductToCart}
+          <ProductAdd
             total={total}
-            additionalPrice={additionalPrice}
+            handleAmountDown={handleAmountDown}
+            handleAmountUp={handleAmountUp}
+            product={product}
+            amount={amount}
           />
         </>
       )}

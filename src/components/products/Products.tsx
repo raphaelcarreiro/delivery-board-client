@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { prepareProduct, addToCart } from 'src/store/redux/modules/cart/actions';
 import ProductList from './ProductList';
@@ -13,11 +13,12 @@ import { useRouter } from 'next/router';
 import { useMessaging } from 'src/hooks/messaging';
 import { Product } from 'src/types/product';
 import ImagePreview from '../image-preview/ImagePreview';
-import ProductView from '../menu/product/view/simple/ProductView';
-import ProductPizzaComplement from '../menu/product/view/pizza_complement/ProductPizzaComplement';
+import ProductView from './detail/simple/ProductView';
+import ProductPizzaComplement from './detail/pizza_complement/ProductPizzaComplement';
 import { useSelector } from 'src/store/redux/selector';
-import ProductComplement from '../menu/product/view/complement/ProductComplement';
+import ProductComplement from './detail/complement/ProductComplement';
 import { useApp } from 'src/hooks/app';
+import { ProductsContextValue, ProductsProvider } from './hooks/useProducts';
 
 const useStyles = makeStyles(theme => ({
   pageHeader: {
@@ -55,33 +56,67 @@ type ProductsProps = {
 
 const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryType }) => {
   const classes = useStyles();
-  const app = useApp();
-  const messaging = useMessaging();
+  const { handleCartVisibility } = useApp();
+  const { handleClose } = useMessaging();
   const dispatch = useDispatch();
   const ref = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const restaurant = useSelector(state => state.restaurant);
   const [imagePreview, setImagePreview] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [dialogProductView, setDialogProductView] = useState(false);
-  const [dialogProductComplement, setDialogProductComplement] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const [search, setSearch] = useState('');
 
+  const isPizza = useMemo(() => {
+    return !!selectedProduct?.category.is_pizza;
+  }, [selectedProduct]);
+
+  const isComplement = useMemo(() => {
+    return !!selectedProduct?.category.has_complement && !selectedProduct?.category.is_pizza;
+  }, [selectedProduct]);
+
+  const isSimple = useMemo(() => {
+    return selectedProduct ? !selectedProduct.category.has_complement : false;
+  }, [selectedProduct]);
+
+  const handleSearch = useCallback(
+    searchValue => {
+      setSearch(searchValue);
+      const _products = products.filter(product => {
+        const productName = product.name
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '');
+        return productName.indexOf(searchValue.toLowerCase()) !== -1;
+      });
+
+      setFilteredProducts(_products);
+    },
+    [products]
+  );
+
+  const handleCancelSearch = useCallback(() => {
+    setIsSearching(false);
+    handleSearch('');
+    setSearch('');
+    ref.current?.focus();
+  }, [handleSearch]);
+
+  const handleAddProductToCart = useCallback(() => {
+    dispatch(addToCart());
+    handleCartVisibility(true);
+    handleCancelSearch();
+    if (restaurant?.configs.facebook_pixel_id) fbq('track', 'AddToCart');
+    if (categoryType === 'NORMAL') router.push('/menu');
+  }, [handleCartVisibility, categoryType, dispatch, handleCancelSearch, restaurant, router]);
+
   const handleProductClick = useCallback(
     product => {
       setSelectedProduct(product);
-      messaging.handleClose();
-
-      if (product.category.has_complement) {
-        setDialogProductComplement(true);
-        return false;
-      }
-
-      setDialogProductView(true);
+      handleClose();
     },
-    [] // eslint-disable-line
+    [handleClose]
   );
 
   const handlePrepareProduct = useCallback(
@@ -104,40 +139,23 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
     }
   }, [selectedProduct, restaurant]);
 
-  function handleOpenImagePreview(event, product) {
+  function handleOpenImagePreview(product: Product) {
     setSelectedProduct(product);
   }
 
-  function handleAddProductToCart() {
-    dispatch(addToCart());
-    app.handleCartVisibility(true);
-    handleCancelSearch();
-    if (restaurant?.configs.facebook_pixel_id) fbq('track', 'AddToCart');
-    if (categoryType === 'NORMAL') router.push('/menu');
-  }
-
-  function handleSearch(searchValue) {
-    setSearch(searchValue);
-    const _products = products.filter(product => {
-      const productName = product.name
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
-      return productName.indexOf(searchValue.toLowerCase()) !== -1;
-    });
-
-    setFilteredProducts(_products);
-  }
-
-  function handleCancelSearch() {
-    setIsSearching(false);
-    handleSearch('');
-    setSearch('');
-    ref.current?.focus();
-  }
+  const productsContextValue: ProductsContextValue = {
+    selectedProduct,
+    handlePrepareProduct,
+    handleSelectProduct: (product: Product | null) => setSelectedProduct(product),
+    handleAddProductToCart,
+    isPizza,
+    isComplement,
+    isSimple,
+    redirectToMenuAfterAddToCart: categoryType === 'NORMAL',
+  };
 
   return (
-    <>
+    <ProductsProvider value={productsContextValue}>
       <Grid item xs={12} className={classes.pageHeader}>
         <div>
           <Typography variant="h5" color="primary">
@@ -194,35 +212,11 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
           description={selectedProduct.name}
         />
       )}
-      {dialogProductView && selectedProduct && (
-        <ProductView
-          handlePrepareProduct={handlePrepareProduct}
-          handleAddProductToCart={handleAddProductToCart}
-          onExited={() => setDialogProductView(false)}
-          productId={selectedProduct.id}
-        />
-      )}
-      {dialogProductComplement && selectedProduct && (
-        <>
-          {selectedProduct.category.is_pizza ? (
-            <ProductPizzaComplement
-              onExited={() => setDialogProductComplement(false)}
-              handleAddProductToCart={handleAddProductToCart}
-              handlePrepareProduct={handlePrepareProduct}
-              productId={selectedProduct.id}
-              productName={selectedProduct.name}
-            />
-          ) : (
-            <ProductComplement
-              onExited={() => setDialogProductComplement(false)}
-              handleAddProductToCart={handleAddProductToCart}
-              handlePrepareProduct={handlePrepareProduct}
-              productId={selectedProduct.id}
-              productName={selectedProduct.name}
-            />
-          )}
-        </>
-      )}
+
+      {isSimple && <ProductView />}
+      {isPizza && <ProductPizzaComplement />}
+      {isComplement && <ProductComplement />}
+
       {filteredProducts.length > 0 ? (
         <ProductList
           listType="col"
@@ -233,7 +227,7 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
       ) : (
         <NoData message="Nenhum produto para exibir" />
       )}
-    </>
+    </ProductsProvider>
   );
 };
 

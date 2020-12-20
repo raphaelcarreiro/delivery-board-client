@@ -87,7 +87,7 @@ const useStyles = makeStyles(theme => ({
 type CategoryProductProps = {
   product: Product;
   handleProductClick(product: Product): void;
-  handleOpenImagePreview(event: MouseEvent<HTMLImageElement>, product: Product): void;
+  handleOpenImagePreview(product: Product): void;
   listType: 'col' | 'row';
 };
 
@@ -108,7 +108,7 @@ const CategoryProduct: React.FC<CategoryProductProps> = ({
             className={classes.img}
             src={product.image.imageThumbUrl ? product.image.imageThumbUrl : product.image.imageUrl}
             alt={product.name}
-            onClick={event => handleOpenImagePreview(event, product)}
+            onClick={() => handleOpenImagePreview(product)}
           />
         </div>
       )}
@@ -133,7 +133,7 @@ const CategoryProduct: React.FC<CategoryProductProps> = ({
         <Typography variant="body2" color="textSecondary" className={classes.productDescription}>
           {product.description}
         </Typography>
-        {/* product.category.has_complement && <Typography color="primary">Monte esse produto</Typography> */}
+        {product.category.has_complement && <Typography color="primary">Monte esse produto</Typography>}
       </div>
     </ListItem>
   );

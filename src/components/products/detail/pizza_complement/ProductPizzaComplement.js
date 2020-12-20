@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Grid, TextField, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import ProductPizzaComplementItem from './ProductPizzaComplementItem';
-import ProductPizzaComplementAction from './ProductPizzaComplementAction';
 import ProductPizzaComplementAdditional from './ProductPizzaComplementAdditional';
 import ProductPizzaComplementIngredient from './ProductPizzaComplementIngredient';
-import PropTypes from 'prop-types';
-import { moneyFormat } from '../../../../../helpers/numberFormat';
+import { moneyFormat } from '../../../../helpers/numberFormat';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import ProductPizzaComplementHeader from './ProductPizzaComplementHeader';
 import { useSelector } from 'react-redux';
@@ -14,6 +12,8 @@ import ImagePreview from 'src/components/image-preview/ImagePreview';
 import { api } from 'src/services/api';
 import InsideLoading from 'src/components/loading/InsideLoading';
 import { useMessaging } from 'src/hooks/messaging';
+import { useProducts } from 'src/components/products/hooks/useProducts';
+import ProductAdd from '../ProductAdd';
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
@@ -61,21 +61,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-ProductPizzaComplement.propTypes = {
-  onExited: PropTypes.func.isRequired,
-  handleAddProductToCart: PropTypes.func.isRequired,
-  handlePrepareProduct: PropTypes.func.isRequired,
-  productId: PropTypes.number.isRequired,
-  productName: PropTypes.string.isRequired,
-};
-
-export default function ProductPizzaComplement({
-  onExited,
-  productId,
-  productName,
-  handleAddProductToCart,
-  handlePrepareProduct,
-}) {
+export default function ProductPizzaComplement() {
   const classes = useStyles();
   const [amount, setAmount] = useState(1);
   const [product, setProduct] = useState(null);
@@ -92,12 +78,19 @@ export default function ProductPizzaComplement({
   const [searchedValue, setSearchedValue] = useState('');
   const [imagePreview, setImagePreview] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { handlePrepareProduct, selectedProduct, handleSelectProduct } = useProducts();
+
+  const total = useMemo(() => {
+    if (!product) return '';
+    const _total = (complementsPrice + product.price) * amount;
+    return moneyFormat(_total);
+  }, [amount, complementsPrice, product]);
 
   useEffect(() => {
     let sizeSelected = {};
 
     api
-      .get(`/products/${productId}`)
+      .get(`/products/${selectedProduct.id}`)
       .then(response => {
         const categories = response.data.complement_categories.map(category => {
           category.product_complement_category_id = category.id;
@@ -154,7 +147,7 @@ export default function ProductPizzaComplement({
       .finally(() => {
         setLoading(false);
       });
-  }, [productId]);
+  }, [selectedProduct]);
 
   useEffect(() => {
     if (!product) return;
@@ -217,14 +210,6 @@ export default function ProductPizzaComplement({
     if (amount > 1) {
       setAmount(amount - 1);
     }
-  }
-
-  function handleConfirmProduct() {
-    if (!product.ready) {
-      messaging.handleOpen('Você precisa selecionar os itens obrigatórios');
-      return;
-    }
-    handleAddProductToCart();
   }
 
   function handleClickPizzaComplements(productId, complementCategoryId, complementId) {
@@ -371,7 +356,7 @@ export default function ProductPizzaComplement({
   return (
     <CustomDialog
       backgroundColor="#fafafa"
-      handleModalState={onExited}
+      handleModalState={() => handleSelectProduct(null)}
       title={`adicionar ao carrinho`}
       displayBottomActions
       maxWidth="sm"
@@ -457,14 +442,12 @@ export default function ProductPizzaComplement({
               />
             </Grid>
           </Grid>
-          <ProductPizzaComplementAction
+          <ProductAdd
             amount={amount}
-            complementsPrice={complementsPrice}
             handleAmountDown={handleAmountDown}
             handleAmountUp={handleAmountUp}
-            handleConfirmProduct={handleConfirmProduct}
             product={product}
-            isReady={product.ready || false}
+            total={total}
           />
         </>
       )}

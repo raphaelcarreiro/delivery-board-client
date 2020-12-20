@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ImagePreview from '../../image-preview/ImagePreview';
 import PropTypes from 'prop-types';
-import ProductView from './view/simple/ProductView';
+import ProductView from '../../products/detail/simple/ProductView';
 import { useDispatch, useSelector } from 'react-redux';
 import { prepareProduct, addToCart } from 'src/store/redux/modules/cart/actions';
-import ProductPizzaComplement from './view/pizza_complement/ProductPizzaComplement';
-import ProductComplement from './view/complement/ProductComplement';
+import ProductPizzaComplement from '../../products/detail/pizza_complement/ProductPizzaComplement';
+import ProductComplement from '../../products/detail/complement/ProductComplement';
 import ProductList from './ProductList';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import ProductAction from './ProductAction';
