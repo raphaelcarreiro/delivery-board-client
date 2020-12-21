@@ -58,8 +58,6 @@ ProductComplementItem.propTypes = {
   complements: PropTypes.array.isRequired,
   handleClickComplements: PropTypes.func.isRequired,
   complementCategoryId: PropTypes.number.isRequired,
-  maxQuantity: PropTypes.number.isRequired,
-  amountSelected: PropTypes.number.isRequired,
 };
 
 export default function ProductComplementItem({ complements, handleClickComplements, complementCategoryId }) {

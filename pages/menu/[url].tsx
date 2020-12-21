@@ -1,7 +1,6 @@
 import React from 'react';
 import axios, { AxiosResponse } from 'axios';
 import Head from 'next/head';
-import Product from 'src/components/menu/product/Product';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';

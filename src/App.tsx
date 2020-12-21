@@ -108,56 +108,51 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   }, []);
 
   useEffect(() => {
-    function loadPromotions() {
-      api
-        .get('/promotions')
-        .then(response => {
-          dispatch(setPromotions(response.data));
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
+    api
+      .get('/restaurants')
+      .then(response => {
+        const _restaurant = response.data;
+        const { configs } = _restaurant;
 
-    function loadRestaurant() {
-      return api
-        .get('/restaurants')
-        .then(response => {
-          const _restaurant = response.data;
-          const { configs } = _restaurant;
+        dispatch(
+          setRestaurant({
+            ..._restaurant,
+            configs: {
+              ..._restaurant.configs,
+              formattedTax: moneyFormat(_restaurant.configs.tax_value),
+              formattedOrderMinimumValue: moneyFormat(_restaurant.configs.order_minimum_value),
+            },
+          })
+        );
 
-          dispatch(
-            setRestaurant({
-              ..._restaurant,
-              configs: {
-                ..._restaurant.configs,
-                formattedTax: moneyFormat(_restaurant.configs.tax_value),
-                formattedOrderMinimumValue: moneyFormat(_restaurant.configs.order_minimum_value),
-              },
-            })
-          );
+        setTheme(createTheme(_restaurant.primary_color, _restaurant.secondary_color));
 
-          setTheme(createTheme(_restaurant.primary_color, _restaurant.secondary_color));
-
-          if (configs.google_analytics_id) {
-            reactGA.initialize(_restaurant.configs.google_analytics_id);
-            reactGA.set({ page: window.location.pathname });
-            reactGA.pageview(window.location.pathname);
-          }
-        })
-        .catch(() => {
-          console.log('Erro ao carregar os dados do restaurante');
-        })
-        .finally(() => {
-          loadPromotions();
-        });
-    }
-
-    loadRestaurant().then(() => {
-      setInitialLoading(false);
-      document.body.classList.add('zoom');
-    });
+        if (configs.google_analytics_id) {
+          reactGA.initialize(_restaurant.configs.google_analytics_id);
+          reactGA.set({ page: window.location.pathname });
+          reactGA.pageview(window.location.pathname);
+        }
+      })
+      .catch(() => {
+        console.log('Erro ao carregar os dados do restaurante');
+      });
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!restaurant) return;
+    api
+      .get('/promotions')
+      .then(response => {
+        dispatch(setPromotions(response.data));
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        setInitialLoading(false);
+        document.body.classList.add('zoom');
+      });
+  }, [dispatch, restaurant]);
 
   useEffect(() => {
     if (!restaurant) return;
