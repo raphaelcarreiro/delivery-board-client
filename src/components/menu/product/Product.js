@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ImagePreview from '../../image-preview/ImagePreview';
 import PropTypes from 'prop-types';
-import ProductView from '../../products/detail/simple/ProductView';
+import ProductView from '../../products/detail/simple/ProductSimple';
 import { useDispatch, useSelector } from 'react-redux';
 import { prepareProduct, addToCart } from 'src/store/redux/modules/cart/actions';
 import ProductPizzaComplement from '../../products/detail/pizza_complement/ProductPizzaComplement';

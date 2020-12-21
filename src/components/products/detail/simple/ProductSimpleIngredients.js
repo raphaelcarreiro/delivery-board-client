@@ -49,12 +49,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-ProductViewIngredients.propTypes = {
+ProductSimpleIngredients.propTypes = {
   ingredients: PropTypes.array.isRequired,
   handleClickIngredient: PropTypes.func.isRequired,
 };
 
-export default function ProductViewIngredients({ ingredients, handleClickIngredient }) {
+export default function ProductSimpleIngredients({ ingredients, handleClickIngredient }) {
   const classes = useStyles();
 
   return (

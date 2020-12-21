@@ -33,8 +33,6 @@ const useStyles = makeStyles(theme => ({
   },
   list: {
     padding: 0,
-    maxHeight: 400,
-    overflowY: 'auto',
   },
   icon: ({ isPizzaTaste }) => ({
     backgroundColor: '#fff',

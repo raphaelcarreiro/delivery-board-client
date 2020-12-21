@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react';
+import React from 'react';
 import { ListItem, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Product } from 'src/types/product';
@@ -15,14 +15,15 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'flex-start',
     height: 269,
     width: props.listType === 'row' ? 230 : '100%',
-    padding: 10,
+    padding: 0,
     flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
       width: props.listType === 'row' ? props.windowWidth / 2 - 15 : '100%',
     },
   }),
   img: {
-    height: '100%',
+    // height: '100%',
+    width: '100%',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
       height: 'auto',
@@ -45,6 +46,7 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     alignItems: 'flex-start',
     width: '100%',
+    padding: 10,
   },
   price: {
     fontWeight: 600,
@@ -81,6 +83,7 @@ const useStyles = makeStyles(theme => ({
     WebkitBoxOrient: 'vertical',
     wordBreak: 'break-word',
     marginTop: 3,
+    height: 60,
   },
 }));
 
@@ -130,10 +133,14 @@ const CategoryProduct: React.FC<CategoryProductProps> = ({
           )
         )}
         <Typography className={classes.productName}>{product.name}</Typography>
-        <Typography variant="body2" color="textSecondary" className={classes.productDescription}>
+        <Typography variant="body2" gutterBottom color="textSecondary" className={classes.productDescription}>
           {product.description}
         </Typography>
-        {product.category.has_complement && <Typography color="primary">Monte esse produto</Typography>}
+        {product.category.has_complement && (
+          <Typography variant="body2" color="primary">
+            Monte esse produto
+          </Typography>
+        )}
       </div>
     </ListItem>
   );

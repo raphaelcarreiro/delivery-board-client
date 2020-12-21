@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { ListItem, List, Typography } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import ProductSimpleAmountControl from './ProductSimpleAmountControl';
+import ProductViewAmountControl from './ProductSimpleAmountControl';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#fff',
-    borderBottom: '1px solid #f5f5f5',
+    borderBottom: '1px solid #eee',
     position: 'relative',
   },
   selected: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottom: '1px solid #f5f5f5',
+    borderBottom: '1px solid #eaeaea',
     backgroundColor: fade(theme.palette.primary.main, 0.05),
     position: 'relative',
     '&:focus': {
@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderRadius: '4px 4px 0 0',
   },
   price: {
     fontWeight: 500,
@@ -75,10 +76,10 @@ export default function ProductSimpleAdditional({ additional, handleClickAdditio
                 </Typography>
               )}
             </div>
-            <ProductSimpleAmountControl
+            <ProductViewAmountControl
+              selectedAmount={item.amount}
               additionalId={item.id}
               handleClickAdditional={handleClickAdditional}
-              selectedAmount={item.amount}
             />
           </ListItem>
         ))}

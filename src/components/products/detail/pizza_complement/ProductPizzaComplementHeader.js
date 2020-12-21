@@ -13,8 +13,12 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderRadius: '4px 4px 0 0',
+    borderRadius: 0,
     height: 75,
+    position: 'sticky',
+    top: -15,
+    backgroundColor: '#fafafa',
+    zIndex: 100,
   },
   chip: {
     display: 'inline-block',
@@ -43,7 +47,7 @@ export default function ProductPizzaComplementHeader({ category, complementSizeS
   return (
     <>
       {category.is_pizza_taste ? (
-        <div className={classes.header}>
+        <div id={`complement-category-${category.id}`} className={classes.header} onScroll={() => console.log('test')}>
           {searchBox ? (
             <ProductPizzaComplementSearchBox
               categoryId={category.id}

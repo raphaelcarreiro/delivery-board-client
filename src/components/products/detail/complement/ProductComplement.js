@@ -1,53 +1,20 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Typography, Grid, TextField } from '@material-ui/core';
+import { Typography, Grid } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import ProductComplementItem from './ProductComplementItem';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import { moneyFormat } from 'src/helpers/numberFormat';
-import ImagePreview from 'src/components/image-preview/ImagePreview';
-import { api } from 'src/services/api';
 import InsideLoading from 'src/components/loading/InsideLoading';
 import { useMessaging } from 'src/hooks/messaging';
 import { useProducts } from 'src/components/products/hooks/useProducts';
 import ProductAdd from '../ProductAdd';
+import { fetchProductComplement } from './fetchProductComplement';
+import { handleSelectProductComplement } from './handleSelectProductComplement';
+import { calculateProductComplementsPrice } from './calculateProductComplementsPrice';
+import ProductDetail from '../ProductDetail';
+import ProductDetailInputAnnotation from '../ProductDetailInputAnnotation';
 
 const useStyles = makeStyles(theme => ({
-  imageContainer: {
-    width: 200,
-    minHeight: 100,
-    maxHeight: 200,
-    marginRight: 20,
-    marginBottom: 10,
-    borderRadius: 4,
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    [theme.breakpoints.down('sm')]: {
-      marginRight: 0,
-    },
-  },
-  imageWrapper: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'flex',
-      justifyContent: 'center',
-      width: '100%',
-      marginBottom: 15,
-    },
-  },
-  image: {
-    width: '100%',
-    cursor: 'zoom-in',
-    borderRadius: 4,
-  },
-  productData: {
-    marginBottom: 15,
-    marginTop: 10,
-    display: 'flex',
-    [theme.breakpoints.down('sm')]: {
-      flexWrap: 'wrap',
-    },
-  },
   header: {
     border: `1px solid ${fade(theme.palette.primary.main, 0.1)}`,
     padding: '7px 15px',
@@ -74,48 +41,10 @@ const useStyles = makeStyles(theme => ({
   container: {
     marginBottom: 0,
   },
-  actionContent: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    padding: 20,
-  },
-  amountControl: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    border: '1px solid #eee',
-    borderRadius: 4,
-    marginRight: 10,
-    height: 40,
-  },
-  action: {
-    position: 'fixed',
-    bottom: 0,
-    left: 0,
-    width: '100%',
-    display: 'flex',
-    backgroundColor: '#fff',
-    boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)',
-  },
-  amount: {
-    textAlign: 'center',
-  },
-  buttonAmount: {
-    minWidth: 50,
-  },
-  finalPrice: {
-    color: ({ isSelected }) => (isSelected ? theme.palette.primary.contrastText : '#888'),
-    textAlign: 'right',
-    minWidth: 80,
-    fontWeight: 500,
-  },
 }));
 
 function ProductComplement() {
   const [amount, setAmount] = useState(1);
-  const [imagePreview, setImagePreview] = useState(false);
   const [product, setProduct] = useState(null);
   const messaging = useMessaging();
   const classes = useStyles();
@@ -123,70 +52,19 @@ function ProductComplement() {
   const [loading, setLoading] = useState(true);
   const { handlePrepareProduct, selectedProduct, handleSelectProduct } = useProducts();
 
-  const total = useMemo(() => {
-    if (!product) return '';
+  const formattedTotal = useMemo(() => {
+    if (!product) return moneyFormat(0);
     const _total = (complementsPrice + product.price) * amount;
     return moneyFormat(_total);
   }, [amount, complementsPrice, product]);
 
   useEffect(() => {
-    api
-      .get(`/products/${selectedProduct.id}`)
-      .then(response => {
-        const categories = response.data.complement_categories.map(category => {
-          category.product_complement_category_id = category.id;
-          category.complements = category.complements.map((complement, index) => {
-            complement.product_complement_id = complement.id;
-            complement.selected = !!complement.selected;
-            complement.formattedPrice = complement.price && moneyFormat(complement.price);
-
-            complement.prices = complement.prices.map((price, index) => {
-              price.product_complement_price_id = price.id;
-              price.formattedPrice = price.price && moneyFormat(price.price);
-              price.selected = index === 0;
-              return price;
-            });
-
-            complement.ingredients = complement.ingredients.map(ingredient => {
-              ingredient.product_complement_ingredient_id = ingredient.id;
-              return ingredient;
-            });
-
-            complement.additional = complement.additional.map(additional => {
-              additional.product_complement_additional_id = additional.id;
-              additional.prices = additional.prices.map((price, index) => {
-                price.product_complement_additional_price_id = price.id;
-                price.selected = index === 0;
-                price.formattedPrice = price.price && moneyFormat(price.price);
-                return price;
-              });
-              return additional;
-            });
-            return complement;
-          });
-          return category;
-        });
-
-        const ready = response.data.complement_categories.every(category => {
-          if (category.is_required) {
-            const selectedAmount = category.complements.reduce((sum, complement) => {
-              return complement.selected ? sum + 1 : sum;
-            }, 0);
-
-            return category.min_quantity <= selectedAmount;
-          }
-          return true;
-        });
-
-        setProduct({
-          ...response.data,
-          ready,
-          complement_categories: categories,
-        });
+    fetchProductComplement(selectedProduct.id)
+      .then(product => {
+        setProduct(product);
       })
-      .finally(() => {
-        setLoading(false);
-      });
+      .catch(err => console.error(err))
+      .finally(() => setLoading(false));
   }, [selectedProduct]);
 
   useEffect(() => {
@@ -198,16 +76,9 @@ function ProductComplement() {
   useEffect(() => {
     if (!product) return;
 
-    setComplementsPrice(
-      product.complement_categories.reduce((value, category) => {
-        const categoryPrice = category.complements.reduce((sum, complement) => {
-          return complement.selected && complement.price ? sum + complement.price : sum;
-        }, 0);
-        return categoryPrice + value;
-      }, 0)
-    );
-    handlePrepareProduct(product, amount);
-  }, [amount, handlePrepareProduct, product]);
+    const price = calculateProductComplementsPrice(product);
+    setComplementsPrice(price);
+  }, [product]);
 
   function handleAmountUp() {
     if (!product.ready) {
@@ -228,49 +99,11 @@ function ProductComplement() {
   }
 
   function handleClickComplements(complementCategoryId, complementId, amount) {
-    const categories = product.complement_categories.map(category => {
-      if (category.id === complementCategoryId) {
-        const selectedAmount = category.complements.filter(complement => complement.selected).length;
-
-        category.complements = category.complements.map(complement => {
-          if (category.max_quantity === 1) {
-            complement.selected = complement.id === complementId && !complement.selected;
-          } else {
-            if (complement.id === complementId) {
-              if (complement.selected) complement.selected = !complement.selected;
-              else if (category.max_quantity > selectedAmount) complement.selected = !complement.selected;
-            }
-          }
-
-          return complement;
-        });
-      }
-      return category;
-    });
-
-    const ready = product.complement_categories.every(category => {
-      if (category.is_required) {
-        const selectedAmount = category.complements.filter(complement => complement.selected).length;
-        return category.min_quantity <= selectedAmount;
-      }
-      return true;
-    });
-
-    console.log(categories);
-
-    const newProduct = {
-      ...product,
-      ready,
-      complement_categories: categories,
-    };
+    const { newProduct } = handleSelectProductComplement(complementCategoryId, complementId, product);
 
     setProduct(newProduct);
 
-    if (ready) handlePrepareProduct(newProduct);
-  }
-
-  function handleImagePreview() {
-    setImagePreview(!imagePreview);
+    if (newProduct.ready) handlePrepareProduct(newProduct);
   }
 
   return (
@@ -281,31 +114,13 @@ function ProductComplement() {
       displayBottomActions
       maxWidth="sm"
     >
-      {imagePreview && product.image && (
-        <ImagePreview src={product.image.imageUrl} description={product.name} onExited={handleImagePreview} />
-      )}
       {loading ? (
         <InsideLoading />
       ) : (
         <>
           <Grid container className={classes.container}>
             <Grid item xs={12}>
-              <div className={classes.productData}>
-                <div className={classes.imageWrapper}>
-                  <div className={classes.imageContainer}>
-                    <img
-                      onClick={handleImagePreview}
-                      className={classes.image}
-                      src={product.image && product.image.imageUrl}
-                      alt={product.name}
-                    />
-                  </div>
-                </div>
-                <div className={classes.productDescription}>
-                  <Typography variant="h6">{product.name}</Typography>
-                  <Typography>{product.description}</Typography>
-                </div>
-              </div>
+              <ProductDetail product={product} />
             </Grid>
             <Grid item xs={12}>
               {product.complement_categories.map(category => (
@@ -335,26 +150,14 @@ function ProductComplement() {
                 </section>
               ))}
             </Grid>
-            <Grid item xs={12} className={classes.annotationContainer}>
-              <TextField
-                variant="outlined"
-                multiline
-                rows={4}
-                label="Tem alguma observação?"
-                placeholder="Por exemplo, carne do hamburguer bem passada"
-                fullWidth
-                margin="normal"
-                value={product.annotation}
-                onChange={event => setProduct({ ...product, annotation: event.target.value })}
-              />
-            </Grid>
+            <ProductDetailInputAnnotation product={product} setProduct={setProduct} />
           </Grid>
           <ProductAdd
             amount={amount}
             handleAmountDown={handleAmountDown}
             handleAmountUp={handleAmountUp}
             product={product}
-            total={total}
+            total={formattedTotal}
           />
         </>
       )}

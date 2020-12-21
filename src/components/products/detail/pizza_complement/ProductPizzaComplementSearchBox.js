@@ -16,7 +16,7 @@ export default function ProductPizzaComplementSearchBox({ handleSearch, closeSea
 
   useEffect(() => {
     handleSearch(categoryId, search);
-  }, [search]);
+  }, [categoryId, handleSearch, search]);
 
   function handleInputChange(event) {
     setSearch(event.target.value);

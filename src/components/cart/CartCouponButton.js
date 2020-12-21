@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useSelector, useDispatch } from 'react-redux';
 import { Chip, Button } from '@material-ui/core';
 import { removeCoupon } from 'src/store/redux/modules/cart/actions';
-import MoneyOffIcon from '@material-ui/icons/MoneyOff';
 import PropTyes from 'prop-types';
 
 const useStyles = makeStyles({

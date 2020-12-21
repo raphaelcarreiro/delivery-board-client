@@ -3,7 +3,7 @@ import { Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { CustomDialogContext } from 'src/components/dialog/CustomDialog';
 import { Product } from 'src/types/product';
-import { useProducts } from 'src/components/products/hooks/useProducts';
+import { useCart } from '../../hooks/useCart';
 
 const useStyles = makeStyles(theme => ({
   finalPrice: {
@@ -14,25 +14,26 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-type ProductAddButtonProps = {
+type CartProductUpdateButtonProps = {
   product: Product;
   total: string;
+  amount: number;
 };
 
-const ProductAddButton: React.FC<ProductAddButtonProps> = ({ product, total }) => {
+const CartProductUpdateButton: React.FC<CartProductUpdateButtonProps> = ({ product, total, amount }) => {
   const classes = useStyles({ isSelected: !!product.ready });
   const { handleCloseDialog } = useContext(CustomDialogContext);
-  const { handleAddProductToCart } = useProducts();
+  const { handleUpdateCartProduct } = useCart();
 
   function handleConfirm() {
     if (!product.ready) return;
-    handleAddProductToCart();
+    handleUpdateCartProduct(product, amount);
     handleCloseDialog();
   }
 
   return (
     <Button disabled={!product.ready} variant="contained" size="large" color="primary" onClick={handleConfirm}>
-      <span>Adicionar</span>
+      <span>Atualizar</span>
       <Typography className={classes.finalPrice} color="textPrimary">
         {total}
       </Typography>
@@ -40,4 +41,4 @@ const ProductAddButton: React.FC<ProductAddButtonProps> = ({ product, total }) =
   );
 };
 
-export default ProductAddButton;
+export default CartProductUpdateButton;

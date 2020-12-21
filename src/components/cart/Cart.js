@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import CartProductList from './CartProductList';
+import CartProductList from './products/CartProductList';
 import CartTotal from './CartTotal';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import ProductSimple from './edit/simple/ProductSimple';
-import ProductComplement from './edit/complements/ProductComplement';
-import ProductPizzaComplement from './edit/pizza_complement/ProductPizzaComplement';
+import ProductSimple from './products/detail/simple/ProductSimple';
+import ProductComplement from './products/detail/complements/ProductComplement';
+import ProductPizzaComplement from './products/detail/pizza_complement/ProductPizzaComplement';
 import { updateProductFromCart } from 'src/store/redux/modules/cart/actions';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import CartClosedRestaurant from 'src/components/cart/CartClosedRestaurant';
@@ -18,6 +18,7 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import { useMessaging } from 'src/hooks/messaging';
 import { useAuth } from 'src/hooks/auth';
 import { useApp } from 'src/hooks/app';
+import { CartProvider } from './hooks/useCart';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -83,12 +84,22 @@ export default function Cart() {
   const messaging = useMessaging();
   const { handleCartVisibility, setRedirect } = useApp();
   const restaurant = useSelector(state => state.restaurant);
-  const [dialogUpdateSimpleProduct, setDialogUpdateSimpleProduct] = useState(false);
-  const [dialogUpdateComplementProduct, setDialogUpdateComplementProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [dialogClosedRestaurant, setDialogClosedRestaurant] = useState(false);
   const [couponView, setCouponView] = useState(false);
   const { isAuthenticated } = useAuth();
+
+  const isPizza = useMemo(() => {
+    return !!selectedProduct?.category.is_pizza;
+  }, [selectedProduct]);
+
+  const isComplement = useMemo(() => {
+    return !!selectedProduct?.category.has_complement && !selectedProduct?.category.is_pizza;
+  }, [selectedProduct]);
+
+  const isSimple = useMemo(() => {
+    return selectedProduct ? !selectedProduct.category.has_complement : false;
+  }, [selectedProduct]);
 
   function handleCheckoutClick() {
     if (!restaurant.is_open) {
@@ -117,54 +128,31 @@ export default function Cart() {
 
   function handleUpdateCartProduct(product, amount) {
     dispatch(updateProductFromCart(product, amount));
-    messaging.handleOpen('Atualizado!');
   }
 
   function handleClickUpdateProduct(product) {
     messaging.handleClose();
 
     setSelectedProduct(product);
-
-    if (product.category.has_complement) {
-      setDialogUpdateComplementProduct(true);
-      return false;
-    }
-
-    setDialogUpdateSimpleProduct(true);
   }
 
   function handleBuyingClick() {
     handleCartVisibility(false);
   }
 
+  const cartContextValue = {
+    selectedProduct,
+    handleUpdateCartProduct: handleUpdateCartProduct,
+    setSelectedProduct: product => setSelectedProduct(product),
+  };
+
   return (
-    <>
+    <CartProvider value={cartContextValue}>
       {router.route === '/cart' && <CustomAppbar title="carrinho" />}
       {dialogClosedRestaurant && <CartClosedRestaurant onExited={() => setDialogClosedRestaurant(false)} />}
-      {dialogUpdateSimpleProduct && (
-        <ProductSimple
-          onExited={() => setDialogUpdateSimpleProduct(false)}
-          selectedProduct={selectedProduct}
-          handleUpdateCartProduct={handleUpdateCartProduct}
-        />
-      )}
-      {dialogUpdateComplementProduct && (
-        <>
-          {selectedProduct.category.is_pizza ? (
-            <ProductPizzaComplement
-              onExited={() => setDialogUpdateComplementProduct(false)}
-              selectedProduct={selectedProduct}
-              handleUpdateCartProduct={handleUpdateCartProduct}
-            />
-          ) : (
-            <ProductComplement
-              onExited={() => setDialogUpdateComplementProduct(false)}
-              selectedProduct={selectedProduct}
-              handleUpdateCartProduct={handleUpdateCartProduct}
-            />
-          )}
-        </>
-      )}
+      {isSimple && <ProductSimple onExited={() => setSelectedProduct(null)} />}
+      {isPizza && <ProductPizzaComplement onExited={() => setSelectedProduct(null)} />}
+      {isComplement && <ProductComplement onExited={() => setSelectedProduct(null)} />}
       {couponView ? (
         <>
           <Coupon setClosedCouponView={() => setCouponView(false)} />
@@ -216,6 +204,6 @@ export default function Cart() {
           </Typography>
         </div>
       )}
-    </>
+    </CartProvider>
   );
 }

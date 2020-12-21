@@ -2,8 +2,6 @@ import React from 'react';
 import { ListItem, List, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import CartProductComplementAdditional from './CartProductComplementAdditional';
-import CartProductComplementIngredient from './CartProductComplementIngredient';
 
 const useStyles = makeStyles({
   list: {

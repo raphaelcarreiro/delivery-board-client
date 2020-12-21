@@ -15,14 +15,19 @@ const useStyles = makeStyles({
   },
 });
 
-type ProductViewAmountControlProps = {
+type ProductSimpleAmountControlProps = {
   handleClickAdditional(additionalId: number, amount: number): void;
   additionalId: number;
+  selectedAmount?: number;
 };
 
-const ProductViewAmountControl: React.FC<ProductViewAmountControlProps> = ({ handleClickAdditional, additionalId }) => {
+const ProductSimpleAmountControl: React.FC<ProductSimpleAmountControlProps> = ({
+  handleClickAdditional,
+  additionalId,
+  selectedAmount,
+}) => {
   const classes = useStyles();
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(selectedAmount || 0);
 
   useEffect(() => {
     handleClickAdditional(additionalId, amount);
@@ -57,4 +62,4 @@ const ProductViewAmountControl: React.FC<ProductViewAmountControlProps> = ({ han
   );
 };
 
-export default ProductViewAmountControl;
+export default ProductSimpleAmountControl;

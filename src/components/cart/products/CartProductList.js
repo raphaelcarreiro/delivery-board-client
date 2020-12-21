@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux';
 import { removeFromCart, restoreCart } from 'src/store/redux/modules/cart/actions';
 import CartProductListComplements from './CartProductListComplements';
 import { useMessaging } from 'src/hooks/messaging';
-import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -110,6 +109,12 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
     messaging.handleOpen('Produto removido', handleRestoreCart);
   }
 
+  function showAdditionalOrIngredients(product) {
+    const showIngredients = product.ingredients.some(ingredient => !ingredient.selected);
+    const showAdditional = product.additional.some(additional => additional.selected);
+    return showAdditional || showIngredients;
+  }
+
   return (
     <List className={classes.list}>
       {products.map(product => (
@@ -146,29 +151,25 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
             </Typography>
           </div>
           {product.category.has_complement && <CartProductListComplements categories={product.complement_categories} />}
-          {(product.ingredients.some(ingredient => !ingredient.selected) ||
-            product.additional.some(additional => additional.selected)) && (
+          {showAdditionalOrIngredients(product) && (
             <div className={classes.options}>
               <div>
-                {product.ingredients.map(
-                  ingredient =>
-                    !ingredient.selected && (
-                      <Typography key={ingredient.id} variant="body2" display="inline" className={classes.ingredients}>
-                        s/ {ingredient.name}
-                      </Typography>
-                    )
-                )}
+                {product.ingredients
+                  .filter(ingredient => !ingredient.selected)
+                  .map(ingredient => (
+                    <Typography key={ingredient.id} variant="body2" display="inline" className={classes.ingredients}>
+                      s/ {ingredient.name}
+                    </Typography>
+                  ))}
               </div>
               <div>
-                {product.additional &&
-                  product.additional.map(
-                    additional =>
-                      additional.selected && (
-                        <Typography key={additional.id} variant="body2" display="inline" className={classes.additional}>
-                          c/ {additional.amount}x {additional.name}
-                        </Typography>
-                      )
-                  )}
+                {product.additional
+                  .filter(additional => additional.selected)
+                  .map(additional => (
+                    <Typography key={additional.id} variant="body2" display="inline" className={classes.additional}>
+                      c/ {additional.amount}x {additional.name}
+                    </Typography>
+                  ))}
               </div>
             </div>
           )}

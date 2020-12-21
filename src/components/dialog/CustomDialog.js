@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -69,6 +69,7 @@ export default function CustomDialog({
   displayBottomActions,
   maxWidth,
   height,
+  onScroll,
 }) {
   const [open, setOpen] = useState(true);
   const app = useApp();
@@ -109,7 +110,7 @@ export default function CustomDialog({
           </Toolbar>
         </AppBar>
       )}
-      <div className={classes.content}>
+      <div className={classes.content} onScroll={onScroll}>
         <CustomDialogContext.Provider value={{ handleCloseDialog: handleClose }}>
           {children}
         </CustomDialogContext.Provider>
@@ -135,6 +136,7 @@ CustomDialog.propTypes = {
   displayBottomActions: PropTypes.bool,
   maxWidth: PropTypes.string,
   height: PropTypes.string,
+  onScroll: PropTypes.func,
 };
 
 export const DialogConsumer = CustomDialogContext.Consumer;
