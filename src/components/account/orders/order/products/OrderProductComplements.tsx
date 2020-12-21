@@ -8,7 +8,6 @@ type OrderProductComplementsProps = {
 
 const useStyles = makeStyles({
   container: {
-    marginTop: 10,
     display: 'flex',
     flexDirection: 'column',
   },
