@@ -43,6 +43,11 @@ export function createTheme(primaryColor, secondaryColor) {
           boxShadow: 'none',
         },
       },
+      MuiAppBar: {
+        root: {
+          boxShadow: 'none',
+        },
+      },
       MuiInput: {
         root: {
           fontWeight: 300,

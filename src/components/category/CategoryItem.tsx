@@ -3,12 +3,12 @@ import { Typography, ListItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 import { Category } from 'src/types/category';
+import NextImage from 'next/image';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
     display: 'flex',
     backgroundColor: '#fff',
-    // border: '1px solid #eee',
     boxShadow: '0 0 3px 1px #eee',
     borderRadius: theme.shape.borderRadius,
     minHeight: 120,
@@ -64,10 +64,12 @@ const CategoryItem: React.FC<CategoryItemProps> = ({ category }) => {
           </div>
           {category.image && (
             <div className={classes.imageWrapper}>
-              <img
+              <NextImage
                 className={classes.image}
-                src={category.image.imageThumbUrl ? category.image.imageThumbUrl : category.image.imageUrl}
+                src={category.image.imageThumbUrl ? category.image.imageUrl : category.image.imageUrl}
                 alt={category.name}
+                height={100}
+                width={100}
               />
             </div>
           )}

@@ -1,4 +1,4 @@
-import React, { MouseEvent } from 'react';
+import React from 'react';
 import { List } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import ProductItem from './ProductItem';
@@ -7,21 +7,23 @@ import { Product } from 'src/types/product';
 const useStyles = makeStyles(theme => ({
   listRow: {
     display: 'grid',
-    gridGap: 6,
+    gridGap: 15,
     gridAutoFlow: 'column',
     gridAutoColumns: 'min-content',
     overflowY: 'scroll',
     padding: '10px 0 0',
     [theme.breakpoints.down('sm')]: {
       padding: '10px 10px 0',
+      gridGap: 6,
     },
   },
   listCol: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-    gridGap: 6,
+    gridGap: 15,
     [theme.breakpoints.down('xs')]: {
       gridTemplateColumns: '1fr 1fr',
+      gridGap: 6,
     },
   },
 }));

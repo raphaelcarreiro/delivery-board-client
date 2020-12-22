@@ -3,27 +3,27 @@ import { ListItem, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Product } from 'src/types/product';
 import { useApp } from 'src/hooks/app';
+import NextImage from 'next/image';
 
 const useStyles = makeStyles(theme => ({
   listItem: (props: { windowWidth: number; listType: 'col' | 'row' }) => ({
     display: 'flex',
     backgroundColor: '#fff',
-    // border: '1px solid #eee',
     boxShadow: '0 0 3px 1px #eee',
     borderRadius: theme.shape.borderRadius,
     position: 'relative',
     alignItems: 'flex-start',
-    height: 269,
+    height: 380,
     width: props.listType === 'row' ? 230 : '100%',
     padding: 0,
     flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
       width: props.listType === 'row' ? props.windowWidth / 2 - 15 : '100%',
+      height: 355,
     },
   }),
   img: {
-    // height: '100%',
-    width: '100%',
+    height: '100%',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
       height: 'auto',
@@ -34,11 +34,14 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: 100,
+    height: 220,
     overflow: 'hidden',
     position: 'relative',
     flexShrink: 0,
     marginBottom: 12,
+    [theme.breakpoints.down('sm')]: {
+      height: 190,
+    },
   },
   productData: {
     display: 'flex',
@@ -46,7 +49,7 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     alignItems: 'flex-start',
     width: '100%',
-    padding: 10,
+    padding: '0 10px 10px 10px',
   },
   price: {
     fontWeight: 600,
@@ -107,11 +110,13 @@ const CategoryProduct: React.FC<CategoryProductProps> = ({
     <ListItem onClick={() => handleProductClick(product)} button className={classes.listItem} key={product.id}>
       {product.image && (
         <div className={classes.imageWrapper}>
-          <img
+          <NextImage
             className={classes.img}
-            src={product.image.imageThumbUrl ? product.image.imageThumbUrl : product.image.imageUrl}
+            src={product.image.imageThumbUrl ? product.image.imageUrl : product.image.imageUrl}
             alt={product.name}
             onClick={() => handleOpenImagePreview(product)}
+            width={300}
+            height={300}
           />
         </div>
       )}

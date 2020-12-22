@@ -1,27 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import ProductViewIngredients from './ProductSimpleIngredients';
-import ProductViewAdditional from './ProductSimpleAdditional';
-import { Grid } from '@material-ui/core';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import InsideLoading from 'src/components/loading/InsideLoading';
 import { useProducts } from 'src/components/products/hooks/useProducts';
 import ProductAdd from '../ProductAdd';
 import { fetchSimpleProduct } from './fetchSimpleProduct';
-import ProductDetail from '../ProductDetail';
-import ProductDetailInputAnnotation from '../ProductDetailInputAnnotation';
-
-const useStyles = makeStyles(theme => ({
-  container: {
-    marginBottom: 0,
-  },
-}));
+import ProductSimpleDetail from './ProductSimpleDetail';
+import { ProductSimpleProvider } from '../hooks/useProduct';
 
 export default function ProductSimple() {
   const [amount, setAmount] = useState(1);
   const [additionalPrice, setAdditionalPrice] = useState(0);
-  const classes = useStyles();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const { selectedProduct, handlePrepareProduct, handleSelectProduct } = useProducts();
@@ -89,40 +78,29 @@ export default function ProductSimple() {
     });
   }
 
+  const productSimpleContext = {
+    handleClickAdditional,
+    handleClickIngredient,
+    product,
+    setProduct,
+  };
+
   return (
     <CustomDialog
-      maxWidth="sm"
+      maxWidth="lg"
       title="adicionar ao carrinho"
       backgroundColor="#fafafa"
       handleModalState={() => handleSelectProduct(null)}
       displayBottomActions
+      height="80vh"
     >
       {loading ? (
         <InsideLoading />
       ) : (
         <>
-          <Grid container className={classes.container} justify="center">
-            <Grid item xs={12}>
-              <ProductDetail product={product} />
-              <Grid item xs={12}>
-                {product.additional.length > 0 && (
-                  <ProductViewAdditional
-                    additional={product.additional}
-                    handleClickAdditional={handleClickAdditional}
-                  />
-                )}
-              </Grid>
-              <Grid item xs={12}>
-                {product.ingredients.length > 0 && (
-                  <ProductViewIngredients
-                    ingredients={product.ingredients}
-                    handleClickIngredient={handleClickIngredient}
-                  />
-                )}
-              </Grid>
-              <ProductDetailInputAnnotation product={product} setProduct={setProduct} />
-            </Grid>
-          </Grid>
+          <ProductSimpleProvider value={productSimpleContext}>
+            <ProductSimpleDetail />
+          </ProductSimpleProvider>
           <ProductAdd
             total={formattedTotal}
             handleAmountDown={handleAmountDown}

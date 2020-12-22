@@ -1,5 +1,4 @@
-import React, { Fragment } from 'react';
-import DialogFullscreen from '../../../dialog/DialogFullscreen';
+import React from 'react';
 import { FormControlLabel, Checkbox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -53,7 +52,7 @@ export default function ProductPizzaComplementIngredient({
 
   return (
     <CustomDialog handleModalState={onExited} title={`${complement.name} - ingredientes`} hideBackdrop maxWidth="sm">
-      <Fragment>
+      <>
         {complement.ingredients.map(ingredient => (
           <FormControlLabel
             classes={{ root: classes.control }}
@@ -64,7 +63,7 @@ export default function ProductPizzaComplementIngredient({
             label={ingredient.name}
           ></FormControlLabel>
         ))}
-      </Fragment>
+      </>
     </CustomDialog>
   );
 }

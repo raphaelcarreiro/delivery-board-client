@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import { useMessaging } from 'src/hooks/messaging';
 import { Product } from 'src/types/product';
 import ImagePreview from '../image-preview/ImagePreview';
-import ProductView from './detail/simple/ProductSimple';
+import ProductSimple from './detail/simple/ProductSimple';
 import ProductPizzaComplement from './detail/pizza_complement/ProductPizzaComplement';
 import { useSelector } from 'src/store/redux/selector';
 import ProductComplement from './detail/complement/ProductComplement';
@@ -213,7 +213,7 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
         />
       )}
 
-      {isSimple && <ProductView />}
+      {isSimple && <ProductSimple />}
       {isPizza && <ProductPizzaComplement />}
       {isComplement && <ProductComplement />}
 

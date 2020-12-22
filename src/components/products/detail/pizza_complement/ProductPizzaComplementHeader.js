@@ -16,9 +16,12 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 0,
     height: 75,
     position: 'sticky',
-    top: -15,
+    top: 0,
     backgroundColor: '#fafafa',
     zIndex: 100,
+    [theme.breakpoints.down('sm')]: {
+      top: -15,
+    },
   },
   chip: {
     display: 'inline-block',

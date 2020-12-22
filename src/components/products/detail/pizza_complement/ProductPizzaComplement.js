@@ -1,12 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import ProductPizzaComplementItem from './ProductPizzaComplementItem';
 import ProductPizzaComplementAdditional from './ProductPizzaComplementAdditional';
 import ProductPizzaComplementIngredient from './ProductPizzaComplementIngredient';
 import { moneyFormat } from '../../../../helpers/numberFormat';
 import CustomDialog from 'src/components/dialog/CustomDialog';
-import ProductPizzaComplementHeader from './ProductPizzaComplementHeader';
 import { useSelector } from 'react-redux';
 import InsideLoading from 'src/components/loading/InsideLoading';
 import { useMessaging } from 'src/hooks/messaging';
@@ -15,22 +11,11 @@ import ProductAdd from '../ProductAdd';
 import { fetchPizzaProduct } from './fetchPizzaProduct';
 import { handleSelectPizzaProductComplement } from './handleSelectPizzaProductComplement';
 import { calculatePizzaProductComplementPrice } from './calculatePizzaProductComplementsPrice';
-import ProductDetail from '../ProductDetail';
-import ProductDetailInputAnnotation from '../ProductDetailInputAnnotation';
 import { handleSearchComplement } from './handleSearchComplement';
-
-const useStyles = makeStyles({
-  category: {
-    display: 'block',
-    marginBottom: 10,
-  },
-  container: {
-    marginBottom: 0,
-  },
-});
+import { ProductPizzaProvider } from '../hooks/useProductPizza';
+import ProductPizzaDetail from './ProductPizzaDetail';
 
 export default function ProductPizzaComplement() {
-  const classes = useStyles();
   const [amount, setAmount] = useState(1);
   const [product, setProduct] = useState(null);
   const [filteredProduct, setFilteredProduct] = useState(null);
@@ -135,22 +120,20 @@ export default function ProductPizzaComplement() {
     }
   }
 
-  function handleScroll(e) {
-    product.complement_categories.forEach(category => {
-      const el = document.getElementById(`complement-category-${category.id}`);
-      if (!el) return;
-      const bounds = el.getBoundingClientRect();
-      console.log(bounds);
-      if (bounds.y <= 93) {
-        el.style.position = 'sticky';
-        el.style.top = '15px';
-        el.style.right = '15px';
-        el.style.left = '15px';
-        el.style.background = '#fafafa';
-        el.style.zIndex = 100;
-      } else el.removeAttribute('style');
-    });
-  }
+  const productPizzaContextValue = {
+    product,
+    setProduct,
+    filteredProduct,
+    handleClickPizzaComplements,
+    openDialogAdditional: () => setDialogAdditional(true),
+    openDialogIngredients: () => setDialogIngredients(true),
+    setComplementCategoryIdSelected,
+    setComplementIdSelected,
+    complementCategoryIdSelected,
+    complementIdSelected,
+    complementSizeSelected,
+    handleSearch,
+  };
 
   return (
     <CustomDialog
@@ -158,59 +141,20 @@ export default function ProductPizzaComplement() {
       handleModalState={() => handleSelectProduct(null)}
       title={`adicionar ao carrinho`}
       displayBottomActions
-      maxWidth="sm"
+      maxWidth="lg"
+      height="80vh"
     >
-      {dialogAdditional && (
-        <ProductPizzaComplementAdditional
-          onExited={() => setDialogAdditional(false)}
-          product={product}
-          complementIdSelected={complementIdSelected}
-          complementCategoryIdSelected={complementCategoryIdSelected}
-          setProduct={setProduct}
-        />
-      )}
-      {dialogIngredients && (
-        <ProductPizzaComplementIngredient
-          onExited={() => setDialogIngredients(false)}
-          complementIdSelected={complementIdSelected}
-          complementCategoryIdSelected={complementCategoryIdSelected}
-          product={product}
-          setProduct={setProduct}
-        />
-      )}
+      <ProductPizzaProvider value={productPizzaContextValue}>
+        {dialogAdditional && <ProductPizzaComplementAdditional onExited={() => setDialogAdditional(false)} />}
+        {dialogIngredients && <ProductPizzaComplementIngredient onExited={() => setDialogIngredients(false)} />}
+      </ProductPizzaProvider>
       {loading ? (
         <InsideLoading />
       ) : (
         <>
-          <Grid container className={classes.container} justify="center">
-            <Grid item xs={12}>
-              <ProductDetail product={product} />
-            </Grid>
-            <Grid item xs={12}>
-              {filteredProduct.complement_categories.map(category => (
-                <section className={classes.category} key={category.id}>
-                  <ProductPizzaComplementHeader
-                    category={category}
-                    complementSizeSelected={complementSizeSelected}
-                    handleSearch={handleSearch}
-                  />
-                  {(category.is_pizza_size || complementSizeSelected.id) && (
-                    <ProductPizzaComplementItem
-                      category={category}
-                      productId={product.id}
-                      handleClickPizzaComplements={handleClickPizzaComplements}
-                      complements={category.complements}
-                      setComplementCategoryIdSelected={setComplementCategoryIdSelected}
-                      setComplementIdSelected={setComplementIdSelected}
-                      openDialogAdditional={() => setDialogAdditional(true)}
-                      openDialogIngredients={() => setDialogIngredients(true)}
-                    />
-                  )}
-                </section>
-              ))}
-            </Grid>
-            <ProductDetailInputAnnotation product={product} setProduct={setProduct} />
-          </Grid>
+          <ProductPizzaProvider value={productPizzaContextValue}>
+            <ProductPizzaDetail />
+          </ProductPizzaProvider>
           <ProductAdd
             amount={amount}
             handleAmountDown={handleAmountDown}

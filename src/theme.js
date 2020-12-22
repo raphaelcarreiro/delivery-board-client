@@ -47,6 +47,11 @@ const theme = createMuiTheme({
         boxShadow: 'none',
       },
     },
+    MuiAppBar: {
+      root: {
+        boxShadow: 'none',
+      },
+    },
     MuiTypography: {
       h6: {
         fontWeight: 400,
