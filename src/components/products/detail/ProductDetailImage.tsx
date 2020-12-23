@@ -6,7 +6,7 @@ import { Product } from 'src/types/product';
 const useStyles = makeStyles(theme => ({
   imageContainer: {
     width: 590,
-    height: 590,
+    maxHeight: 590,
     display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'center',
