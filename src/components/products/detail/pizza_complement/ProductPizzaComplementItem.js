@@ -175,7 +175,7 @@ export default function ProductPizzaComplementItem({
                 {complement.image && (
                   <img
                     className={classes.image}
-                    src={complement.image.imageUrl}
+                    src={complement.image.imageThumbUrl ? complement.image.imageThumbUrl : complement.image.imageUrl}
                     alt={complement.name}
                     onClick={event => handleImageClick(event, complement)}
                   />

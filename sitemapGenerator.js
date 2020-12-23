@@ -54,20 +54,20 @@ function sitemapGenerator() {
                 .txt(`${restaurant.url}/menu/${category.url}`);
 
               sitemap.end({ pretty: true });
-              fs.writeFile(`public/sitemap.xml`, sitemap, 'utf8', err => {
+              fs.writeFile(`public/sitemap.xml`, sitemap.toString(), 'utf8', err => {
                 if (err) {
                   console.log(err);
                 }
               });
             });
           })
-          .catch(() => {
-            console.log('There was an error on create sitemap.xml');
+          .catch(err => {
+            console.log(err);
           });
       }
     })
-    .catch(() => {
-      console.log('There was an error on create sitemap.xml');
+    .catch(err => {
+      console.log(err);
     });
 }
 

@@ -3,7 +3,6 @@ import { Typography, ListItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 import { Category } from 'src/types/category';
-import NextImage from 'next/image';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -12,7 +11,7 @@ const useStyles = makeStyles(theme => ({
     boxShadow: '0 0 3px 1px #eee',
     borderRadius: theme.shape.borderRadius,
     minHeight: 120,
-    padding: '0 0 0 10px',
+    padding: '0 0 0 15px',
   },
   content: {
     display: 'flex',

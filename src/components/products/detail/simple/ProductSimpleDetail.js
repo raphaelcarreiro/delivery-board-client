@@ -41,11 +41,11 @@ export default function ProductSimpleDetail() {
       <ProductDetailImage product={product} />
       <div className={classes.options}>
         <ProductDetailDescription product={product} />
-        {product.additional.length > 0 && (
-          <ProductViewAdditional additional={product.additional} handleClickAdditional={handleClickAdditional} />
-        )}
         {product.ingredients.length > 0 && (
           <ProductViewIngredients ingredients={product.ingredients} handleClickIngredient={handleClickIngredient} />
+        )}
+        {product.additional.length > 0 && (
+          <ProductViewAdditional additional={product.additional} handleClickAdditional={handleClickAdditional} />
         )}
         <ProductDetailInputAnnotation product={product} setProduct={setProduct} />
       </div>

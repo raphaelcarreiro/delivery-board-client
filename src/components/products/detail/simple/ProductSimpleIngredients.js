@@ -40,6 +40,13 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 10,
+    position: 'sticky',
+    top: 0,
+    backgroundColor: '#fafafa',
+    zIndex: 100,
+    [theme.breakpoints.down('sm')]: {
+      top: -15,
+    },
   },
   icon: {
     backgroundColor: '#fff',
