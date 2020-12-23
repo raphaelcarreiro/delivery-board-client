@@ -49,17 +49,15 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 15,
-  },
-  image: {
-    borderRadius: '50%',
-    border: `2px solid #fff`,
+    overflow: 'hidden',
     width: 70,
     height: 70,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#eee',
+    borderRadius: '50%',
     cursor: 'zoom-in',
+    backgroundColor: '#eee',
+  },
+  image: {
+    width: '100%',
   },
   complementData: {
     display: 'flex',
@@ -171,16 +169,16 @@ export default function ProductPizzaComplementItem({
               </IconButton>
             )}
             <div className={classes.complementData}>
-              <div className={classes.imageContainer}>
-                {complement.image && (
+              {complement.image && (
+                <div className={classes.imageContainer}>
                   <img
                     className={classes.image}
                     src={complement.image.imageThumbUrl ? complement.image.imageThumbUrl : complement.image.imageUrl}
                     alt={complement.name}
                     onClick={event => handleImageClick(event, complement)}
                   />
-                )}
-              </div>
+                </div>
+              )}
               <div>
                 <Typography variant="body1" className={classes.complementName}>
                   {complement.name}
