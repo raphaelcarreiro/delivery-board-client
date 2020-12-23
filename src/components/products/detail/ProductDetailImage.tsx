@@ -2,11 +2,11 @@ import { makeStyles } from '@material-ui/core';
 import React, { useState } from 'react';
 import ImagePreview from 'src/components/image-preview/ImagePreview';
 import { Product } from 'src/types/product';
-import NextImage from 'next/image';
 
 const useStyles = makeStyles(theme => ({
   imageContainer: {
-    width: '590px',
+    width: 590,
+    height: 590,
     display: 'flex',
     alignItems: 'flex-start',
     justifyContent: 'center',
@@ -41,14 +41,14 @@ const ProductDetailImage: React.FC<ProductDetailImageProps> = ({ product }) => {
       )}
       <div className={classes.imageWrapper}>
         <div className={classes.imageContainer}>
-          <NextImage
-            onClick={() => setImagePreview(true)}
-            className={classes.image}
-            src={product.image && product.image.imageUrl}
-            alt={product.name}
-            height={600}
-            width={600}
-          />
+          {product.image && (
+            <img
+              onClick={() => setImagePreview(true)}
+              className={classes.image}
+              src={product.image.imageUrl}
+              alt={product.name}
+            />
+          )}
         </div>
       </div>
     </>

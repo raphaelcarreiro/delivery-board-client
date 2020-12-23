@@ -24,7 +24,6 @@ const ProductDetailInputAnnotation: React.FC<ProductDetailInputAnnotionProps> = 
         label="Tem alguma observação?"
         placeholder="Por exemplo, carne do hamburguer bem passada"
         fullWidth
-        margin="normal"
         value={product.annotation}
         onChange={event => {
           setProduct({ ...product, annotation: event.target.value });

@@ -3,7 +3,6 @@ import { ListItem, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Product } from 'src/types/product';
 import { useApp } from 'src/hooks/app';
-import NextImage from 'next/image';
 
 const useStyles = makeStyles(theme => ({
   listItem: (props: { windowWidth: number; listType: 'col' | 'row' }) => ({
@@ -110,13 +109,11 @@ const CategoryProduct: React.FC<CategoryProductProps> = ({
     <ListItem onClick={() => handleProductClick(product)} button className={classes.listItem} key={product.id}>
       {product.image && (
         <div className={classes.imageWrapper}>
-          <NextImage
+          <img
             className={classes.img}
-            src={product.image.imageThumbUrl ? product.image.imageUrl : product.image.imageUrl}
+            src={product.image.imageThumbUrl ? product.image.imageThumbUrl : product.image.imageUrl}
             alt={product.name}
             onClick={() => handleOpenImagePreview(product)}
-            width={300}
-            height={300}
           />
         </div>
       )}
