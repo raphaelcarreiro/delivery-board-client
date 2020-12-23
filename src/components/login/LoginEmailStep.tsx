@@ -21,7 +21,7 @@ const LoginEmailStep: React.FC<LoginEmailStepProps> = ({ email, setEmail, emailE
         onChange={event => setEmail(event.target.value)}
         required
         margin="normal"
-        autoComplete="email"
+        autoComplete="email username"
         error={!!emailError}
         helperText={emailError}
       />

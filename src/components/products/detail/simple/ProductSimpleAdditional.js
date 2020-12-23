@@ -40,6 +40,13 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderRadius: '4px 4px 0 0',
+    position: 'sticky',
+    top: 0,
+    backgroundColor: '#fafafa',
+    zIndex: 100,
+    [theme.breakpoints.down('sm')]: {
+      top: -15,
+    },
   },
   price: {
     fontWeight: 500,

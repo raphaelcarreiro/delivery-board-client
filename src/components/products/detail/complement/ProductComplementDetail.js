@@ -25,6 +25,9 @@ const useStyles = makeStyles(theme => ({
     '&::-webkit-scrollbar': {
       width: 3,
     },
+    [theme.breakpoints.down('sm')]: {
+      overflowY: 'unset',
+    },
   },
 }));
 

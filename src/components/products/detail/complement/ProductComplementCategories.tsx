@@ -11,6 +11,13 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    position: 'sticky',
+    top: 0,
+    backgroundColor: '#fafafa',
+    zIndex: 100,
+    [theme.breakpoints.down('sm')]: {
+      top: -15,
+    },
   },
   chip: {
     display: 'inline-block',

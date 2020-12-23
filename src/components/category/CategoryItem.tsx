@@ -12,6 +12,7 @@ const useStyles = makeStyles(theme => ({
     boxShadow: '0 0 3px 1px #eee',
     borderRadius: theme.shape.borderRadius,
     minHeight: 120,
+    padding: '0 0 0 10px',
   },
   content: {
     display: 'flex',
@@ -23,23 +24,21 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 100,
-    height: 100,
+    width: 120,
+    height: 120,
     overflow: 'hidden',
-    borderRadius: 4,
     flexShrink: 0,
     marginLeft: 10,
   },
   image: {
-    borderRadius: 4,
     height: '100%',
     [theme.breakpoints.down('sm')]: {
-      height: 'auto',
-      width: '100%',
+      // height: 'auto',
+      // width: '100%',
     },
   },
   productName: {
-    fontWeight: 300,
+    fontWeight: 400,
   },
 }));
 
@@ -64,12 +63,10 @@ const CategoryItem: React.FC<CategoryItemProps> = ({ category }) => {
           </div>
           {category.image && (
             <div className={classes.imageWrapper}>
-              <NextImage
+              <img
                 className={classes.image}
-                src={category.image.imageThumbUrl ? category.image.imageUrl : category.image.imageUrl}
+                src={category.image.imageThumbUrl ? category.image.imageThumbUrl : category.image.imageUrl}
                 alt={category.name}
-                height={100}
-                width={100}
               />
             </div>
           )}

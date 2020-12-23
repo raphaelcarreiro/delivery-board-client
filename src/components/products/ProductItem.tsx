@@ -30,13 +30,9 @@ const useStyles = makeStyles(theme => ({
     },
   },
   imageWrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
     width: '100%',
     height: 220,
     overflow: 'hidden',
-    position: 'relative',
     flexShrink: 0,
     marginBottom: 12,
     [theme.breakpoints.down('sm')]: {
@@ -87,6 +83,10 @@ const useStyles = makeStyles(theme => ({
     wordBreak: 'break-word',
     marginTop: 3,
     height: 60,
+  },
+  hasComplement: {
+    position: 'absolute',
+    bottom: 10,
   },
 }));
 
@@ -142,7 +142,7 @@ const CategoryProduct: React.FC<CategoryProductProps> = ({
           {product.description}
         </Typography>
         {product.category.has_complement && (
-          <Typography variant="body2" color="primary">
+          <Typography variant="body2" color="primary" className={classes.hasComplement}>
             Monte esse produto
           </Typography>
         )}
