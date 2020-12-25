@@ -17,6 +17,7 @@
     "axios": "^0.19.0",
     "babel-eslint": "^10.0.3",
     "date-fns": "^2.16.1",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "firebase": "^7.6.1",
     "heroku-ssl-redirect": "^0.0.4",
@@ -36,10 +37,11 @@
     "yup": "^0.27.0"
   },
   "scripts": {
-    "dev": "set NODE_OPTIONS=--inspect && node server.js",
+    "dev": "set NODE_OPTIONS=--inspect && next dev",
     "debug": "set NODE_OPTIONS=--inspect && next dev",
-    "build": "next build",
-    "start": "NODE_ENV=production node server.js -p $PORT"
+    "build": "node sitemapGenerator.js && next build",
+    "start": "NODE_ENV=production node server.js -p $PORT",
+    "createXml": "node sitemapGenerator.js"
   },
   "devDependencies": {
     "@types/facebook-js-sdk": "^3.3.0",

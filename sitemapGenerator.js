@@ -1,74 +1,73 @@
+require('dotenv').config({ path: './.env.production' });
 const axios = require('axios');
 const fs = require('fs');
 const builder = require('xmlbuilder');
 
-function sitemapGenerator() {
-  const restaurantId = process.env.NEXT_PUBLIC_RESTAURANT_ID;
+const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API,
+  headers: {
+    RestaurantId: process.env.NEXT_PUBLIC_RESTAURANT_ID,
+  },
+});
 
-  const sitemap = builder
-    .create('urlset')
-    .dec()
-    .att('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+const sitemap = builder
+  .create('urlset')
+  .dec()
+  .att('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
 
-  axios
-    .get(`${process.env.NEXT_PUBLIC_API}restaurants`, {
-      headers: {
-        RestaurantId: restaurantId,
-      },
-    })
-    .then(response => {
-      const restaurant = response.data;
-      if (restaurant) {
-        sitemap
-          .ele('url')
-          .ele('loc')
-          .txt(restaurant.url);
+api
+  .get('/restaurants')
+  .then(response => {
+    const restaurant = response.data;
+    console.log(`Building ${restaurant.name} sitemap.xml`);
 
-        sitemap
-          .ele('url')
-          .ele('loc')
-          .txt(`${restaurant.url}/menu`);
+    if (!restaurant) {
+      console.log('Restaurant not found');
+      return;
+    }
 
-        sitemap
-          .ele('url')
-          .ele('loc')
-          .txt(`${restaurant.url}/checkout`);
+    sitemap
+      .ele('url')
+      .ele('loc')
+      .txt(restaurant.url);
 
-        sitemap
-          .ele('url')
-          .ele('loc')
-          .txt(`${restaurant.url}/login`);
+    sitemap
+      .ele('url')
+      .ele('loc')
+      .txt(`${restaurant.url}/menu`);
 
-        axios
-          .get(`${process.env.NEXT_PUBLIC_API}categories`, {
-            headers: {
-              RestaurantId: restaurantId,
-            },
-          })
-          .then(response => {
-            const categories = response.data;
-            categories.forEach(category => {
-              sitemap
-                .ele('url')
-                .ele('loc')
-                .txt(`${restaurant.url}/menu/${category.url}`);
+    sitemap
+      .ele('url')
+      .ele('loc')
+      .txt(`${restaurant.url}/checkout`);
 
-              sitemap.end({ pretty: true });
-              fs.writeFile(`public/sitemap.xml`, sitemap.toString(), 'utf8', err => {
-                if (err) {
-                  console.log(err);
-                }
-              });
-            });
-          })
-          .catch(err => {
+    sitemap
+      .ele('url')
+      .ele('loc')
+      .txt(`${restaurant.url}/login`);
+
+    api
+      .get('/categories')
+      .then(response => {
+        const categories = response.data;
+        categories.forEach(category => {
+          sitemap
+            .ele('url')
+            .ele('loc')
+            .txt(`${restaurant.url}/menu/${category.url}`);
+        });
+        sitemap.end({ pretty: true });
+        fs.writeFile(`public/sitemap.xml`, sitemap.toString(), 'utf8', err => {
+          if (err) {
             console.log(err);
-          });
-      }
-    })
-    .catch(err => {
-      console.log(err);
-    });
-}
-
-module.exports = sitemapGenerator;
+          }
+        });
+        console.log(`${restaurant.name} sitemap.xml created!`);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  })
+  .catch(err => {
+    console.log(err);
+  });

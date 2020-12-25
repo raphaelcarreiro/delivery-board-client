@@ -1,8 +1,6 @@
 const express = require('express');
 const sslRedirect = require('heroku-ssl-redirect');
 const next = require('next');
-const { parse } = require('url');
-const sitemapGenerator = require('./sitemapGenerator');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -11,9 +9,6 @@ const handle = app.getRequestHandler();
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 
-// create sitemap.xml
-sitemapGenerator();
-
 app
   .prepare()
   .then(() => {
@@ -21,9 +16,8 @@ app
 
     server.use(sslRedirect());
 
-    server.get('*', (req, res) => {
-      const parsedUrl = parse(req.url, true);
-      handle(req, res, parsedUrl);
+    server.all('*', (req, res) => {
+      return handle(req, res);
     });
 
     server.listen(port, error => {
