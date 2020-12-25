@@ -42,6 +42,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius: '4px 4px 0 0',
     position: 'sticky',
     top: 0,
+    marginTop: 15,
     backgroundColor: '#fafafa',
     zIndex: 100,
     [theme.breakpoints.down('sm')]: {

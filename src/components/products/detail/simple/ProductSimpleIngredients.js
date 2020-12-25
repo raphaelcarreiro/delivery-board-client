@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 10,
+    marginTop: 0,
     position: 'sticky',
     top: 0,
     backgroundColor: '#fafafa',
