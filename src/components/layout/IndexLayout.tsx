@@ -7,6 +7,11 @@ import DialogFullscreen from 'src/components/dialog/DialogFullscreen';
 import { CART_WIDTH } from '../constants/constants';
 import { useApp } from 'src/hooks/app';
 
+type StyleProps = {
+  isCartVisible: boolean;
+  windowHeight: number;
+};
+
 const useStyles = makeStyles(theme => ({
   container: {
     position: 'relative',
@@ -21,14 +26,17 @@ const useStyles = makeStyles(theme => ({
         padding: '15px 15px 0',
       },
     },
+    [theme.breakpoints.down('lg')]: {
+      maxWidth: 1200,
+    },
   },
-  mobileContainer: {
+  mobileContainer: ({ windowHeight }: StyleProps) => ({
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    minHeight: 'calc(100vh - 56px)',
+    minHeight: `${windowHeight - 56}px`,
     paddingBottom: 20,
-  },
+  }),
   wrapper: {
     position: 'absolute',
     display: 'flex',
@@ -44,7 +52,7 @@ const useStyles = makeStyles(theme => ({
       marginTop: 56,
     },
   },
-  cart: ({ isCartVisible }: { isCartVisible: boolean }) => ({
+  cart: ({ isCartVisible }: StyleProps) => ({
     transition: 'transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms',
     transform: isCartVisible ? 'none' : `translateX(${CART_WIDTH + 10}px)`,
     position: 'fixed',
@@ -67,8 +75,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const IndexLayout: React.FC = ({ children }) => {
-  const { isMobile, windowWidth, isCartVisible, handleCartVisibility } = useApp();
-  const classes = useStyles({ isCartVisible });
+  const { isMobile, windowWidth, isCartVisible, handleCartVisibility, windowHeight } = useApp();
+  const classes = useStyles({ isCartVisible, windowHeight });
 
   return (
     <div className={classes.wrapper}>

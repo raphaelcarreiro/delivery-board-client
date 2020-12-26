@@ -12,6 +12,9 @@ const useStyles = makeStyles(theme => ({
     maxWidth: '1366px',
     margin: '0 auto 100px',
     padding: '20px 20px 0 20px',
+    [theme.breakpoints.down('lg')]: {
+      maxWidth: 1200,
+    },
   },
   mobileContainer: {
     position: 'relative',

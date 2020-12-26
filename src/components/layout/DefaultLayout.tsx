@@ -21,6 +21,9 @@ const useStyles = makeStyles(theme => ({
         padding: '15px 15px 0',
       },
     },
+    [theme.breakpoints.down('lg')]: {
+      maxWidth: 1200,
+    },
   },
   mobileContainer: {
     position: 'relative',

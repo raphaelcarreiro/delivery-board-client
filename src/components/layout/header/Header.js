@@ -19,6 +19,9 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    [theme.breakpoints.down('lg')]: {
+      maxWidth: 1200,
+    },
   },
   header: {
     height: 80,

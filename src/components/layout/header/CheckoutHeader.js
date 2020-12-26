@@ -14,13 +14,15 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    [theme.breakpoints.down('lg')]: {
+      maxWidth: 1200,
+    },
   },
   header: {
     height: 80,
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',
-    // boxShadow: '1px 1px 7px 1px #d4d4d4',
     borderBottom: '1px solid #eee',
     padding: '0 15px',
     backgroundColor: '#fff',

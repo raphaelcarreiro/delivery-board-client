@@ -11,6 +11,10 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'flex-start',
     justifyContent: 'center',
     overflow: 'hidden',
+    [theme.breakpoints.down('lg')]: {
+      width: 560,
+      maxHeight: 560,
+    },
     [theme.breakpoints.down('sm')]: {
       marginRight: 0,
       width: '100%',
@@ -19,6 +23,7 @@ const useStyles = makeStyles(theme => ({
   imageWrapper: {
     display: 'flex',
     flex: 1,
+    justifyContent: 'center',
   },
   image: {
     width: '100%',

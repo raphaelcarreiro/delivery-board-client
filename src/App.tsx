@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { api } from './services/api';
 import { useRouter } from 'next/router';
-import { mobileCheck } from './helpers/MobileCheck';
 import { useDispatch } from 'react-redux';
 import { setRestaurant, setRestaurantIsOpen } from './store/redux/modules/restaurant/actions';
 import { setCart } from 'src/store/redux/modules/cart/actions';
@@ -26,6 +25,7 @@ import GoogleLoginProvider from './hooks/googleLogin';
 import FacebookLoginProvider from './hooks/facebookLogin';
 import LayoutHandler from './components/layout/LayoutHandler';
 import { AppProvider, AppContextValue } from './hooks/app';
+import { useWindowSize } from './hooks/windowSize';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -48,9 +48,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const classes = useStyles({});
   const router = useRouter();
   const dispatch = useDispatch();
-  const [isMobile, setIsMobile] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(0);
   const [initialLoading, setInitialLoading] = useState(true);
   const [isCartVisible, setIsCartVisible] = useState(false);
   const [redirect, setRedirect] = useState<string | null>(null);
@@ -59,6 +57,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const [readyToInstall, setReadyToInstall] = useState(false);
   const restaurant = useSelector(state => state.restaurant);
   const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
+  const windowSize = useWindowSize();
 
   const handleCartVisibility = useCallback((state?: boolean) => {
     setIsCartVisible(oldValue => (state === undefined ? !oldValue : state));
@@ -170,12 +169,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     reactotronInitialize();
   }, []);
 
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    setIsMobile(mobileCheck());
-    setWindowWidth(window.innerWidth);
-  }, [dispatch]);
-
   // set webscoket connection
   useEffect(() => {
     function getRestaurantState() {
@@ -226,17 +219,10 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     setIsProgressBarVisible(false);
   }
 
-  function handleResize() {
-    const _isMobile = mobileCheck();
-    const width = window.innerWidth;
-
-    setIsMobile(_isMobile);
-    setWindowWidth(width);
-  }
-
   const appProviderValue: AppContextValue = {
-    isMobile,
-    windowWidth,
+    isMobile: windowSize.isMobile,
+    windowWidth: windowSize.width,
+    windowHeight: windowSize.height,
     isOpenMenu,
     isCartVisible,
     redirect,

@@ -1,14 +1,15 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles({
-  container: {
+  container: (props: { windowHeight: number }) => ({
     display: 'flex',
     position: 'relative',
-    minHeight: '100vh',
+    minHeight: `${props.windowHeight}px`,
     justifyContent: 'center',
     alignItems: 'center',
-  },
+  }),
   wrapper: {
     position: 'absolute',
     display: 'flex',
@@ -23,7 +24,8 @@ const useStyles = makeStyles({
 });
 
 const AuthLayout: React.FC = ({ children }) => {
-  const classes = useStyles({});
+  const { windowHeight } = useApp();
+  const classes = useStyles({ windowHeight });
 
   return (
     <div className={classes.wrapper}>

@@ -23,6 +23,9 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     flex: 1,
+    [theme.breakpoints.down('lg')]: {
+      maxWidth: 1200,
+    },
   },
   restaurantData: {
     display: 'flex',

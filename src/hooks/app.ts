@@ -3,6 +3,7 @@ import { createContext, useContext } from 'react';
 export type AppContextValue = {
   isMobile: boolean;
   windowWidth: number;
+  windowHeight: number;
   isOpenMenu: boolean;
   isCartVisible: boolean;
   redirect: string | null;
