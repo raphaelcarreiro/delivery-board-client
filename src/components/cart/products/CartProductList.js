@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     padding: '15px 0',
     alignItems: 'flex-start',
     '&:first-child': {
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('sm')]: {
         padding: '0 0 15px',
       },
     },

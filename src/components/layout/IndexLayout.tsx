@@ -21,20 +21,18 @@ const useStyles = makeStyles(theme => ({
     maxWidth: '1366px',
     margin: '0 auto 100px',
     padding: '15px 0 0',
-    '@media (max-width:1366px)': {
-      '&': {
-        padding: '15px 15px 0',
-      },
-    },
     [theme.breakpoints.down('lg')]: {
       maxWidth: 1200,
+    },
+    [theme.breakpoints.down('md')]: {
+      padding: '15px 15px 0',
     },
   },
   mobileContainer: ({ windowHeight }: StyleProps) => ({
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    minHeight: `${windowHeight - 56}px`,
+    minHeight: windowHeight - 56,
     paddingBottom: 20,
   }),
   wrapper: {
@@ -48,7 +46,7 @@ const useStyles = makeStyles(theme => ({
     overflowY: 'auto',
     position: 'relative',
     marginTop: 80,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('xs')]: {
       marginTop: 56,
     },
   },

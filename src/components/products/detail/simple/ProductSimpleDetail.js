@@ -11,8 +11,10 @@ const useStyles = makeStyles(theme => ({
   container: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
-    marginBottom: 20,
-    maxHeight: '60vh',
+    maxHeight: '62vh',
+    '@media (max-width: 1280px)': {
+      maxHeight: '55vh',
+    },
     [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: '1fr',
       maxHeight: 'none',

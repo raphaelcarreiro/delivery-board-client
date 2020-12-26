@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
     '& svg': {
       marginRight: 10,
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'none',
     },
   },

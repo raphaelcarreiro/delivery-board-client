@@ -1,10 +1,11 @@
 import { makeStyles } from '@material-ui/core';
 import React, { useState } from 'react';
 import ImagePreview from 'src/components/image-preview/ImagePreview';
+import { useApp } from 'src/hooks/app';
 import { Product } from 'src/types/product';
 
 const useStyles = makeStyles(theme => ({
-  imageContainer: {
+  imageContainer: (props: { windowWidth: number }) => ({
     width: 590,
     maxHeight: 590,
     display: 'flex',
@@ -12,18 +13,19 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     overflow: 'hidden',
     [theme.breakpoints.down('lg')]: {
-      width: 560,
-      maxHeight: 560,
+      width: props.windowWidth * 0.3,
+      maxHeight: props.windowWidth * 0.3,
     },
     [theme.breakpoints.down('sm')]: {
       marginRight: 0,
       width: '100%',
     },
-  },
+  }),
   imageWrapper: {
     display: 'flex',
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   image: {
     width: '100%',
@@ -36,7 +38,8 @@ type ProductDetailImageProps = {
 };
 
 const ProductDetailImage: React.FC<ProductDetailImageProps> = ({ product }) => {
-  const classes = useStyles();
+  const { windowWidth } = useApp();
+  const classes = useStyles({ windowWidth });
   const [imagePreview, setImagePreview] = useState(false);
 
   return (
