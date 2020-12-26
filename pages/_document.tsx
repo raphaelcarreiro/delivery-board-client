@@ -125,7 +125,7 @@ MyDocument.getInitialProps = async ctx => {
         src: restaurant.image.imageUrl,
         sizes: '512x512',
         type: 'image/png',
-        purpose: 'maskable',
+        // purpose: 'maskable',
       },
     ],
     start_url: '/',

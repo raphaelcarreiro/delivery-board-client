@@ -12,7 +12,6 @@ export function useWindowSize(): WindowSize {
   useEffect(() => {
     function updateSize() {
       setSize({ width: window.innerWidth, height: window.innerHeight, isMobile: mobileCheck() });
-      console.log({ width: window.innerWidth, height: window.innerHeight, isMobile: mobileCheck() });
     }
     window.addEventListener('resize', updateSize);
     updateSize();
