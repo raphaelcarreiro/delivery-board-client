@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
   },
   address: {
     [theme.breakpoints.down('xs')]: {
-      maxWidth: 260,
+      maxWidth: '92%',
     },
   },
 }));

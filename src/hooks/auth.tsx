@@ -91,6 +91,13 @@ const AuthProvider: React.FC = ({ children }) => {
   const logout = useCallback((): Promise<boolean> => {
     return new Promise((resolve, reject) => {
       setLoggingOff(true);
+      if (!localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_NAME || '')) {
+        setIsAuthenticated(false);
+        dispatch(removeUser());
+        setLoggingOff(false);
+        resolve(true);
+        return;
+      }
       api
         .post('/logout')
         .then(() => {
