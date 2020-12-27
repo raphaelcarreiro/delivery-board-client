@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'flex-start',
     justifyContent: 'center',
     overflow: 'hidden',
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.between('md', 'lg')]: {
       width: props.windowWidth * 0.3,
       maxHeight: props.windowWidth * 0.3,
     },

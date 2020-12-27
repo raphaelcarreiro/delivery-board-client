@@ -18,7 +18,8 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
       width: props.listType === 'row' ? props.windowWidth / 2 - 15 : '100%',
-      height: 355,
+      // height: 355,
+      height: 'auto',
     },
   }),
   img: {
@@ -35,7 +36,8 @@ const useStyles = makeStyles(theme => ({
     flexShrink: 0,
     marginBottom: 12,
     [theme.breakpoints.down('sm')]: {
-      height: 190,
+      // height: 190,
+      height: 'auto',
     },
   },
   productData: {
@@ -81,11 +83,15 @@ const useStyles = makeStyles(theme => ({
     WebkitBoxOrient: 'vertical',
     wordBreak: 'break-word',
     marginTop: 3,
-    height: 60,
+    [theme.breakpoints.up('sm')]: {
+      height: 60,
+    },
   },
   hasComplement: {
-    position: 'absolute',
-    bottom: 10,
+    [theme.breakpoints.up('sm')]: {
+      position: 'absolute',
+      bottom: 10,
+    },
   },
 }));
 
