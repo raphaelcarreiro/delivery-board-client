@@ -139,21 +139,22 @@ const AuthProvider: React.FC = ({ children }) => {
     const token = localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_NAME);
     const secret: jwt.Secret = process.env.NEXT_PUBLIC_SECRET;
 
-    if (token) {
-      try {
-        jwt.verify(token, secret, {
-          ignoreNotBefore: true,
-        });
-
-        return true;
-      } catch (e) {
-        console.log(e);
-        localStorage.removeItem(process.env.NEXT_PUBLIC_TOKEN_NAME);
-        setIsAuthenticated(false);
-      }
+    if (!token) {
+      setIsAuthenticated(false);
+      return false;
     }
 
-    return false;
+    try {
+      jwt.verify(token, secret, {
+        ignoreNotBefore: true,
+      });
+
+      return true;
+    } catch (e) {
+      localStorage.removeItem(process.env.NEXT_PUBLIC_TOKEN_NAME);
+      setIsAuthenticated(false);
+      return false;
+    }
   }, []);
 
   const googleLogin = useCallback(
