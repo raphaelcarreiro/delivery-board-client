@@ -41,7 +41,7 @@ const FacebookLoginProvider: React.FC = ({ children }) => {
   }, [restaurant]);
 
   const facebookLogin = useCallback(
-    () => handleFacebookLogin({ email: facebookUser?.email, name: facebookUser?.name }),
+    () => handleFacebookLogin({ email: facebookUser?.email, name: facebookUser?.name, id: facebookUser?.id }),
     [facebookUser, handleFacebookLogin]
   );
 
@@ -50,11 +50,12 @@ const FacebookLoginProvider: React.FC = ({ children }) => {
       new Promise(resolve => {
         FB.getLoginStatus(response => {
           if (response.status !== 'connected') {
+            const userId = response.authResponse.userID;
             FB.login(
               response => {
                 if (response.status === 'connected') {
                   FB.api('/me?locale=pt_BR&fields=name,email', (profile: any) => {
-                    setFacebookUser(profile);
+                    setFacebookUser({ ...profile, id: userId });
                     resolve(true);
                   });
                 }

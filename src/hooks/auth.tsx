@@ -25,6 +25,7 @@ export type SocialLoginResponse = {
 export type SocialUserProfile = {
   email?: string;
   name?: string;
+  id?: string;
 };
 
 const AuthContext = React.createContext({} as AuthContextData);

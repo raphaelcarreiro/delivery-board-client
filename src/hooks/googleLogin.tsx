@@ -61,7 +61,11 @@ const GoogleLoginProvider: React.FC = ({ children }) => {
   );
 
   const googleLogin = useCallback(() => {
-    return handleGoogleLogin({ email: googleUserProfile?.getEmail(), name: googleUserProfile?.getName() });
+    return handleGoogleLogin({
+      email: googleUserProfile?.getEmail(),
+      name: googleUserProfile?.getName(),
+      id: googleUserProfile?.getId(),
+    });
   }, [googleUserProfile, handleGoogleLogin]);
 
   return (
