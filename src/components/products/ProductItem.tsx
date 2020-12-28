@@ -18,7 +18,6 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
       width: props.listType === 'row' ? props.windowWidth / 2 - 15 : '100%',
-      // height: 355,
       height: 'auto',
     },
   }),
@@ -32,13 +31,14 @@ const useStyles = makeStyles(theme => ({
   imageWrapper: {
     display: 'flex',
     justifyContent: 'center',
+    alignItems: 'center',
     width: '100%',
     height: 220,
     overflow: 'hidden',
     flexShrink: 0,
     marginBottom: 12,
     [theme.breakpoints.down('sm')]: {
-      // height: 190,
+      maxHeight: 190,
       height: 'auto',
     },
   },

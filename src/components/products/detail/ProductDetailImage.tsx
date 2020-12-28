@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
     width: 590,
     maxHeight: 590,
     display: 'flex',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
     [theme.breakpoints.between('md', 'lg')]: {
@@ -19,6 +19,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('sm')]: {
       marginRight: 0,
       width: '100%',
+      maxHeight: props.windowWidth - 30,
     },
   }),
   imageWrapper: {
