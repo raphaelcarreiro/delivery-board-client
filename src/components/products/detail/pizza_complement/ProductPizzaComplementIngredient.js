@@ -3,6 +3,7 @@ import { FormControlLabel, Checkbox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import CustomDialog from 'src/components/dialog/CustomDialog';
+import { useProductPizza } from '../hooks/useProductPizza';
 
 const useStyles = makeStyles({
   control: {
@@ -12,20 +13,11 @@ const useStyles = makeStyles({
 
 ProductPizzaComplementIngredient.propTypes = {
   onExited: PropTypes.func.isRequired,
-  product: PropTypes.object.isRequired,
-  setProduct: PropTypes.func.isRequired,
-  complementIdSelected: PropTypes.number.isRequired,
-  complementCategoryIdSelected: PropTypes.number.isRequired,
 };
 
-export default function ProductPizzaComplementIngredient({
-  onExited,
-  product,
-  setProduct,
-  complementIdSelected,
-  complementCategoryIdSelected,
-}) {
+export default function ProductPizzaComplementIngredient({ onExited }) {
   const classes = useStyles();
+  const { product, setProduct, complementCategoryIdSelected, complementIdSelected } = useProductPizza();
 
   const category = product.complement_categories.find(category => category.id === complementCategoryIdSelected);
   const complement = category.complements.find(complement => complement.id === complementIdSelected);
