@@ -4,7 +4,7 @@ import { moneyFormat } from 'src/helpers/numberFormat';
 import InsideLoading from 'src/components/loading/InsideLoading';
 import { useMessaging } from 'src/hooks/messaging';
 import { useProducts } from 'src/components/products/hooks/useProducts';
-import ProductAdd from '../ProductAdd';
+import ProductAdd from '../addToCart/ProductAdd';
 import { fetchProductComplement } from './fetchProductComplement';
 import { handleSelectProductComplement } from './handleSelectProductComplement';
 import { calculateProductComplementsPrice } from './calculateProductComplementsPrice';

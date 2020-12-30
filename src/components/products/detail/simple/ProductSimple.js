@@ -3,7 +3,7 @@ import CustomDialog from 'src/components/dialog/CustomDialog';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import InsideLoading from 'src/components/loading/InsideLoading';
 import { useProducts } from 'src/components/products/hooks/useProducts';
-import ProductAdd from '../ProductAdd';
+import ProductAdd from '../addToCart/ProductAdd';
 import { fetchSimpleProduct } from './fetchSimpleProduct';
 import ProductSimpleDetail from './ProductSimpleDetail';
 import { ProductSimpleProvider } from '../hooks/useProduct';

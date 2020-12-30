@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { MENU_WIDTH } from '../constants/constants';
+import { MENU_WIDTH } from '../../constants/constants';
 import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({

@@ -4,7 +4,7 @@ import Footer from './footer/Footer';
 import { makeStyles } from '@material-ui/core';
 import Cart from '../cart/Cart';
 import DialogFullscreen from 'src/components/dialog/DialogFullscreen';
-import { CART_WIDTH } from '../constants/constants';
+import { CART_WIDTH } from '../../constants/constants';
 import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({

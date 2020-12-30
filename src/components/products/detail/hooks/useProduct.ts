@@ -2,8 +2,8 @@ import { createContext, useContext } from 'react';
 import { Product } from 'src/types/product';
 
 export type ProductValue = {
-  product: Product;
-  handleClickAdditional(additionalId: number): void;
+  product: Product | null;
+  handleClickAdditional(additionalId: number, amount: number): void;
   handleClickIngredient(ingredientId: number): void;
   setProduct(product: Product): void;
 };

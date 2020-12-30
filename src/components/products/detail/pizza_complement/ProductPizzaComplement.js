@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import InsideLoading from 'src/components/loading/InsideLoading';
 import { useMessaging } from 'src/hooks/messaging';
 import { useProducts } from 'src/components/products/hooks/useProducts';
-import ProductAdd from '../ProductAdd';
+import ProductAdd from '../addToCart/ProductAdd';
 import { fetchPizzaProduct } from './fetchPizzaProduct';
 import { handleSelectPizzaProductComplement } from './handleSelectPizzaProductComplement';
 import { calculatePizzaProductComplementPrice } from './calculatePizzaProductComplementsPrice';

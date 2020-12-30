@@ -96,7 +96,7 @@ export default function CheckoutSuccess() {
         {readyToInstall && (
           <div className={classes.contentAction}>
             <Typography align="center" variant="body2" color="textSecondary">
-              Adicione esse app à área de trabalho do seu celular
+              Adicione esse aplicativo da web na tela inicial do seu celular.
             </Typography>
             <Button color="primary" onClick={handleInstallApp} variant="text" size="medium" startIcon={<GetAppIcon />}>
               Adicionar

@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import ProductViewIngredients from './ProductSimpleIngredients';
-import ProductViewAdditional from './ProductSimpleAdditional';
+import ProductViewIngredients from './ingredients/ProductSimpleIngredients';
+import ProductViewAdditional from './additional/ProductSimpleAdditional';
 import ProductDetailInputAnnotation from '../ProductDetailInputAnnotation';
 import ProductDetailImage from '../ProductDetailImage';
 import ProductDetailDescription from '../ProductDetailDescription';

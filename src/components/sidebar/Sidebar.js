@@ -15,7 +15,7 @@ import ChatIcon from '@material-ui/icons/Chat';
 import LocalOfferIcons from '@material-ui/icons/LocalOffer';
 import { FiLogIn, FiLogOut } from 'react-icons/fi';
 import { useAuth } from 'src/hooks/auth';
-import { MENU_WIDTH } from '../constants/constants';
+import { MENU_WIDTH } from '../../constants/constants';
 import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
