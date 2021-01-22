@@ -1,4 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setRestaurantConfig } from 'src/store/redux/modules/restaurant/actions';
 import { useSelector } from 'src/store/redux/selector';
 import { SocialLoginResponse, useAuth } from './auth';
 
@@ -19,26 +21,32 @@ const FacebookLoginProvider: React.FC = ({ children }) => {
   const [facebookUser, setFacebookUser] = useState<any | null>(null);
   const restaurant = useSelector(state => state.restaurant);
   const { facebookLogin: handleFacebookLogin } = useAuth();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!restaurant) return;
-    if (restaurant.configs.facebook_login) {
-      FB.init({
-        appId: '588242751734818',
-        cookie: true,
-        xfbml: true,
-        version: 'v5.0',
-      });
+    if (!restaurant.configs.facebook_login) return;
 
-      FB.getLoginStatus(response => {
-        if (response.status === 'connected') {
-          FB.api('/me?locale=pt_BR&fields=name,email', profile => {
-            setFacebookUser(profile);
-          });
-        }
-      });
+    if (typeof FB === 'undefined') {
+      dispatch(setRestaurantConfig('facebook_login', false));
+      return;
     }
-  }, [restaurant]);
+
+    FB.init({
+      appId: '588242751734818',
+      cookie: true,
+      xfbml: true,
+      version: 'v5.0',
+    });
+
+    FB.getLoginStatus(response => {
+      if (response.status === 'connected') {
+        FB.api('/me?locale=pt_BR&fields=name,email', profile => {
+          setFacebookUser(profile);
+        });
+      }
+    });
+  }, [dispatch, restaurant]);
 
   const facebookLogin = useCallback(
     () => handleFacebookLogin({ email: facebookUser?.email, name: facebookUser?.name, id: facebookUser?.id }),

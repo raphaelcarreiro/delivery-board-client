@@ -1,4 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setRestaurant, setRestaurantConfig } from 'src/store/redux/modules/restaurant/actions';
 import { useSelector } from 'src/store/redux/selector';
 import { SocialLoginResponse, useAuth } from './auth';
 
@@ -20,10 +22,16 @@ const GoogleLoginProvider: React.FC = ({ children }) => {
   const restaurant = useSelector(state => state.restaurant);
   const { googleLogin: handleGoogleLogin } = useAuth();
   const [googleAuth2, setGoogleAuth2] = useState<gapi.auth2.GoogleAuth | undefined>(undefined);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!restaurant) return;
     if (!restaurant.configs.google_login) return;
+
+    if (typeof gapi === 'undefined') {
+      dispatch(setRestaurantConfig('google_login', false));
+      return;
+    }
 
     gapi.load('auth', () => {
       gapi.auth2
@@ -35,7 +43,7 @@ const GoogleLoginProvider: React.FC = ({ children }) => {
           setGoogleAuth2(auth);
         });
     });
-  }, [restaurant]);
+  }, [dispatch, restaurant]);
 
   useEffect(() => {
     if (!googleAuth2) return;
