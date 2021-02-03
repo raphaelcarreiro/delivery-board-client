@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState, useEffect } from 'react';
+import React, { useCallback, useContext, useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { useDispatch } from 'react-redux';
 import jwt from 'jsonwebtoken';
 import { removeUser, setUser } from 'src/store/redux/modules/user/actions';
@@ -12,6 +12,7 @@ interface AuthContextData {
   checkEmail(email: string): Promise<User>;
   googleLogin(profile: SocialUserProfile): Promise<SocialLoginResponse>;
   facebookLogin(profile: SocialUserProfile): Promise<SocialLoginResponse>;
+  setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
   isAuthenticated: boolean;
   isLoading: boolean;
   loggingOff: boolean;
@@ -241,6 +242,7 @@ const AuthProvider: React.FC = ({ children }) => {
         checkEmail,
         googleLogin,
         facebookLogin,
+        setIsAuthenticated,
         isAuthenticated,
         isLoading,
         loggingOff,

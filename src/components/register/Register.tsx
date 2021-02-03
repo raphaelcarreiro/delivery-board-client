@@ -14,6 +14,7 @@ import { useApp } from 'src/hooks/app';
 import { useUserRegisterReducer } from 'src/store/context-api/modules/user/reducer';
 import { useUserRegisterValidation } from './validation/registerValidation';
 import { UserRegister } from 'src/types/userRegister';
+import { useAuth } from 'src/hooks/auth';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -75,6 +76,7 @@ const Register: React.FC<RegisterProps> = ({ name, email, phone }) => {
   const app = useApp();
   const reduxDispatch = useDispatch();
   const classes = useStyles();
+  const { setIsAuthenticated } = useAuth();
 
   useEffect(() => {
     if (name) dispatch(userChange('name', name));
@@ -106,6 +108,7 @@ const Register: React.FC<RegisterProps> = ({ name, email, phone }) => {
         if (process.env.NEXT_PUBLIC_TOKEN_NAME)
           localStorage.setItem(process.env.NEXT_PUBLIC_TOKEN_NAME, response.data.token);
         reduxDispatch(setUser(response.data.user));
+        setIsAuthenticated(true);
         if (app.redirect) {
           router.push(app.redirect);
           app.setRedirect(null);
