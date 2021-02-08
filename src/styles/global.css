@@ -21,6 +21,15 @@ body {
   left: 0;
 }
 
+input,
+textarea,
+button,
+select,
+div,
+a {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
 a,
 a:hover {
   text-decoration: none;
