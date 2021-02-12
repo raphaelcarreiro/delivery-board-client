@@ -58,12 +58,12 @@ const FacebookLoginProvider: React.FC = ({ children }) => {
       new Promise(resolve => {
         FB.getLoginStatus(response => {
           if (response.status !== 'connected') {
-            const userId = response.authResponse.userID;
+            // const userId = response.authResponse.userID;
             FB.login(
               response => {
                 if (response.status === 'connected') {
                   FB.api('/me?locale=pt_BR&fields=name,email', (profile: any) => {
-                    setFacebookUser({ ...profile, id: userId });
+                    setFacebookUser(profile);
                     resolve(true);
                   });
                 }
