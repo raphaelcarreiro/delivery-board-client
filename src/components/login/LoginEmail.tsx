@@ -147,7 +147,7 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ emailParam, phoneParam }) => {
           setError(error => ({ ...error, email: err.message }));
           const type = /^\d+$/.test(email) ? 'phone' : email.includes('@') ? 'email' : null;
           if (type) setRegisterUrl(`/register?${type}=${email}`);
-          else router.push('/register');
+          else setRegisterUrl('/register');
         })
         .finally(() => {
           setLoading(false);
