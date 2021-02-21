@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { api } from './services/api';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import { setRestaurant, setRestaurantConfig, setRestaurantIsOpen } from './store/redux/modules/restaurant/actions';
+import { setRestaurant, setRestaurantIsOpen } from './store/redux/modules/restaurant/actions';
 import { setCart } from 'src/store/redux/modules/cart/actions';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import { createTheme } from 'src/helpers/createTheme';
@@ -26,7 +26,6 @@ import FacebookLoginProvider from './hooks/facebookLogin';
 import LayoutHandler from './components/layout/LayoutHandler';
 import { AppProvider, AppContextValue } from './hooks/app';
 import { useWindowSize } from './hooks/windowSize';
-import { isFacebookNavigator } from './helpers/isFacebookNavigator';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -211,13 +210,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
       defferedPromptPwa = event;
     });
   }, []);
-
-  useEffect(() => {
-    if (isFacebookNavigator()) {
-      dispatch(setRestaurantConfig('facebook_login', false));
-      dispatch(setRestaurantConfig('google_login', false));
-    }
-  }, [dispatch]);
 
   function handleRouteChangeStart() {
     setIsProgressBarVisible(true);

@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { isFacebookNavigator } from 'src/helpers/isFacebookNavigator';
 import { setRestaurantConfig } from 'src/store/redux/modules/restaurant/actions';
 import { useSelector } from 'src/store/redux/selector';
 import { SocialLoginResponse, useAuth } from './auth';
@@ -28,6 +29,11 @@ const FacebookLoginProvider: React.FC = ({ children }) => {
     if (!restaurant.configs.facebook_login) return;
 
     if (typeof FB === 'undefined') {
+      dispatch(setRestaurantConfig('facebook_login', false));
+      return;
+    }
+
+    if (isFacebookNavigator()) {
       dispatch(setRestaurantConfig('facebook_login', false));
       return;
     }

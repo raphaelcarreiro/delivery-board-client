@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { isFacebookNavigator } from 'src/helpers/isFacebookNavigator';
 import { setRestaurant, setRestaurantConfig } from 'src/store/redux/modules/restaurant/actions';
 import { useSelector } from 'src/store/redux/selector';
 import { SocialLoginResponse, useAuth } from './auth';
@@ -29,6 +30,11 @@ const GoogleLoginProvider: React.FC = ({ children }) => {
     if (!restaurant.configs.google_login) return;
 
     if (typeof gapi === 'undefined') {
+      dispatch(setRestaurantConfig('google_login', false));
+      return;
+    }
+
+    if (isFacebookNavigator()) {
       dispatch(setRestaurantConfig('google_login', false));
       return;
     }
