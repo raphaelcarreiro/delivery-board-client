@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { isFacebookNavigator } from 'src/helpers/isFacebookNavigator';
 import { mobileCheck } from 'src/helpers/MobileCheck';
 
 type WindowSize = {
@@ -11,7 +12,11 @@ export function useWindowSize(): WindowSize {
   const [size, setSize] = useState<WindowSize>({ height: 0, width: 0, isMobile: false });
   useEffect(() => {
     function updateSize() {
-      setSize({ width: window.innerWidth, height: window.innerHeight, isMobile: mobileCheck() });
+      setSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+        isMobile: mobileCheck(),
+      });
     }
     window.addEventListener('resize', updateSize);
     updateSize();

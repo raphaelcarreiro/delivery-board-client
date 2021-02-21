@@ -1,43 +1,47 @@
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useState, useContext, useCallback, CSSProperties, useEffect } from 'react';
 import Messaging from 'src/components/messaging/Messaging';
-
+import MessagingLarge from 'src/components/messaging/MessagingLarge';
+import { useApp } from './app';
 interface MessagingContextData {
   handleClose(): void;
-  handleOpen(message: string, action?: CallbackFunction, options?: Options | null): void;
-}
-
-export interface Options {
-  marginTop: number;
+  handleOpen(message: string, messagingOptions?: MessagingOptions): void;
 }
 
 export const MessagingContext = React.createContext({} as MessagingContextData);
 
-export type CallbackFunction = () => void;
-let action: CallbackFunction | null = null;
+type MessagingContainerType = 'default' | 'large';
+
+type CallbackFunction = () => void;
+
+type MessagingOptions = {
+  action?: () => void;
+  style?: CSSProperties;
+  variant?: MessagingContainerType;
+};
 
 const MessagingProvider: React.FC = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
-  const [options, setOptions] = useState<Options | null>(null);
+  const [style, setOptions] = useState<CSSProperties | undefined>(undefined);
+  const [variant, setVariant] = useState<MessagingContainerType>('default');
+  const [action, setAction] = useState<CallbackFunction | undefined>(undefined);
+  const app = useApp();
 
   const handleClose = useCallback(() => {
     setOpen(false);
   }, []);
 
-  const handleOpen = useCallback(
-    (_message: string, actionParam: null | CallbackFunction = null, optionParam: Options | null = null) => {
-      setOptions(optionParam);
+  const handleOpen = useCallback((_message: string, messagingOptions?: MessagingOptions) => {
+    setOptions(messagingOptions?.style);
+    setVariant(messagingOptions?.variant || 'default');
+    setAction(messagingOptions?.action);
+    setOpen(false);
 
-      setOpen(false);
-
-      setTimeout(() => {
-        action = actionParam;
-        setMessage(_message);
-        setOpen(true);
-      }, 150);
-    },
-    []
-  );
+    setTimeout(() => {
+      setMessage(_message);
+      setOpen(true);
+    }, 150);
+  }, []);
 
   function handleAction() {
     if (action) {
@@ -54,7 +58,11 @@ const MessagingProvider: React.FC = ({ children }) => {
       }}
     >
       {children}
-      <Messaging message={message} options={options} action={action} handleAction={handleAction} open={open} />
+      {variant === 'default' ? (
+        <Messaging message={message} style={style} action={action} handleAction={handleAction} open={open} />
+      ) : (
+        <MessagingLarge message={message} action={action} handleAction={handleAction} open={open} />
+      )}
     </MessagingContext.Provider>
   );
 };

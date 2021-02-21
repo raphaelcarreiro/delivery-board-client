@@ -13,6 +13,8 @@ import { useSelector } from 'src/store/redux/selector';
 import CustomLink from '../link/CustomLink';
 import { User } from 'src/types/user';
 import { useApp } from 'src/hooks/app';
+import LoginUserNotFound from './LoginUserNotFound';
+import DialogInput from '../dialog/DialogInput';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -109,6 +111,8 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ emailParam, phoneParam }) => {
     password: '',
   });
   const [user, setUser] = useState<User | null>(null);
+  const [userNotFound, setUserNotFound] = useState(false);
+  const [registerUrl, setRegisterUrl] = useState('');
 
   useEffect(() => {
     if (checkAuth()) router.push('account');
@@ -139,11 +143,11 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ emailParam, phoneParam }) => {
           setStep('password');
         })
         .catch(err => {
-          messaging.handleOpen(err.message);
+          setUserNotFound(true);
           setError(error => ({ ...error, email: err.message }));
-          // const type = /^\d+$/.test(email) ? 'phone' : email.includes('@') ? 'email' : null;
-          // if (type) router.push(`/register?${type}=${email}`);
-          // else router.push('/register');
+          const type = /^\d+$/.test(email) ? 'phone' : email.includes('@') ? 'email' : null;
+          if (type) setRegisterUrl(`/register?${type}=${email}`);
+          else router.push('/register');
         })
         .finally(() => {
           setLoading(false);
@@ -168,6 +172,11 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ emailParam, phoneParam }) => {
 
   return (
     <Grid container justify="center" alignItems="center">
+      {userNotFound && (
+        <DialogInput maxWidth="sm" onExited={() => setUserNotFound(false)}>
+          <LoginUserNotFound message={error.email} registerUrl={registerUrl} />
+        </DialogInput>
+      )}
       <Grid item xs={12} lg={4} xl={3} md={6}>
         <form onSubmit={handleSubmit}>
           <div className={classes.container}>

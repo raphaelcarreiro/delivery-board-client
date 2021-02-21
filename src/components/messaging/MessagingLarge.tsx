@@ -1,21 +1,16 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { useMessaging, Options, CallbackFunction } from 'src/hooks/messaging';
+import { useMessaging } from 'src/hooks/messaging';
 import { Dialog, DialogActions, DialogContent, Typography } from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   message: {
     marginLeft: 10,
     paddingTop: 3,
   },
   messageContent: {
     display: 'flex',
-    flexDirection: 'column',
-    width: 500,
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   snackbar: {
     bottom: 10,
@@ -23,42 +18,49 @@ const useStyles = makeStyles(theme => ({
   warningText: {
     color: '#ffc107',
   },
-  actionText: {
-    color: theme.palette.primary.light,
+  content: {
+    minHeight: 200,
+    minWidth: 400,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '& p': {
+      fontSize: 20,
+    },
   },
-}));
+});
 
-interface Messaging {
+interface LargeMessagingProps {
   message: string;
-  options: Options | null;
-  action: CallbackFunction | null;
-  handleAction(): void;
+  action?: () => void;
+  handleAction?(): void;
   open: boolean;
 }
 
-const MessagingLarge: React.FC<Messaging> = ({ message, options = null, action, handleAction, open }) => {
+const LargeMessaging: React.FC<LargeMessagingProps> = ({ message, action, handleAction, open }) => {
   const classes = useStyles();
   const messaging = useMessaging();
 
   return (
-    <Dialog open={open} onClose={messaging.handleClose} maxWidth="lg">
+    <Dialog open={open} onClose={messaging.handleClose} maxWidth="sm">
       <DialogContent>
-        <div className={classes.messageContent}>
-          <Typography variant="h5">{message}</Typography>
+        <div className={classes.content}>
+          <Typography>{message}</Typography>
         </div>
       </DialogContent>
-      {action && (
-        <DialogActions>
-          <Button classes={{ root: classes.actionText }} size="small" onClick={handleAction}>
+      <DialogActions>
+        {action ? (
+          <Button color="primary" size="small" onClick={handleAction}>
             Desfazer
           </Button>
-          <Button size="small" classes={{ root: classes.actionText }} onClick={messaging.handleClose}>
+        ) : (
+          <Button variant="text" color="primary" size="small" onClick={messaging.handleClose}>
             Fechar
           </Button>
-        </DialogActions>
-      )}
+        )}
+      </DialogActions>
     </Dialog>
   );
 };
 
-export default MessagingLarge;
+export default LargeMessaging;

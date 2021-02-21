@@ -1,27 +1,12 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import Snackbar from '@material-ui/core/Snackbar';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { useMessaging, Options, CallbackFunction } from 'src/hooks/messaging';
+import { useMessaging } from 'src/hooks/messaging';
 import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
-  success: {
-    backgroundColor: '#28a745',
-  },
-  error: {
-    backgroundColor: '#dc3545',
-  },
-  warning: {
-    backgroundColor: '#ffc107',
-  },
-  info: {
-    backgroundColor: '#17a2b8',
-  },
-  primary: {
-    backgroundColor: '#007bff',
-  },
   message: {
     marginLeft: 10,
     paddingTop: 3,
@@ -42,20 +27,20 @@ const useStyles = makeStyles(theme => ({
 
 interface Messaging {
   message: string;
-  options: Options | null;
-  action: CallbackFunction | null;
+  style?: CSSProperties;
+  action?: () => void;
   handleAction(): void;
   open: boolean;
 }
 
-const Messaging: React.FC<Messaging> = ({ message, options, action, handleAction, open }) => {
+const Messaging: React.FC<Messaging> = ({ message, style, action, handleAction, open }) => {
   const classes = useStyles();
   const app = useApp();
   const messaging = useMessaging();
 
   return (
     <Snackbar
-      style={options || undefined}
+      style={style}
       classes={{
         anchorOriginBottomCenter: !app.isMobile ? classes.snackbar : undefined,
       }}
