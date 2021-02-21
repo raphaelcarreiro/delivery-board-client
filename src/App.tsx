@@ -213,10 +213,10 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   }, []);
 
   useEffect(() => {
-    if (!isFacebookNavigator()) return;
-
-    dispatch(setRestaurantConfig('facebook_login', false));
-    dispatch(setRestaurantConfig('google_login', false));
+    if (isFacebookNavigator()) {
+      dispatch(setRestaurantConfig('facebook_login', false));
+      dispatch(setRestaurantConfig('google_login', false));
+    }
   }, [dispatch]);
 
   function handleRouteChangeStart() {
