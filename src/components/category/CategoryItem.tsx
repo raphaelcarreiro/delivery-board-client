@@ -30,11 +30,9 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 10,
   },
   image: {
-    height: '100%',
-    [theme.breakpoints.down('sm')]: {
-      // height: 'auto',
-      // width: '100%',
-    },
+    width: 120,
+    height: 120,
+    objectFit: 'contain',
   },
   productName: {
     fontWeight: 400,
@@ -61,13 +59,11 @@ const CategoryItem: React.FC<CategoryItemProps> = ({ category }) => {
             </Typography>
           </div>
           {category.image && (
-            <div className={classes.imageWrapper}>
-              <img
-                className={classes.image}
-                src={category.image.imageThumbUrl ? category.image.imageThumbUrl : category.image.imageUrl}
-                alt={category.name}
-              />
-            </div>
+            <img
+              className={classes.image}
+              src={category.image.imageThumbUrl ? category.image.imageThumbUrl : category.image.imageUrl}
+              alt={category.name}
+            />
           )}
         </div>
       </ListItem>

@@ -99,14 +99,14 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
   const dispatch = useDispatch();
   const messaging = useMessaging();
 
-  function handleRestoreCart() {
+  /*   function handleRestoreCart() {
     dispatch(restoreCart());
     messaging.handleClose();
-  }
+  } */
 
   function handleRemoveFromCart(productUid) {
     dispatch(removeFromCart(productUid));
-    messaging.handleOpen('Produto removido', handleRestoreCart);
+    // messaging.handleOpen('Produto removido', handleRestoreCart);
   }
 
   function showAdditionalOrIngredients(product) {

@@ -10,6 +10,7 @@ const useStyles = makeStyles(theme => ({
   container: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
+    columnGap: '15px',
     maxHeight: '62vh',
     '@media (max-width: 1280px)': {
       maxHeight: '55vh',

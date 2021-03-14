@@ -7,7 +7,6 @@ import { Grid, Button, Typography, LinearProgress, IconButton } from '@material-
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Loading from '../loading/Loading';
-import { useMessaging } from 'src/hooks/messaging';
 import { useAuth } from 'src/hooks/auth';
 import { useSelector } from 'src/store/redux/selector';
 import CustomLink from '../link/CustomLink';
@@ -101,7 +100,6 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ emailParam, phoneParam }) => {
   const [password, setPassword] = useState('');
   const [step, setStep] = useState('email');
   const [loading, setLoading] = useState(false);
-  const messaging = useMessaging();
   const router = useRouter();
   const restaurant = useSelector(state => state.restaurant);
   const { redirect, setRedirect, isMobile, windowWidth } = useApp();
@@ -163,7 +161,6 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ emailParam, phoneParam }) => {
           } else router.push('/');
         })
         .catch(err => {
-          messaging.handleOpen(err.message);
           setError(error => ({ ...error, password: err.message }));
           setLoading(false);
         });

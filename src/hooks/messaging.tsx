@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback, CSSProperties, useEffect } from 'react';
+import React, { useState, useContext, useCallback, CSSProperties } from 'react';
 import Messaging from 'src/components/messaging/Messaging';
 import MessagingLarge from 'src/components/messaging/MessagingLarge';
 import { useApp } from './app';
@@ -31,17 +31,20 @@ const MessagingProvider: React.FC = ({ children }) => {
     setOpen(false);
   }, []);
 
-  const handleOpen = useCallback((_message: string, messagingOptions?: MessagingOptions) => {
-    setOptions(messagingOptions?.style);
-    setVariant(messagingOptions?.variant || 'default');
-    setAction(messagingOptions?.action);
-    setOpen(false);
+  const handleOpen = useCallback(
+    (_message: string, messagingOptions?: MessagingOptions) => {
+      setOptions(messagingOptions?.style);
+      setVariant(messagingOptions?.variant || app.isMobile ? 'default' : 'large');
+      setAction(messagingOptions?.action);
+      setOpen(false);
 
-    setTimeout(() => {
-      setMessage(_message);
-      setOpen(true);
-    }, 150);
-  }, []);
+      setTimeout(() => {
+        setMessage(_message);
+        setOpen(true);
+      }, 150);
+    },
+    [app.isMobile]
+  );
 
   function handleAction() {
     if (action) {

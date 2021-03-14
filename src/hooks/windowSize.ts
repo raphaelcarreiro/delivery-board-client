@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { isFacebookNavigator } from 'src/helpers/isFacebookNavigator';
 import { mobileCheck } from 'src/helpers/MobileCheck';
 
 type WindowSize = {

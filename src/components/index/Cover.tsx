@@ -1,6 +1,5 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
-import { useSelector } from 'src/store/redux/selector';
 import { Restaurant } from 'src/types/restaurant';
 
 const useStyles = makeStyles(theme => ({

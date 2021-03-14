@@ -2,10 +2,9 @@ import React from 'react';
 import { ListItem, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Product } from 'src/types/product';
-import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
-  listItem: (props: { windowWidth: number; listType: 'col' | 'row' }) => ({
+  listItem: (props: { listType: 'col' | 'row' }) => ({
     display: 'flex',
     backgroundColor: '#fff',
     boxShadow: '0 0 3px 1px #eee',
@@ -17,15 +16,17 @@ const useStyles = makeStyles(theme => ({
     padding: 0,
     flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
-      width: props.listType === 'row' ? props.windowWidth / 2 - 15 : '100%',
+      width: props.listType === 'row' ? 'calc(100vw / 2 - 15)' : '100%',
       height: 'auto',
     },
   }),
   img: {
-    height: '100%',
+    height: 'auto',
+    maxWidth: 220,
+    objectFit: 'contain',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
-      height: 'auto',
+      maxHeight: 190,
     },
   },
   imageWrapper: {
@@ -49,6 +50,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'flex-start',
     width: '100%',
     padding: '0 10px 10px 10px',
+    justifyContent: 'space-between',
   },
   price: {
     fontWeight: 600,
@@ -89,12 +91,6 @@ const useStyles = makeStyles(theme => ({
       height: 60,
     },
   },
-  hasComplement: {
-    [theme.breakpoints.up('sm')]: {
-      position: 'absolute',
-      bottom: 10,
-    },
-  },
 }));
 
 type CategoryProductProps = {
@@ -110,8 +106,7 @@ const CategoryProduct: React.FC<CategoryProductProps> = ({
   handleOpenImagePreview,
   listType,
 }) => {
-  const { windowWidth } = useApp();
-  const classes = useStyles({ windowWidth, listType });
+  const classes = useStyles({ listType });
 
   return (
     <ListItem onClick={() => handleProductClick(product)} button className={classes.listItem} key={product.id}>
@@ -119,7 +114,7 @@ const CategoryProduct: React.FC<CategoryProductProps> = ({
         <div className={classes.imageWrapper}>
           <img
             className={classes.img}
-            src={product.image.imageThumbUrl ? product.image.imageThumbUrl : product.image.imageUrl}
+            src={product.image.imageThumbUrl ? product.image.imageUrl : product.image.imageUrl}
             alt={product.name}
             onClick={() => handleOpenImagePreview(product)}
           />
@@ -147,7 +142,7 @@ const CategoryProduct: React.FC<CategoryProductProps> = ({
           {product.description}
         </Typography>
         {product.category.has_complement && (
-          <Typography variant="body2" color="primary" className={classes.hasComplement}>
+          <Typography variant="body2" color="primary">
             Monte esse produto
           </Typography>
         )}
