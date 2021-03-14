@@ -21,27 +21,19 @@ const useStyles = makeStyles(theme => ({
     },
   }),
   img: {
-    height: 'auto',
+    maxHeight: 220,
     maxWidth: 220,
     objectFit: 'contain',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      maxHeight: 190,
-    },
+    width: '100%',
   },
   imageWrapper: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    height: 220,
-    overflow: 'hidden',
     flexShrink: 0,
     marginBottom: 12,
-    [theme.breakpoints.down('sm')]: {
-      maxHeight: 190,
-      height: 'auto',
-    },
+    height: 220,
   },
   productData: {
     display: 'flex',

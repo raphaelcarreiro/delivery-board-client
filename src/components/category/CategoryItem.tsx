@@ -37,6 +37,9 @@ const useStyles = makeStyles(theme => ({
   productName: {
     fontWeight: 400,
   },
+  data: {
+    marginRight: 10,
+  },
 }));
 
 type CategoryItemProps = {
@@ -50,7 +53,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({ category }) => {
     <Link href={'/menu/[url]'} as={`/menu/${category.url}`}>
       <ListItem className={classes.listItem} button component="a">
         <div className={classes.content}>
-          <div>
+          <div className={classes.data}>
             <Typography variant="h6" className={classes.productName}>
               {category.name}
             </Typography>
