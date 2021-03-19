@@ -72,6 +72,7 @@ export const cartMiddlware = store => next => action => {
         tax_mode: configs.tax_mode,
         tax_value: configs.tax_value,
         order_minimum_value: configs.order_minimum_value,
+        order_minimum_products_amount: configs.order_minimum_products_amount,
       })
     );
   }

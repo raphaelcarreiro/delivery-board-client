@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import PaymentList from './PaymentList';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 import PaymentTabs from './PaymentTabs';
-import PaymentOnlineList from './PaymentOnlineList';
+import PaymentOnlineList from './list/PaymentOnlineList';
+import PaymentList from './list/PaymentList';
 
 const useStyles = makeStyles(theme => ({
   container: {

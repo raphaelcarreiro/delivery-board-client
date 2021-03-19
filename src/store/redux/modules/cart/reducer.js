@@ -10,6 +10,7 @@ export const INITIAL_STATE = {
   discount: 0,
   subtotal: 0,
   tax: 0,
+  productsAmount: 0,
 };
 
 export default function cart(state = INITIAL_STATE, action) {
@@ -314,6 +315,7 @@ export default function cart(state = INITIAL_STATE, action) {
       let total = 0;
       let discount = 0 || state.discount;
       const subtotal = state.products.reduce((sum, value) => sum + value.final_price, 0);
+      const productsAmount = state.products.reduce((carry, product) => carry + product.amount, 0);
 
       if (coupon) {
         discount = coupon.discount_type === 'percent' ? subtotal * (coupon.discount / 100) : coupon.discount;
@@ -333,6 +335,9 @@ export default function cart(state = INITIAL_STATE, action) {
           tax = 0;
           total = subtotal - discount;
         }
+      } else if (configs.tax_mode === 'products_amount' && action.shipmentMethod === 'delivery') {
+        tax = productsAmount <= configs.order_minimum_products_amount ? configs.tax_value : 0;
+        total = subtotal - discount + tax;
       } else {
         tax = 0;
         total = subtotal - discount;
@@ -350,6 +355,7 @@ export default function cart(state = INITIAL_STATE, action) {
         formattedDiscount: moneyFormat(discount),
         formattedTax: moneyFormat(tax),
         formattedTotal: moneyFormat(total),
+        productsAmount,
       };
     }
 

@@ -33,6 +33,7 @@ import InsideLoading from '../loading/InsideLoading';
 import { useMessaging } from 'src/hooks/messaging';
 import { useAuth } from 'src/hooks/auth';
 import { useApp } from 'src/hooks/app';
+import CheckoutError from './steps/error/CheckoutError';
 
 const cartWidth = 450;
 
@@ -117,12 +118,13 @@ export const CheckoutContext = React.createContext({
   handleSubmitOrder: () => {},
   handleSetStep: () => {},
   handleSetStepById: () => {},
-  setIsCardValid: () => {},
+  setIsCardValid: state => {},
   createdOrder: null,
   step: null,
   cardValidation: {},
   saving: false,
   isCardValid: false,
+  mercadoPagoPublicKey: '',
 });
 
 export default function Checkout() {
@@ -142,6 +144,7 @@ export default function Checkout() {
   const [isCardValid, setIsCardValid] = useState(false);
   const dispatch = useDispatch();
   const auth = useAuth();
+  const [error, setError] = useState('');
 
   const currentStep = useMemo(() => {
     return steps.find(item => item.order === step);
@@ -159,6 +162,17 @@ export default function Checkout() {
     createdOrder,
     step,
   };
+
+  useEffect(() => {
+    if (!restaurant) return;
+
+    if (restaurant.payment_gateway === 'mercadopago') {
+      api
+        .get('/payment-config')
+        .then(response => window.Mercadopago.setPublishableKey(response.data.mercado_pago_public_key))
+        .catch(err => console.error(err));
+    }
+  }, [restaurant]);
 
   useEffect(() => {
     if (!restaurant) return;
@@ -211,6 +225,18 @@ export default function Checkout() {
   }, [cart.total, restaurant]); // eslint-disable-line
 
   useEffect(() => {
+    if (!restaurant) return;
+
+    if (
+      cart.productsAmount < restaurant.configs.order_minimum_products_amount &&
+      restaurant.configs.tax_mode !== 'products_amount'
+    ) {
+      handleOpen(`A quantidade mínima de produtos é ${restaurant.configs.order_minimum_products_amount}`);
+      router.push('/menu');
+    }
+  }, [cart, restaurant, router, handleOpen]);
+
+  useEffect(() => {
     if (!user.id) return;
 
     const customer = user.customer;
@@ -244,6 +270,7 @@ export default function Checkout() {
       return;
     }
     setSaving(true);
+
     api
       .post('/orders', order)
       .then(response => {
@@ -258,7 +285,7 @@ export default function Checkout() {
         handleStepNext();
       })
       .catch(err => {
-        if (err.response) handleOpen(err.response.data.error, null, { marginBottom: 47 });
+        setError(err.response ? err.response.data.error : 'Não foi possível salvar o pedido');
       })
       .finally(() => {
         setSaving(false);
@@ -322,6 +349,8 @@ export default function Checkout() {
         <CheckoutContext.Provider value={checkoutContextValue}>
           <CheckoutSuccess />
         </CheckoutContext.Provider>
+      ) : error ? (
+        <CheckoutError handleReset={() => setError('')} errorMessage={error} />
       ) : cart.products.length === 0 ? (
         <CheckoutEmptyCart />
       ) : (

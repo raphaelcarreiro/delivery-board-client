@@ -15,6 +15,7 @@ const INITIAL_STATE = {
     expiration_date: '',
     cvv: '',
     cpf: '',
+    token: '',
   },
   coupon: null,
   tax: 0,
@@ -119,6 +120,7 @@ export default function order(state = INITIAL_STATE, action) {
           expiration_date: '',
           cvv: '',
           cpf: '',
+          token: '',
         },
       };
     }
@@ -151,6 +153,16 @@ export default function order(state = INITIAL_STATE, action) {
           ...state.shipment,
           scheduled_at: action.date,
           formattedScheduledAt: action.date ? format(action.date, 'HH:mm', { locale: ptBR }) : null,
+        },
+      };
+    }
+
+    case '@order/SET_MERCADO_PAGO_CARD_TOKEN': {
+      return {
+        ...state,
+        creditCard: {
+          ...state.creditCard,
+          token: action.token,
         },
       };
     }

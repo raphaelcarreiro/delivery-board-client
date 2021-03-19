@@ -80,7 +80,7 @@ export const CardBack = styled.div<CardProps>`
 `;
 
 export const CardNumber = styled.p`
-  letter-spacing: 8px;
+  letter-spacing: 7px;
   margin-top: 30px;
   max-width: 300px;
   width: 100%;
@@ -90,7 +90,7 @@ export const CardNumber = styled.p`
   align-items: center;
 
   @media (max-width: 960px) {
-    letter-spacing: 7px;
+    letter-spacing: 6px;
   }
 `;
 

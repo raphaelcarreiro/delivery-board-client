@@ -7,9 +7,10 @@ import { makeStyles, fade } from '@material-ui/core/styles';
 import { CheckoutContext } from 'src/components/checkout/Checkout';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import PaymentCpf from './PaymentCpf';
-import PaymentCreditCard from './PaymentCard';
 import { setPaymentMethod } from 'src/store/redux/modules/order/actions';
+import PaymentMercadoPago from '../card/PaymentMercadoPago';
+import PaymentCpf from '../PaymentCpf';
+import PaymentCard from '../card/PaymentCard';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -88,6 +89,7 @@ export default function PaymentOnlineList({ paymentMethods, paymentMethodId }) {
   const user = useSelector(state => state.user);
   const order = useSelector(state => state.order);
   const dispatch = useDispatch();
+  const restaurant = useSelector(state => state.restaurant);
 
   function handleClick(paymentMethod) {
     dispatch(setPaymentMethod(paymentMethod));
@@ -121,7 +123,12 @@ export default function PaymentOnlineList({ paymentMethods, paymentMethodId }) {
   return (
     <>
       {dialogCpf && <PaymentCpf onExited={handleCloseDialogCpf} />}
-      {dialogCard && <PaymentCreditCard onExited={handleCloseDialogCard} />}
+      {dialogCard &&
+        (restaurant.payment_gateway === 'mercadopago' ? (
+          <PaymentMercadoPago onExited={handleCloseDialogCard} />
+        ) : (
+          <PaymentCard onExited={handleCloseDialogCard} />
+        ))}
       <List className={classes.list}>
         {paymentMethods.map(
           paymentMethod =>

@@ -112,6 +112,14 @@ export default function Cart() {
       return;
     }
 
+    if (
+      restaurant.configs.tax_mode !== 'products_amount' &&
+      restaurant.configs.order_minimum_products_amount > cart.productsAmount
+    ) {
+      messaging.handleOpen(`A quantidade mínima de produtos é ${restaurant.configs.order_minimum_products_amount}`);
+      return;
+    }
+
     if (!isAuthenticated) {
       if (restaurant.configs.require_login) {
         router.push('/login');

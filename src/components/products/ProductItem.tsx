@@ -10,10 +10,10 @@ const useStyles = makeStyles(theme => ({
     boxShadow: '0 0 3px 1px #eee',
     borderRadius: theme.shape.borderRadius,
     position: 'relative',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     height: 380,
     width: props.listType === 'row' ? 230 : '100%',
-    padding: 0,
+    padding: 10,
     flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
       width: props.listType === 'row' ? 'calc(100vw / 2 - 15)' : '100%',
@@ -21,19 +21,12 @@ const useStyles = makeStyles(theme => ({
     },
   }),
   img: {
-    maxHeight: 220,
+    height: 190,
     maxWidth: 220,
     objectFit: 'contain',
     width: '100%',
-  },
-  imageWrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
     flexShrink: 0,
-    marginBottom: 12,
-    height: 220,
+    [theme.breakpoints.down('sm')]: {},
   },
   productData: {
     display: 'flex',
@@ -41,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     alignItems: 'flex-start',
     width: '100%',
-    padding: '0 10px 10px 10px',
+    marginTop: 10,
     justifyContent: 'space-between',
   },
   price: {
@@ -103,14 +96,12 @@ const CategoryProduct: React.FC<CategoryProductProps> = ({
   return (
     <ListItem onClick={() => handleProductClick(product)} button className={classes.listItem} key={product.id}>
       {product.image && (
-        <div className={classes.imageWrapper}>
-          <img
-            className={classes.img}
-            src={product.image.imageThumbUrl ? product.image.imageUrl : product.image.imageUrl}
-            alt={product.name}
-            onClick={() => handleOpenImagePreview(product)}
-          />
-        </div>
+        <img
+          className={classes.img}
+          src={product.image.imageThumbUrl ? product.image.imageUrl : product.image.imageUrl}
+          alt={product.name}
+          onClick={() => handleOpenImagePreview(product)}
+        />
       )}
       <div className={classes.productData}>
         {product.promotion_activated && product.special_price && product.special_price > 0 ? (

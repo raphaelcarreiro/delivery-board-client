@@ -67,4 +67,5 @@ export interface Restaurant {
   addresses: RestaurantAddress[];
   phones: RestaurantPhones[];
   play_store_link: string;
+  payment_gateway: string;
 }

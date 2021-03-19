@@ -9,7 +9,7 @@ export default function CardExpirationDate({ inputRef, ...other }) {
       ref={ref => {
         inputRef(ref ? ref.inputElement : null);
       }}
-      mask={[/\d/, /\d/, '/', /\d/, /\d/]}
+      mask={[/\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
       placeholderChar={'\u2000'}
       showMask={false}
     />

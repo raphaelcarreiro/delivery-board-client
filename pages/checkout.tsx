@@ -39,6 +39,9 @@ const CheckoutPage: NextPage = () => {
     <>
       <Head>
         <title>Fechar pedido</title>
+        {restaurant?.payment_gateway === 'mercadopago' && (
+          <script src="https://secure.mlstatic.com/sdk/javascript/v1/mercadopago.js"></script>
+        )}
       </Head>
       {!restaurant?.is_open && <CartClosedRestaurant onExited={handleExitModal} />}
       {isAuthenticated && restaurant?.is_open && <Checkout />}

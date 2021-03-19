@@ -102,3 +102,10 @@ export function setCard(card) {
     card,
   };
 }
+
+export function setMercadoPagoTokenCard(token) {
+  return {
+    type: '@order/SET_MERCADO_PAGO_CARD_TOKEN',
+    token,
+  };
+}

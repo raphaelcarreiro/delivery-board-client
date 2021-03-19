@@ -109,7 +109,7 @@ export default function Confirm() {
               </div>
             )}
             <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
-              Alterar
+              alterar
             </Typography>
           </div>
         ) : (
@@ -137,7 +137,7 @@ export default function Confirm() {
               )}
             </div>
             <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
-              Alterar
+              alterar
             </Typography>
           </div>
         )}
@@ -166,7 +166,7 @@ export default function Confirm() {
             </Typography>
           )}
           <Typography color="primary" className={classes.link} onClick={() => handleChangeStepById('STEP_PAYMENT')}>
-            Alterar
+            alterar
           </Typography>
         </div>
         <div className={classes.item}>

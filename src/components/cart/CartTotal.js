@@ -51,16 +51,20 @@ export default function CartTotal() {
                   <Typography variant="caption" color="textSecondary" align="center">
                     {`Será cobrada para os pedidos inferiores a ${restaurant.configs.formattedOrderMinimumValue}`}
                   </Typography>
+                ) : restaurant.configs.tax_mode === 'district' ? (
+                  <>
+                    <Typography variant="caption" color="textSecondary" display="block">
+                      Valor determinado por bairro
+                    </Typography>
+                    <Typography variant="caption" color="textSecondary" display="block">
+                      {order.shipment.district}, {order.shipment.city}
+                    </Typography>
+                  </>
                 ) : (
-                  restaurant.configs.tax_mode === 'district' && (
-                    <>
-                      <Typography variant="caption" color="textSecondary" display="block">
-                        Valor determinado por bairro
-                      </Typography>
-                      <Typography variant="caption" color="textSecondary" display="block">
-                        {order.shipment.district}, {order.shipment.city}
-                      </Typography>
-                    </>
+                  restaurant.configs.tax_mode === 'products_amount' && (
+                    <Typography variant="caption" color="textSecondary" align="center">
+                      {`Será cobrado para pedido com quantidade de produtos inferior ou igual a ${restaurant.configs.order_minimum_products_amount}`}
+                    </Typography>
                   )
                 )}
               </div>
