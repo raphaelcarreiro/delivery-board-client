@@ -253,7 +253,7 @@ function Sidebar({ handleOpenMenu, isOpenMenu }) {
       )}
       <div className={classes.installApp}>
         <Typography variant="body2">Quer ter um app como esse?</Typography>
-        <a href="mailto:carreiro@sgrande.delivery">Entrar em contato</a>
+        <a href="https://www.sgrande.delivery">ir para sgrande.delivery</a>
       </div>
     </Drawer>
   );

@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
   image: {
     width: 120,
     height: 120,
-    objectFit: 'contain',
+    objectFit: 'cover',
   },
   productName: {
     fontWeight: 400,
