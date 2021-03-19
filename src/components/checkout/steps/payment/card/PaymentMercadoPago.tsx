@@ -134,7 +134,6 @@ const PaymentMercadoPago: React.FC<PaymentMercadoPagoProps> = ({ onExited }) => 
     if (formElement.current)
       window.Mercadopago.createToken(formElement.current, (status, response) => {
         if (status === 200 || status === 201) {
-          console.log(response);
           dispatch(changeCreditCard('token', response.id));
         }
       });
