@@ -3,8 +3,6 @@ import { List, ListItem, Typography } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import PropTypes from 'prop-types';
-import { Add, Remove } from '@material-ui/icons';
-import ProductComplementItemAmountControl from './ProductComplementItemAmountControl';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
