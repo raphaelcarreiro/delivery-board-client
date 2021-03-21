@@ -26,6 +26,7 @@ import FacebookLoginProvider from './hooks/facebookLogin';
 import LayoutHandler from './components/layout/LayoutHandler';
 import { AppProvider, AppContextValue } from './hooks/app';
 import { useWindowSize } from './hooks/windowSize';
+import InstallAppNotification from './components/install-app-notification/InstallAppNotification';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -249,6 +250,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
               <GoogleLoginProvider>
                 <FacebookLoginProvider>
                   <Sidebar handleOpenMenu={handleOpenMenu} isOpenMenu={isOpenMenu} />
+                  <InstallAppNotification />
                   <LayoutHandler>
                     <Component {...pageProps} />
                   </LayoutHandler>
