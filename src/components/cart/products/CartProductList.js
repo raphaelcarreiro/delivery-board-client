@@ -3,9 +3,8 @@ import { List, ListItem, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
-import { removeFromCart, restoreCart } from 'src/store/redux/modules/cart/actions';
+import { removeFromCart } from 'src/store/redux/modules/cart/actions';
 import CartProductListComplements from './CartProductListComplements';
-import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -97,16 +96,9 @@ CartProductList.propTypes = {
 export default function CartProductList({ products, handleClickUpdateProduct }) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const messaging = useMessaging();
-
-  /*   function handleRestoreCart() {
-    dispatch(restoreCart());
-    messaging.handleClose();
-  } */
 
   function handleRemoveFromCart(productUid) {
     dispatch(removeFromCart(productUid));
-    // messaging.handleOpen('Produto removido', handleRestoreCart);
   }
 
   function showAdditionalOrIngredients(product) {
@@ -137,10 +129,10 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
                 {product.promotion && (
                   <>
                     <Typography variant="caption" color="textSecondary" display="block">
-                      Você ganhou esse produto!
+                      você ganhou esse produto!
                     </Typography>
                     <Typography variant="caption" color="textSecondary" display="block">
-                      Promoção {product.promotion.name}
+                      promoção {product.promotion.name}
                     </Typography>
                   </>
                 )}
@@ -176,10 +168,10 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
           {!product.promotion && (
             <div className={classes.actions}>
               <Typography onClick={() => handleClickUpdateProduct(product)} color="primary" className={classes.link}>
-                Editar
+                editar
               </Typography>
               <Typography className={classes.link} onClick={() => handleRemoveFromCart(product.uid)}>
-                Excluir
+                excluir
               </Typography>
             </div>
           )}

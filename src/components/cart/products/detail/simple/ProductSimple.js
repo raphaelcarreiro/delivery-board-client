@@ -47,7 +47,7 @@ export default function ProductSimple({ onExited }) {
   function handleClickIngredient(ingredientId) {
     setProduct({
       ...product,
-      ingredient: product.ingredients.map(ingredient => {
+      ingredients: product.ingredients.map(ingredient => {
         if (ingredient.id === ingredientId) ingredient.selected = !ingredient.selected;
         return ingredient;
       }),

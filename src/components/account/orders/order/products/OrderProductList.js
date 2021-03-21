@@ -5,7 +5,7 @@ import OrderProductAdditional from './OrderProductAdditional';
 import OrderProductIngredients from './OrderProductIngredients';
 import OrderProductComplements from './OrderProductComplements';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   listItem: {
     display: 'flex',
     backgroundColor: '#fff',
@@ -16,6 +16,11 @@ const useStyles = makeStyles({
     marginBottom: 4,
     flexDirection: 'column',
     alignItems: 'flex-start',
+    [theme.breakpoints.down('sm')]: {
+      backgroundColor: 'inherit',
+      paddingLeft: 0,
+      paddingRight: 0,
+    },
   },
   list: {
     paddingBottom: 20,
@@ -38,7 +43,7 @@ const useStyles = makeStyles({
   productName: {
     fontSize: 18,
   },
-});
+}));
 
 OrderProductList.propTypes = {
   products: PropTypes.array.isRequired,
@@ -50,7 +55,7 @@ export default function OrderProductList({ products }) {
   return (
     <>
       <Typography variant="h6" gutterBottom>
-        Itens
+        itens
       </Typography>
       <List className={classes.list}>
         {products.map(product => (

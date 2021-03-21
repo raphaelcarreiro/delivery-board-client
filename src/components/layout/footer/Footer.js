@@ -107,7 +107,7 @@ function Footer() {
         </div>
         <div className={classes.phone}>
           <Typography variant="h5" color="inherit">
-            Peça pelo telefone
+            peça pelo telefone
           </Typography>
           <List>
             {restaurant &&

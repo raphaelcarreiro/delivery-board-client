@@ -94,7 +94,7 @@ export default function Confirm() {
         {order.shipment.shipment_method === 'delivery' ? (
           <div className={classes.item}>
             <Typography variant="h5" className={classes.title}>
-              Endereço de entrega
+              endereço de entrega
             </Typography>
             <Typography>
               {order.shipment.address}, {order.shipment.number}, {order.shipment.district}
@@ -104,7 +104,7 @@ export default function Confirm() {
             {restaurant.configs.delivery_time && (
               <div className={classes.deliveryTime}>
                 <Typography color="textSecondary" variant="body2">
-                  Tempo estimado para entrega, {restaurant.configs.delivery_time} min
+                  tempo estimado para entrega, {restaurant.configs.delivery_time} min
                 </Typography>
               </div>
             )}
@@ -115,7 +115,7 @@ export default function Confirm() {
         ) : (
           <div className={classes.item}>
             <Typography variant="h5" className={classes.title}>
-              Endereço para retirada
+              endereço para retirada
             </Typography>
             <Typography>
               {mainRestaurantAddress.address}, {mainRestaurantAddress.number}
@@ -126,12 +126,12 @@ export default function Confirm() {
             <div className={classes.deliveryTime}>
               {order.shipment.scheduled_at ? (
                 <Typography color="textSecondary" variant="body2">
-                  Agendado para as {order.shipment.formattedScheduledAt}
+                  agendado para as {order.shipment.formattedScheduledAt}
                 </Typography>
               ) : (
                 restaurant.configs.delivery_time && (
                   <Typography color="textSecondary" variant="body2">
-                    Tempo estimado para retirada, {restaurant.configs.delivery_time} min
+                    tempo estimado para retirada, {restaurant.configs.delivery_time} min
                   </Typography>
                 )
               )}
@@ -143,12 +143,12 @@ export default function Confirm() {
         )}
         <div className={classes.item}>
           <Typography variant="h5" className={classes.title}>
-            Forma de pagamento
+            forma de pagamento
           </Typography>
           {order.paymentMethod.mode === 'online' ? (
-            <Typography>Pagamento on-line</Typography>
+            <Typography>pagamento on-line</Typography>
           ) : (
-            <Typography>Pagamento na entrega</Typography>
+            <Typography>pagamento na entrega</Typography>
           )}
           {order.paymentMethod.kind === 'card' && order.paymentMethod.mode === 'online' ? (
             <>
@@ -160,7 +160,7 @@ export default function Confirm() {
               {order.paymentMethod.method}
               {order.change > 0 && (
                 <Typography display="inline" variant="body1" color="textSecondary" component="span">
-                  {' - '}Troco para {moneyFormat(order.change)}
+                  {' - '}troco para {moneyFormat(order.change)}
                 </Typography>
               )}
             </Typography>
@@ -171,14 +171,14 @@ export default function Confirm() {
         </div>
         <div className={classes.item}>
           <Typography variant="h5" className={classes.title}>
-            Total à pagar
+            total à pagar
           </Typography>
           <Typography variant="h6" className={classes.total}>
             {cart.formattedTotal}
           </Typography>
           {cart.tax > 0 && (
             <Typography color="textSecondary" variant="body2">
-              Este valor inclui a taxa de {cart.formattedTax} para a entrega
+              este valor inclui a taxa de {cart.formattedTax} para a entrega
             </Typography>
           )}
         </div>

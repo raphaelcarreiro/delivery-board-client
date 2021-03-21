@@ -32,25 +32,25 @@ export default function OrderTotals({ order }) {
   return (
     <div className={classes.totals}>
       <div>
-        <Typography>Subtotal</Typography>
+        <Typography>subtotal</Typography>
       </div>
       <div>
         <Typography>{order.formattedSubtotal}</Typography>
       </div>
       <div>
-        <Typography>Desconto</Typography>
+        <Typography>desconto</Typography>
       </div>
       <div>
         <Typography>{order.formattedDiscount}</Typography>
       </div>
       <div>
-        <Typography>Taxa de entrega</Typography>
+        <Typography>taxa de entrega</Typography>
       </div>
       <div>
         <Typography>{order.formattedTax}</Typography>
       </div>
       <div className={classes.total}>
-        <Typography>Total</Typography>
+        <Typography>total</Typography>
       </div>
       <div className={classes.total}>
         <Typography variant="h5">

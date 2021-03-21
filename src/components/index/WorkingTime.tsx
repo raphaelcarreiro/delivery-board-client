@@ -38,7 +38,7 @@ const WorkingTime: React.FC<WorkingTimeProps> = ({ restaurant }) => {
         <div className={classes.working}>
           <div className={classes.restaurantStatus}>
             <StatusIcon />
-            <Typography>{restaurant.is_open ? 'Aberto' : 'Fechado'}</Typography>
+            <Typography>{restaurant.is_open ? 'aberto' : 'fechado'}</Typography>
           </div>
           <Typography color="textSecondary" align="center" variant="body1">
             {restaurant.working_hours}

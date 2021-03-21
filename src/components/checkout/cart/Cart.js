@@ -98,7 +98,7 @@ export default function Cart() {
       ) : cart.products.length > 0 ? (
         <div className={classes.cart}>
           <Typography className={classes.title} variant="h5" color="primary">
-            Carrinho
+            carrinho
           </Typography>
           <CartProductList handleClickUpdateProduct={handleClickUpdateProduct} products={cart.products} />
           <CartCouponButton setCouponView={setCouponView} />

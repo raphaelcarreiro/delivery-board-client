@@ -25,7 +25,7 @@ export default function OrderShipment({ order }) {
   return (
     <>
       <Typography variant="h6" gutterBottom>
-        {order.shipment.shipment_method === 'delivery' ? 'Endereço de entrega' : 'Endereço para retirada'}
+        {order.shipment.shipment_method === 'delivery' ? 'endereço de entrega' : 'endereço para retirada'}
       </Typography>
       <Typography>
         {order.shipment.address}, {order.shipment.number}
@@ -40,7 +40,7 @@ export default function OrderShipment({ order }) {
       )}
       {order.shipment.scheduled_at && (
         <Typography variant="body2" className={classes.scheduleAt}>
-          <WatchLaterIcon /> Agendado para as {order.shipment.formattedScheduledAt}
+          <WatchLaterIcon /> agendado para as {order.shipment.formattedScheduledAt}
         </Typography>
       )}
     </>

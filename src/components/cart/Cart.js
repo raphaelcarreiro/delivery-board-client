@@ -194,7 +194,7 @@ export default function Cart() {
             {restaurant.configs.delivery_time > 0 && (
               <Typography color="textSecondary" variant="body2" className={classes.infoItem}>
                 <WatchLaterIcon />
-                Tempo estimado para entrega {restaurant.configs.delivery_time} minutos
+                tempo estimado para entrega {restaurant.configs.delivery_time} minutos
               </Typography>
             )}
             {restaurant.configs.order_minimum_value > 0 && restaurant.configs.tax_mode !== 'order_value' && (

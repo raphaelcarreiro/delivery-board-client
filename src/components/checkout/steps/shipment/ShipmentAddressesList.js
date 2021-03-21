@@ -137,7 +137,7 @@ export default function ShipmentAddressesList({
             handleDialogEditAddress(selectedAddress);
           }}
         >
-          Editar
+          editar
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -145,7 +145,7 @@ export default function ShipmentAddressesList({
             handleDeleteAddress(selectedAddress);
           }}
         >
-          Excluir
+          excluir
         </MenuItem>
       </Menu>
       <List className={classes.list}>
@@ -177,12 +177,12 @@ export default function ShipmentAddressesList({
               )}
               {restaurant.configs.tax_mode === 'district' && address.area_region && address.area_region.tax > 0 && (
                 <Typography color="textSecondary" className={classes.tax} variant="body2">
-                  Taxa de entrega de {address.area_region.formattedTax}
+                  taxa de entrega de {address.area_region.formattedTax}
                 </Typography>
               )}
               {restaurant.configs.tax_mode === 'distance' && address.distance_tax > 0 && (
                 <Typography color="textSecondary" className={classes.tax} variant="body2">
-                  Taxa de entrega de {address.formattedDistanceTax}
+                  taxa de entrega de {address.formattedDistanceTax}
                 </Typography>
               )}
             </div>
@@ -191,7 +191,7 @@ export default function ShipmentAddressesList({
         ))}
         <ListItem button className={classes.listItemNewAddress} onClick={handleDialogNewAddress}>
           <Typography variant="h6" color="primary">
-            Adicionar endereço
+            adicionar endereço
           </Typography>
         </ListItem>
       </List>

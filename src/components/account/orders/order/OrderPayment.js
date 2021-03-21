@@ -10,12 +10,12 @@ export default function OrderPayment({ order }) {
   return (
     <>
       <Typography variant="h6" gutterBottom>
-        Forma de pagamento
+        forma de pagamento
       </Typography>
       {order.payment_method.mode === 'online' ? (
-        <Typography>Pagamento online </Typography>
+        <Typography>pagamento online </Typography>
       ) : (
-        <Typography>Pagamento na entrega</Typography>
+        <Typography>pagamento na entrega</Typography>
       )}
       <div>
         <Typography display="inline">{order.payment_method.method}</Typography>
@@ -29,7 +29,7 @@ export default function OrderPayment({ order }) {
         {order.picpay_payment && order.status === 'p' && (
           <div>
             <Link color="primary" variant="body1" href={order.picpay_payment.payment_url} target="blank">
-              Fazer pagamento
+              fazer pagamento
             </Link>
           </div>
         )}

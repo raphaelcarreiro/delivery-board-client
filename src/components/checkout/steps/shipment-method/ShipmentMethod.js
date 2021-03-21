@@ -77,13 +77,19 @@ export default function ShipmentMethod() {
       <div className={classes.container}>
         <div className={classes.actions}>
           <ListItem button className={classes.button} onClick={handleSetCustomerCollect}>
-            <Typography variant="h6">Quero retirar</Typography>
+            <Typography variant="h6">retirar</Typography>
+            <Typography variant="body1" color="textSecondary">
+              você retira conosco
+            </Typography>
             {order.shipment.scheduled_at && (
-              <Typography color="textSecondary">Agendado para as {order.shipment.formattedScheduledAt}</Typography>
+              <Typography color="textSecondary">agendado para as {order.shipment.formattedScheduledAt}</Typography>
             )}
           </ListItem>
           <ListItem button className={classes.button} onClick={handleSetDelivery}>
-            <Typography variant="h6">Quero receber</Typography>
+            <Typography variant="h6">receber</Typography>
+            <Typography variant="body1" color="textSecondary">
+              nós levamos até você
+            </Typography>
           </ListItem>
         </div>
       </div>
