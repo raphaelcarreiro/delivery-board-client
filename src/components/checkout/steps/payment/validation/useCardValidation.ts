@@ -29,7 +29,7 @@ export function useCardValidation(): UseCardValidation {
         .required('CPF é obrigatório'),
       cvv: yup
         .string()
-        .min(3, 'o código de segurança deve ter 3 digitos')
+        .min(3, 'o código de segurança deve ter no mínimo 3 digitos')
         .transform((value, originalValue) => {
           return originalValue.replace(/\D/g, '');
         })

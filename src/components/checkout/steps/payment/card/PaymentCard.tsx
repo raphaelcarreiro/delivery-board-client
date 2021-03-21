@@ -110,8 +110,9 @@ const PaymentCard: React.FC<PaymentCardProps> = ({ onExited }) => {
             fullWidth
             autoFocus
             autoComplete="cc-number"
-            InputProps={{
-              inputComponent: CardNumber as any,
+            type="number"
+            inputProps={{
+              maxlength: 19,
             }}
           />
           <TextField
@@ -149,15 +150,16 @@ const PaymentCard: React.FC<PaymentCardProps> = ({ onExited }) => {
                 inputRef={inputs.cvv}
                 label="Código"
                 error={!!validation.cvv}
-                helperText={validation.cvv ? validation.cvv : 'Últimos três número do verso do seu cartão'}
+                helperText={validation.cvv ? validation.cvv : 'Código de segurança'}
                 margin="normal"
                 placeholder="Código de segurança"
                 value={cvv}
                 onChange={e => setCvv(e.target.value)}
                 autoComplete="cc-csc"
                 fullWidth
-                InputProps={{
-                  inputComponent: CardSecurityCode as any,
+                type="number"
+                inputProps={{
+                  maxlength: 4,
                 }}
               />
             </Grid>
