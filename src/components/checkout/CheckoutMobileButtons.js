@@ -52,12 +52,12 @@ export default function CheckoutMobileButtons({ handleStepPrior, handleStepNext,
       {currentStep.order > 1 && (
         <button className={`${classes.button} ${classes.buttonBack}`} onClick={handleStepPrior}>
           <FiChevronLeft />
-          <Typography>Voltar</Typography>
+          <Typography>voltar</Typography>
         </button>
       )}
       {currentStep.order < quantitySteps - 1 && (
         <button className={`${classes.button} ${classes.buttonNext}`} onClick={handleStepNext}>
-          <Typography>Próximo</Typography>
+          <Typography>próximo</Typography>
           <FiChevronRight />
         </button>
       )}
