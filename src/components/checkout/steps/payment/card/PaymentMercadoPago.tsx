@@ -183,11 +183,11 @@ const PaymentMercadoPago: React.FC<PaymentMercadoPagoProps> = ({ onExited }) => 
               fullWidth
               autoFocus
               autoComplete="cc-number"
-              InputProps={{
-                inputComponent: CardNumber as any,
-              }}
               inputProps={{
                 'data-checkout': 'cardNumber',
+                maxLength: 19,
+                step: 1,
+                inputMode: 'numeric',
               }}
               id="cardNumber"
             />
@@ -237,11 +237,11 @@ const PaymentMercadoPago: React.FC<PaymentMercadoPagoProps> = ({ onExited }) => 
                   onChange={e => setCvv(e.target.value)}
                   autoComplete="cc-csc"
                   fullWidth
-                  InputProps={{
-                    inputComponent: CardSecurityCode as any,
-                  }}
                   inputProps={{
                     'data-checkout': 'securityCode',
+                    maxLength: 4,
+                    step: 1,
+                    inputMode: 'numeric',
                   }}
                   id="securityCode"
                 />
@@ -262,6 +262,7 @@ const PaymentMercadoPago: React.FC<PaymentMercadoPagoProps> = ({ onExited }) => 
               }}
               inputProps={{
                 'data-checkout': 'docNumber',
+                inputMode: 'numeric',
               }}
               id="docNumber"
               name="docNumber"

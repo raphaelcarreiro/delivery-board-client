@@ -112,7 +112,9 @@ const PaymentCard: React.FC<PaymentCardProps> = ({ onExited }) => {
             autoComplete="cc-number"
             type="number"
             inputProps={{
-              maxlength: 19,
+              maxLength: 19,
+              step: 1,
+              inputMode: 'numeric',
             }}
           />
           <TextField
@@ -159,7 +161,9 @@ const PaymentCard: React.FC<PaymentCardProps> = ({ onExited }) => {
                 fullWidth
                 type="number"
                 inputProps={{
-                  maxlength: 4,
+                  maxLength: 4,
+                  step: 1,
+                  inputMode: 'numeric',
                 }}
               />
             </Grid>
@@ -174,6 +178,9 @@ const PaymentCard: React.FC<PaymentCardProps> = ({ onExited }) => {
             value={cpf}
             onChange={e => setCpf(e.target.value)}
             fullWidth
+            inputProps={{
+              inputMode: 'numeric',
+            }}
             InputProps={{
               inputComponent: CpfInput as any,
             }}

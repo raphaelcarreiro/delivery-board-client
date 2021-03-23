@@ -74,6 +74,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ user, validation, handleCha
         value={user.phone}
         onChange={event => handleChange('phone', event.target.value)}
         autoComplete="tel"
+        inputProps={{
+          inputMode: 'numeric',
+        }}
       />
       <TextField
         inputRef={inputs.email}

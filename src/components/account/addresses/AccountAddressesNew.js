@@ -261,6 +261,9 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
             }}
             required
             autoFocus
+            inputProps={{
+              inputMode: 'numeric',
+            }}
           />
         </Grid>
       )}

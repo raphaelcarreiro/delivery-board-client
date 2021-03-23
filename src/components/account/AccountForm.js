@@ -90,6 +90,9 @@ export default function AccountForm({ userCustomer, handleValidation, saving, va
             InputProps={{
               inputComponent: CpfInput,
             }}
+            inputProps={{
+              inputMode: 'numeric',
+            }}
           />
           <div className={classes.actions}>
             <Button type="submit" variant="contained" color="primary" disabled={saving}>
