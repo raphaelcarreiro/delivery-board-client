@@ -223,6 +223,9 @@ const PaymentMercadoPago: React.FC<PaymentMercadoPagoProps> = ({ onExited }) => 
                   InputProps={{
                     inputComponent: CardExpirationDate as any,
                   }}
+                  inputProps={{
+                    inputMode: 'numeric',
+                  }}
                 />
               </Grid>
               <Grid item xs={6}>
