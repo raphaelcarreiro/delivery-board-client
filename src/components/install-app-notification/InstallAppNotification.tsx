@@ -9,6 +9,10 @@ const useStyles = makeStyles({
   playStoreImg: {
     width: 120,
   },
+  message: {
+    textShadow: '0 1px 2px #000',
+    fontSize: 13,
+  },
 });
 
 const InstallAppNotification: React.FC = () => {
@@ -20,13 +24,15 @@ const InstallAppNotification: React.FC = () => {
     <>
       {restaurant?.play_store_link && isMobile && shownPlayStoreBanner && (
         <InstallAppNotificationContainer>
-          <Typography variant="caption">Baixe o aplicativo {restaurant?.name}, gratuíto para celular</Typography>
-          <a href={restaurant?.play_store_link} target="blank">
-            <img className={classes.playStoreImg} src="/images/play_store.png" alt="Google Play Store" />
-          </a>
           <IconButton onClick={handleShowPlayStoreBanner} color="inherit" size="small">
             <CloseIcon />
           </IconButton>
+          <Typography className={classes.message} variant="caption">
+            {restaurant?.name}, gratuíto para celular
+          </Typography>
+          <a href={restaurant?.play_store_link} target="blank">
+            <img className={classes.playStoreImg} src="/images/play_store.png" alt="Google Play Store" />
+          </a>
         </InstallAppNotificationContainer>
       )}
     </>

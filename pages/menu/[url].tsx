@@ -120,13 +120,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     if (err.response)
       return {
         props: {
-          error: err.response.status === 404 ? '404 - Página não encontrada' : 'Aconteceu um erro ao carregar a página',
+          error: err.response.status === 404 ? '404 - página não encontrada' : 'aconteceu um erro ao carregar a página',
         },
       };
 
     return {
       props: {
-        error: 'Aconteceu um erro ao carregar a página',
+        error: 'aconteceu um erro ao carregar a página',
       },
     };
   }

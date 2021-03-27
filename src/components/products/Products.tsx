@@ -106,10 +106,10 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
   const handleAddProductToCart = useCallback(() => {
     dispatch(addToCart());
     handleCartVisibility(true);
-    handleCancelSearch();
     if (restaurant?.configs.facebook_pixel_id) fbq('track', 'AddToCart');
-    if (categoryType === 'NORMAL') router.push('/menu');
-  }, [handleCartVisibility, categoryType, dispatch, handleCancelSearch, restaurant, router]);
+    // handleCancelSearch();
+    // if (categoryType === 'NORMAL') router.push('/menu');
+  }, [handleCartVisibility, dispatch, restaurant]);
 
   const handleProductClick = useCallback(
     product => {

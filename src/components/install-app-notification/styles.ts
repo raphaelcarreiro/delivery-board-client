@@ -19,12 +19,12 @@ export const InstallAppNotificationContainer = styled.div`
   align-items: center;
   padding: 0 15px;
   z-index: 20;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: #fff;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #fafafa;
   animation: ${animation} 0.3s ease 6s;
   animation-fill-mode: forwards;
 
-  height: 80px;
+  height: 70px;
 
   span {
     max-width: 160px;

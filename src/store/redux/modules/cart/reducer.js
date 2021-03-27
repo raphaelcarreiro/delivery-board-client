@@ -11,6 +11,7 @@ export const INITIAL_STATE = {
   subtotal: 0,
   tax: 0,
   productsAmount: 0,
+  promotionDiscount: 0,
 };
 
 export default function cart(state = INITIAL_STATE, action) {
@@ -300,48 +301,59 @@ export default function cart(state = INITIAL_STATE, action) {
     }
 
     case '@cart/SET_DISCOUNT': {
+      if (action.discount === 0)
+        return {
+          ...state,
+          promotionDiscount: 0,
+        };
+
       const subtotal = state.products.reduce((sum, value) => sum + value.final_price, 0);
+
+      let promotionDiscount = action.discountType === 'percent' ? subtotal * (action.discount / 100) : action.discount;
+
+      if (state.configs.cart_accumulate_discount) promotionDiscount = state.promotionDiscount + promotionDiscount;
+      else
+        promotionDiscount = state.promotionDiscount > promotionDiscount ? state.promotionDiscount : promotionDiscount;
 
       return {
         ...state,
-        discount: action.discountType === 'percent' ? subtotal * (action.discount / 100) : action.discount,
+        promotionDiscount,
       };
     }
 
     case '@cart/UPDATE_TOTAL': {
       const { configs } = state;
       const { coupon } = state;
+      const promotionDiscount = state.promotionDiscount;
+
       let tax = state.tax;
+      let discount = 0;
       let total = 0;
-      let discount = 0 || state.discount;
+      let couponDiscount = 0;
+
       const subtotal = state.products.reduce((sum, value) => sum + value.final_price, 0);
       const productsAmount = state.products.reduce((carry, product) => carry + product.amount, 0);
 
-      if (coupon) {
-        discount = coupon.discount_type === 'percent' ? subtotal * (coupon.discount / 100) : coupon.discount;
-      }
+      if (coupon)
+        couponDiscount = coupon.discount_type === 'percent' ? subtotal * (coupon.discount / 100) : coupon.discount;
 
-      if (configs.tax_mode === 'order_value') {
-        if (action.shipmentMethod === 'delivery') {
-          tax = configs.tax_value > 0 && subtotal < configs.order_minimum_value ? configs.tax_value : 0;
-          total = subtotal < configs.order_minimum_value ? subtotal - discount + tax : subtotal - discount;
-        } else {
-          tax = 0;
-          total = subtotal - discount;
+      if (configs.cart_accumulate_discount) discount = promotionDiscount + couponDiscount;
+      else discount = couponDiscount > promotionDiscount ? couponDiscount : promotionDiscount;
+
+      if (action.shipmentMethod === 'delivery') {
+        switch (configs.tax_mode) {
+          case 'order_value': {
+            tax = configs.tax_value > 0 && subtotal < configs.order_minimum_value ? configs.tax_value : 0;
+            break;
+          }
+
+          case 'products_amount': {
+            tax = productsAmount <= configs.order_minimum_products_amount ? configs.tax_value : 0;
+          }
         }
-      } else if (configs.tax_mode === 'district' || configs.tax_mode === 'distance') {
-        if (action.shipmentMethod === 'delivery') total = subtotal - discount + tax;
-        else {
-          tax = 0;
-          total = subtotal - discount;
-        }
-      } else if (configs.tax_mode === 'products_amount' && action.shipmentMethod === 'delivery') {
-        tax = productsAmount <= configs.order_minimum_products_amount ? configs.tax_value : 0;
-        total = subtotal - discount + tax;
-      } else {
-        tax = 0;
-        total = subtotal - discount;
-      }
+      } else tax = 0;
+
+      total = subtotal - discount + tax;
 
       total = total < 0 ? 0 : total;
 

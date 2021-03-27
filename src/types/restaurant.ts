@@ -21,6 +21,7 @@ export interface RestaurantConfig {
   facebook_pixel_id: string;
   google_login: boolean;
   facebook_login: boolean;
+  cart_accumulate_discount: boolean;
 }
 
 interface RestaurantAddress {

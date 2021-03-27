@@ -3,10 +3,13 @@ export function checkProducts(cart, promotion) {
   const cartProducts = cart.products;
 
   const response = promotion.products.every(promotionProduct => {
-    const cartProduct = cartProducts.find(cp => cp.id === promotionProduct.product_id);
-    if (cartProduct) {
-      let checkedComplements = [];
-      if (promotionProduct.complement_categories.length > 0) {
+    const products = cartProducts.filter(cp => cp.id === promotionProduct.product_id);
+
+    let matches = 0;
+
+    if (products.length > 0) {
+      products.forEach(cartProduct => {
+        let checkedComplements = [];
         promotionProduct.complement_categories.forEach(category => {
           const cartComplementCategory = cartProduct.complement_categories.find(
             cc => cc.id === category.product_complement_category_id
@@ -46,13 +49,19 @@ export function checkProducts(cart, promotion) {
             }
           });
         });
-      }
-      checkedComplements = checkedComplements.every(category => {
-        const checkedComplement = category.complements.some(complement => complement.test);
-        return checkedComplement;
+
+        const test = checkedComplements.every(category => {
+          const checkedComplement = category.complements.some(complement => complement.test);
+          return checkedComplement;
+        });
+
+        matches = test ? matches + 1 * cartProduct.amount : matches;
       });
-      return cartProduct.amount >= promotionProduct.amount && checkedComplements;
-    } else return false;
+
+      return matches >= promotionProduct.amount;
+    }
+
+    return false;
   });
 
   return response;
