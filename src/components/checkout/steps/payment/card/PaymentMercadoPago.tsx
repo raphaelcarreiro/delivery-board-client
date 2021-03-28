@@ -1,18 +1,17 @@
-import React, { useContext, useRef, useEffect, useState, FormEvent, useCallback } from 'react';
+import React, { useContext, useRef, useEffect, useState, FormEvent } from 'react';
 import { Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { changeCreditCard, setCard } from 'src/store/redux/modules/order/actions';
-import CardSecurityCode from 'src/components/masked-input/CardSecurityCode';
 import CardExpirationDate from 'src/components/masked-input/CardExperitionDate';
 import CpfInput from 'src/components/masked-input/CpfInput';
-import CardNumber from 'src/components/masked-input/CardNumber';
 import { CheckoutContext } from '../../../Checkout';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import PaymentCardActions from './PaymentCardActions';
 import { useCardValidation } from '../validation/useCardValidation';
 import { useSelector } from 'src/store/redux/selector';
 import { format } from 'date-fns';
+import { useMessaging } from 'src/hooks/messaging';
 
 declare global {
   interface Window {
@@ -53,6 +52,7 @@ const PaymentMercadoPago: React.FC<PaymentMercadoPagoProps> = ({ onExited }) => 
   const formElement = useRef<HTMLFormElement>(null);
   const [cardExpirationMonth, setCardExpirationMonth] = useState('');
   const [cardExpirationYear, setCardExpirationYear] = useState('');
+  const messaging = useMessaging();
 
   const inputs = {
     number: useRef<HTMLInputElement>(null),
@@ -61,20 +61,6 @@ const PaymentMercadoPago: React.FC<PaymentMercadoPagoProps> = ({ onExited }) => 
     cvv: useRef<HTMLInputElement>(null),
     cpf: useRef<HTMLInputElement>(null),
   };
-
-  const setPaymentMethod = useCallback(
-    (cardnumber: string) => {
-      window.Mercadopago.getPaymentMethod(
-        {
-          bin: cardnumber,
-        },
-        (status, response) => {
-          if (status === 200 || status === 201) dispatch(changeCreditCard('brand', response[0].id));
-        }
-      );
-    },
-    [dispatch]
-  );
 
   useEffect(() => {
     const [key] = Object.keys(validation) as [keyof typeof inputs];
@@ -92,9 +78,12 @@ const PaymentMercadoPago: React.FC<PaymentMercadoPagoProps> = ({ onExited }) => 
       {
         bin: bin,
       },
-      () => setPaymentMethod(bin)
+      (status, response) => {
+        console.log(response[0].id);
+        if (status === 200 || status === 201) dispatch(changeCreditCard('brand', response[0].id));
+      }
     );
-  }, [number, setPaymentMethod]);
+  }, [number, dispatch]);
 
   useEffect(() => {
     const rawDate = expirationDate.replace(/\D/g, '');
@@ -134,13 +123,15 @@ const PaymentMercadoPago: React.FC<PaymentMercadoPagoProps> = ({ onExited }) => 
       window.Mercadopago.createToken(formElement.current, (status, response) => {
         if (status === 200 || status === 201) {
           dispatch(changeCreditCard('token', response.id));
+          dispatch(setCard(card));
+
+          checkout.setIsCardValid(true);
+          checkout.handleStepNext();
+          return;
         }
+
+        messaging.handleOpen('Não foi possível verificar o cartão de crédito');
       });
-
-    dispatch(setCard(card));
-
-    checkout.setIsCardValid(true);
-    checkout.handleStepNext();
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {

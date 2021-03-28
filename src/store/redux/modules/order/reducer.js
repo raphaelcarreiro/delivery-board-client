@@ -16,6 +16,7 @@ const INITIAL_STATE = {
     cvv: '',
     cpf: '',
     token: '',
+    brand: '',
   },
   coupon: null,
   tax: 0,
