@@ -99,6 +99,7 @@ export interface Product {
   annotation: string;
   complement_categories: ComplementCategory[];
   ready?: boolean;
+  no_tax: boolean;
 }
 
 export interface CreatedOrderProduct {

@@ -62,7 +62,7 @@ function Orders() {
               </Grid>
             </Grid>
           ) : (
-            <NoData message="Nenhum pedido para mostrar." />
+            <NoData message="nenhum pedido para mostrar" />
           )}
         </>
       )}

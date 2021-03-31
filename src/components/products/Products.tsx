@@ -225,7 +225,7 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
           handleOpenImagePreview={handleOpenImagePreview}
         />
       ) : (
-        <NoData message="Nenhum produto para exibir" />
+        <NoData message="nenhum produto para exibir" />
       )}
     </ProductsProvider>
   );

@@ -27,6 +27,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     zIndex: 1,
     backgroundColor: '#555',
+    flexShrink: 0,
   },
   background: ({ coverUrl }: { coverUrl: string }) => ({
     backgroundImage: `url(${coverUrl})`,

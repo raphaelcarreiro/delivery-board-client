@@ -49,6 +49,8 @@ export async function fetchPizzaProduct(productId: number): Promise<{ product: P
     product: {
       ...product,
       ready: false,
+      formattedPrice: moneyFormat(product.price),
+      formattedSpecialPrice: moneyFormat(product.special_price),
       complement_categories: categories,
     },
     sizeSelected,

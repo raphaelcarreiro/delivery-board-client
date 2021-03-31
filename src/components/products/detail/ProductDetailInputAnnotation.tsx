@@ -5,6 +5,7 @@ import { Product } from 'src/types/product';
 const useStyles = makeStyles({
   annotationContainer: {
     marginTop: 15,
+    marginBottom: 30,
   },
 });
 

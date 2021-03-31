@@ -2,28 +2,21 @@ import React, { Fragment } from 'react';
 import CustomAppbar from '../appbar/CustomAppbar';
 import IndexAppbarActions from './IndexAppbarActions';
 import { makeStyles } from '@material-ui/core/styles';
-import Link from '../link/Link';
 import Cover from './Cover';
 import Info from './Info';
 import { useSelector } from 'src/store/redux/selector';
 import WorkingTime from './WorkingTime';
-import { Button } from '@material-ui/core';
+import Promotions from './promotions/ActivePromotions';
+import Offers from './offers/Offers';
+import Categories from './categories/Categories';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   container: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
-    [theme.breakpoints.down('sm')]: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-    },
   },
   main: {
-    padding: '5px 15px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -55,7 +48,7 @@ const useStyles = makeStyles(theme => ({
   playStoreImg: {
     width: 120,
   },
-}));
+});
 
 const Index: React.FC = () => {
   const restaurant = useSelector(state => state.restaurant);
@@ -72,11 +65,9 @@ const Index: React.FC = () => {
         <Cover restaurant={restaurant} />
         <div className={classes.main}>
           <Info restaurant={restaurant} />
-          <div className={classes.action}>
-            <Button variant="contained" size="large" color="primary" component={Link} href="/menu">
-              Acessar cardápio
-            </Button>
-          </div>
+          <Categories />
+          <Offers />
+          <Promotions />
           <WorkingTime restaurant={restaurant} />
         </div>
       </div>

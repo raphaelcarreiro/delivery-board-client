@@ -6,31 +6,30 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import HomeIcon from '@material-ui/icons/Home';
 import Drawer from '@material-ui/core/Drawer';
-import { makeStyles, fade } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 import Link from '../link/Link';
-import { useRouter } from 'next/router';
-import PropTypes from 'prop-types';
 import ChatIcon from '@material-ui/icons/Chat';
 import LocalOfferIcons from '@material-ui/icons/LocalOffer';
 import { FiLogIn, FiLogOut } from 'react-icons/fi';
 import { useAuth } from 'src/hooks/auth';
-import { MENU_WIDTH } from '../../constants/constants';
+import { MENU_WIDTH } from 'src/constants/constants';
 import { useApp } from 'src/hooks/app';
+import SidebarItem from './SidebarItem';
 
 const useStyles = makeStyles(theme => ({
   drawerPaper: {
     width: MENU_WIDTH,
     backgroundColor: theme.palette.secondary.main,
+    '& a': {
+      color: theme.palette.secondary.contrastText,
+    },
     '@media print': {
       display: 'none',
     },
   },
-  listItemIcon: {
-    color: theme.palette.primary.contrastText,
-  },
-  listItemText: {
-    color: '#fff',
+  sidebarItem: {
+    color: theme.palette.secondary.contrastText,
   },
   drawerHeader: {
     backgroundColor: theme.palette.primary.main,
@@ -44,21 +43,7 @@ const useStyles = makeStyles(theme => ({
   drawerHeaderTitle: {
     color: theme.palette.primary.contrastText,
   },
-  expandColor: {
-    color: '#fff',
-  },
-  nested: {
-    paddingLeft: theme.spacing(5),
-  },
-  link: {
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: 16,
-    '& svg': {
-      marginRight: 10,
-    },
-  },
-  cartBadge: ({ cartItems }) => ({
+  cartBadge: {
     position: 'absolute',
     display: 'flex',
     alignItems: 'center',
@@ -71,103 +56,41 @@ const useStyles = makeStyles(theme => ({
     fontSize: 12,
     color: '#FFF',
     border: `2px solid ${theme.palette.primary.dark}`,
-  }),
+  },
   avatar: {
     width: 44,
     height: 44,
     border: `2px solid ${theme.palette.primary.dark}`,
   },
-  restaurantName: ({ restaurantIsOpen }) => ({
+  restaurantName: {
     display: 'flex',
     alignItems: 'center',
     fontSize: 20,
-  }),
-  installApp: {
-    // position: 'absolute',
-    bottom: 0,
-    borderRadius: 4,
-    padding: '10px 15px',
-    width: 'calc(100% - 20px)',
-    display: 'flex',
-    // alignItems: 'center',
-    margin: 10,
-    flexDirection: 'column',
-    color: theme.palette.secondary.contrastText,
-    // backgroundColor: fade(theme.palette.primary.main, 0.5),
-    // border: `1px dashed ${theme.palette.primary.dark}`,
-    '& button': {
-      marginTop: 10,
-    },
-    '& a': {
-      color: theme.palette.primary.main,
-    },
   },
-  activeNotifications: ({ readyToInstall }) => ({
-    position: 'absolute',
-    bottom: readyToInstall ? 100 : 10,
-    borderRadius: 4,
-    padding: '10px 15px',
-    width: 'calc(100% - 20px)',
-    display: 'flex',
-    alignItems: 'center',
-    margin: '0 10px',
-    flexDirection: 'column',
-    color: theme.palette.secondary.contrastText,
-    backgroundColor: fade(theme.palette.primary.main, 0.5),
-    border: `1px dashed ${theme.palette.primary.dark}`,
-    '& button': {
-      marginTop: 10,
-    },
-  }),
-
   headerTitle: {
     whiteSpace: 'wrap',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     width: 150,
   },
-  statusIcon: {
-    fontSize: 33,
+  developer: {
+    padding: 25,
+    color: '#fff',
   },
 }));
 
-Sidebar.propTypes = {
-  handleOpenMenu: PropTypes.func.isRequired,
-  isOpenMenu: PropTypes.bool.isRequired,
-};
-
-function Sidebar({ handleOpenMenu, isOpenMenu }) {
-  const router = useRouter();
+function Sidebar() {
   const user = useSelector(state => state.user);
   const restaurant = useSelector(state => state.restaurant);
   const cart = useSelector(state => state.cart);
-  const { readyToInstall } = useApp();
+  const { readyToInstall, handleOpenMenu, isOpenMenu } = useApp();
   const theme = useTheme();
+  const { logout } = useAuth();
   const classes = useStyles({
     cartItems: cart.products.length > 0,
     restaurantIsOpen: restaurant && restaurant.is_open,
     readyToInstall: readyToInstall,
   });
-  const { logout } = useAuth();
-
-  function handleClick() {
-    handleOpenMenu();
-  }
-
-  function handleLoginClick() {
-    router.push('/login');
-    handleOpenMenu();
-  }
-
-  function handleAccountClick() {
-    router.push('/account');
-    handleOpenMenu();
-  }
-
-  function handleOrdersClick() {
-    router.push('/account/orders');
-    handleOpenMenu();
-  }
 
   function handleLogoutClick() {
     logout();
@@ -183,77 +106,51 @@ function Sidebar({ handleOpenMenu, isOpenMenu }) {
       onClose={handleOpenMenu}
     >
       <div className={classes.drawerHeader}>
-        {restaurant && (
-          <>
-            <Typography color="inherit" variant="body2" className={classes.restaurantName}>
-              {restaurant.name}
-            </Typography>
-          </>
-        )}
+        <Typography color="inherit" variant="body2" className={classes.restaurantName}>
+          {restaurant?.name}
+        </Typography>
       </div>
-      <ListItem component={Link} href="/" onClick={handleClick} button>
-        <ListItemIcon className={classes.listItemIcon}>
-          <HomeIcon />
-        </ListItemIcon>
-        <ListItemText classes={{ primary: classes.listItemText }} primary="início" />
-      </ListItem>
-      <ListItem component={Link} href="/offers" onClick={handleClick} button>
-        <ListItemIcon className={classes.listItemIcon}>
-          <LocalOfferIcons />
-        </ListItemIcon>
-        <ListItemText classes={{ primary: classes.listItemText }} primary="ofertas" />
-      </ListItem>
-      <ListItem component={Link} href="/menu" onClick={handleClick} button>
-        <ListItemIcon className={classes.listItemIcon}>
-          <MenuBookIcon />
-        </ListItemIcon>
-        <ListItemText classes={{ primary: classes.listItemText }} primary="cardápio" />
-      </ListItem>
-      <ListItem component={Link} href="/cart" onClick={handleClick} button>
+      <SidebarItem icon={<HomeIcon />} href="/" label="início" />
+      <SidebarItem icon={<LocalOfferIcons />} href="/offers" label="ofertas" />
+      <SidebarItem icon={<MenuBookIcon />} href="/menu" label="cardápio" />
+
+      <ListItem component={Link} href="/cart" onClick={handleOpenMenu} button>
         {cart.products.length > 0 && <span className={classes.cartBadge}>{cart.products.length}</span>}
-        <ListItemIcon className={classes.listItemIcon}>
+        <ListItemIcon className={classes.sidebarItem}>
           <ShoppingCartIcon />
         </ListItemIcon>
-        <ListItemText classes={{ primary: classes.listItemText }} primary="carrinho" />
+        <ListItemText classes={{ primary: classes.sidebarItem }} primary="carrinho" />
       </ListItem>
-      <ListItem component={Link} href="/contact" onClick={handleClick} button>
-        <ListItemIcon className={classes.listItemIcon}>
-          <ChatIcon />
-        </ListItemIcon>
-        <ListItemText classes={{ primary: classes.listItemText }} primary="fala comigo" />
-      </ListItem>
+
+      <SidebarItem icon={<ChatIcon />} href="/contact" label="contato" />
+
       {user.id ? (
         <>
-          <ListItem button onClick={handleOrdersClick}>
-            <ListItemIcon className={classes.listItemIcon}>
-              <AssignmentIcon />
-            </ListItemIcon>
-            <ListItemText classes={{ primary: classes.listItemText }} primary="meus pedidos" />
-          </ListItem>
-          <ListItem button onClick={handleAccountClick}>
-            <ListItemIcon className={classes.listItemIcon}>
-              {user.image ? <Avatar src={user.image.imageUrl} className={classes.avatar} /> : <PersonIcon />}
-            </ListItemIcon>
-            <ListItemText classes={{ primary: classes.listItemText }} primary={user.name} />
-          </ListItem>
+          <SidebarItem icon={<AssignmentIcon />} href="/account/orders" label="meus pedidos" />
+
+          <SidebarItem
+            icon={user.image ? <Avatar src={user.image.imageUrl} className={classes.avatar} /> : <PersonIcon />}
+            href="/account"
+            label={user.name}
+          />
+
           <ListItem button onClick={handleLogoutClick}>
-            <ListItemIcon className={classes.listItemIcon}>
+            <ListItemIcon className={classes.sidebarItem}>
               <FiLogOut size={22} color={theme.palette.primary.main} />
             </ListItemIcon>
-            <ListItemText classes={{ primary: classes.listItemText }} primary="sair" />
+            <ListItemText classes={{ primary: classes.sidebarItem }} primary="sair" />
           </ListItem>
         </>
       ) : (
-        <ListItem onClick={handleLoginClick} button>
-          <ListItemIcon className={classes.listItemIcon}>
-            <FiLogIn size={22} />
-          </ListItemIcon>
-          <ListItemText classes={{ primary: classes.listItemText }} primary="entrar" />
-        </ListItem>
+        <SidebarItem icon={<FiLogIn size={20} />} href="/login" label="entrar" />
       )}
-      <div className={classes.installApp}>
-        <Typography variant="body2">Quer ter um app como esse?</Typography>
-        <a href="https://www.sgrande.delivery">ir para sgrande.delivery</a>
+      <div className={classes.developer}>
+        <Typography color="inherit" variant="body2">
+          Quer ter um app como esse?
+        </Typography>
+        <a href="https://www.sgrande.delivery" target="blank">
+          ir para sgrande.delivery
+        </a>
       </div>
     </Drawer>
   );

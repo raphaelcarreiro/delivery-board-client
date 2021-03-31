@@ -46,7 +46,7 @@ ul {
   margin: 0;
 }
 
-@media (min-width: 500px) {
+@media (min-width: 450px) {
   /* width */
   ::-webkit-scrollbar {
     width: 8px;

@@ -3,19 +3,23 @@ import { makeStyles, Typography } from '@material-ui/core';
 import { Product } from 'src/types/product';
 
 const useStyles = makeStyles(theme => ({
-  price: {
-    fontWeight: 300,
-  },
   oldPrice: {
     textDecoration: 'line-through',
   },
-  specialPrice: {},
   productDescription: {
     display: 'flex',
     flexDirection: 'column',
     marginBottom: 15,
     [theme.breakpoints.down('sm')]: {
       marginTop: 15,
+    },
+  },
+  priceContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 5,
+    '& .special-price': {
+      marginLeft: 15,
     },
   },
 }));
@@ -31,20 +35,20 @@ const ProductDetailDescription: React.FC<ProductDetailDescriptionProps> = ({ pro
     <div className={classes.productDescription}>
       <Typography variant="h6">{product.name}</Typography>
       <Typography>{product.description}</Typography>
-      {product.promotion_activated && !!product.special_price && product.special_price > 0 ? (
-        <>
-          <Typography variant="body1" color="textSecondary" className={classes.oldPrice}>
-            {product.formattedPrice}
-          </Typography>
-          <Typography variant="h6" color="secondary" className={classes.specialPrice}>
-            {product.formattedSpecialPrice}
-          </Typography>
-        </>
-      ) : (
-        <Typography color="textSecondary" className={classes.price}>
-          {product.formattedPrice}
-        </Typography>
-      )}
+      <div className={classes.priceContainer}>
+        {product.promotion_activated && !!product.special_price && product.special_price > 0 ? (
+          <>
+            <Typography variant="body1" className={classes.oldPrice}>
+              {product.formattedPrice}
+            </Typography>
+            <Typography variant="h5" color="primary" className="special-price">
+              {product.formattedSpecialPrice}
+            </Typography>
+          </>
+        ) : (
+          product.price > 0 && <Typography variant="h5">{product.formattedPrice}</Typography>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,11 +1,17 @@
+import { format, parseISO } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { moneyFormat } from 'src/helpers/numberFormat';
+import { Promotion } from 'src/types/promotion';
+import { PromotionActions } from './types';
 
-export const INITIAL_STATE = null;
+export const INITIAL_STATE: Promotion[] | null = null;
 
-export default function promotions(state = INITIAL_STATE, action) {
+export default function promotions(state = INITIAL_STATE, action: PromotionActions): Promotion[] | null {
   switch (action.type) {
-    case '@promotion/SET_PROMOTIONS': {
+    case '@promotions/SET_PROMOTIONS': {
       const promotions = action.promotions.map(promotion => {
+        const date = promotion.valid_at ? parseISO(promotion.valid_at) : null;
+        promotion.formattedValidAt = date ? format(date, 'PP', { locale: ptBR }) : undefined;
         promotion.offered_products = promotion.offered_products.map(product => {
           product.additional = product.additional.map(additional => {
             additional.formattedPrice = moneyFormat(additional.price);

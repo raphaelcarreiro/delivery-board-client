@@ -53,6 +53,17 @@ export default class MyDocument extends Document<DocumentProps> {
     };
   }
 
+  setGoogleAnalyticsTag(gaId: string): { __html: string } {
+    return {
+      __html: `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '${gaId}');
+      `,
+    };
+  }
+
   render(): ReactElement {
     const { themeColor, gaId, pixelId, googleLogin, facebookLogin } = this.props;
     return (
@@ -61,7 +72,17 @@ export default class MyDocument extends Document<DocumentProps> {
           <link rel="icon" href="/images/favicon.png" />
           <link rel="manifest" href="/manifest.json" />
           {themeColor && <meta name="theme-color" content={themeColor} />}
-          {gaId && <script dangerouslySetInnerHTML={this.setGoogleTags()} />}
+
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=G-287R3N6K2F`} />
+          <script dangerouslySetInnerHTML={this.setGoogleAnalyticsTag('G-287R3N6K2F')}></script>
+
+          {gaId && (
+            <>
+              <script async src={`https://www.googletagmanager.com/gtag/js?id=${this.props.gaId}`} />
+              <script dangerouslySetInnerHTML={this.setGoogleAnalyticsTag(this.props.gaId)}></script>
+            </>
+          )}
+
           {pixelId && (
             <>
               <script dangerouslySetInnerHTML={this.setFacebookPixel()}></script>

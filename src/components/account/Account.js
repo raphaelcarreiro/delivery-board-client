@@ -168,7 +168,7 @@ export default function Account() {
   return (
     <>
       <CustomAppbar
-        title="Minha conta"
+        title="minha conta"
         actionComponent={<AccountActions tabIndex={tabIndex} handleValidation={handleValidation} saving={saving} />}
         TabComponent={<AccountTabsAppbar tabIndex={tabIndex} handleTabChange={handleTabChange} />}
       />

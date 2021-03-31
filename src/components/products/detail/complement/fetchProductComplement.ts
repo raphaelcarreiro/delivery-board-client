@@ -54,6 +54,8 @@ export async function fetchProductComplement(productId: number): Promise<Product
   return {
     ...product,
     ready,
+    formattedPrice: moneyFormat(product.price),
+    formattedSpecialPrice: moneyFormat(product.special_price),
     complement_categories: categories,
   };
 }

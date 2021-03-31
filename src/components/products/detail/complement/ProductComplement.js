@@ -21,7 +21,8 @@ function ProductComplement() {
 
   const formattedTotal = useMemo(() => {
     if (!product) return moneyFormat(0);
-    const _total = (complementsPrice + product.price) * amount;
+    const productPrice = product.promotion_activated && product.special_price ? product.special_price : product.price;
+    const _total = (complementsPrice + productPrice) * amount;
     return moneyFormat(_total);
   }, [amount, complementsPrice, product]);
 

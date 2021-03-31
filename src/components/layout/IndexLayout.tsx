@@ -96,7 +96,7 @@ const IndexLayout: React.FC = ({ children }) => {
       )}
       <div className={classes.containerWrapper}>
         <div className={isMobile || windowWidth < 960 ? classes.mobileContainer : classes.container}>{children}</div>
-        {!isMobile && windowWidth >= 960 && <Footer />}
+        <Footer />
       </div>
     </div>
   );
