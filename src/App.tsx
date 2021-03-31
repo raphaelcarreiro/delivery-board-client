@@ -249,7 +249,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
             <MessagingProvider>
               <GoogleLoginProvider>
                 <FacebookLoginProvider>
-                  <Sidebar handleOpenMenu={handleOpenMenu} isOpenMenu={isOpenMenu} />
+                  <Sidebar />
                   <InstallAppNotification />
                   <LayoutHandler>
                     <Component {...pageProps} />
