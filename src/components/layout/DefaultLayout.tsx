@@ -4,7 +4,7 @@ import Footer from './footer/Footer';
 import { makeStyles } from '@material-ui/core';
 import Cart from '../cart/Cart';
 import DialogFullscreen from 'src/components/dialog/DialogFullscreen';
-import { CART_WIDTH } from '../../constants/constants';
+import { CART_WIDTH, PAGE_MAX_WIDTH } from '../../constants/constants';
 import { useApp } from 'src/hooks/app';
 
 const useStyles = makeStyles(theme => ({
@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     minHeight: 'calc(100vh - 350px)',
-    maxWidth: '1366px',
+    maxWidth: PAGE_MAX_WIDTH,
     margin: '0 auto 100px',
     padding: '15px 0 0',
     [theme.breakpoints.down('lg')]: {

@@ -10,11 +10,12 @@ import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { useAuth } from 'src/hooks/auth';
 import { useApp } from 'src/hooks/app';
+import { PAGE_MAX_WIDTH } from 'src/constants/constants';
 
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
-    maxWidth: 1366,
+    maxWidth: PAGE_MAX_WIDTH,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',

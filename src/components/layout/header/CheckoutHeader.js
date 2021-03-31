@@ -5,11 +5,12 @@ import { useSelector } from 'react-redux';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { Typography } from '@material-ui/core';
 import { useApp } from 'src/hooks/app';
+import { PAGE_MAX_WIDTH } from 'src/constants/constants';
 
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
-    maxWidth: 1366,
+    maxWidth: PAGE_MAX_WIDTH,
     flex: '1 1',
     flexDirection: 'row',
     justifyContent: 'space-between',

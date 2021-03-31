@@ -2,6 +2,7 @@ import React from 'react';
 import CheckoutHeader from './header/CheckoutHeader';
 import { makeStyles } from '@material-ui/core/styles';
 import { useApp } from 'src/hooks/app';
+import { PAGE_MAX_WIDTH } from 'src/constants/constants';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -9,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     minHeight: 'calc(100vh - 250px)',
-    maxWidth: '1366px',
+    maxWidth: PAGE_MAX_WIDTH,
     margin: '0 auto 100px',
     padding: '20px 20px 0 20px',
     [theme.breakpoints.down('lg')]: {

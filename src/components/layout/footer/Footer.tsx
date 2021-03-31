@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { useSelector } from 'src/store/redux/selector';
 import Link from 'next/link';
+import { PAGE_MAX_WIDTH } from 'src/constants/constants';
 
 const useStyles = makeStyles(theme => ({
   footer: {
@@ -23,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 40,
   },
   container: {
-    maxWidth: 1366,
+    maxWidth: PAGE_MAX_WIDTH,
     width: '100%',
     margin: '0 auto',
   },
