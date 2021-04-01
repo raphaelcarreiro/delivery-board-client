@@ -10,6 +10,7 @@ import { useApp } from 'src/hooks/app';
 import { api } from 'src/services/api';
 import { addToCart, prepareProduct } from 'src/store/redux/modules/cart/actions';
 import { useSelector } from 'src/store/redux/selector';
+import { AnimatedBackground } from 'src/styles/animatedBackground';
 import { Product } from 'src/types/product';
 import OffersList from './OffersList';
 
@@ -27,6 +28,26 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('sm')]: {
       marginLeft: 15,
     },
+  },
+  loading: {
+    display: 'grid',
+    columnGap: '10px',
+    overflowX: 'hidden',
+    gridAutoFlow: 'column',
+    gridAutoColumns: 'min-content',
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: 15,
+    },
+  },
+  animated: {
+    height: 305,
+    width: 200,
+    [theme.breakpoints.down('sm')]: {
+      width: 'calc(100vw / 3 + 30px)',
+    },
+  },
+  categoryItem: {
+    marginRight: 10,
   },
 }));
 
@@ -80,7 +101,7 @@ const ActivePromotions: React.FC = () => {
     [dispatch]
   );
 
-  if (products.length === 0) return <Fragment />;
+  if (products.length === 0 && !loading) return <Fragment />;
 
   return (
     <ProductsProvider
@@ -104,7 +125,15 @@ const ActivePromotions: React.FC = () => {
           <Typography variant="h5">ofertas</Typography>
         </div>
 
-        <OffersList products={products} />
+        {loading ? (
+          <div className={classes.loading}>
+            {Array.from(Array(10).keys()).map(item => (
+              <AnimatedBackground className={classes.animated} key={item} />
+            ))}
+          </div>
+        ) : (
+          products.length > 0 && <OffersList products={products} />
+        )}
       </div>
     </ProductsProvider>
   );

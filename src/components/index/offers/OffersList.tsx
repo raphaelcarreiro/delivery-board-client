@@ -6,8 +6,7 @@ import OfferItem from './OfferItem';
 const useStyles = makeStyles(theme => ({
   ul: {
     display: 'grid',
-    overflowX: 'scroll',
-    overflowY: 'hidden',
+    overflowX: 'auto',
     gridAutoFlow: 'column',
     gridAutoColumns: 'min-content',
     columnGap: '10px',

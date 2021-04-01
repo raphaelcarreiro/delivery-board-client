@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     borderBottom: '1px solid #eee',
     padding: '0 15px',
-    backgroundColor: '#fff',
+    backgroundColor: '#f5f5f5',
     position: 'fixed',
     width: '100%',
     zIndex: 10,

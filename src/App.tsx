@@ -135,6 +135,10 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
       })
       .catch(() => {
         console.log('Erro ao carregar os dados do restaurante');
+      })
+      .finally(() => {
+        setInitialLoading(false);
+        document.body.classList.add('zoom');
       });
   }, [dispatch]);
 
@@ -147,10 +151,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
       })
       .catch(err => {
         console.log(err);
-      })
-      .finally(() => {
-        setInitialLoading(false);
-        document.body.classList.add('zoom');
       });
   }, [dispatch, restaurant]);
 

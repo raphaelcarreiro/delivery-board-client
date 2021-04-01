@@ -2,8 +2,19 @@ import { makeStyles, Typography } from '@material-ui/core';
 import { Schedule } from '@material-ui/icons';
 import React from 'react';
 import { Restaurant } from 'src/types/restaurant';
+import StatusIcon from '@material-ui/icons/FiberManualRecord';
+
+interface UseStyleProps {
+  isOpen: boolean;
+}
 
 const useStyles = makeStyles(theme => ({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    position: 'relative',
+  },
   info: {
     display: 'flex',
     justifyContent: 'space-around',
@@ -26,6 +37,68 @@ const useStyles = makeStyles(theme => ({
   infoItem: {
     fontWeight: 300,
   },
+  logo: (props: UseStyleProps) => ({
+    width: 120,
+    height: 120,
+    objectFit: 'cover',
+    borderRadius: '50%',
+    border: `3px solid ${props.isOpen ? theme.palette.success.main : theme.palette.error.main}`,
+    position: 'absolute',
+    top: -20,
+    zIndex: 20,
+    backgroundColor: '#fff',
+    [theme.breakpoints.down('sm')]: {
+      width: 100,
+      height: 100,
+    },
+  }),
+  restaurantIdentity: {
+    marginBottom: 10,
+    borderBottom: '1px solid #eee',
+    padding: '20px 10px 20px 50px',
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+      padding: '16px 15px 10px',
+      flexWrap: 'wrap',
+    },
+    '& .restaurant-name': {
+      fontWeight: 400,
+      fontSize: 26,
+    },
+  },
+  logoContainer: {
+    width: 135,
+    flexShrink: 0,
+    [theme.breakpoints.down('sm')]: {
+      width: 115,
+    },
+  },
+  description: {
+    maxWidth: 'calc(100vw - 150px)',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  detail: {
+    width: '100%',
+    [theme.breakpoints.down('sm')]: {
+      width: 'auto',
+      marginBottom: 10,
+    },
+  },
+  status: (props: UseStyleProps) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    borderRadius: 4,
+    '& svg': {
+      color: props.isOpen ? '#28a745' : '#dc3545',
+      marginRight: 5,
+    },
+    '& p': {
+      fontWeight: 600,
+    },
+  }),
 }));
 
 type InfoProps = {
@@ -33,23 +106,40 @@ type InfoProps = {
 };
 
 const Info: React.FC<InfoProps> = ({ restaurant }) => {
-  const classes = useStyles();
+  const classes = useStyles({ isOpen: restaurant.is_open });
 
   return (
-    <div className={classes.info}>
-      {restaurant.configs.delivery_time > 0 && (
-        <div className={classes.deliveryTime}>
-          <Schedule />
-          <Typography variant="h6" className={classes.infoItem}>
-            {restaurant.configs.delivery_time} minutos
-          </Typography>
+    <div className={classes.container}>
+      <div className={classes.restaurantIdentity}>
+        <div className={classes.logoContainer}>
+          <img className={classes.logo} src={restaurant.image.imageThumbUrl} alt={restaurant.name} />
         </div>
-      )}
-      {restaurant.configs.order_minimum_value > 0 && restaurant.configs.tax_mode !== 'order_value' && (
-        <Typography variant="h6" className={classes.infoItem}>
-          {restaurant.configs.formattedOrderMinimumValue} mínimo
-        </Typography>
-      )}
+        <div className={classes.detail}>
+          <Typography className={`restaurant-name ${classes.description}`}>{restaurant.name}</Typography>
+          <Typography className={classes.description} variant="body2" color="textSecondary">
+            {restaurant.description}
+          </Typography>
+          <div className={classes.status}>
+            <Typography variant="body1">{restaurant.is_open ? 'aberto' : 'fechado'}</Typography>
+            <StatusIcon />
+          </div>
+        </div>
+        <div className={classes.info}>
+          {restaurant.configs.delivery_time > 0 && (
+            <div className={classes.deliveryTime}>
+              <Schedule />
+              <Typography variant="h6" className={classes.infoItem}>
+                {restaurant.configs.delivery_time} minutos
+              </Typography>
+            </div>
+          )}
+          {restaurant.configs.order_minimum_value > 0 && restaurant.configs.tax_mode !== 'order_value' && (
+            <Typography variant="h6" className={classes.infoItem}>
+              {restaurant.configs.formattedOrderMinimumValue} mínimo
+            </Typography>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

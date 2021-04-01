@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Cover from './Cover';
 import Info from './Info';
 import { useSelector } from 'src/store/redux/selector';
-import WorkingTime from './WorkingTime';
 import Promotions from './promotions/ActivePromotions';
 import Offers from './offers/Offers';
 import Categories from './categories/Categories';
@@ -28,7 +27,7 @@ const useStyles = makeStyles({
   },
   installApp: {
     position: 'fixed',
-    bottom: -100,
+    bottom: 0,
     right: 0,
     left: 0,
     height: 60,
@@ -40,7 +39,6 @@ const useStyles = makeStyles({
     padding: '0 10px',
     color: '#fff',
     fontWeight: 'bold',
-    transition: 'bottom 0.3s ease 6s',
     '& span': {
       maxWidth: 160,
     },
@@ -68,7 +66,6 @@ const Index: React.FC = () => {
           <Categories />
           <Offers />
           <Promotions />
-          <WorkingTime restaurant={restaurant} />
         </div>
       </div>
     </>

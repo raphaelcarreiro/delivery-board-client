@@ -91,8 +91,11 @@ const Footer: React.FC = () => {
       <div className={classes.container}>
         <div className={classes.grid}>
           <div>
-            <Typography className={classes.restaurantName} variant="h5" color="inherit" gutterBottom>
+            <Typography className={classes.restaurantName} variant="h5" color="inherit">
               {restaurant?.name}
+            </Typography>
+            <Typography className={classes.restaurantName} variant="body2" color="inherit" gutterBottom>
+              {restaurant?.working_hours}
             </Typography>
             {restaurant?.play_store_link && (
               <div className={classes.stores}>

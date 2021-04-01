@@ -7,8 +7,7 @@ const useStyles = makeStyles(theme => ({
   ul: {
     display: 'grid',
     columnGap: '10px',
-    overflowY: 'hidden',
-    overflowX: 'scroll',
+    overflowX: 'auto',
     gridAutoFlow: 'column',
     gridAutoColumns: 'min-content',
     [theme.breakpoints.down('sm')]: {

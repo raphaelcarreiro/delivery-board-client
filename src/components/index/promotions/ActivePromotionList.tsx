@@ -6,13 +6,13 @@ import ActivePromotionItem from './ActivePromotionItem';
 const useStyles = makeStyles(theme => ({
   ul: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
     columnGap: '20px',
+    overflowX: 'auto',
+    overflowY: 'hidden',
+    gridAutoFlow: 'column',
+    gridAutoColumns: 'min-content',
     [theme.breakpoints.down('sm')]: {
       paddingLeft: 15,
-      overflow: 'auto',
-      gridAutoFlow: 'column',
-      gridAutoColumns: 'min-content',
     },
     '& li:last-child img': {
       marginRight: 15,

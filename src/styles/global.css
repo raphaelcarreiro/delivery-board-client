@@ -49,8 +49,14 @@ ul {
 @media (min-width: 450px) {
   /* width */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 5px;
+    height: 5px;
+  }
+
+  * {
+    -ms-overflow-style: 5px; /* IE and Edge */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: light;
   }
 
   /* Track */
@@ -66,6 +72,17 @@ ul {
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
     background: #c6c6c6;
+  }
+}
+
+@media (max-width: 499px) {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }
 

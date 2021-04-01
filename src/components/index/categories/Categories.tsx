@@ -3,6 +3,7 @@ import { makeStyles, Typography } from '@material-ui/core';
 import { Category } from 'src/types/category';
 import CategoryList from './CategoryList';
 import Link from 'next/link';
+import { AnimatedBackground } from 'src/styles/animatedBackground';
 import { api } from 'src/services/api';
 
 const useStyles = makeStyles(theme => ({
@@ -34,6 +35,26 @@ const useStyles = makeStyles(theme => ({
       },
     },
   },
+  loading: {
+    display: 'grid',
+    columnGap: '10px',
+    overflowX: 'hidden',
+    gridAutoFlow: 'column',
+    gridAutoColumns: 'min-content',
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: 15,
+    },
+  },
+  animated: {
+    height: 155,
+    width: 120,
+    [theme.breakpoints.down('sm')]: {
+      width: 'calc(100vw / 3 + 30px)',
+    },
+  },
+  categoryItem: {
+    marginRight: 10,
+  },
 }));
 
 const Categories: React.FC = () => {
@@ -54,7 +75,15 @@ const Categories: React.FC = () => {
           <a>ver todos</a>
         </Link>
       </div>
-      <CategoryList categories={categories} />
+      {categories.length > 0 ? (
+        <CategoryList categories={categories} />
+      ) : (
+        <div className={classes.loading}>
+          {Array.from(Array(10).keys()).map(item => (
+            <AnimatedBackground className={classes.animated} key={item} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

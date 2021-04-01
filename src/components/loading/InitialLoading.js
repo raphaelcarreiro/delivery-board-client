@@ -49,7 +49,7 @@ export default function InitialLoading() {
         </div>
       </div>
       <Typography className={classes.text} variant="h6" color="textSecondary">
-        SGrande Delivery
+        sgrande.delivery
       </Typography>
     </div>
   );
