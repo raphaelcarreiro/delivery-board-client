@@ -201,7 +201,7 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
         ))}
         <ListItem button className={classes.listItemNewAddress} onClick={handleDialogNewAddress}>
           <Typography variant="h6" color="primary">
-            Adicionar endereço
+            adicionar endereço
           </Typography>
         </ListItem>
       </List>

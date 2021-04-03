@@ -65,6 +65,31 @@ export default function CheckoutSuccess() {
     if (restaurant.configs.facebook_pixel_id) fbq('track', 'Purchase', { value: order.total, currency: 'BRL' });
   }, [restaurant.configs.facebook_pixel_id, order.total, handleCartVisibility]);
 
+  useEffect(() => {
+    gtag('event', 'purchase', {
+      affiliation: restaurant?.name,
+      coupon: order.coupon?.description,
+      currency: 'BRL',
+      items: order.products.map(product => ({
+        item_id: product.id,
+        item_name: product.name,
+        coupon: '',
+        discount: 0,
+        affiliation: restaurant?.name,
+        item_brand: '',
+        item_category: product.category.name,
+        item_variant: '',
+        price: product.price,
+        currency: 'BRL',
+        quantity: product.amount,
+      })),
+      transaction_id: order.id,
+      shipping: order.tax,
+      value: order.total,
+      tax: 0,
+    });
+  }, [order, restaurant]);
+
   return (
     <div className={classes.container}>
       <FiCheck color="#3ac359" size={66} />

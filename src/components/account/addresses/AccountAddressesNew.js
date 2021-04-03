@@ -230,7 +230,7 @@ function AccountAddressesNew({ handleAddressSubmit, handleModalState, saving }) 
 
   return (
     <CustomDialogForm
-      title="Adicionar endereço"
+      title="adicionar endereço"
       handleModalState={handleModalState}
       handleSubmit={handleValidation}
       closeOnSubmit

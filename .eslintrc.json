@@ -11,7 +11,8 @@
     "__SERVER__": "readonly",
     "FB": true,
     "gapi": true,
-    "fbq": true
+    "fbq": true,
+    "gtag": "readonly"
   },
   "parser": "babel-eslint",
   "parserOptions": {

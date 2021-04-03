@@ -163,7 +163,7 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
 
   return (
     <CustomDialogForm
-      title="Atualizar endereço"
+      title="atualizar endereço"
       handleModalState={handleModalState}
       handleSubmit={handleValidation}
       closeOnSubmit

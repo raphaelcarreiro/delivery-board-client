@@ -2,10 +2,6 @@ import { createHistory, setConfigs, updateTotal, setTax } from './actions';
 
 import checkPromotion from './promotion/checkPromotion';
 
-const saveCartAtLocalStorage = cart => {
-  localStorage.setItem(process.env.NEXT_PUBLIC_LOCALSTORAGE_CART, JSON.stringify(cart));
-};
-
 export const cartMiddlware = store => next => action => {
   // actions para atualizar total e salvar carrinho em local storage
   const actionsToSaveCart = [
@@ -90,12 +86,5 @@ export const cartMiddlware = store => next => action => {
    */
   if (actionsToSaveCart.includes(action.type)) {
     checkPromotion(store);
-  }
-
-  // salva o carrinho em local storage
-  if (actionsToSaveCart.includes(action.type)) {
-    const cart = store.getState().cart;
-    const { configs } = store.getState().restaurant;
-    if (configs.preserve_cart) saveCartAtLocalStorage(cart);
   }
 };

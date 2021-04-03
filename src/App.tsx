@@ -3,7 +3,6 @@ import { api } from './services/api';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { setRestaurant, setRestaurantIsOpen } from './store/redux/modules/restaurant/actions';
-import { setCart } from 'src/store/redux/modules/cart/actions';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import { createTheme } from 'src/helpers/createTheme';
 import { moneyFormat } from './helpers/numberFormat';
@@ -152,18 +151,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
       .catch(err => {
         console.log(err);
       });
-  }, [dispatch, restaurant]);
-
-  useEffect(() => {
-    if (!restaurant) return;
-
-    if (process.env.NEXT_PUBLIC_LOCALSTORAGE_CART) {
-      let cart = localStorage.getItem(process.env.NEXT_PUBLIC_LOCALSTORAGE_CART);
-      if (cart) {
-        cart = JSON.parse(cart);
-        dispatch(setCart(cart));
-      }
-    }
   }, [dispatch, restaurant]);
 
   useEffect(() => {

@@ -95,6 +95,25 @@ export default function cart(state = INITIAL_STATE, action) {
       },
     ];
 
+    gtag('event', 'add_to_cart', {
+      currency: 'BRL',
+      items: [
+        {
+          item_id: state.product.id,
+          item_name: state.product.name,
+          coupon: '',
+          discount: 0,
+          affiliation: state.product.name,
+          item_brand: '',
+          item_category: state.product.category.name,
+          item_variant: '',
+          price: state.product.price,
+          currency: 'BRL',
+        },
+      ],
+      value: state.product.final_price,
+    });
+
     return {
       ...state,
       product: null,

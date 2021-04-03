@@ -44,8 +44,10 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, error }) => {
         category && (
           <>
             <Head>
-              <title>{category.name}</title>
-              <meta name="description" content={category.name} />
+              <title>
+                {category.name} em {category.restaurant.name} - {category.restaurant.description}
+              </title>
+              <meta name="description" content={category.description} />
               <meta name="keywords" content={category.keywords} />
               <meta property="og:locale" content="pt_BR" />
               <meta property="og:url" content={`${category.restaurant.url}/menu/${category.url}`} />

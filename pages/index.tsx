@@ -13,7 +13,9 @@ const IndexPage: NextPage<IndexPageProps> = ({ restaurant }) => {
   return (
     <>
       <Head>
-        <title>{restaurant.name}</title>
+        <title>
+          {restaurant.name} - {restaurant.description}
+        </title>
         <meta name="keywords" content={restaurant.keywords} />
         <meta name="description" content={restaurant.description} />
         <meta property="og:locale" content="pt_BR" />

@@ -184,7 +184,7 @@ export default function Account() {
       {saving && <Loading background="rgba(250,250,250, 0.5)" />}
 
       <Grid container>
-        <PageHeader title="Minha conta" description="Gerencie os dados e endereços da sua conta" />
+        <PageHeader title="minha conta" description="gerencie os dados e endereços da sua conta" />
         {!isMobile && windowWidth >= 960 && (
           <Grid item xs={12} container>
             <AccountTabs tabIndex={tabIndex} handleTabChange={handleTabChange} />

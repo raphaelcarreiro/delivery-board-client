@@ -1,30 +1,41 @@
 import React from 'react';
 import Head from 'next/head';
-import { GetStaticProps } from 'next';
+import { GetStaticProps, NextPage } from 'next';
 import axios from 'axios';
 import { Category } from 'src/types/category';
 import { Typography } from '@material-ui/core';
 import Categories from 'src/components/category/Categories';
+import { Restaurant } from 'src/types/restaurant';
 
 interface MenuPageProps {
   categories: Category[];
+  restaurant?: Restaurant;
   error?: string;
 }
 
-const MenuPage: React.FC<MenuPageProps> = ({ categories, error }) => {
-  return (
-    <>
-      <Head>
-        <title>Cardápio</title>
-        <meta name="description" content="Cardápio do restaurante" />
-      </Head>
-      {error ? (
+const MenuPage: NextPage<MenuPageProps> = ({ categories, error, restaurant }) => {
+  if (error)
+    return (
+      <>
+        <Head>
+          <title>Erro ao carregar o cardápio</title>
+        </Head>
         <div>
           <Typography>{error}</Typography>
         </div>
-      ) : (
-        <Categories categories={categories} />
-      )}
+      </>
+    );
+
+  return (
+    <>
+      <Head>
+        <title>
+          {restaurant?.name} - Cardápio - {restaurant?.description}
+        </title>
+        <meta name="description" content={`${restaurant?.name} - cardápio - ${restaurant?.description}`} />
+      </Head>
+
+      <Categories categories={categories} />
     </>
   );
 };
@@ -40,12 +51,16 @@ export const getStaticProps: GetStaticProps<MenuPageProps> = async () => {
   });
 
   try {
-    const response = await instance.get('/categories');
+    const response = await instance.get<Category[]>('/categories');
     const categories = response.data;
+
+    const restaurantResponse = await instance.get<Restaurant>('/restaurants');
+    const restaurant = restaurantResponse.data;
 
     return {
       props: {
         categories,
+        restaurant,
       },
       revalidate: 300,
     };

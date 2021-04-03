@@ -99,6 +99,26 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
 
   function handleRemoveFromCart(productUid) {
     dispatch(removeFromCart(productUid));
+
+    const product = products.find(product => product.uid === productUid);
+
+    if (!product) return;
+
+    gtag('event', 'remove_from_cart', {
+      items: [
+        {
+          id: product.id,
+          name: product.name,
+          list_name: '',
+          brand: '',
+          category: product.category.name,
+          variant: '',
+          list_position: 1,
+          quantity: product.amount,
+          price: product.price,
+        },
+      ],
+    });
   }
 
   function showAdditionalOrIngredients(product) {

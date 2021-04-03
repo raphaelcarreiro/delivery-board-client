@@ -1,5 +1,5 @@
 import { Button, makeStyles, Typography } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CustomDialog, { DialogConsumer } from 'src/components/dialog/CustomDialog';
 import ImagePreview from 'src/components/image-preview/ImagePreview';
 import { useActivePromotions } from './hooks/useActivePromotions';
@@ -52,6 +52,17 @@ const PromotionDetail: React.FC = () => {
   const classes = useStyles();
   const [imagePreview, setImagePreview] = useState(false);
   const { selectedPromotion: promotion, setSelectedPromotion } = useActivePromotions();
+
+  useEffect(() => {
+    gtag('event', 'view_promotion', {
+      promotions: [
+        {
+          id: promotion?.id,
+          name: promotion?.name,
+        },
+      ],
+    });
+  }, [promotion]);
 
   return (
     <CustomDialog maxWidth="md" height="60vh" handleModalState={() => setSelectedPromotion(null)}>

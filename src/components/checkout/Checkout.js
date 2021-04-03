@@ -164,6 +164,23 @@ export default function Checkout() {
   };
 
   useEffect(() => {
+    gtag('event', 'begin_checkout', {
+      items: cart.products.map((product, index) => ({
+        id: product.id,
+        name: product.name,
+        list_name: '',
+        brand: '',
+        category: product.category.name,
+        variant: '',
+        list_position: index,
+        quantity: product.amount,
+        price: product.price,
+      })),
+      coupon: cart.coupon ? cart.coupon.name : '',
+    });
+  }, [cart]);
+
+  useEffect(() => {
     if (!restaurant) return;
 
     if (restaurant.payment_gateway === 'mercadopago') {
@@ -213,19 +230,19 @@ export default function Checkout() {
 
     dispatch(setTax(cart.tax));
     dispatch(setDiscount(cart.discount));
-    if (
-      cart.subtotal < restaurant.configs.order_minimum_value &&
-      restaurant.configs.tax_mode !== 'order_value' &&
-      currentStep.id !== 'STEP_SUCCESS' &&
-      cart.products.length > 0
-    ) {
+
+    if (cart.products.length === 0) return;
+
+    if (cart.subtotal < restaurant.configs.order_minimum_value && restaurant.configs.tax_mode !== 'order_value') {
       handleOpen(`Valor mínimo do pedido deve ser ${restaurant.configs.formattedOrderMinimumValue}`);
       router.push('/menu');
     }
-  }, [cart.total, restaurant]); // eslint-disable-line
+  }, [cart, dispatch, handleOpen, restaurant, router]);
 
   useEffect(() => {
     if (!restaurant) return;
+
+    if (cart.products.length === 0) return;
 
     if (
       cart.productsAmount < restaurant.configs.order_minimum_products_amount &&
