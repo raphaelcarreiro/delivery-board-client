@@ -12,7 +12,7 @@ import { checkProducts } from './checkPromotionProducts';
 import { checkValue } from './checkPromotionValue';
 
 export default function checkPromotion(store) {
-  const promotions = store.getState().promotion;
+  const promotions = store.getState().promotions;
   const cart = store.getState().cart;
   const order = store.getState().order;
 
