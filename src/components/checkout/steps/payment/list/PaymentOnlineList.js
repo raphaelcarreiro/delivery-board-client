@@ -94,7 +94,7 @@ export default function PaymentOnlineList({ paymentMethods, paymentMethodId }) {
   function handleClick(paymentMethod) {
     dispatch(setPaymentMethod(paymentMethod));
 
-    if (paymentMethod.kind === 'picpay') {
+    if (paymentMethod.kind === 'picpay' || paymentMethod.kind === 'pix') {
       if (!user.customer.cpf) {
         setDialogCpf(true);
         return;
@@ -141,11 +141,9 @@ export default function PaymentOnlineList({ paymentMethods, paymentMethodId }) {
               >
                 <div className={classes.iconContainer}>
                   <div className={classes.icon}>
-                    {paymentMethod.kind === 'card' ? (
-                      <CreditCardIcon color="primary" />
-                    ) : (
-                      paymentMethod.kind === 'picpay' && <SmartphoneIcon color="primary" />
-                    )}
+                    {paymentMethod.kind === 'card' && <CreditCardIcon color="primary" />}
+                    {paymentMethod.kind === 'picpay' && <SmartphoneIcon color="primary" />}
+                    {paymentMethod.kind === 'pix' && <SmartphoneIcon color="primary" />}
                   </div>
                 </div>
                 <div className={classes.method}>

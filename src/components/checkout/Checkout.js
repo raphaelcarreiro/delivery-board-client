@@ -302,7 +302,9 @@ export default function Checkout() {
         handleStepNext();
       })
       .catch(err => {
-        setError(err.response ? err.response.data.error : 'Não foi possível salvar o pedido');
+        setError(
+          err.response && err.response.status === 400 ? err.response.data.error : 'Não foi possível salvar o pedido'
+        );
       })
       .finally(() => {
         setSaving(false);
