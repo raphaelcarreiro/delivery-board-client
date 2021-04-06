@@ -62,8 +62,8 @@ const Categories: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    api.get('/categories').then(response => {
-      setCategories(response.data);
+    api.get<Category[]>('/categories').then(response => {
+      setCategories(response.data.filter(category => category.activated));
     });
   }, []);
 
