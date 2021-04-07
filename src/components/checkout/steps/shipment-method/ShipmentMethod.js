@@ -1,10 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { ListItem, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { CheckoutContext } from '../../Checkout';
 import { setShipmentMethod, setSchedule } from 'src/store/redux/modules/order/actions';
 import ShipmentCollectSchedule from './ShipmentCollectSchedule';
+import { useCheckout } from '../hooks/useCheckout';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
 export default function ShipmentMethod() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const checkout = useContext(CheckoutContext);
+  const checkout = useCheckout();
   const restaurant = useSelector(state => state.restaurant);
   const order = useSelector(state => state.order);
   const [dialogCollectSchedule, setDialogSchecule] = useState(false);

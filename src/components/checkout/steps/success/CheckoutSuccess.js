@@ -1,5 +1,4 @@
-import React, { useContext, useEffect } from 'react';
-import { CheckoutContext } from 'src/components/checkout/Checkout';
+import React, { useEffect } from 'react';
 import { Typography, Button } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { formatId } from 'src/helpers/formatOrderId';
@@ -11,6 +10,8 @@ import { firebaseMessagingIsSupported as isSupported } from 'src/config/Firebase
 import { FiCheck } from 'react-icons/fi';
 import { useFirebase } from 'src/hooks/firebase';
 import { useApp } from 'src/hooks/app';
+import { useCheckout } from '../hooks/useCheckout';
+import CheckoutSucessPix from './CheckoutSuccessPix';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -52,7 +53,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function CheckoutSuccess() {
-  const checkout = useContext(CheckoutContext);
+  const checkout = useCheckout();
   const user = useSelector(state => state.user);
   const order = checkout.createdOrder;
   const classes = useStyles();
@@ -99,6 +100,7 @@ export default function CheckoutSuccess() {
       <Typography>
         O número do pedido é <strong>{formatId(order.id)}</strong>
       </Typography>
+      {checkout.createdOrder?.pix_payment && <CheckoutSucessPix order={checkout.createdOrder} />}
       <div className={classes.actions}>
         <Link
           className={classes.followOrder}

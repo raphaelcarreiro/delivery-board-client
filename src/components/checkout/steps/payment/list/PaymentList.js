@@ -1,15 +1,15 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { List, ListItem, Typography } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import { makeStyles, fade } from '@material-ui/core/styles';
-import { CheckoutContext } from 'src/components/checkout/Checkout';
 import PropTypes from 'prop-types';
 import PaymentChange from 'src/components/checkout/steps/payment/PaymentChange';
 import { useSelector, useDispatch } from 'react-redux';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { setPaymentMethod } from 'src/store/redux/modules/order/actions';
+import { useCheckout } from '../../hooks/useCheckout';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -82,7 +82,7 @@ PaymentList.propTypes = {
 
 export default function PaymentList({ paymentMethods, paymentMethodId }) {
   const classes = useStyles();
-  const checkout = useContext(CheckoutContext);
+  const checkout = useCheckout();
   const [dialogChange, setDialogChange] = useState(false);
   const order = useSelector(state => state.order);
   const dispatch = useDispatch();

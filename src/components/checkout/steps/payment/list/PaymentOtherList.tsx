@@ -1,11 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { List, ListItem, Typography } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { makeStyles, fade } from '@material-ui/core/styles';
-import { CheckoutContext } from 'src/components/checkout/Checkout';
 import PaymentCpf from '../PaymentCpf';
 import { useSelector } from 'src/store/redux/selector';
 import PicPayIcon from 'src/components/icons/PicPayIcon';
+import { useCheckout } from '../../hooks/useCheckout';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -83,7 +83,7 @@ const PaymentOtherList: React.FC<PaymentOtherListProps> = ({
   paymentMethodId,
 }) => {
   const classes = useStyles();
-  const checkout = useContext(CheckoutContext);
+  const checkout = useCheckout();
   const [dialogCpf, setDialogCpf] = useState(false);
   const user = useSelector(state => state.user);
 

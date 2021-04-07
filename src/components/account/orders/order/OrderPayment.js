@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Link } from '@material-ui/core';
+import { Typography, Link, Button } from '@material-ui/core';
+import CheckoutSucessPix from 'src/components/checkout/steps/success/CheckoutSuccessPix';
 
 OrderPayment.propTypes = {
   order: PropTypes.object.isRequired,
@@ -33,6 +34,7 @@ export default function OrderPayment({ order }) {
             </Link>
           </div>
         )}
+        {order.pix_payment && order.status === 'p' && <CheckoutSucessPix order={order} />}
       </div>
     </>
   );

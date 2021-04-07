@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ShipmentAddressesList from './ShipmentAddressesList';
 import PropTypes from 'prop-types';
 import Loading from 'src/components/loading/Loading';
@@ -10,9 +10,9 @@ import { setShipmentAddress } from 'src/store/redux/modules/order/actions';
 import { api } from 'src/services/api';
 import DialogDelete from 'src/components/dialog/delete/DialogDelete';
 import { Grid } from '@material-ui/core';
-import { CheckoutContext } from '../../Checkout';
 import { useMessaging } from 'src/hooks/messaging';
 import { useApp } from 'src/hooks/app';
+import { useCheckout } from '../hooks/useCheckout';
 
 Shipment.propTypes = {
   addresses: PropTypes.array.isRequired,
@@ -23,7 +23,7 @@ export default function Shipment({ addresses }) {
   const [saving, setSaving] = useState(false);
   const [savingAddress, setSavingAddress] = useState(false);
   const messaging = useMessaging();
-  const checkout = useContext(CheckoutContext);
+  const checkout = useCheckout();
   const [selectedAddress, setSelectedAddress] = useState(false);
   const [dialogNewAddress, setDialogNewAddress] = useState(false);
   const [dialogEditAddress, setDialogEditAddress] = useState(false);

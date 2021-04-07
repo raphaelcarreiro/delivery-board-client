@@ -1,17 +1,17 @@
-import React, { useContext, useRef, useEffect, useState, FormEvent } from 'react';
+import React, { useRef, useEffect, useState, FormEvent } from 'react';
 import { Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { changeCreditCard, setCard } from 'src/store/redux/modules/order/actions';
 import CardExpirationDate from 'src/components/masked-input/CardExperitionDate';
 import CpfInput from 'src/components/masked-input/CpfInput';
-import { CheckoutContext } from '../../../Checkout';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import PaymentCardActions from './PaymentCardActions';
 import { useCardValidation } from '../validation/useCardValidation';
 import { useSelector } from 'src/store/redux/selector';
 import { format } from 'date-fns';
 import { useMessaging } from 'src/hooks/messaging';
+import { useCheckout } from '../../hooks/useCheckout';
 
 declare global {
   interface Window {
@@ -42,7 +42,7 @@ const PaymentMercadoPago: React.FC<PaymentMercadoPagoProps> = ({ onExited }) => 
   const classes = useStyles();
   const order = useSelector(state => state.order);
   const dispatch = useDispatch();
-  const checkout = useContext(CheckoutContext);
+  const checkout = useCheckout();
   const [name, setName] = useState(order.creditCard.name);
   const [number, setNumber] = useState(order.creditCard.number);
   const [cvv, setCvv] = useState(order.creditCard.cvv);

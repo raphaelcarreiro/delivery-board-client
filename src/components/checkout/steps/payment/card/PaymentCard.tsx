@@ -1,17 +1,15 @@
-import React, { useContext, useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch } from 'react-redux';
 import { setCard } from 'src/store/redux/modules/order/actions';
-import CardSecurityCode from 'src/components/masked-input/CardSecurityCode';
 import CardExpirationDate from 'src/components/masked-input/CardExperitionDate';
 import CpfInput from 'src/components/masked-input/CpfInput';
-import CardNumber from 'src/components/masked-input/CardNumber';
-import { CheckoutContext } from '../../../Checkout';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import PaymentCardActions from './PaymentCardActions';
 import { useCardValidation } from '../validation/useCardValidation';
 import { useSelector } from 'src/store/redux/selector';
+import { useCheckout } from '../../hooks/useCheckout';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -36,7 +34,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({ onExited }) => {
   const classes = useStyles();
   const order = useSelector(state => state.order);
   const dispatch = useDispatch();
-  const checkout = useContext(CheckoutContext);
+  const checkout = useCheckout();
   const [name, setName] = useState(order.creditCard.name);
   const [number, setNumber] = useState(order.creditCard.number);
   const [cvv, setCvv] = useState(order.creditCard.cvv);

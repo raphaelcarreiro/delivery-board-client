@@ -34,6 +34,7 @@ import { useMessaging } from 'src/hooks/messaging';
 import { useAuth } from 'src/hooks/auth';
 import { useApp } from 'src/hooks/app';
 import CheckoutError from './steps/error/CheckoutError';
+import { CheckoutProvider } from './steps/hooks/useCheckout';
 
 const cartWidth = 450;
 
@@ -111,21 +112,6 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
   },
 }));
-
-export const CheckoutContext = React.createContext({
-  handleStepNext: () => {},
-  handleStepPrior: () => {},
-  handleSubmitOrder: () => {},
-  handleSetStep: () => {},
-  handleSetStepById: () => {},
-  setIsCardValid: state => {},
-  createdOrder: null,
-  step: null,
-  cardValidation: {},
-  saving: false,
-  isCardValid: false,
-  mercadoPagoPublicKey: '',
-});
 
 export default function Checkout() {
   const { handleOpen } = useMessaging();
@@ -311,7 +297,7 @@ export default function Checkout() {
       });
   }
 
-  async function handleStepNext() {
+  function handleStepNext() {
     if (currentStep.id === 'STEP_SHIPMENT') {
       if (!order.shipment.id) {
         handleOpen('Informe o endereço', null, { marginBottom: 47 });
@@ -341,7 +327,7 @@ export default function Checkout() {
   }
 
   return (
-    <>
+    <CheckoutProvider value={checkoutContextValue}>
       {!isMobile && windowWidth >= 960 ? (
         <div className={classes.cart}>
           <Cart />
@@ -365,57 +351,53 @@ export default function Checkout() {
       {auth.isLoading ? (
         <InsideLoading />
       ) : currentStep.id === 'STEP_SUCCESS' ? (
-        <CheckoutContext.Provider value={checkoutContextValue}>
-          <CheckoutSuccess />
-        </CheckoutContext.Provider>
+        <CheckoutSuccess />
       ) : error ? (
         <CheckoutError handleReset={() => setError('')} errorMessage={error} />
       ) : cart.products.length === 0 ? (
         <CheckoutEmptyCart />
       ) : (
         <Grid container direction="column" justify="space-between" className={classes.container}>
-          <CheckoutContext.Provider value={checkoutContextValue}>
-            <div className={classes.content}>
-              <Grid item xs={12} className={classes.title}>
-                <Typography variant="h6" className={classes.stepDescription}>
-                  <span className={classes.step}>{currentStep.order}</span>
-                  {currentStep.description}
-                </Typography>
-              </Grid>
-              {currentStep.id === 'STEP_SHIPMENT_METHOD' ? (
-                <ShipmentMethod />
-              ) : currentStep.id === 'STEP_SHIPMENT' ? (
-                <Shipment addresses={user.customer ? user.customer.addresses : []} />
-              ) : currentStep.id === 'STEP_PAYMENT' ? (
-                <Payment
-                  paymentMethods={paymentMethods}
-                  paymentMethodId={order.paymentMethod && order.paymentMethod.id}
-                  isCardValid={isCardValid}
-                  setIsCardValid={setIsCardValid}
-                />
-              ) : (
-                currentStep.id === 'STEP_CONFIRM' && <Confirm />
-              )}
-            </div>
-            {currentStep.id !== 'STEP_SHIPMENT_METHOD' && (
-              <>
-                <CheckoutButtons
-                  handleStepNext={handleStepNext}
-                  handleStepPrior={handleStepPrior}
-                  currentStep={currentStep}
-                  quantitySteps={steps.length}
-                />
-                <CheckoutMobileButtons
-                  handleStepNext={handleStepNext}
-                  handleStepPrior={handleStepPrior}
-                  currentStep={currentStep}
-                  quantitySteps={steps.length}
-                />
-              </>
+          <div className={classes.content}>
+            <Grid item xs={12} className={classes.title}>
+              <Typography variant="h6" className={classes.stepDescription}>
+                <span className={classes.step}>{currentStep.order}</span>
+                {currentStep.description}
+              </Typography>
+            </Grid>
+            {currentStep.id === 'STEP_SHIPMENT_METHOD' ? (
+              <ShipmentMethod />
+            ) : currentStep.id === 'STEP_SHIPMENT' ? (
+              <Shipment addresses={user.customer ? user.customer.addresses : []} />
+            ) : currentStep.id === 'STEP_PAYMENT' ? (
+              <Payment
+                paymentMethods={paymentMethods}
+                paymentMethodId={order.paymentMethod && order.paymentMethod.id}
+                isCardValid={isCardValid}
+                setIsCardValid={setIsCardValid}
+              />
+            ) : (
+              currentStep.id === 'STEP_CONFIRM' && <Confirm />
             )}
-          </CheckoutContext.Provider>
+          </div>
+          {currentStep.id !== 'STEP_SHIPMENT_METHOD' && (
+            <>
+              <CheckoutButtons
+                handleStepNext={handleStepNext}
+                handleStepPrior={handleStepPrior}
+                currentStep={currentStep}
+                quantitySteps={steps.length}
+              />
+              <CheckoutMobileButtons
+                handleStepNext={handleStepNext}
+                handleStepPrior={handleStepPrior}
+                currentStep={currentStep}
+                quantitySteps={steps.length}
+              />
+            </>
+          )}
         </Grid>
       )}
-    </>
+    </CheckoutProvider>
   );
 }

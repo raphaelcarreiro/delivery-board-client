@@ -1,16 +1,16 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { List, ListItem, Typography } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import SmartphoneIcon from '@material-ui/icons/Smartphone';
 import { makeStyles, fade } from '@material-ui/core/styles';
-import { CheckoutContext } from 'src/components/checkout/Checkout';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { setPaymentMethod } from 'src/store/redux/modules/order/actions';
 import PaymentMercadoPago from '../card/PaymentMercadoPago';
 import PaymentCpf from '../PaymentCpf';
 import PaymentCard from '../card/PaymentCard';
+import { useCheckout } from '../../hooks/useCheckout';
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -83,7 +83,7 @@ PaymentOnlineList.propTypes = {
 
 export default function PaymentOnlineList({ paymentMethods, paymentMethodId }) {
   const classes = useStyles();
-  const checkout = useContext(CheckoutContext);
+  const checkout = useCheckout();
   const [dialogCpf, setDialogCpf] = useState(false);
   const [dialogCard, setDialogCard] = useState(false);
   const user = useSelector(state => state.user);

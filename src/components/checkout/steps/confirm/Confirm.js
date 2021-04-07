@@ -1,9 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { moneyFormat } from 'src/helpers/numberFormat';
-import { CheckoutContext } from 'src/components/checkout/Checkout';
+import { useCheckout } from '../hooks/useCheckout';
 
 const useStyles = makeStyles(theme => ({
   data: {
@@ -72,7 +72,7 @@ export default function Confirm() {
   const order = useSelector(state => state.order);
   const cart = useSelector(state => state.cart);
   const restaurant = useSelector(state => state.restaurant);
-  const checkout = useContext(CheckoutContext);
+  const checkout = useCheckout();
   const mainRestaurantAddress = useSelector(state => state.restaurant).addresses.find(address => address.is_main);
   const classes = useStyles();
 

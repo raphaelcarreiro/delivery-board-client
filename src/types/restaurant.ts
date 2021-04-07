@@ -1,12 +1,15 @@
 import { Image } from './image';
 
+export type RestaurantConfigTaxMode = 'district' | 'distance' | 'no_tax' | 'order_value' | 'products_amount';
+export type RestaurantConfigPizzaCalculate = 'higher_value' | 'average_value';
+
 export interface RestaurantConfig {
   id: number;
   restaurant_id: number;
-  pizza_calculate: 'higher_value' | 'average_value';
+  pizza_calculate: RestaurantConfigPizzaCalculate;
   require_login: boolean;
   customer_collect: boolean;
-  tax_mode: 'district' | 'distance' | 'no_tax' | 'order_value';
+  tax_mode: RestaurantConfigTaxMode;
   tax_value: number;
   formattedTax: string;
   delivery_time: number;
