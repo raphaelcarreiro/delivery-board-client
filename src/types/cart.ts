@@ -41,6 +41,5 @@ export interface Cart {
   formattedTax: string;
   formattedSubtotal: string;
   formattedDiscount: string;
-  formattedTax: string;
   formattedTotal: string;
 }
