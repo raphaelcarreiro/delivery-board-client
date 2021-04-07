@@ -2,7 +2,6 @@ import { Button, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { useMessaging } from 'src/hooks/messaging';
 import { CreatedOrder } from 'src/types/order';
-import { useCheckout } from '../hooks/useCheckout';
 
 const useStyles = makeStyles({
   qrCodeImage: {

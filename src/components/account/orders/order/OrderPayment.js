@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Link, Button } from '@material-ui/core';
+import { Typography, Link } from '@material-ui/core';
 import CheckoutSucessPix from 'src/components/checkout/steps/success/CheckoutSuccessPix';
 
 OrderPayment.propTypes = {
