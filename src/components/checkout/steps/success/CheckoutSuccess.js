@@ -20,6 +20,7 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 100,
   },
   actions: {
     marginTop: 20,
@@ -47,8 +48,9 @@ const useStyles = makeStyles(theme => ({
   playStoreImg: {
     width: 150,
   },
-  followOrder: {
-    marginBottom: 20,
+  linkFollowOrder: {
+    fontSize: 18,
+    marginTop: 30,
   },
 }));
 
@@ -100,16 +102,17 @@ export default function CheckoutSuccess() {
       <Typography>
         O número do pedido é <strong>{formatId(order.id)}</strong>
       </Typography>
+
+      <Link
+        className={classes.linkFollowOrder}
+        href="account/orders/[id]"
+        as={`account/orders/${order.encrypted_id}`}
+        color="primary"
+      >
+        acompanhar pedido
+      </Link>
       {checkout.createdOrder?.pix_payment && <CheckoutSucessPix order={checkout.createdOrder} />}
       <div className={classes.actions}>
-        <Link
-          className={classes.followOrder}
-          href="account/orders/[id]"
-          as={`account/orders/${order.encrypted_id}`}
-          color="primary"
-        >
-          Acompanhar pedido
-        </Link>
         {restaurant && restaurant.play_store_link && isMobile && (
           <div className={classes.contentAction}>
             <Typography variant="body2" color="textSecondary" align="center">

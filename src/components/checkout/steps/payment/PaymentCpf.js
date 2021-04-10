@@ -130,6 +130,9 @@ export default function PaymentCpf({ onExited }) {
                 InputProps={{
                   inputComponent: CpfInput,
                 }}
+                inputProps={{
+                  inputMode: 'numeric',
+                }}
               />
               <Button
                 type="submit"

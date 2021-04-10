@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 export default function CpfInput({ inputRef, ...other }) {
   return (
     <MaskedInput
+      inputMode="numeric"
       {...other}
       ref={ref => {
         inputRef(ref ? ref.inputElement : null);

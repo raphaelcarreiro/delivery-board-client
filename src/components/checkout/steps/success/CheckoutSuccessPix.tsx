@@ -1,6 +1,5 @@
 import { Button, makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
-import { useMessaging } from 'src/hooks/messaging';
+import React, { useState } from 'react';
 import { CreatedOrder } from 'src/types/order';
 
 const useStyles = makeStyles({
@@ -17,6 +16,9 @@ const useStyles = makeStyles({
   copyQrCodeContainer: {
     marginTop: 20,
   },
+  button: {
+    width: 160,
+  },
 });
 
 interface CheckoutSuccessPixProps {
@@ -25,14 +27,15 @@ interface CheckoutSuccessPixProps {
 
 const CheckoutSucessPix: React.FC<CheckoutSuccessPixProps> = ({ order }) => {
   const classes = useStyles();
-  const messaging = useMessaging();
+  const [buttonText, setButtonText] = useState('copiar código qr');
 
   function handleCopyToClipboard(value?: string) {
     if (!value) return;
 
     navigator.clipboard.writeText(value).then(
       () => {
-        messaging.handleOpen('Código QR copiado!');
+        setButtonText('Copiado!');
+        setTimeout(() => setButtonText('copiar código qr'), 2000);
       },
       err => console.error(err)
     );
@@ -40,7 +43,19 @@ const CheckoutSucessPix: React.FC<CheckoutSuccessPixProps> = ({ order }) => {
 
   return (
     <div className={classes.container}>
-      <Typography>Código QR para pagamento com PIX</Typography>
+      <Typography>Código QR para pagamento com Pix</Typography>
+
+      <div className={classes.copyQrCodeContainer}>
+        <Button
+          onClick={() => handleCopyToClipboard(order?.pix_payment?.qr_code)}
+          variant="contained"
+          color="primary"
+          size="small"
+          className={classes.button}
+        >
+          {buttonText}
+        </Button>
+      </div>
 
       <img
         className={classes.qrCodeImage}
@@ -48,18 +63,11 @@ const CheckoutSucessPix: React.FC<CheckoutSuccessPixProps> = ({ order }) => {
         alt="qrcode para pagamento pedido"
       />
       <Typography align="center" variant="body2" color="textSecondary" gutterBottom>
-        Se você estiver em um PC pode escanear o código QR. Caso contrário copie o código QR para realizar o pagamento.
+        Este código tem válidade de 10min
       </Typography>
-      <div className={classes.copyQrCodeContainer}>
-        <Button
-          onClick={() => handleCopyToClipboard(order?.pix_payment?.qr_code)}
-          variant="contained"
-          color="primary"
-          size="small"
-        >
-          Copiar código QR
-        </Button>
-      </div>
+      <Typography align="center" variant="body2" color="textSecondary" gutterBottom>
+        Você deve procurar a opção de colar código QR no app onde será realizado o pagamento.
+      </Typography>
     </div>
   );
 };
