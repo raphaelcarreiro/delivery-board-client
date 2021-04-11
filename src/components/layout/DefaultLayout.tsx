@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     overflowY: 'auto',
     position: 'relative',
     marginTop: 80,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       marginTop: 56,
     },
   },

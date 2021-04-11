@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { HTMLAttributes } from 'react';
 import { makeStyles, Typography } from '@material-ui/core';
 import { Category } from 'src/types/category';
 import Link from 'next/link';
@@ -23,17 +23,17 @@ const useStyles = makeStyles({
   },
 });
 
-interface CategoryItemProps {
+interface CategoryItemProps extends HTMLAttributes<HTMLLIElement> {
   category: Category;
 }
 
-const CategoryItem: React.FC<CategoryItemProps> = ({ category }) => {
+const CategoryItem: React.FC<CategoryItemProps> = ({ category, ...rest }) => {
   const classes = useStyles();
 
   return (
     <Link href={`/menu/${category.url}`}>
       <a>
-        <li className={classes.li} key={category.id}>
+        <li className={classes.li} key={category.id} {...rest}>
           <img
             className={classes.image}
             src={category.image.imageThumbUrl ? category.image.imageThumbUrl : category.image.imageUrl}

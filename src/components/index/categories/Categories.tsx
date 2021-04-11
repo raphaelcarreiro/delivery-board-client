@@ -5,6 +5,9 @@ import CategoryList from './CategoryList';
 import Link from 'next/link';
 import { AnimatedBackground } from 'src/styles/animatedBackground';
 import { api } from 'src/services/api';
+import Slider from 'src/components/slider/Slider';
+import { useApp } from 'src/hooks/app';
+import CategoryItem from './CategoryItem';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -14,6 +17,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     marginBottom: 20,
     marginTop: 20,
+    position: 'relative',
   },
   header: {
     marginBottom: 15,
@@ -60,6 +64,7 @@ const useStyles = makeStyles(theme => ({
 const Categories: React.FC = () => {
   const classes = useStyles();
   const [categories, setCategories] = useState<Category[]>([]);
+  const { isMobile } = useApp();
 
   useEffect(() => {
     api.get<Category[]>('/categories').then(response => {
@@ -76,7 +81,17 @@ const Categories: React.FC = () => {
         </Link>
       </div>
       {categories.length > 0 ? (
-        <CategoryList categories={categories} />
+        <>
+          {isMobile ? (
+            <CategoryList categories={categories} />
+          ) : (
+            <Slider amount={categories.length} itemWidth={130}>
+              {categories.map(category => (
+                <CategoryItem className={classes.categoryItem} key={category.id} category={category} />
+              ))}
+            </Slider>
+          )}
+        </>
       ) : (
         <div className={classes.loading}>
           {Array.from(Array(10).keys()).map(item => (

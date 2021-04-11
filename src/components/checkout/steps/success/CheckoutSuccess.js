@@ -109,7 +109,7 @@ export default function CheckoutSuccess() {
         as={`account/orders/${order.encrypted_id}`}
         color="primary"
       >
-        acompanhar pedido
+        <a className={classes.linkFollowOrder}>acompanhar pedido</a>
       </Link>
       {checkout.createdOrder?.pix_payment && <CheckoutSucessPix order={checkout.createdOrder} />}
       <div className={classes.actions}>

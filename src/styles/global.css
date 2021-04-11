@@ -1,3 +1,7 @@
+* {
+  outline: 0;
+}
+
 html,
 body,
 #__next {
@@ -39,11 +43,16 @@ form {
   width: 100%;
 }
 
-ul {
+ul,
+ol {
   width: 100%;
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+li {
+  list-style: none;
 }
 
 @media (min-width: 450px) {
