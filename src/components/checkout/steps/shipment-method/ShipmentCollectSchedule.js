@@ -114,8 +114,10 @@ export default function ShipmentCollectSchedule({ onExited }) {
                   <Typography>Escolha a hora em que deseja retirar seu pedido</Typography>
                   <CustomTimerPicker
                     value={scheduledAt}
-                    handleChange={date => setScheduledAt(date)}
+                    onChange={date => setScheduledAt(date)}
                     label="Horário da retirada"
+                    hideBackdrop
+                    autoOk
                     helperText={`Agende um horário para depois das ${format(
                       addMinutes(currentTime, restaurant.configs.delivery_time),
                       'HH:mm:ss',
