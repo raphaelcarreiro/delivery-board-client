@@ -10,7 +10,7 @@ type LoginEmailStepProps = {
 const LoginEmailStep: React.FC<LoginEmailStepProps> = ({ email, setEmail, emailError }) => {
   return (
     <div>
-      <Typography align="center">Informe seu e-mail ou telefone.</Typography>
+      <Typography align="center">informe seu e-mail ou telefone.</Typography>
       <TextField
         variant="outlined"
         label="E-mail ou telefone"

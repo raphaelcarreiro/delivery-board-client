@@ -204,7 +204,7 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ emailParam, phoneParam }) => {
                 </div>
               )}
               <Typography align="center" variant="h6">
-                Login
+                login
               </Typography>
               {step === 'email' ? (
                 <LoginEmailStep email={email} setEmail={setEmail} emailError={error.email} />
@@ -226,7 +226,7 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ emailParam, phoneParam }) => {
               </Button>
               {step === 'email' && (
                 <CustomLink href="/login" color="primary">
-                  Voltar
+                  voltar
                 </CustomLink>
               )}
               {step === 'password' && (
@@ -235,7 +235,7 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ emailParam, phoneParam }) => {
                   href={{ pathname: '/password-request', query: { user: email } }}
                   className={classes.forgot}
                 >
-                  Esqueci minha senha
+                  esqueci minha senha
                 </CustomLink>
               )}
             </div>

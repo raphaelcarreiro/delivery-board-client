@@ -10,6 +10,7 @@ import { useMessaging } from 'src/hooks/messaging';
 import { useAuth } from 'src/hooks/auth';
 import Loading from '../loading/Loading';
 import { useApp } from 'src/hooks/app';
+import Link from 'next/link';
 
 const useStyles = makeStyles({
   container: {
@@ -46,12 +47,12 @@ const useStyles = makeStyles({
     width: '100%',
   },
   btnCreateAccount: {
-    marginTop: 20,
+    marginTop: 30,
     width: '100%',
     borderTop: '1px solid #ddd',
     paddingTop: 20,
     '& button': {
-      marginBottom: 20,
+      marginBottom: 30,
     },
   },
   startIcon: {
@@ -61,6 +62,9 @@ const useStyles = makeStyles({
     width: 70,
   },
   logoContainer: {
+    marginBottom: 20,
+  },
+  title: {
     marginBottom: 20,
   },
 });
@@ -123,10 +127,6 @@ const Login: React.FC = () => {
 
   function handleCreateAccountClick() {
     router.push('/register');
-  }
-
-  function handleBack() {
-    router.push('/menu');
   }
 
   async function handleGoogleLogin() {
@@ -193,10 +193,16 @@ const Login: React.FC = () => {
       <div className={classes.content}>
         {restaurant && restaurant.image && (
           <div className={classes.logoContainer}>
-            <img src={restaurant.image.imageUrl} className={classes.logo} />
+            <Link href="/">
+              <a>
+                <img src={restaurant.image.imageUrl} className={classes.logo} />
+              </a>
+            </Link>
           </div>
         )}
-        <Typography variant="h5">Como deseja continuar?</Typography>
+        <Typography className={classes.title} variant="h5">
+          como deseja continuar?
+        </Typography>
         {restaurant && (
           <>
             {restaurant.configs.facebook_login && (
@@ -243,11 +249,11 @@ const Login: React.FC = () => {
           </Button>
         </div>
         <div className={classes.btnCreateAccount}>
-          <Button size="large" color="primary" variant="contained" fullWidth onClick={handleCreateAccountClick}>
+          <Typography gutterBottom align="center" variant="body1">
+            você é novo por aqui? crie uma conta
+          </Typography>
+          <Button size="large" color="primary" variant="text" fullWidth onClick={handleCreateAccountClick}>
             Criar conta
-          </Button>
-          <Button color="primary" variant="text" size="large" fullWidth onClick={handleBack}>
-            Voltar
           </Button>
         </div>
       </div>

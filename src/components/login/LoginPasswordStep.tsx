@@ -42,7 +42,7 @@ const LoginPasswordStep: React.FC<LoginPasswordStepProps> = ({
   return (
     <div>
       <Typography align="center">
-        Olá <span className={classes.name}>{name}</span>!
+        olá <span className={classes.name}>{name}</span>!
       </Typography>
       {phoneParam && (
         <Typography align="center" variant="body2" className={classes.info}>
