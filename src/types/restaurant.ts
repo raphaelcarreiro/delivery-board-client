@@ -35,6 +35,8 @@ interface RestaurantAddress {
   postal_code: string;
   city: string;
   is_main: boolean;
+  region: string;
+  complement: string;
 }
 
 interface RestaurantPhones {

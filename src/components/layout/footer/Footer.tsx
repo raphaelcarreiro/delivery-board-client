@@ -168,7 +168,7 @@ const Footer: React.FC = () => {
             <>
               <Typography variant="body2" color="inherit">
                 {mainAddress.address}, {mainAddress.number}, {mainAddress.district} {mainAddress.city}-
-                {mainAddress.district}, CEP {mainAddress.postal_code}
+                {mainAddress.region}, CEP {mainAddress.postal_code}
               </Typography>
             </>
           )}
