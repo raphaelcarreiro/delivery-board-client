@@ -109,3 +109,10 @@ export function setMercadoPagoTokenCard(token) {
     token,
   };
 }
+
+export function setRestaurantAddress(address) {
+  return {
+    type: '@order/SET_RESTAURANT_ADDRESS',
+    address,
+  };
+}

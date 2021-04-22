@@ -27,7 +27,7 @@ export interface RestaurantConfig {
   cart_accumulate_discount: boolean;
 }
 
-interface RestaurantAddress {
+export interface RestaurantAddress {
   id: number;
   address: string;
   number: string;
@@ -35,6 +35,8 @@ interface RestaurantAddress {
   postal_code: string;
   city: string;
   is_main: boolean;
+  region: string;
+  complement: string | null;
 }
 
 interface RestaurantPhones {

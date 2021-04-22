@@ -25,6 +25,8 @@ CheckoutButtons.propTypes = {
 export default function CheckoutButtons({ handleStepPrior, handleStepNext, currentStep, quantitySteps }) {
   const classes = useStyles({ step: currentStep.order });
 
+  const preventNextStep = ['STEP_RESTAURANT_ADDRESSES', 'STEP_SHIPMENT_METHOD'];
+
   return (
     <div className={classes.actions}>
       {currentStep.order > 1 && (
@@ -32,7 +34,7 @@ export default function CheckoutButtons({ handleStepPrior, handleStepNext, curre
           Voltar
         </Button>
       )}
-      {currentStep.order < quantitySteps - 1 && (
+      {currentStep.order < quantitySteps - 1 && !preventNextStep.includes(currentStep.id) && (
         <Button size="large" color="primary" variant="contained" onClick={handleStepNext}>
           Próximo
         </Button>

@@ -14,7 +14,9 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
   },
   actions: {
-    display: 'flex',
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    columnGap: '15px',
     [theme.breakpoints.down('sm')]: {
       display: 'grid',
       width: '100%',
@@ -27,7 +29,6 @@ const useStyles = makeStyles(theme => ({
     },
   },
   button: {
-    marginRight: 20,
     width: 350,
     height: 100,
     display: 'flex',

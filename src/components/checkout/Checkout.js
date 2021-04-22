@@ -35,6 +35,7 @@ import { useAuth } from 'src/hooks/auth';
 import { useApp } from 'src/hooks/app';
 import CheckoutError from './steps/error/CheckoutError';
 import { CheckoutProvider } from './steps/hooks/useCheckout';
+import RestaurantAddresses from './steps/restaurant-address/RestaurantAddresses';
 
 const cartWidth = 450;
 
@@ -193,6 +194,10 @@ export default function Checkout() {
 
     let stepId = 0;
     let newSteps = defaultSteps.slice();
+
+    if (!configs.restaurant_address_selection) {
+      newSteps = newSteps.filter(s => s.id !== 'STEP_RESTAURANT_ADDRESSES');
+    }
 
     if (!configs.customer_collect) {
       newSteps = newSteps.filter(s => s.id !== 'STEP_SHIPMENT_METHOD');
@@ -354,7 +359,7 @@ export default function Checkout() {
         <CheckoutSuccess />
       ) : error ? (
         <CheckoutError handleReset={() => setError('')} errorMessage={error} />
-      ) : cart.products.length === 0 ? (
+      ) : cart.products.length === 10 ? (
         <CheckoutEmptyCart />
       ) : (
         <Grid container direction="column" justify="space-between" className={classes.container}>
@@ -365,7 +370,9 @@ export default function Checkout() {
                 {currentStep.description}
               </Typography>
             </Grid>
-            {currentStep.id === 'STEP_SHIPMENT_METHOD' ? (
+            {currentStep.id === 'STEP_RESTAURANT_ADDRESSES' ? (
+              <RestaurantAddresses />
+            ) : currentStep.id === 'STEP_SHIPMENT_METHOD' ? (
               <ShipmentMethod />
             ) : currentStep.id === 'STEP_SHIPMENT' ? (
               <Shipment addresses={user.customer ? user.customer.addresses : []} />
@@ -380,22 +387,20 @@ export default function Checkout() {
               currentStep.id === 'STEP_CONFIRM' && <Confirm />
             )}
           </div>
-          {currentStep.id !== 'STEP_SHIPMENT_METHOD' && (
-            <>
-              <CheckoutButtons
-                handleStepNext={handleStepNext}
-                handleStepPrior={handleStepPrior}
-                currentStep={currentStep}
-                quantitySteps={steps.length}
-              />
-              <CheckoutMobileButtons
-                handleStepNext={handleStepNext}
-                handleStepPrior={handleStepPrior}
-                currentStep={currentStep}
-                quantitySteps={steps.length}
-              />
-            </>
-          )}
+          <>
+            <CheckoutButtons
+              handleStepNext={handleStepNext}
+              handleStepPrior={handleStepPrior}
+              currentStep={currentStep}
+              quantitySteps={steps.length}
+            />
+            <CheckoutMobileButtons
+              handleStepNext={handleStepNext}
+              handleStepPrior={handleStepPrior}
+              currentStep={currentStep}
+              quantitySteps={steps.length}
+            />
+          </>
         </Grid>
       )}
     </CheckoutProvider>
