@@ -25,6 +25,7 @@ export interface RestaurantConfig {
   google_login: boolean;
   facebook_login: boolean;
   cart_accumulate_discount: boolean;
+  restaurant_address_selection: boolean;
 }
 
 export interface RestaurantAddress {
@@ -37,6 +38,7 @@ export interface RestaurantAddress {
   is_main: boolean;
   region: string;
   complement: string | null;
+  nickname: string;
 }
 
 interface RestaurantPhones {

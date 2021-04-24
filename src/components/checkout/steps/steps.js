@@ -1,11 +1,5 @@
 const steps = [
   {
-    id: 'STEP_RESTAURANT_ADDRESSES',
-    order: 1,
-    title: 'Endereço da loja',
-    description: 'para qual loja enviar o pedido?',
-  },
-  {
     id: 'STEP_SHIPMENT_METHOD',
     order: 1,
     title: 'Método de entrega',

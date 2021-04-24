@@ -26,6 +26,8 @@ import LayoutHandler from './components/layout/LayoutHandler';
 import { AppProvider, AppContextValue } from './hooks/app';
 import { useWindowSize } from './hooks/windowSize';
 import InstallAppNotification from './components/install-app-notification/InstallAppNotification';
+import RestaurantAddressSelector from './components/restaurant-address-selector/RestaurantAddressSelector';
+import { Restaurant } from './types/restaurant';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -58,6 +60,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const restaurant = useSelector(state => state.restaurant);
   const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
   const windowSize = useWindowSize();
+  const [dialogRestaurantAddress, setDialogRestaurantAddress] = useState(false);
 
   const handleCartVisibility = useCallback((state?: boolean) => {
     setIsCartVisible(oldValue => (state === undefined ? !oldValue : state));
@@ -108,10 +111,12 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
 
   useEffect(() => {
     api
-      .get('/restaurants')
+      .get<Restaurant>('/restaurants')
       .then(response => {
         const _restaurant = response.data;
         const { configs } = _restaurant;
+
+        if (configs.restaurant_address_selection) setDialogRestaurantAddress(true);
 
         dispatch(
           setRestaurant({
@@ -222,6 +227,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     setRedirect: handleSetRedirect,
     handleInstallApp,
     handleShowPlayStoreBanner: handleShowPlayStoreBanner,
+    setDialogRestaurantAddress,
   };
 
   return (
@@ -230,6 +236,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
       <AppProvider value={appProviderValue}>
         {initialLoading && <InitialLoading />}
         {isProgressBarVisible && <LinearProgress color="secondary" className={classes.progressBar} />}
+        {dialogRestaurantAddress && <RestaurantAddressSelector onExited={() => setDialogRestaurantAddress(false)} />}
 
         <AuthProvider>
           <FirebaseProvider>

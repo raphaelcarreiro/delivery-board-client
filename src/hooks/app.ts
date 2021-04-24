@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, Dispatch, SetStateAction, useContext } from 'react';
 
 export type AppContextValue = {
   isMobile: boolean;
@@ -15,6 +15,7 @@ export type AppContextValue = {
   handleCartVisibility(state: boolean): void;
   handleInstallApp(): void;
   handleShowPlayStoreBanner(): void;
+  setDialogRestaurantAddress: Dispatch<SetStateAction<boolean>>;
 };
 
 const AppContext = createContext<AppContextValue>({} as AppContextValue);

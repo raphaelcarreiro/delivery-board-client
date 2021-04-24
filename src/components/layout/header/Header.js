@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { useAuth } from 'src/hooks/auth';
 import { useApp } from 'src/hooks/app';
 import { PAGE_MAX_WIDTH } from 'src/constants/constants';
+import HeaderRestaurantAddress from './HeaderRestaurantAddress';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -156,6 +157,7 @@ export default function Header() {
               <span>Carregando...</span>
             )}
           </div>
+          <HeaderRestaurantAddress />
           <div className={classes.headerLinks}>
             <div>
               <Link href="/offers" className={classes.link}>

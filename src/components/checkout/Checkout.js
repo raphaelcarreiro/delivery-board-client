@@ -195,10 +195,6 @@ export default function Checkout() {
     let stepId = 0;
     let newSteps = defaultSteps.slice();
 
-    if (!configs.restaurant_address_selection) {
-      newSteps = newSteps.filter(s => s.id !== 'STEP_RESTAURANT_ADDRESSES');
-    }
-
     if (!configs.customer_collect) {
       newSteps = newSteps.filter(s => s.id !== 'STEP_SHIPMENT_METHOD');
     }
