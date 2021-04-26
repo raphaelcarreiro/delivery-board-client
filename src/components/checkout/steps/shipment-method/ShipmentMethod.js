@@ -10,13 +10,14 @@ const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flex: 1,
   },
   actions: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    columnGap: '15px',
+    gridTemplateColumns: '1fr',
+    gridGap: 10,
+    flex: 1,
     [theme.breakpoints.down('sm')]: {
       display: 'grid',
       width: '100%',
@@ -29,13 +30,12 @@ const useStyles = makeStyles(theme => ({
     },
   },
   button: {
-    width: 350,
     height: 100,
     display: 'flex',
     backgroundColor: '#fff',
     boxShadow: '1px 1px 9px 1px #eee',
     borderRadius: theme.shape.borderRadius,
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
     position: 'relative',
     fontSize: 18,
@@ -52,7 +52,6 @@ export default function ShipmentMethod() {
   const dispatch = useDispatch();
   const checkout = useCheckout();
   const restaurant = useSelector(state => state.restaurant);
-  const order = useSelector(state => state.order);
   const [dialogCollectSchedule, setDialogSchecule] = useState(false);
 
   function handleSetCustomerCollect() {
@@ -82,9 +81,6 @@ export default function ShipmentMethod() {
             <Typography variant="body1" color="textSecondary">
               você retira conosco
             </Typography>
-            {order.shipment.scheduled_at && (
-              <Typography color="textSecondary">agendado para as {order.shipment.formattedScheduledAt}</Typography>
-            )}
           </ListItem>
           <ListItem button className={classes.button} onClick={handleSetDelivery}>
             <Typography variant="h6">receber</Typography>

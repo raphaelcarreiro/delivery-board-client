@@ -15,10 +15,10 @@ import { useCheckout } from '../../hooks/useCheckout';
 const useStyles = makeStyles(theme => ({
   list: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
+    gridTemplateColumns: 'repeat(1, 1fr)',
     gridGap: 6,
     [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: 'repeat(2, 1fr)',
+      gridTemplateColumns: 'repeat(1, 1fr)',
     },
     [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: '1fr',
@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    padding: 10,
+    padding: 15,
     borderRadius: 4,
     backgroundColor: '#fff',
     boxShadow: '1px 1px 9px 1px #eee',
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    padding: 10,
+    padding: 15,
     boxShadow: '1px 1px 9px 1px #eee',
     borderRadius: 4,
     backgroundColor: fade(theme.palette.primary.main, 0.2),
@@ -63,7 +63,7 @@ const useStyles = makeStyles(theme => ({
   },
   icon: {
     borderRadius: '50%',
-    border: `1px solid ${theme.palette.primary.light}`,
+    border: `1px solid rgba(0, 0, 0, 0.54)`,
     width: 50,
     height: 50,
     display: 'flex',
@@ -141,9 +141,9 @@ export default function PaymentOnlineList({ paymentMethods, paymentMethodId }) {
               >
                 <div className={classes.iconContainer}>
                   <div className={classes.icon}>
-                    {paymentMethod.kind === 'card' && <CreditCardIcon color="primary" />}
-                    {paymentMethod.kind === 'picpay' && <SmartphoneIcon color="primary" />}
-                    {paymentMethod.kind === 'pix' && <SmartphoneIcon color="primary" />}
+                    {paymentMethod.kind === 'card' && <CreditCardIcon color="action" />}
+                    {paymentMethod.kind === 'picpay' && <SmartphoneIcon color="action" />}
+                    {paymentMethod.kind === 'pix' && <SmartphoneIcon color="action" />}
                   </div>
                 </div>
                 <div className={classes.method}>

@@ -42,8 +42,9 @@ PaymentChange.propTypes = {
 export default function PaymentChange({ onExited }) {
   const [hasChange, setHasChange] = useState(false);
   const cart = useSelector(state => state.cart);
+  const order = useSelector(state => state.order);
   const dispatch = useDispatch();
-  const [paymentChange, setPaymentChange] = useState('');
+  const [paymentChange, setPaymentChange] = useState(order.change || '');
   const classes = useStyles();
 
   function handleChangeYes() {

@@ -109,11 +109,9 @@ export default function CartProductList({ products, handleClickUpdateProduct }) 
         {
           id: product.id,
           name: product.name,
-          list_name: '',
           brand: '',
           category: product.category.name,
           variant: '',
-          list_position: 1,
           quantity: product.amount,
           price: product.price,
         },

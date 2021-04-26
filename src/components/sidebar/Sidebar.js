@@ -32,13 +32,12 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.secondary.contrastText,
   },
   drawerHeader: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    height: 55,
+    color: theme.palette.secondary.contrastText,
     display: 'flex',
     justifyContent: 'space-between',
-    padding: '0 0 0 16px',
+    padding: '15px 20px',
     position: 'relative',
+    borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
   },
   drawerHeaderTitle: {
     color: theme.palette.primary.contrastText,
@@ -63,8 +62,6 @@ const useStyles = makeStyles(theme => ({
     border: `2px solid ${theme.palette.primary.dark}`,
   },
   restaurantName: {
-    display: 'flex',
-    alignItems: 'center',
     fontSize: 20,
   },
   headerTitle: {
@@ -106,7 +103,7 @@ function Sidebar() {
       onClose={handleOpenMenu}
     >
       <div className={classes.drawerHeader}>
-        <Typography color="inherit" variant="body2" className={classes.restaurantName}>
+        <Typography color="inherit" noWrap className={classes.restaurantName}>
           {restaurant?.name}
         </Typography>
       </div>

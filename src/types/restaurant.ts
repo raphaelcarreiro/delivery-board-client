@@ -24,6 +24,7 @@ export interface RestaurantConfig {
   facebook_pixel_id: string;
   google_login: boolean;
   facebook_login: boolean;
+  order_minimum_products_amount: number;
   cart_accumulate_discount: boolean;
   restaurant_address_selection: boolean;
 }
@@ -39,6 +40,7 @@ export interface RestaurantAddress {
   region: string;
   complement: string | null;
   nickname: string;
+  active: boolean;
 }
 
 interface RestaurantPhones {

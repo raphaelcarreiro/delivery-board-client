@@ -68,7 +68,6 @@ export default function CheckoutHeader() {
   const restaurant = useSelector(state => state.restaurant);
   const cart = useSelector(state => state.cart);
   const classes = useStyles({ cartItems: cart.products.length > 0 });
-  const user = useSelector(state => state.user);
   const app = useApp();
 
   function handleCartClick() {
@@ -89,12 +88,6 @@ export default function CheckoutHeader() {
             )}
           </div>
           <HeaderRestaurantAddress />
-          <div>
-            <Typography color="primary" onClick={handleCartClick} className={classes.cartLink}>
-              {cart.products.length > 0 && <span className={classes.cartBadge}>{cart.products.length}</span>}
-              <ShoppingCartIcon color="primary" /> carrinho
-            </Typography>
-          </div>
         </div>
       </header>
     </>

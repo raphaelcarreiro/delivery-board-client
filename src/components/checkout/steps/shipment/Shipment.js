@@ -60,13 +60,13 @@ export default function Shipment({ addresses }) {
       const newAddress = response.data;
       dispatch(addCustomerAddress(newAddress));
 
-      if (restaurant.delivery_max_distance) {
+      if (checkout.area.max_distance) {
         if (newAddress.distance === null) {
           messaging.handleOpen('Não é possível entregar nesse endereço');
           return;
         }
 
-        if (newAddress.distance > restaurant.delivery_max_distance) {
+        if (newAddress.distance > checkout.area.max_distance) {
           messaging.handleOpen('Não entregamos nesse endereço');
           return;
         }
@@ -88,13 +88,13 @@ export default function Shipment({ addresses }) {
       const updatedAddress = response.data;
       dispatch(updateCustomerAddress(updatedAddress));
 
-      if (restaurant.delivery_max_distance) {
+      if (checkout.area.max_distance) {
         if (updatedAddress.distance === null) {
           messaging.handleOpen('Não é possível entregar nesse endereço');
           return;
         }
 
-        if (updatedAddress.distance > restaurant.delivery_max_distance) {
+        if (updatedAddress.distance > checkout.area.max_distance) {
           messaging.handleOpen('Não entregamos nesse endereço');
           return;
         }
@@ -148,13 +148,13 @@ export default function Shipment({ addresses }) {
       return;
     }
 
-    if (restaurant.delivery_max_distance) {
+    if (checkout.area.max_distance) {
       if (address.distance === null) {
         messaging.handleOpen('Não é possível entregar nesse endereço');
         return;
       }
 
-      if (address.distance > restaurant.delivery_max_distance) {
+      if (address.distance > checkout.area.max_distance) {
         messaging.handleOpen('Não entregamos nesse endereço');
         return;
       }

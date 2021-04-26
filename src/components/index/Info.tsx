@@ -76,9 +76,6 @@ const useStyles = makeStyles(theme => ({
   },
   description: {
     maxWidth: 'calc(100vw - 150px)',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
   },
   detail: {
     width: '100%',

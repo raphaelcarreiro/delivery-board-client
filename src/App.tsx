@@ -28,6 +28,8 @@ import { useWindowSize } from './hooks/windowSize';
 import InstallAppNotification from './components/install-app-notification/InstallAppNotification';
 import RestaurantAddressSelector from './components/restaurant-address-selector/RestaurantAddressSelector';
 import { Restaurant } from './types/restaurant';
+import { setRestaurantAddress } from './store/redux/modules/order/actions';
+import { setCustomerAddresses } from './store/redux/modules/user/actions';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -61,6 +63,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
   const windowSize = useWindowSize();
   const [dialogRestaurantAddress, setDialogRestaurantAddress] = useState(false);
+  const order = useSelector(state => state.order);
 
   const handleCartVisibility = useCallback((state?: boolean) => {
     setIsCartVisible(oldValue => (state === undefined ? !oldValue : state));
@@ -102,12 +105,16 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   }, [restaurant]);
 
   useEffect(() => {
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-      for (const registration of registrations) {
-        if (registration.scope.includes('service-worker')) registration.unregister();
-      }
-    });
-  }, []);
+    if (!order.restaurant_address) return;
+
+    api
+      .post('/addressDistances', { restaurantAddressId: order.restaurant_address.id })
+      .then(response => {
+        const customerAddresses = response.data;
+        dispatch(setCustomerAddresses(customerAddresses));
+      })
+      .catch(err => console.error(err));
+  }, [dispatch, order.restaurant_address]);
 
   useEffect(() => {
     api
@@ -117,6 +124,9 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
         const { configs } = _restaurant;
 
         if (configs.restaurant_address_selection) setDialogRestaurantAddress(true);
+
+        const mainAddress = _restaurant.addresses.find(address => address.is_main);
+        if (mainAddress) dispatch(setRestaurantAddress(mainAddress));
 
         dispatch(
           setRestaurant({

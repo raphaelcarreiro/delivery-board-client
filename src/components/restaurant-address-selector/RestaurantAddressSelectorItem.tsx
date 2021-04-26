@@ -28,11 +28,10 @@ const RestaurantAddressSelectorItem: React.FC<RestaurantAddressSelectorItemProps
   }
 
   return (
-    <ListItem button className={classes.listItem} onClick={() => handleClick(address)}>
-      <Typography gutterBottom color="primary">
-        {address.nickname}
+    <ListItem button disabled={!address.active} className={classes.listItem} onClick={() => handleClick(address)}>
+      <Typography>
+        {address.nickname}, {address.city} - {address.region}
       </Typography>
-      <Typography>{address.city}</Typography>
 
       <Typography color="textSecondary" variant="body2">
         {address.address}, {address.number}

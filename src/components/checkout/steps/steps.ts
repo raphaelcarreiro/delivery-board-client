@@ -1,4 +1,18 @@
-const steps = [
+export type CheckoutStepIds =
+  | 'STEP_SHIPMENT_METHOD'
+  | 'STEP_SHIPMENT'
+  | 'STEP_PAYMENT'
+  | 'STEP_CONFIRM'
+  | 'STEP_SUCCESS';
+
+export interface CheckoutStep {
+  id: CheckoutStepIds;
+  order: number;
+  title: string;
+  description: string;
+}
+
+const steps: CheckoutStep[] = [
   {
     id: 'STEP_SHIPMENT_METHOD',
     order: 1,
@@ -21,7 +35,7 @@ const steps = [
     id: 'STEP_CONFIRM',
     order: 4,
     title: 'Finalizar',
-    description: 'confirmação do pedido',
+    description: 'está tudo correto?',
   },
   {
     id: 'STEP_SUCCESS',

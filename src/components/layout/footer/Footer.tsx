@@ -165,12 +165,9 @@ const Footer: React.FC = () => {
             CNPJ {restaurant?.cnpj}
           </Typography>
           {mainAddress && (
-            <>
-              <Typography variant="body2" color="inherit">
-                {mainAddress.address}, {mainAddress.number}, {mainAddress.district} {mainAddress.city}-
-                {mainAddress.district}, CEP {mainAddress.postal_code}
-              </Typography>
-            </>
+            <Typography variant="body2" color="inherit">
+              {`${mainAddress.address}, ${mainAddress.number}, ${mainAddress.district}, ${mainAddress.city} - ${mainAddress.region}, ${mainAddress.postal_code}`}
+            </Typography>
           )}
         </div>
         <div className={classes.developer}>

@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useContext } from 'react';
+import React, { Fragment, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar/AppBar';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
   },
   restaurantAddressContainer: {
     padding: '8px 15px',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
     display: 'flex',
     alignItems: 'center',
     '& .content': {
@@ -71,6 +71,9 @@ const useStyles = makeStyles(theme => ({
     '& .restaurant-address': {
       maxWidth: 'calc(100vw - 50px)',
     },
+  },
+  toolbar: {
+    minHeight: 70,
   },
 }));
 
@@ -101,7 +104,7 @@ function CustomAppbar({ actionComponent, title, TabComponent, cancel, cancelActi
                 </div>
               </div>
             )}
-            <Toolbar>
+            <Toolbar className={classes.toolbar}>
               <IconButton onClick={cancel ? cancelAction : handleOpenMenu} color="inherit">
                 {cancel ? <ArrowBackIcon /> : <MenuIcon />}
               </IconButton>

@@ -4,6 +4,7 @@ import { Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { useCheckout } from '../hooks/useCheckout';
+import ConfirmShipmentAddressText from './ConfirmShipmentAddressText';
 
 const useStyles = makeStyles(theme => ({
   data: {
@@ -13,16 +14,10 @@ const useStyles = makeStyles(theme => ({
   },
   item: {
     position: 'relative',
-    maxWidth: 900,
     width: '100%',
     marginBottom: 8,
-    marginRight: 10,
-    padding: 10,
-    borderRadius: 4,
+    padding: '10px 0',
     borderBottom: '1px solid #eee',
-    [theme.breakpoints.down('xs')]: {
-      marginRight: 0,
-    },
     '&:last-child': {
       border: 'none',
     },
@@ -37,11 +32,7 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     display: 'flex',
-    padding: 15,
     flexDirection: 'column',
-    [theme.breakpoints.down('sm')]: {
-      padding: '0 0 30px',
-    },
   },
   total: {
     fontWeight: 300,
@@ -52,7 +43,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   title: {
-    fontWeight: 600,
+    fontWeight: 400,
     fontSize: 20,
     marginBottom: 5,
   },
@@ -73,7 +64,6 @@ export default function Confirm() {
   const cart = useSelector(state => state.cart);
   const restaurant = useSelector(state => state.restaurant);
   const checkout = useCheckout();
-  const mainRestaurantAddress = useSelector(state => state.restaurant).addresses.find(address => address.is_main);
   const classes = useStyles();
 
   useEffect(() => {
@@ -91,56 +81,29 @@ export default function Confirm() {
   return (
     <div className={classes.container}>
       <div className={classes.data}>
-        {order.shipment.shipment_method === 'delivery' ? (
-          <div className={classes.item}>
-            <Typography variant="h5" className={classes.title}>
-              endereço de entrega
-            </Typography>
-            <Typography>
-              {order.shipment.address}, {order.shipment.number}, {order.shipment.district}
-              {order.shipment.address_complement && `, ${order.shipment.address_complement}`}
-              {order.shipment.postal_code !== '00000000' && `, ${order.shipment.postal_code}`}
-            </Typography>
-            {restaurant.configs.delivery_time && (
-              <div className={classes.deliveryTime}>
+        <div className={classes.item}>
+          <Typography variant="h5" className={classes.title}>
+            {order.shipment.shipment_method === 'delivery' ? 'endereço de entrega' : 'endereço para retirada'}
+          </Typography>
+          <ConfirmShipmentAddressText />
+          <div className={classes.deliveryTime}>
+            {order.shipment.scheduled_at ? (
+              <Typography color="textSecondary" variant="body2">
+                agendado para as {order.shipment.formattedScheduledAt}
+              </Typography>
+            ) : (
+              restaurant.configs.delivery_time && (
                 <Typography color="textSecondary" variant="body2">
-                  tempo estimado para entrega, {restaurant.configs.delivery_time} min
+                  tempo estimado para retirada, {restaurant.configs.delivery_time} min
                 </Typography>
-              </div>
+              )
             )}
-            <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
-              alterar
-            </Typography>
           </div>
-        ) : (
-          <div className={classes.item}>
-            <Typography variant="h5" className={classes.title}>
-              endereço para retirada
-            </Typography>
-            <Typography>
-              {mainRestaurantAddress.address}, {mainRestaurantAddress.number}
-            </Typography>
-            <Typography>{mainRestaurantAddress.district}</Typography>
-            <Typography>{mainRestaurantAddress.address_complement}</Typography>
-            <Typography color="textSecondary">{mainRestaurantAddress.postal_code}</Typography>
-            <div className={classes.deliveryTime}>
-              {order.shipment.scheduled_at ? (
-                <Typography color="textSecondary" variant="body2">
-                  agendado para as {order.shipment.formattedScheduledAt}
-                </Typography>
-              ) : (
-                restaurant.configs.delivery_time && (
-                  <Typography color="textSecondary" variant="body2">
-                    tempo estimado para retirada, {restaurant.configs.delivery_time} min
-                  </Typography>
-                )
-              )}
-            </div>
-            <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
-              alterar
-            </Typography>
-          </div>
-        )}
+          <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
+            alterar
+          </Typography>
+        </div>
+
         <div className={classes.item}>
           <Typography variant="h5" className={classes.title}>
             forma de pagamento

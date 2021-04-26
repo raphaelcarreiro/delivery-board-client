@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     marginTop: 80,
     [theme.breakpoints.down('sm')]: {
-      marginTop: 56,
+      marginTop: 124,
     },
   },
   cart: ({ isCartVisible }: { isCartVisible: boolean }) => ({

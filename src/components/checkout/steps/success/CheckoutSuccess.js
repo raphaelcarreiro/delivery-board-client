@@ -20,7 +20,6 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 100,
   },
   actions: {
     marginTop: 20,
@@ -70,26 +69,21 @@ export default function CheckoutSuccess() {
 
   useEffect(() => {
     gtag('event', 'purchase', {
+      transaction_id: order.id,
       affiliation: restaurant?.name,
-      coupon: order.coupon?.description,
+      value: order.total,
       currency: 'BRL',
+      tax: 0,
+      shipping: order.tax,
       items: order.products.map(product => ({
-        item_id: product.id,
-        item_name: product.name,
-        coupon: '',
-        discount: 0,
-        affiliation: restaurant?.name,
-        item_brand: '',
-        item_category: product.category.name,
-        item_variant: '',
+        id: product.id,
+        name: product.name,
+        brand: '',
+        category: product.category.name,
+        variant: '',
         price: product.price,
-        currency: 'BRL',
         quantity: product.amount,
       })),
-      transaction_id: order.id,
-      shipping: order.tax,
-      value: order.total,
-      tax: 0,
     });
   }, [order, restaurant]);
 
@@ -115,11 +109,11 @@ export default function CheckoutSuccess() {
       <div className={classes.actions}>
         {restaurant && restaurant.play_store_link && isMobile && (
           <div className={classes.contentAction}>
-            <Typography variant="body2" color="textSecondary" align="center">
+            <Typography variant="body2" gutterBottom color="textSecondary" align="center">
               Baixe o aplicativo {restaurant.name}, gratuíto para celular
             </Typography>
             <a href={restaurant.play_store_link}>
-              <img className={classes.playStoreImg} src="/images/play_store.png" alt="Google Play Store" />
+              <img className={classes.playStoreImg} src="/images/playstore.png" alt="Google Play Store" />
             </a>
           </div>
         )}
