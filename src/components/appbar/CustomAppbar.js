@@ -72,9 +72,6 @@ const useStyles = makeStyles(theme => ({
       maxWidth: 'calc(100vw - 50px)',
     },
   },
-  toolbar: {
-    minHeight: 70,
-  },
 }));
 
 function CustomAppbar({ actionComponent, title, TabComponent, cancel, cancelAction }) {
@@ -104,7 +101,7 @@ function CustomAppbar({ actionComponent, title, TabComponent, cancel, cancelActi
                 </div>
               </div>
             )}
-            <Toolbar className={classes.toolbar}>
+            <Toolbar>
               <IconButton onClick={cancel ? cancelAction : handleOpenMenu} color="inherit">
                 {cancel ? <ArrowBackIcon /> : <MenuIcon />}
               </IconButton>

@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     marginTop: 80,
     [theme.breakpoints.down('xs')]: {
-      marginTop: 124,
+      marginTop: 110,
     },
   },
 }));
