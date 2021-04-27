@@ -98,6 +98,7 @@ const useStyles = makeStyles<Theme, UseStylesProps>(theme => ({
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
+    paddingBottom: 100,
   },
 }));
 

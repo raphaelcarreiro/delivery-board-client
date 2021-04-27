@@ -16,6 +16,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: fade(theme.palette.primary.main, 0.2),
     position: 'relative',
     alignItems: 'center',
+    minHeight: 165,
     '&:focus': {
       backgroundColor: fade(theme.palette.primary.main, 0.2),
     },
@@ -30,12 +31,13 @@ const useStyles = makeStyles(theme => ({
     borderRadius: theme.shape.borderRadius,
     alignItems: 'center',
     position: 'relative',
+    minHeight: 165,
   },
   listItemNewAddress: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 120,
+    minHeight: 165,
     backgroundColor: '#fff',
     boxShadow: '1px 1px 9px 1px #eee',
     borderRadius: theme.shape.borderRadius,
