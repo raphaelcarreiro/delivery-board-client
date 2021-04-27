@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
   },
   restaurantAddressContainer: {
     padding: '8px 15px',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
     display: 'flex',
     alignItems: 'center',
     '& .content': {

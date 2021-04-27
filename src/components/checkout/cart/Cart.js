@@ -107,7 +107,9 @@ export default function Cart() {
         </>
       )}
       {couponView ? (
-        <Coupon setClosedCouponView={() => setCouponView(false)} />
+        <div className={classes.cart}>
+          <Coupon setClosedCouponView={() => setCouponView(false)} />
+        </div>
       ) : cart.products.length > 0 ? (
         <div className={classes.cart}>
           <Typography className={classes.title} variant="h5" color="primary">
