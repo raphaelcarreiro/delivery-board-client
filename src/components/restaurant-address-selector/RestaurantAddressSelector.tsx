@@ -1,6 +1,6 @@
-import { Dialog, makeStyles, Typography } from '@material-ui/core';
-import React, { useState } from 'react';
-import { RestaurantAddressProvider } from './hooks/useRestaurantAddressSelector';
+import React from 'react';
+import { makeStyles } from '@material-ui/core';
+import CustomDialog from '../dialog/CustomDialog';
 import RestaurantAddressSelectorList from './RestaurantAddressSelectorList';
 
 const useStyles = makeStyles(theme => ({
@@ -8,22 +8,11 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     minHeight: '80vh',
-    width: 400,
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
-  header: {
-    display: 'flex',
-    padding: 15,
-    backgroundColor: '#eee',
-    '& > p': {
-      fontWeight: 500,
-    },
-  },
-  content: {
-    padding: '0px 10px 30px',
-  },
+  content: {},
 }));
 
 interface RestaurantAddressSelectorProps {
@@ -32,21 +21,15 @@ interface RestaurantAddressSelectorProps {
 
 const RestaurantAddressSelector: React.FC<RestaurantAddressSelectorProps> = ({ onExited }) => {
   const classes = useStyles();
-  const [open, setOpen] = useState(true);
 
   return (
-    <RestaurantAddressProvider value={{ open, setOpen }}>
-      <Dialog maxWidth="sm" open={open} onExited={onExited}>
-        <div className={classes.container}>
-          <div className={classes.header}>
-            <Typography>selecione o endereço da loja</Typography>
-          </div>
-          <div className={classes.content}>
-            <RestaurantAddressSelectorList />
-          </div>
+    <CustomDialog maxWidth="sm" title="selecione o endereço da loja" handleModalState={onExited}>
+      <div className={classes.container}>
+        <div className={classes.content}>
+          <RestaurantAddressSelectorList />
         </div>
-      </Dialog>
-    </RestaurantAddressProvider>
+      </div>
+    </CustomDialog>
   );
 };
 

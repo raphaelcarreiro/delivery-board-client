@@ -7,7 +7,7 @@ const RestaurantAddressSelectorList: React.FC = () => {
   const restaurant = useSelector(state => state.restaurant);
 
   return (
-    <List>
+    <List disablePadding>
       {restaurant?.addresses.map(address => (
         <RestaurantAddressSelectorItem address={address} key={address.id} />
       ))}

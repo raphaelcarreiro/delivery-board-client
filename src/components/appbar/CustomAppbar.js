@@ -36,12 +36,11 @@ const useStyles = makeStyles(theme => ({
     },
   },
   appBarTabs: {
-    top: 64,
     [theme.breakpoints.down('md')]: {
-      top: 56,
+      top: 109,
     },
     [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
-      top: 48,
+      top: 101,
     },
     [theme.breakpoints.up('lg')]: {
       backgroundColor: theme.palette.primary.light,

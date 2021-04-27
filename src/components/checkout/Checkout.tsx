@@ -256,40 +256,14 @@ const Checkout: React.FC = () => {
     api
       .get(`/area/restaurantAddress/${order.restaurant_address.id}`)
       .then(response => {
-        setArea(response.data);
+        setArea(response.data || null);
+        dispatch(setShipmentAddress({}));
+        dispatch(cartSetTax(0));
+        setStep(1);
       })
       .catch(err => console.error(err))
       .finally(() => setSaving(false));
-  }, [order.restaurant_address]);
-
-  useEffect(() => {
-    if (!area) return;
-
-    if (!order.shipment.id || order.shipment.shipment_method === 'customer_collect') return;
-
-    const customerAddress = user.customer.addresses.find(address => address.id === order.shipment.id);
-
-    if (!customerAddress) return;
-
-    if (area.max_distance) {
-      if (customerAddress.distance === null) {
-        handleOpen('Não é possível entregar no endereço selecionado');
-        dispatch(setShipmentAddress({}));
-        dispatch(cartSetTax(0));
-        setStep(1);
-        return;
-      }
-
-      if (customerAddress.distance > area.max_distance) {
-        handleOpen('Não entregamos no endereço selecionado');
-        dispatch(setShipmentAddress({}));
-        dispatch(cartSetTax(0));
-        setStep(1);
-      }
-
-      dispatch(cartSetTax(customerAddress.distance_tax));
-    }
-  }, [area, order.shipment, dispatch, handleOpen, user.customer.addresses]);
+  }, [order.restaurant_address, dispatch]);
 
   useEffect(() => {
     dispatch(setProducts(cart.products));

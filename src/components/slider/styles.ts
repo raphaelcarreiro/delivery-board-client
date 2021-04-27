@@ -60,7 +60,7 @@ export const Arrow = styled.button<ArrowProps>`
   align-items: center;
   transition: background ease-in 0.1s;
   border: 1px solid #ccc;
-  z-index: 10;
+  z-index: 8;
   &:hover {
     background: #eee;
   }

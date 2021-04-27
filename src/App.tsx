@@ -27,7 +27,7 @@ import { AppProvider, AppContextValue } from './hooks/app';
 import { useWindowSize } from './hooks/windowSize';
 import InstallAppNotification from './components/install-app-notification/InstallAppNotification';
 import RestaurantAddressSelector from './components/restaurant-address-selector/RestaurantAddressSelector';
-import { Restaurant } from './types/restaurant';
+import { Restaurant, RestaurantAddress } from './types/restaurant';
 import { setRestaurantAddress } from './store/redux/modules/order/actions';
 import { setCustomerAddresses } from './store/redux/modules/user/actions';
 
@@ -107,6 +107,8 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   useEffect(() => {
     if (!order.restaurant_address) return;
 
+    localStorage.setItem('restaurantAddressId', order.restaurant_address.id.toString());
+
     api
       .post('/addressDistances', { restaurantAddressId: order.restaurant_address.id })
       .then(response => {
@@ -122,11 +124,21 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
       .then(response => {
         const _restaurant = response.data;
         const { configs } = _restaurant;
+        let restaurantAddress: RestaurantAddress | undefined;
 
         if (configs.restaurant_address_selection) setDialogRestaurantAddress(true);
 
-        const mainAddress = _restaurant.addresses.find(address => address.is_main);
-        if (mainAddress) dispatch(setRestaurantAddress(mainAddress));
+        const restaurantAddressId = localStorage.getItem('restaurantAddressId');
+
+        if (restaurantAddressId) {
+          restaurantAddress = _restaurant.addresses.find(address => address.id === parseInt(restaurantAddressId));
+          if (!restaurantAddress) restaurantAddress = _restaurant.addresses.find(address => address.is_main);
+        } else restaurantAddress = _restaurant.addresses.find(address => address.is_main);
+
+        if (restaurantAddress) {
+          dispatch(setRestaurantAddress(restaurantAddress));
+          localStorage.setItem('restaurantAddressId', restaurantAddress.id.toString());
+        }
 
         dispatch(
           setRestaurant({
