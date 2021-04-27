@@ -72,6 +72,7 @@ export interface Restaurant {
   minimum_order: number;
   image: Image;
   cover: Image;
+  mobile_cover: Image | null;
   configs: RestaurantConfig;
   delivery_max_distance: number;
   addresses: RestaurantAddress[];
