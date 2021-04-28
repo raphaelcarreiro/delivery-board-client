@@ -69,7 +69,7 @@ export default function PaymentChange({ onExited }) {
           <>
             {!hasChange ? (
               <div className={classes.container}>
-                <Typography variant="h6">Precisa de troco?</Typography>
+                <Typography variant="h6">precisa de troco?</Typography>
                 <div className={classes.actions}>
                   <Button onClick={handleChangeYes} variant="contained" color="primary">
                     Sim

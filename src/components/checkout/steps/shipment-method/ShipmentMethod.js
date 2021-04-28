@@ -53,6 +53,7 @@ export default function ShipmentMethod() {
   const checkout = useCheckout();
   const restaurant = useSelector(state => state.restaurant);
   const [dialogCollectSchedule, setDialogSchecule] = useState(false);
+  const { area } = useCheckout();
 
   function handleSetCustomerCollect() {
     dispatch(setShipmentMethod('customer_collect'));
@@ -76,18 +77,22 @@ export default function ShipmentMethod() {
       {dialogCollectSchedule && <ShipmentCollectSchedule onExited={handleDialogClose} />}
       <div className={classes.container}>
         <div className={classes.actions}>
-          <ListItem button className={classes.button} onClick={handleSetCustomerCollect}>
-            <Typography variant="h6">retirar</Typography>
-            <Typography variant="body1" color="textSecondary">
-              você retira conosco
-            </Typography>
-          </ListItem>
-          <ListItem button className={classes.button} onClick={handleSetDelivery}>
-            <Typography variant="h6">receber</Typography>
-            <Typography variant="body1" color="textSecondary">
-              nós levamos até você
-            </Typography>
-          </ListItem>
+          {area && area.setting.customer_collect && (
+            <ListItem button className={classes.button} onClick={handleSetCustomerCollect}>
+              <Typography variant="h6">retirar</Typography>
+              <Typography variant="body1" color="textSecondary">
+                você retira conosco
+              </Typography>
+            </ListItem>
+          )}
+          {area && area.setting.delivery && (
+            <ListItem button className={classes.button} onClick={handleSetDelivery}>
+              <Typography variant="h6">receber</Typography>
+              <Typography variant="body1" color="textSecondary">
+                nós levamos até você
+              </Typography>
+            </ListItem>
+          )}
         </div>
       </div>
     </>

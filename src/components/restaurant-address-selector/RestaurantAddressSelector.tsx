@@ -23,7 +23,7 @@ const RestaurantAddressSelector: React.FC<RestaurantAddressSelectorProps> = ({ o
   const classes = useStyles();
 
   return (
-    <CustomDialog maxWidth="sm" title="selecione o endereço da loja" handleModalState={onExited}>
+    <CustomDialog maxWidth="sm" title="selecione uma unidade" handleModalState={onExited}>
       <div className={classes.container}>
         <div className={classes.content}>
           <RestaurantAddressSelectorList />

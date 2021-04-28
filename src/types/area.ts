@@ -4,6 +4,7 @@ export interface Area {
   restaurant_address_id: number;
   max_distance: number | null;
   distances: AreaDistance[];
+  setting: AreaSetting;
 }
 
 export interface AreaDistance {
@@ -12,4 +13,10 @@ export interface AreaDistance {
   from_distance: number;
   until_distance: number;
   tax: number;
+}
+
+export interface AreaSetting {
+  delivery: boolean;
+  customer_collect: boolean;
+  areaId: number;
 }
