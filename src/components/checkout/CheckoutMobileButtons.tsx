@@ -1,8 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { Typography } from '@material-ui/core';
+import { ArrowBack, ArrowForward } from '@material-ui/icons';
+import { CheckoutStep } from './steps/steps';
 
 const useStyles = makeStyles(theme => ({
   mobileActions: {
@@ -35,32 +35,45 @@ const useStyles = makeStyles(theme => ({
   buttonNext: {
     justifyContent: 'flex-end',
   },
+  iconRight: {
+    marginLeft: 7,
+  },
+  iconLeft: {
+    marginRight: 7,
+  },
 }));
 
-CheckoutMobileButtons.propTypes = {
-  handleStepPrior: PropTypes.func.isRequired,
-  handleStepNext: PropTypes.func.isRequired,
-  currentStep: PropTypes.object.isRequired,
-  quantitySteps: PropTypes.number.isRequired,
-};
+interface CheckoutButtonsProps {
+  handleStepPrior(): void;
+  handleStepNext(): void;
+  currentStep?: CheckoutStep;
+  quantitySteps: number;
+}
 
-export default function CheckoutMobileButtons({ handleStepPrior, handleStepNext, currentStep, quantitySteps }) {
+const CheckoutMobileButtons: React.FC<CheckoutButtonsProps> = ({
+  handleStepPrior,
+  handleStepNext,
+  currentStep,
+  quantitySteps,
+}) => {
   const classes = useStyles();
 
   return (
     <div className={classes.mobileActions}>
-      {currentStep.order > 1 && (
+      {currentStep && currentStep.order > 1 && (
         <button className={`${classes.button} ${classes.buttonBack}`} onClick={handleStepPrior}>
-          <FiChevronLeft />
+          <ArrowBack className={classes.iconLeft} />
           <Typography>voltar</Typography>
         </button>
       )}
-      {currentStep.order < quantitySteps - 1 && (
+      {currentStep && currentStep.order < quantitySteps - 1 && (
         <button className={`${classes.button} ${classes.buttonNext}`} onClick={handleStepNext}>
           <Typography>próximo</Typography>
-          <FiChevronRight />
+          <ArrowForward className={classes.iconRight} />
         </button>
       )}
     </div>
   );
-}
+};
+
+export default CheckoutMobileButtons;

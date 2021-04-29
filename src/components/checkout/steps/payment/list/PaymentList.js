@@ -14,10 +14,10 @@ import { useCheckout } from '../../hooks/useCheckout';
 const useStyles = makeStyles(theme => ({
   list: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
+    gridTemplateColumns: 'repeat(1, 1fr)',
     gridGap: 6,
     [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: 'repeat(2, 1fr)',
+      gridTemplateColumns: 'repeat(1, 1fr)',
     },
     [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: '1fr',
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    padding: 10,
+    padding: 15,
     borderRadius: theme.shape.borderRadius,
     backgroundColor: '#fff',
     boxShadow: '1px 1px 9px 1px #eee',
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    padding: 10,
+    padding: 15,
     boxShadow: '1px 1px 9px 1px #eee',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.primary.main, 0.2),
@@ -62,7 +62,7 @@ const useStyles = makeStyles(theme => ({
   },
   icon: {
     borderRadius: '50%',
-    border: `1px solid ${theme.palette.primary.light}`,
+    border: `1px solid rgba(0, 0, 0, 0.54)`,
     width: 50,
     height: 50,
     display: 'flex',
@@ -118,8 +118,8 @@ export default function PaymentList({ paymentMethods, paymentMethodId }) {
               >
                 <div className={classes.iconContainer}>
                   <div className={classes.icon}>
-                    {paymentMethod.kind === 'card' && <CreditCardIcon color="primary" />}
-                    {paymentMethod.kind === 'money' && <AttachMoneyIcon color="primary" />}
+                    {paymentMethod.kind === 'card' && <CreditCardIcon color="action" />}
+                    {paymentMethod.kind === 'money' && <AttachMoneyIcon color="action" />}
                   </div>
                 </div>
                 <div className={classes.method}>

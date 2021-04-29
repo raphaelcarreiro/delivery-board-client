@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -140,3 +140,8 @@ CustomDialog.propTypes = {
 };
 
 export const DialogConsumer = CustomDialogContext.Consumer;
+
+export function useCustomDialog() {
+  const context = useContext(CustomDialogContext);
+  return context;
+}

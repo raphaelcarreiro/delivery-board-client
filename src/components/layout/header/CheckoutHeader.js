@@ -6,6 +6,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { Typography } from '@material-ui/core';
 import { useApp } from 'src/hooks/app';
 import { PAGE_MAX_WIDTH } from 'src/constants/constants';
+import HeaderRestaurantAddress from './HeaderRestaurantAddress';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -67,7 +68,6 @@ export default function CheckoutHeader() {
   const restaurant = useSelector(state => state.restaurant);
   const cart = useSelector(state => state.cart);
   const classes = useStyles({ cartItems: cart.products.length > 0 });
-  const user = useSelector(state => state.user);
   const app = useApp();
 
   function handleCartClick() {
@@ -87,15 +87,7 @@ export default function CheckoutHeader() {
               </LinkNext>
             )}
           </div>
-          <Typography variant="h6">
-            {user && cart.products.length > 0 && `${user.name}, finalize seu pedido.`}
-          </Typography>
-          <div>
-            <Typography color="primary" onClick={handleCartClick} className={classes.cartLink}>
-              {cart.products.length > 0 && <span className={classes.cartBadge}>{cart.products.length}</span>}
-              <ShoppingCartIcon color="primary" /> carrinho
-            </Typography>
-          </div>
+          <HeaderRestaurantAddress />
         </div>
       </header>
     </>

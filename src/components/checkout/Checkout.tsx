@@ -1,32 +1,31 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   setCustomer,
-  setPaymentMethod,
   setProducts,
   setChange,
   clearCard,
   setCoupon,
   setTax,
   setDiscount,
+  setShipmentAddress,
 } from 'src/store/redux/modules/order/actions';
 import Shipment from './steps/shipment/Shipment';
 import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
-import { steps as defaultSteps } from './steps/steps';
-import { Grid, Typography } from '@material-ui/core';
+import { steps as defaultSteps, CheckoutStepIds } from './steps/steps';
+import { Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Payment from 'src/components/checkout/steps/payment/Payment';
 import Confirm from 'src/components/checkout/steps/confirm/Confirm';
 import CheckoutEmptyCart from 'src/components/checkout/steps/CheckoutEmptyCart';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import CheckoutSuccess from 'src/components/checkout/steps/success/CheckoutSuccess';
-import { clearCart } from 'src/store/redux/modules/cart/actions';
+import { clearCart, setTax as cartSetTax } from 'src/store/redux/modules/cart/actions';
 import Cart from 'src/components/checkout/cart/Cart';
 import IndexAppbarActions from 'src/components/index/IndexAppbarActions';
 import DialogFullscreen from 'src/components/dialog/DialogFullscreen';
 import CheckoutButtons from 'src/components/checkout/CheckoutButtons';
-import CheckoutMobileButtons from 'src/components/checkout/CheckoutMobileButtons';
 import ShipmentMethod from './steps/shipment-method/ShipmentMethod';
 import { useRouter } from 'next/router';
 import InsideLoading from '../loading/InsideLoading';
@@ -34,14 +33,17 @@ import { useMessaging } from 'src/hooks/messaging';
 import { useAuth } from 'src/hooks/auth';
 import { useApp } from 'src/hooks/app';
 import CheckoutError from './steps/error/CheckoutError';
-import { CheckoutProvider } from './steps/hooks/useCheckout';
+import { CheckoutContextValue, CheckoutProvider } from './steps/hooks/useCheckout';
+import { useSelector } from 'src/store/redux/selector';
+import CheckoutTitle from './CheckoutTitle';
+import { Area } from 'src/types/area';
 
-const cartWidth = 450;
+type UseStylesProps = {
+  step: number;
+  isCartVisible: boolean;
+};
 
-const useStyles = makeStyles(theme => ({
-  title: {
-    marginBottom: 15,
-  },
+const useStyles = makeStyles<Theme, UseStylesProps>(theme => ({
   productDescription: {
     [theme.breakpoints.down('sm')]: {
       display: 'none',
@@ -56,22 +58,20 @@ const useStyles = makeStyles(theme => ({
     marginTop: 60,
     borderLeft: '1px solid #eee',
   },
-  step: {
-    display: 'inline-flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: theme.palette.primary.main,
-    color: '#fff',
-    width: 40,
-    height: 40,
-    borderRadius: '50%',
-    marginRight: 10,
-    border: `2px solid ${theme.palette.primary.dark}`,
-  },
   container: {
     flex: 1,
+    display: 'flex',
     [theme.breakpoints.down('md')]: {
       marginBottom: 20,
+    },
+  },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 400px',
+    columnGap: 30,
+    flex: 1,
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateColumns: '1fr',
     },
   },
   actions: ({ step }) => ({
@@ -80,24 +80,12 @@ const useStyles = makeStyles(theme => ({
     justifyContent: step > 1 ? 'space-between' : 'flex-end',
     marginTop: 20,
   }),
-  cart: ({ isCartVisible }) => ({
-    transition: 'transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms',
-    transform: isCartVisible ? 'none' : `translateX(${cartWidth}px)`,
-    position: 'fixed',
-    top: 80,
-    width: cartWidth,
-    bottom: 0,
-    right: 0,
-    backgroundColor: '#fff',
-    boxShadow: '0 0 6px 4px #ddd',
-    padding: '10px 20px 20px 20px',
-    zIndex: 9,
-    overflowY: 'auto',
-  }),
-  stepDescription: {
-    fontSize: 18,
-    [theme.breakpoints.down('xs')]: {
-      fontSize: 18,
+  cart: {
+    display: 'flex',
+    position: 'relative',
+    backgroundColor: '#eee',
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
     },
   },
   cartContent: {
@@ -110,12 +98,13 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
+    paddingBottom: 100,
   },
 }));
 
-export default function Checkout() {
+const Checkout: React.FC = () => {
   const { handleOpen } = useMessaging();
-  const { isCartVisible, handleCartVisibility, isMobile, windowWidth } = useApp();
+  const { isCartVisible, handleCartVisibility } = useApp();
   const user = useSelector(state => state.user);
   const cart = useSelector(state => state.cart);
   const order = useSelector(state => state.order);
@@ -131,12 +120,13 @@ export default function Checkout() {
   const dispatch = useDispatch();
   const auth = useAuth();
   const [error, setError] = useState('');
+  const [area, setArea] = useState<Area | null>(null);
 
   const currentStep = useMemo(() => {
     return steps.find(item => item.order === step);
   }, [step, steps]);
 
-  const checkoutContextValue = {
+  const checkoutContextValue: CheckoutContextValue = {
     handleStepNext: handleStepNext,
     handleStepPrior: handleStepPrior,
     handleSubmitOrder: handleSubmitOrder,
@@ -147,6 +137,8 @@ export default function Checkout() {
     saving,
     createdOrder,
     step,
+    currentStep,
+    area,
   };
 
   useEffect(() => {
@@ -251,14 +243,28 @@ export default function Checkout() {
       .get('/order/paymentMethods')
       .then(response => {
         setPaymentMethods(response.data);
-        const paymentMethods = response.data;
-        const offline = paymentMethods.some(method => method.mode === 'offline');
-        if (offline) dispatch(setPaymentMethod(response.data[0]));
       })
       .catch(err => {
-        if (err.response) handleOpen(err.response.data.error, null, { marginBottom: 47 });
+        if (err.response) handleOpen(err.response.data.error);
       });
   }, [dispatch, handleOpen]);
+
+  useEffect(() => {
+    if (!order.restaurant_address) return;
+
+    setSaving(true);
+
+    api
+      .get(`/area/restaurantAddress/${order.restaurant_address.id}`)
+      .then(response => {
+        setArea(response.data || null);
+        dispatch(setShipmentAddress({}));
+        dispatch(cartSetTax(0));
+        setStep(1);
+      })
+      .catch(err => console.error(err))
+      .finally(() => setSaving(false));
+  }, [order.restaurant_address, dispatch]);
 
   useEffect(() => {
     dispatch(setProducts(cart.products));
@@ -266,12 +272,17 @@ export default function Checkout() {
   }, [cart, dispatch]);
 
   function handleSubmitOrder() {
+    if (!restaurant) return;
+
     if (cart.subtotal < restaurant.configs.order_minimum_value && restaurant.configs.tax_mode !== 'order_value') {
-      handleOpen(`Valor mínimo do pedido deve ser ${restaurant.configs.formattedOrderMinimumValue}`, null, {
-        marginBottom: 47,
+      handleOpen(`Valor mínimo do pedido deve ser ${restaurant.configs.formattedOrderMinimumValue}`, {
+        style: {
+          marginBottom: 47,
+        },
       });
       return;
     }
+
     setSaving(true);
 
     api
@@ -298,14 +309,14 @@ export default function Checkout() {
   }
 
   function handleStepNext() {
-    if (currentStep.id === 'STEP_SHIPMENT') {
+    if (currentStep?.id === 'STEP_SHIPMENT') {
       if (!order.shipment.id) {
-        handleOpen('Informe o endereço', null, { marginBottom: 47 });
+        handleOpen('Informe o endereço');
         return;
       }
-    } else if (currentStep.id === 'STEP_PAYMENT') {
+    } else if (currentStep?.id === 'STEP_PAYMENT') {
       if (!order.paymentMethod) {
-        handleOpen('Selecione uma forma de pagamento', null, { marginBottom: 47 });
+        handleOpen('Selecione uma forma de pagamento');
         return;
       }
     }
@@ -316,88 +327,73 @@ export default function Checkout() {
     if (step > 1) setStep(step - 1);
   }
 
-  function handleSetStep(step) {
+  function handleSetStep(step: number) {
     if (step < 1 || step > 4) return;
     setStep(step);
   }
 
-  function handleSetStepById(id) {
-    const order = steps.find(s => s.id === id).order;
-    if (order) setStep(order);
+  function handleSetStepById(id: CheckoutStepIds) {
+    const step = steps.find(s => s.id === id);
+
+    if (!step) return;
+
+    if (order) setStep(step.order);
   }
 
   return (
     <CheckoutProvider value={checkoutContextValue}>
-      {!isMobile && windowWidth >= 960 ? (
-        <div className={classes.cart}>
-          <Cart />
-        </div>
-      ) : (
-        <>
-          {isCartVisible && (
-            <DialogFullscreen title="carrinho" handleModalState={() => handleCartVisibility(false)}>
-              <div className={classes.cartContent}>
-                <Cart />
-              </div>
-            </DialogFullscreen>
-          )}
-        </>
-      )}
+      <>
+        {isCartVisible && (
+          <DialogFullscreen title="carrinho" handleModalState={() => handleCartVisibility(false)}>
+            <div className={classes.cartContent}>
+              <Cart />
+            </div>
+          </DialogFullscreen>
+        )}
+      </>
+
       <CustomAppbar
-        title={currentStep.id === 'STEP_SUCCESS' ? 'pedido recebido' : 'finalizar pedido'}
+        title={currentStep?.id === 'STEP_SUCCESS' ? 'pedido recebido' : 'finalizar pedido'}
         actionComponent={<IndexAppbarActions />}
+        cancel={step > 1 && currentStep?.id !== 'STEP_SUCCESS'}
+        cancelAction={step > 1 ? handleStepPrior : undefined}
       />
       {saving && <Loading background="rgba(250,250,250,0.5)" />}
       {auth.isLoading ? (
         <InsideLoading />
-      ) : currentStep.id === 'STEP_SUCCESS' ? (
+      ) : currentStep?.id === 'STEP_SUCCESS' ? (
         <CheckoutSuccess />
       ) : error ? (
         <CheckoutError handleReset={() => setError('')} errorMessage={error} />
       ) : cart.products.length === 0 ? (
         <CheckoutEmptyCart />
       ) : (
-        <Grid container direction="column" justify="space-between" className={classes.container}>
-          <div className={classes.content}>
-            <Grid item xs={12} className={classes.title}>
-              <Typography variant="h6" className={classes.stepDescription}>
-                <span className={classes.step}>{currentStep.order}</span>
-                {currentStep.description}
-              </Typography>
-            </Grid>
-            {currentStep.id === 'STEP_SHIPMENT_METHOD' ? (
-              <ShipmentMethod />
-            ) : currentStep.id === 'STEP_SHIPMENT' ? (
-              <Shipment addresses={user.customer ? user.customer.addresses : []} />
-            ) : currentStep.id === 'STEP_PAYMENT' ? (
-              <Payment
-                paymentMethods={paymentMethods}
-                paymentMethodId={order.paymentMethod && order.paymentMethod.id}
-                isCardValid={isCardValid}
-                setIsCardValid={setIsCardValid}
-              />
-            ) : (
-              currentStep.id === 'STEP_CONFIRM' && <Confirm />
-            )}
+        <div className={classes.container}>
+          <div className={classes.grid}>
+            <div className={classes.content}>
+              <CheckoutTitle />
+              {currentStep?.id === 'STEP_SHIPMENT_METHOD' ? (
+                <ShipmentMethod />
+              ) : currentStep?.id === 'STEP_SHIPMENT' ? (
+                <Shipment addresses={user.customer ? user.customer.addresses : []} />
+              ) : currentStep?.id === 'STEP_PAYMENT' ? (
+                <Payment
+                  paymentMethods={paymentMethods}
+                  paymentMethodId={order.paymentMethod && order.paymentMethod.id}
+                />
+              ) : (
+                currentStep?.id === 'STEP_CONFIRM' && <Confirm />
+              )}
+              <CheckoutButtons />
+            </div>
+            <div className={classes.cart}>
+              <Cart />
+            </div>
           </div>
-          {currentStep.id !== 'STEP_SHIPMENT_METHOD' && (
-            <>
-              <CheckoutButtons
-                handleStepNext={handleStepNext}
-                handleStepPrior={handleStepPrior}
-                currentStep={currentStep}
-                quantitySteps={steps.length}
-              />
-              <CheckoutMobileButtons
-                handleStepNext={handleStepNext}
-                handleStepPrior={handleStepPrior}
-                currentStep={currentStep}
-                quantitySteps={steps.length}
-              />
-            </>
-          )}
-        </Grid>
+        </div>
       )}
     </CheckoutProvider>
   );
-}
+};
+
+export default Checkout;

@@ -12,6 +12,7 @@ export const ADD_ADDRESS = '@user/ADD_ADDRESS';
 export const DELETE_ADDRESS = '@user/DELETE_ADDRESS';
 export const UPDATE_ADDRESS = '@user/UPDATE_ADDRESS';
 export const SET_MAIN_ADDRESS = '@user/SET_MAIN_ADDRESS';
+export const SET_CUSTOMER_ADDRESSES = '@user/SET_CUSTOMER_ADDRESSES';
 
 interface SetUserAction {
   type: typeof SET_USER;
@@ -62,6 +63,11 @@ interface SetMainAddressAction {
   addressId: number;
 }
 
+interface SetCustomerAddressesAction {
+  type: typeof SET_CUSTOMER_ADDRESSES;
+  addresses: Address[];
+}
+
 export type UserActionsType =
   | SetMainAddressAction
   | UpdateAddressAction
@@ -72,4 +78,5 @@ export type UserActionsType =
   | CustomerChangeAction
   | UserChangeAction
   | RemoveUserAction
-  | SetUserAction;
+  | SetUserAction
+  | SetCustomerAddressesAction;

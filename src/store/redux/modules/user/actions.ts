@@ -65,6 +65,13 @@ export function updateCustomerAddress(address: Address): UserActionsType {
   };
 }
 
+export function setCustomerAddresses(addresses: Address[]): UserActionsType {
+  return {
+    type: '@user/SET_CUSTOMER_ADDRESSES',
+    addresses,
+  };
+}
+
 export function setMainCustomerAddress(addressId: number): UserActionsType {
   return {
     type: '@user/SET_MAIN_ADDRESS',

@@ -1,5 +1,7 @@
 import { createContext, Dispatch, SetStateAction, useContext } from 'react';
+import { Area } from 'src/types/area';
 import { CreatedOrder } from 'src/types/order';
+import { CheckoutStep } from '../steps';
 
 export interface CheckoutContextValue {
   handleStepNext(): void;
@@ -12,6 +14,8 @@ export interface CheckoutContextValue {
   saving: boolean;
   createdOrder: CreatedOrder | null;
   step: number;
+  currentStep?: CheckoutStep;
+  area: null | Area;
 }
 
 const CheckoutContext = createContext<CheckoutContextValue>({} as CheckoutContextValue);

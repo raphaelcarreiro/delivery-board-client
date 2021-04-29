@@ -26,6 +26,10 @@ import LayoutHandler from './components/layout/LayoutHandler';
 import { AppProvider, AppContextValue } from './hooks/app';
 import { useWindowSize } from './hooks/windowSize';
 import InstallAppNotification from './components/install-app-notification/InstallAppNotification';
+import RestaurantAddressSelector from './components/restaurant-address-selector/RestaurantAddressSelector';
+import { Restaurant, RestaurantAddress } from './types/restaurant';
+import { setRestaurantAddress } from './store/redux/modules/order/actions';
+import { setCustomerAddresses } from './store/redux/modules/user/actions';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -58,6 +62,8 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const restaurant = useSelector(state => state.restaurant);
   const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
   const windowSize = useWindowSize();
+  const [dialogRestaurantAddress, setDialogRestaurantAddress] = useState(false);
+  const order = useSelector(state => state.order);
 
   const handleCartVisibility = useCallback((state?: boolean) => {
     setIsCartVisible(oldValue => (state === undefined ? !oldValue : state));
@@ -99,19 +105,40 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   }, [restaurant]);
 
   useEffect(() => {
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-      for (const registration of registrations) {
-        if (registration.scope.includes('service-worker')) registration.unregister();
-      }
-    });
-  }, []);
+    if (!order.restaurant_address) return;
+
+    localStorage.setItem('restaurantAddressId', order.restaurant_address.id.toString());
+
+    api
+      .post('/addressDistances', { restaurantAddressId: order.restaurant_address.id })
+      .then(response => {
+        const customerAddresses = response.data;
+        dispatch(setCustomerAddresses(customerAddresses));
+      })
+      .catch(err => console.error(err));
+  }, [dispatch, order.restaurant_address]);
 
   useEffect(() => {
     api
-      .get('/restaurants')
+      .get<Restaurant>('/restaurants')
       .then(response => {
         const _restaurant = response.data;
         const { configs } = _restaurant;
+        let restaurantAddress: RestaurantAddress | undefined;
+
+        if (configs.restaurant_address_selection) setDialogRestaurantAddress(true);
+
+        const restaurantAddressId = localStorage.getItem('restaurantAddressId');
+
+        if (restaurantAddressId) {
+          restaurantAddress = _restaurant.addresses.find(address => address.id === parseInt(restaurantAddressId));
+          if (!restaurantAddress) restaurantAddress = _restaurant.addresses.find(address => address.is_main);
+        } else restaurantAddress = _restaurant.addresses.find(address => address.is_main);
+
+        if (restaurantAddress) {
+          dispatch(setRestaurantAddress(restaurantAddress));
+          localStorage.setItem('restaurantAddressId', restaurantAddress.id.toString());
+        }
 
         dispatch(
           setRestaurant({
@@ -222,6 +249,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     setRedirect: handleSetRedirect,
     handleInstallApp,
     handleShowPlayStoreBanner: handleShowPlayStoreBanner,
+    setDialogRestaurantAddress,
   };
 
   return (
@@ -230,6 +258,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
       <AppProvider value={appProviderValue}>
         {initialLoading && <InitialLoading />}
         {isProgressBarVisible && <LinearProgress color="secondary" className={classes.progressBar} />}
+        {dialogRestaurantAddress && <RestaurantAddressSelector onExited={() => setDialogRestaurantAddress(false)} />}
 
         <AuthProvider>
           <FirebaseProvider>

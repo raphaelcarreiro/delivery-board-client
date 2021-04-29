@@ -16,13 +16,26 @@ const useStyles = makeStyles(theme => ({
   cart: {
     display: 'flex',
     flexDirection: 'column',
-    marginBottom: 30,
+    flex: 1,
+    position: 'fixed',
+    top: 80,
+    bottom: 0,
+    width: 400,
+    backgroundColor: '#f5f5f5',
+    padding: 15,
+    [theme.breakpoints.down('sm')]: {
+      position: 'relative',
+      backgroundColor: '#fff',
+      width: '100%',
+      padding: 0,
+      top: 'unset',
+    },
   },
   emptyCart: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100%',
+    flex: 1,
   },
   title: {
     display: 'flex',
@@ -94,7 +107,9 @@ export default function Cart() {
         </>
       )}
       {couponView ? (
-        <Coupon setClosedCouponView={() => setCouponView(false)} />
+        <div className={classes.cart}>
+          <Coupon setClosedCouponView={() => setCouponView(false)} />
+        </div>
       ) : cart.products.length > 0 ? (
         <div className={classes.cart}>
           <Typography className={classes.title} variant="h5" color="primary">

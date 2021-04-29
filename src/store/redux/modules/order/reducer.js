@@ -26,6 +26,7 @@ const INITIAL_STATE = {
     app_name: name,
     platform: 'web-app',
   },
+  restaurant_address: null,
 };
 
 export default function order(state = INITIAL_STATE, action) {
@@ -41,7 +42,6 @@ export default function order(state = INITIAL_STATE, action) {
       return {
         ...state,
         shipment: {
-          // ...state.shipment,
           ...action.address,
           shipment_method: 'delivery',
         },
@@ -53,6 +53,7 @@ export default function order(state = INITIAL_STATE, action) {
         ...state,
         shipment: {
           ...state.shipment,
+          ...state.restaurant_address,
           shipment_method: action.shipmentMethod,
         },
       };
@@ -165,6 +166,13 @@ export default function order(state = INITIAL_STATE, action) {
           ...state.creditCard,
           token: action.token,
         },
+      };
+    }
+
+    case '@order/SET_RESTAURANT_ADDRESS': {
+      return {
+        ...state,
+        restaurant_address: action.address,
       };
     }
 

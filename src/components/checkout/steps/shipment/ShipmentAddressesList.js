@@ -16,6 +16,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: fade(theme.palette.primary.main, 0.2),
     position: 'relative',
     alignItems: 'center',
+    minHeight: 165,
     '&:focus': {
       backgroundColor: fade(theme.palette.primary.main, 0.2),
     },
@@ -30,12 +31,13 @@ const useStyles = makeStyles(theme => ({
     borderRadius: theme.shape.borderRadius,
     alignItems: 'center',
     position: 'relative',
+    minHeight: 165,
   },
   listItemNewAddress: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 120,
+    minHeight: 165,
     backgroundColor: '#fff',
     boxShadow: '1px 1px 9px 1px #eee',
     borderRadius: theme.shape.borderRadius,
@@ -43,19 +45,13 @@ const useStyles = makeStyles(theme => ({
   },
   list: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
-    gridGap: 6,
-    [theme.breakpoints.down('md')]: {
-      gridTemplateColumns: 'repeat(2, 1fr)',
-    },
+    gridTemplateColumns: 'repeat(1, 1fr)',
+    gridGap: 10,
     [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: '1fr',
     },
   },
-  address: {
-    display: 'flex',
-    alignItems: 'center',
-  },
+  address: {},
   iconButton: {
     position: 'absolute',
     bottom: 0,
@@ -98,6 +94,7 @@ const useStyles = makeStyles(theme => ({
   },
   tax: {
     marginTop: 7,
+    fontWeight: 400,
   },
 }));
 
@@ -160,7 +157,7 @@ export default function ShipmentAddressesList({
               <MoreVertIcon />
             </IconButton>
             <div>
-              <Typography variant="h6" className={classes.address}>
+              <Typography variant="h6" gutterBottom className={classes.address}>
                 {address.address}, {address.number}
                 {address.is_main === 1 && (
                   <Tooltip title="Endereço principal">
@@ -168,21 +165,17 @@ export default function ShipmentAddressesList({
                   </Tooltip>
                 )}
               </Typography>
-              <Typography color="textSecondary">{address.district}</Typography>
-              <Typography color="textSecondary">
-                {address.city}, {address.region}
-              </Typography>
-              {address.postal_code !== '00000000' && (
-                <Typography color="textSecondary">{address.postal_code}</Typography>
-              )}
+              <Typography variant="body1">{`${address.district}, ${address.city} - ${address.region}`}</Typography>
+
+              {address.postal_code !== '00000000' && <Typography variant="body1">{address.postal_code}</Typography>}
               {restaurant.configs.tax_mode === 'district' && address.area_region && address.area_region.tax > 0 && (
                 <Typography color="textSecondary" className={classes.tax} variant="body2">
-                  taxa de entrega de {address.area_region.formattedTax}
+                  {address.area_region.formattedTax} de taxa de entrega
                 </Typography>
               )}
               {restaurant.configs.tax_mode === 'distance' && address.distance_tax > 0 && (
                 <Typography color="textSecondary" className={classes.tax} variant="body2">
-                  taxa de entrega de {address.formattedDistanceTax}
+                  taxa {address.formattedDistanceTax}
                 </Typography>
               )}
             </div>

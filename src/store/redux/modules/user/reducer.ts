@@ -120,6 +120,7 @@ export default function user(state = INITIAL_STATE, action: UserActionsType): Us
 
         return address;
       });
+
       return {
         ...state,
         customer: {
@@ -131,6 +132,28 @@ export default function user(state = INITIAL_STATE, action: UserActionsType): Us
     case '@user/SET_MAIN_ADDRESS': {
       const addresses = state.customer.addresses.map(address => {
         address.is_main = address.id === action.addressId;
+        return address;
+      });
+
+      return {
+        ...state,
+        customer: {
+          ...state.customer,
+          addresses,
+        },
+      };
+    }
+
+    case '@user/SET_CUSTOMER_ADDRESSES': {
+      const addresses = action.addresses.map(address => {
+        address.formattedDistanceTax = moneyFormat(address.distance_tax);
+        address.area_region = address.area_region
+          ? {
+              ...address.area_region,
+              formattedTax: moneyFormat(address.area_region.tax),
+            }
+          : null;
+
         return address;
       });
 

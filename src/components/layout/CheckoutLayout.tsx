@@ -9,9 +9,9 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    minHeight: 'calc(100vh - 250px)',
+    minHeight: 'calc(100vh - 110px)',
     maxWidth: PAGE_MAX_WIDTH,
-    margin: '0 auto 100px',
+    margin: '0 auto',
     padding: '20px 20px 0 20px',
     [theme.breakpoints.down('lg')]: {
       maxWidth: 1200,
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    minHeight: 'calc(100vh - 106px)',
+    minHeight: 'calc(100vh - 125px)',
     padding: '20px 20px 30px',
   },
   wrapper: {
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     marginTop: 80,
     [theme.breakpoints.down('xs')]: {
-      marginTop: 56,
+      marginTop: 110,
     },
   },
 }));

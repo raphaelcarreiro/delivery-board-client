@@ -24,10 +24,12 @@ export interface RestaurantConfig {
   facebook_pixel_id: string;
   google_login: boolean;
   facebook_login: boolean;
+  order_minimum_products_amount: number;
   cart_accumulate_discount: boolean;
+  restaurant_address_selection: boolean;
 }
 
-interface RestaurantAddress {
+export interface RestaurantAddress {
   id: number;
   address: string;
   number: string;
@@ -36,7 +38,9 @@ interface RestaurantAddress {
   city: string;
   is_main: boolean;
   region: string;
-  complement: string;
+  complement: string | null;
+  nickname: string;
+  active: boolean;
 }
 
 interface RestaurantPhones {
@@ -68,6 +72,7 @@ export interface Restaurant {
   minimum_order: number;
   image: Image;
   cover: Image;
+  mobile_cover: Image | null;
   configs: RestaurantConfig;
   delivery_max_distance: number;
   addresses: RestaurantAddress[];

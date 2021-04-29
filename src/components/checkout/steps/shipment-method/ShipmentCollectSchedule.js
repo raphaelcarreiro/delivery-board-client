@@ -91,7 +91,7 @@ export default function ShipmentCollectSchedule({ onExited }) {
           <>
             {!hasSchedule ? (
               <div className={classes.container}>
-                <Typography variant="h6">Agendar a retirada?</Typography>
+                <Typography variant="h6">agendar a retirada?</Typography>
                 <div className={classes.actions}>
                   <Button onClick={handleScheduleYes} variant="contained" color="primary">
                     Sim

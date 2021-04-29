@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useContext, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Button } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import PageHeader from 'src/components/pageHeader/PageHeader';
 import { formatId } from 'src/helpers/formatOrderId';
 import { api } from 'src/services/api';
@@ -11,9 +11,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import io from 'socket.io-client';
-import { useSelector } from 'react-redux';
-import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
-import { firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
 import OrderAction from './OrderAction';
 import OrderProductList from './products/OrderProductList';
 import Link from 'src/components/link/Link';
@@ -23,7 +20,6 @@ import OrderShipment from './OrderShipment';
 import OrderPayment from './OrderPayment';
 import OrderTotals from './OrderTotals';
 import { useMessaging } from 'src/hooks/messaging';
-import { useFirebase } from 'src/hooks/firebase';
 
 const useStyles = makeStyles(theme => ({
   section: {
@@ -38,6 +34,7 @@ const useStyles = makeStyles(theme => ({
       padding: 10,
       backgroundColor: 'inherit',
       border: 'none',
+      marginBottom: 0,
     },
   },
   container: {
@@ -85,10 +82,8 @@ Order.propTypes = {
 export default function Order({ cryptId }) {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
-  const user = useSelector(state => state.user);
   const messaging = useMessaging();
   const classes = useStyles();
-  const { requestPermissionMessaging, fmHasToken } = useFirebase();
 
   useEffect(() => {
     const socket = io.connect(process.env.NEXT_PUBLIC_SOCKET + '/client');
@@ -198,22 +193,6 @@ export default function Order({ cryptId }) {
         <>
           <PageHeader title={`pedido ${order.formattedId}`} description={`pedido gerado em ${order.formattedDate}`} />
           <div className={classes.container}>
-            {!fmHasToken && isSupported() && user.id && (
-              <div className={classes.activeNotifications}>
-                <Typography variant="body2" color="textSecondary" align="center">
-                  Ative notificações para acompanhar esse pedido
-                </Typography>
-                <Button
-                  color="primary"
-                  onClick={requestPermissionMessaging}
-                  variant="contained"
-                  size="small"
-                  startIcon={<NotificationsActiveIcon />}
-                >
-                  Ativar
-                </Button>
-              </div>
-            )}
             <OrderStatusList order={order} />
             <div className={classes.containerGrid2}>
               <div className={classes.section}>

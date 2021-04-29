@@ -10,9 +10,10 @@ const api = axios.create({
 api.interceptors.request.use(
   config => {
     const token = localStorage.getItem(process.env.NEXT_PUBLIC_TOKEN_NAME || '');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    const restaurantAddressId = localStorage.getItem('restaurantAddressId');
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+
+    if (restaurantAddressId) config.headers.restaurantAddressId = restaurantAddressId;
     return config;
   },
   err => Promise.reject(err)
