@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => ({
     width: 400,
     backgroundColor: '#f5f5f5',
     padding: 15,
+    overflowY: 'auto',
     [theme.breakpoints.down('sm')]: {
       position: 'relative',
       backgroundColor: '#fff',

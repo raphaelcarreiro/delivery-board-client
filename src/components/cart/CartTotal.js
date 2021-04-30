@@ -13,6 +13,7 @@ const useStyles = makeStyles({
   container: {
     display: 'flex',
     flexDirection: 'column',
+    marginBottom: 50,
   },
   cartValues: {
     display: 'grid',

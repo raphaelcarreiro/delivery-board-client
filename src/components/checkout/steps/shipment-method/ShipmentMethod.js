@@ -4,7 +4,7 @@ import { ListItem, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { setShipmentMethod, setSchedule } from 'src/store/redux/modules/order/actions';
 import ShipmentCollectSchedule from './ShipmentCollectSchedule';
-import { useCheckout } from '../hooks/useCheckout';
+import { useCheckout } from '../../hooks/useCheckout';
 
 const useStyles = makeStyles(theme => ({
   container: {

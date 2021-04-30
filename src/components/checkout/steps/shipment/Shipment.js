@@ -12,7 +12,7 @@ import DialogDelete from 'src/components/dialog/delete/DialogDelete';
 import { Grid } from '@material-ui/core';
 import { useMessaging } from 'src/hooks/messaging';
 import { useApp } from 'src/hooks/app';
-import { useCheckout } from '../hooks/useCheckout';
+import { useCheckout } from '../../hooks/useCheckout';
 
 Shipment.propTypes = {
   addresses: PropTypes.array.isRequired,

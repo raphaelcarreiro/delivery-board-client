@@ -10,7 +10,7 @@ import { firebaseMessagingIsSupported as isSupported } from 'src/config/Firebase
 import { FiCheck } from 'react-icons/fi';
 import { useFirebase } from 'src/hooks/firebase';
 import { useApp } from 'src/hooks/app';
-import { useCheckout } from '../hooks/useCheckout';
+import { useCheckout } from '../../hooks/useCheckout';
 import CheckoutSucessPix from './CheckoutSuccessPix';
 
 const useStyles = makeStyles(theme => ({

@@ -1,7 +1,7 @@
 import { createContext, Dispatch, SetStateAction, useContext } from 'react';
 import { Area } from 'src/types/area';
 import { CreatedOrder } from 'src/types/order';
-import { CheckoutStep } from '../steps';
+import { CheckoutStep } from '../steps/steps';
 
 export interface CheckoutContextValue {
   handleStepNext(): void;

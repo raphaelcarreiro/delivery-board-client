@@ -33,7 +33,7 @@ import { useMessaging } from 'src/hooks/messaging';
 import { useAuth } from 'src/hooks/auth';
 import { useApp } from 'src/hooks/app';
 import CheckoutError from './steps/error/CheckoutError';
-import { CheckoutContextValue, CheckoutProvider } from './steps/hooks/useCheckout';
+import { CheckoutContextValue, CheckoutProvider } from './hooks/useCheckout';
 import { useSelector } from 'src/store/redux/selector';
 import CheckoutTitle from './CheckoutTitle';
 import { Area } from 'src/types/area';

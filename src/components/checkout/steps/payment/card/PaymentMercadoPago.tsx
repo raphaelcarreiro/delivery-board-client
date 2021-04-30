@@ -11,7 +11,7 @@ import { useCardValidation } from '../validation/useCardValidation';
 import { useSelector } from 'src/store/redux/selector';
 import { format } from 'date-fns';
 import { useMessaging } from 'src/hooks/messaging';
-import { useCheckout } from '../../hooks/useCheckout';
+import { useCheckout } from '../../../hooks/useCheckout';
 
 declare global {
   interface Window {

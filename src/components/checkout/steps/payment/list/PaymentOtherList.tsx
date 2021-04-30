@@ -5,7 +5,7 @@ import { makeStyles, fade } from '@material-ui/core/styles';
 import PaymentCpf from '../PaymentCpf';
 import { useSelector } from 'src/store/redux/selector';
 import PicPayIcon from 'src/components/icons/PicPayIcon';
-import { useCheckout } from '../../hooks/useCheckout';
+import { useCheckout } from '../../../hooks/useCheckout';
 
 const useStyles = makeStyles(theme => ({
   list: {

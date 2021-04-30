@@ -9,7 +9,7 @@ import PaymentChange from 'src/components/checkout/steps/payment/PaymentChange';
 import { useSelector, useDispatch } from 'react-redux';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { setPaymentMethod } from 'src/store/redux/modules/order/actions';
-import { useCheckout } from '../../hooks/useCheckout';
+import { useCheckout } from '../../../hooks/useCheckout';
 
 const useStyles = makeStyles(theme => ({
   list: {

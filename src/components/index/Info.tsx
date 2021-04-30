@@ -112,7 +112,9 @@ const Info: React.FC<InfoProps> = ({ restaurant }) => {
           <img className={classes.logo} src={restaurant.image.imageThumbUrl} alt={restaurant.name} />
         </div>
         <div className={classes.detail}>
-          <Typography className={`restaurant-name ${classes.description}`}>{restaurant.name}</Typography>
+          <Typography noWrap className={`restaurant-name ${classes.description}`}>
+            {restaurant.name}
+          </Typography>
           <Typography className={classes.description} variant="body2" color="textSecondary">
             {restaurant.description}
           </Typography>

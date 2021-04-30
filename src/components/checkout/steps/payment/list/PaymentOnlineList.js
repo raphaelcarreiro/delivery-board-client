@@ -10,7 +10,7 @@ import { setPaymentMethod } from 'src/store/redux/modules/order/actions';
 import PaymentMercadoPago from '../card/PaymentMercadoPago';
 import PaymentCpf from '../PaymentCpf';
 import PaymentCard from '../card/PaymentCard';
-import { useCheckout } from '../../hooks/useCheckout';
+import { useCheckout } from '../../../hooks/useCheckout';
 
 const useStyles = makeStyles(theme => ({
   list: {

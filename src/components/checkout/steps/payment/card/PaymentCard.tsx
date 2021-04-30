@@ -9,7 +9,7 @@ import CustomDialog from 'src/components/dialog/CustomDialog';
 import PaymentCardActions from './PaymentCardActions';
 import { useCardValidation } from '../validation/useCardValidation';
 import { useSelector } from 'src/store/redux/selector';
-import { useCheckout } from '../../hooks/useCheckout';
+import { useCheckout } from '../../../hooks/useCheckout';
 
 const useStyles = makeStyles(theme => ({
   container: {

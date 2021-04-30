@@ -66,6 +66,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'flex-start',
     marginTop: 10,
+    marginBottom: 50,
   },
   infoItem: {
     display: 'flex',

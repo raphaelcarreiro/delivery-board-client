@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import { useCheckout } from './steps/hooks/useCheckout';
+import { useCheckout } from './hooks/useCheckout';
 import { ArrowBack } from '@material-ui/icons';
 
 interface UseStylesProps {

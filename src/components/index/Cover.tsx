@@ -23,7 +23,7 @@ const useStyles = makeStyles<Theme, MakeStylesProps>(theme => ({
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
     backgroundSize: 'cover',
-    filter: 'brightness(0.8) blur(0px)',
+    // filter: 'brightness(1) blur(0px)',
     zIndex: 2,
     borderRadius: '10px 10px 0 0',
     [theme.breakpoints.down('sm')]: {

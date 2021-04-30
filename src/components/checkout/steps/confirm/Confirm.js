@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { moneyFormat } from 'src/helpers/numberFormat';
-import { useCheckout } from '../hooks/useCheckout';
+import { useCheckout } from '../../hooks/useCheckout';
 import ConfirmShipmentAddressText from './ConfirmShipmentAddressText';
 
 const useStyles = makeStyles(theme => ({
