@@ -64,6 +64,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const windowSize = useWindowSize();
   const [dialogRestaurantAddress, setDialogRestaurantAddress] = useState(false);
   const order = useSelector(state => state.order);
+  const user = useSelector(state => state.user);
 
   const handleCartVisibility = useCallback((state?: boolean) => {
     setIsCartVisible(oldValue => (state === undefined ? !oldValue : state));
@@ -105,6 +106,8 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   }, [restaurant]);
 
   useEffect(() => {
+    if (!user.id) return;
+
     if (!order.restaurant_address) return;
 
     localStorage.setItem('restaurantAddressId', order.restaurant_address.id.toString());
@@ -116,7 +119,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
         dispatch(setCustomerAddresses(customerAddresses));
       })
       .catch(err => console.error(err));
-  }, [dispatch, order.restaurant_address]);
+  }, [dispatch, order.restaurant_address, user.id]);
 
   useEffect(() => {
     api
