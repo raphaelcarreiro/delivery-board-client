@@ -355,8 +355,9 @@ const Checkout: React.FC = () => {
       <CustomAppbar
         title={currentStep?.id === 'STEP_SUCCESS' ? 'pedido recebido' : 'finalizar pedido'}
         actionComponent={<IndexAppbarActions />}
-        cancel={step > 1 && currentStep?.id !== 'STEP_SUCCESS'}
-        cancelAction={step > 1 ? handleStepPrior : undefined}
+        cancelAction={
+          step > 1 && cart.products.length > 0 && currentStep?.id !== 'STEP_SUCCESS' ? handleStepPrior : undefined
+        }
       />
       {saving && <Loading background="rgba(250,250,250,0.5)" />}
       {auth.isLoading ? (

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { FaFacebookF, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { FaFacebookF, FaHeart, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { useSelector } from 'src/store/redux/selector';
 import Link from 'next/link';
 import { PAGE_MAX_WIDTH } from 'src/constants/constants';
@@ -76,8 +76,13 @@ const useStyles = makeStyles(theme => ({
     marginTop: 30,
   },
   developer: {
-    textAlign: 'center',
     margin: '30px 0 0',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '& svg': {
+      marginLeft: 7,
+    },
   },
 }));
 
@@ -172,8 +177,9 @@ const Footer: React.FC = () => {
         </div>
         <div className={classes.developer}>
           <a target="blank" href="https://www.sgrande.delivery">
-            sgrande.delivery
+            SGrande Delivery
           </a>
+          <FaHeart color="#f0592a" size={16} />
         </div>
       </div>
     </footer>

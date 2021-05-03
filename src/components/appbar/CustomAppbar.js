@@ -73,7 +73,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function CustomAppbar({ actionComponent, title, TabComponent, cancel, cancelAction }) {
+function CustomAppbar({ actionComponent, title, TabComponent, cancelAction }) {
   const [appBarTabs] = useState(true);
   const classes = useStyles();
   const { handleOpenMenu, isMobile, windowWidth, setDialogRestaurantAddress } = useApp();
@@ -101,8 +101,8 @@ function CustomAppbar({ actionComponent, title, TabComponent, cancel, cancelActi
               </div>
             )}
             <Toolbar>
-              <IconButton onClick={cancel ? cancelAction : handleOpenMenu} color="inherit">
-                {cancel ? <ArrowBackIcon /> : <MenuIcon />}
+              <IconButton onClick={cancelAction || handleOpenMenu} color="inherit">
+                {cancelAction ? <ArrowBackIcon /> : <MenuIcon />}
               </IconButton>
               {title && (
                 <Typography variant="h6" color="inherit" className={classes.appBarTitle}>
@@ -129,7 +129,6 @@ CustomAppbar.propTypes = {
   title: PropTypes.string.isRequired,
   actionComponent: PropTypes.element,
   TabComponent: PropTypes.element,
-  cancel: PropTypes.bool,
   cancelAction: PropTypes.func,
 };
 

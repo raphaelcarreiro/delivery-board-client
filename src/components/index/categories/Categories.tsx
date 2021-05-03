@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles, Typography } from '@material-ui/core';
 import { Category } from 'src/types/category';
 import CategoryList from './CategoryList';
-import Link from 'next/link';
 import { AnimatedBackground } from 'src/styles/animatedBackground';
 import { api } from 'src/services/api';
 import Slider from 'src/components/slider/Slider';
@@ -76,9 +75,6 @@ const Categories: React.FC = () => {
     <div className={classes.container}>
       <div className={classes.header}>
         <Typography variant="h5">cardápio</Typography>
-        <Link href="/menu">
-          <a>ver todos</a>
-        </Link>
       </div>
       {categories.length > 0 ? (
         <>

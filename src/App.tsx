@@ -248,7 +248,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     handleCartVisibility,
     setRedirect: handleSetRedirect,
     handleInstallApp,
-    handleShowPlayStoreBanner: handleShowPlayStoreBanner,
+    handleShowPlayStoreBanner,
     setDialogRestaurantAddress,
   };
 

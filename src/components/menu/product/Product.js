@@ -175,7 +175,6 @@ export default function Product({ products, categoryName, categoryUrl }) {
         />
       </Grid>
       <CustomAppbar
-        cancel
         cancelAction={isSearching ? handleCancelSearch : () => router.push('/menu')}
         title={isSearching ? '' : categoryName}
         actionComponent={

@@ -194,7 +194,6 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
         />
       </Grid>
       <CustomAppbar
-        cancel
         cancelAction={isSearching ? handleCancelSearch : () => router.push('/menu')}
         title={isSearching ? '' : categoryName}
         actionComponent={
