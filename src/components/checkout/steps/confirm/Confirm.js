@@ -92,11 +92,14 @@ export default function Confirm() {
                 agendado para as {order.shipment.formattedScheduledAt}
               </Typography>
             ) : (
-              restaurant.configs.delivery_time && (
+              restaurant.configs.delivery_time &&
+              (order.shipment.shipment_method === 'delivery' ? (
                 <Typography color="textSecondary" variant="body2">
-                  tempo estimado para retirada, {restaurant.configs.delivery_time} min
+                  tempo estimado para entrega, {restaurant.configs.delivery_time} min
                 </Typography>
-              )
+              ) : (
+                <Typography>tempo estimado para retirada, {restaurant.configs.delivery_time} min</Typography>
+              ))
             )}
           </div>
           <Typography color="primary" className={classes.link} onClick={() => handleChangeStep(1)}>
