@@ -2,14 +2,14 @@ import React from 'react';
 import CheckoutHeader from './header/CheckoutHeader';
 import { makeStyles } from '@material-ui/core/styles';
 import { useApp } from 'src/hooks/app';
-import { PAGE_MAX_WIDTH } from 'src/constants/constants';
+import { APPBAR_HEIGHT, PAGE_MAX_WIDTH } from 'src/constants/constants';
 
 const useStyles = makeStyles(theme => ({
   container: {
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    minHeight: 'calc(100vh - 110px)',
+    minHeight: `calc(100vh - ${APPBAR_HEIGHT}px)`,
     maxWidth: PAGE_MAX_WIDTH,
     margin: '0 auto',
     padding: '20px 20px 0 20px',
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     marginTop: 80,
     [theme.breakpoints.down('xs')]: {
-      marginTop: 110,
+      marginTop: APPBAR_HEIGHT,
     },
   },
 }));

@@ -4,7 +4,7 @@ import Footer from './footer/Footer';
 import { makeStyles } from '@material-ui/core/styles';
 import Cart from '../cart/Cart';
 import DialogFullscreen from 'src/components/dialog/DialogFullscreen';
-import { CART_WIDTH, PAGE_MAX_WIDTH } from '../../constants/constants';
+import { APPBAR_HEIGHT, CART_WIDTH, PAGE_MAX_WIDTH } from '../../constants/constants';
 import { useApp } from 'src/hooks/app';
 
 type StyleProps = {
@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     marginTop: 80,
     [theme.breakpoints.down('sm')]: {
-      marginTop: 110,
+      marginTop: APPBAR_HEIGHT,
     },
   },
   cart: ({ isCartVisible }: StyleProps) => ({

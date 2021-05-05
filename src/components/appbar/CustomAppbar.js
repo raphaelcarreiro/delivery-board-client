@@ -3,7 +3,7 @@ import AppBar from '@material-ui/core/AppBar/AppBar';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import { makeStyles } from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -58,8 +58,9 @@ const useStyles = makeStyles(theme => ({
     },
   },
   restaurantAddressContainer: {
-    padding: '8px 15px',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    padding: '5px 0',
+    margin: '0 15px',
+    borderBottom: `1px solid ${fade(theme.palette.primary.contrastText, 0.1)}`,
     display: 'flex',
     alignItems: 'center',
     '& .content': {
@@ -92,7 +93,6 @@ function CustomAppbar({ actionComponent, title, TabComponent, cancelAction }) {
               <div onClick={() => setDialogRestaurantAddress(true)} className={classes.restaurantAddressContainer}>
                 <RoomOutlined />
                 <div className="content">
-                  <Typography variant="caption">você está comprando em</Typography>
                   <Typography noWrap className="restaurant-address" align="center" variant="caption">
                     {order.restaurant_address.nickname} - {order.restaurant_address.address},{' '}
                     {order.restaurant_address.number}

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import AddPhotoIcon from '@material-ui/icons/AddAPhoto';
 import { CircularProgress, Zoom, Button } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
@@ -6,6 +6,7 @@ import { api } from '../../services/api';
 import { useAccount } from './Account';
 import { userChange, imageDelete } from 'src/store/context-api/modules/user-customer/actions';
 import { useMessaging } from 'src/hooks/messaging';
+import { APPBAR_HEIGHT } from 'src/constants/constants';
 
 const useStyles = makeStyles(theme => ({
   image: {
@@ -45,7 +46,7 @@ const useStyles = makeStyles(theme => ({
   label: {
     display: 'flex',
     cursor: 'pointer',
-    minWidth: 110,
+    minWidth: APPBAR_HEIGHT,
   },
   icon: {
     backgroundColor: '#fff',
