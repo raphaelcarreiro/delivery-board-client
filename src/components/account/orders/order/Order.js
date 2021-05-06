@@ -155,7 +155,7 @@ export default function Order({ cryptId }) {
           shipment: {
             ..._order.shipment,
             formattedScheduledAt: _order.shipment.scheduled_at
-              ? format(parseISO(_order.shipment.scheduled_at), 'HH:mm')
+              ? format(parseISO(_order.shipment.scheduled_at), "PP 'às' p", { locale: ptbr })
               : null,
           },
           order_status: _order.order_status.reverse().map(status => {

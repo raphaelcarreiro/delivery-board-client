@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   restaurantAddressContainer: {
-    padding: '5px 0',
+    padding: '7px 0',
     margin: '0 15px',
     borderBottom: `1px solid ${fade(theme.palette.primary.contrastText, 0.1)}`,
     display: 'flex',

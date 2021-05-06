@@ -34,7 +34,7 @@ export default function OrderShipment({ order }) {
       </Typography>
       {order.shipment.scheduled_at && (
         <Typography variant="body2" className={classes.scheduleAt}>
-          <WatchLaterIcon /> agendado para as {order.shipment.formattedScheduledAt}
+          <WatchLaterIcon /> agendado para {order.shipment.formattedScheduledAt}
         </Typography>
       )}
     </>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Dialog, DialogContent } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -68,3 +68,8 @@ DialogInput.propTypes = {
 };
 
 export const DialogInputConsumer = DialogInputContext.Consumer;
+
+export function useDialogInput() {
+  const context = useContext(DialogInputContext);
+  return context;
+}

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Button } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
 import DialogInput, { DialogInputConsumer } from 'src/components/dialog/DialogInput';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { setSchedule } from 'src/store/redux/modules/order/actions';
-import { isBefore, addMinutes, format } from 'date-fns';
-import CustomTimerPicker from 'src/components/pickers/TimerPicker';
-import { ptBR } from 'date-fns/locale';
+import { isBefore, addMinutes } from 'date-fns';
+import ShipmentCollectQuestion from './ShipmentCollectQuestion';
+import ShipmentCollectScheduling from './ShipmentCollectScheduling';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -90,53 +89,16 @@ export default function ShipmentCollectSchedule({ onExited }) {
         {({ handleCloseDialog }) => (
           <>
             {!hasSchedule ? (
-              <div className={classes.container}>
-                <Typography variant="h6">agendar a retirada?</Typography>
-                <div className={classes.actions}>
-                  <Button onClick={handleScheduleYes} variant="contained" color="primary">
-                    Sim
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleScheduleNo();
-                      handleCloseDialog();
-                    }}
-                    variant="contained"
-                    color="primary"
-                  >
-                    Não
-                  </Button>
-                </div>
-              </div>
+              <ShipmentCollectQuestion handleScheduleNo={handleScheduleNo} handleScheduleYes={handleScheduleYes} />
             ) : (
               <div className={classes.container}>
-                <form onSubmit={event => handleSubmit(event, handleCloseDialog)} className={classes.form}>
-                  <Typography>Escolha a hora em que deseja retirar seu pedido</Typography>
-                  <CustomTimerPicker
-                    value={scheduledAt}
-                    onChange={date => setScheduledAt(date)}
-                    label="Horário da retirada"
-                    hideBackdrop
-                    autoOk
-                    helperText={`Agende um horário para depois das ${format(
-                      addMinutes(currentTime, restaurant.configs.delivery_time),
-                      'HH:mm:ss',
-                      {
-                        locale: ptBR,
-                      }
-                    )}`}
-                  />
-                  <Button
-                    type="submit"
-                    disabled={!dateTest(scheduledAt)}
-                    className={classes.btnConfirm}
-                    color="primary"
-                    variant="contained"
-                    fullWidth
-                  >
-                    Confirmar
-                  </Button>
-                </form>
+                <ShipmentCollectScheduling
+                  handleSubmit={handleSubmit}
+                  dateTest={dateTest}
+                  currentTime={currentTime}
+                  scheduledAt={scheduledAt}
+                  setScheduledAt={setScheduledAt}
+                />
               </div>
             )}
           </>

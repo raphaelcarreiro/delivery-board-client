@@ -154,7 +154,7 @@ export default function order(state = INITIAL_STATE, action) {
         shipment: {
           ...state.shipment,
           scheduled_at: action.date,
-          formattedScheduledAt: action.date ? format(action.date, 'HH:mm', { locale: ptBR }) : null,
+          formattedScheduledAt: action.date ? format(action.date, 'PPp', { locale: ptBR }) : null,
         },
       };
     }

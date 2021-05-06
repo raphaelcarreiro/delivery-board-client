@@ -89,7 +89,7 @@ export default function Confirm() {
           <div className={classes.deliveryTime}>
             {order.shipment.scheduled_at ? (
               <Typography color="textSecondary" variant="body2">
-                agendado para as {order.shipment.formattedScheduledAt}
+                agendado para {order.shipment.formattedScheduledAt}
               </Typography>
             ) : (
               restaurant.configs.delivery_time &&
