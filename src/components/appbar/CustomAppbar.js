@@ -7,7 +7,7 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { MENU_WIDTH } from '../../constants/constants';
+import { APPBAR_HEIGHT, MENU_WIDTH } from '../../constants/constants';
 import { useApp } from 'src/hooks/app';
 import { useSelector } from 'react-redux';
 import { RoomOutlined } from '@material-ui/icons';
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
   },
   appBarTabs: {
     [theme.breakpoints.down('md')]: {
-      top: 109,
+      top: APPBAR_HEIGHT,
     },
     [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
       top: 101,
