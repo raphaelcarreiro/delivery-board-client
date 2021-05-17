@@ -8,7 +8,7 @@ const ConfirmShipmentAddressText: React.FC = () => {
   return (
     <Typography>
       {`${order.shipment.address}, ${order.shipment.number}, ${order.shipment.district}${
-        order.shipment.address_complement ? `, ${order.shipment.address_complement}` : ''
+        order.shipment.complement ? `, ${order.shipment.complement}` : ''
       }${order.shipment.postal_code !== '00000000' && `, ${order.shipment.postal_code}`}`}
     </Typography>
   );

@@ -49,11 +49,25 @@ export default function order(state = INITIAL_STATE, action) {
     }
 
     case '@order/SET_SHIPMENT_METHOD': {
+      const shipment = action.shipmentMethod === 'delivery' ? state.shipment : state.restaurant_address;
+
+      const shipmentMethod = action.shipmentMethod;
+
+      if (shipment) {
+        return {
+          ...state,
+          shipment: {
+            ...state.shipment,
+            ...shipment,
+            shipment_method: shipmentMethod,
+          },
+        };
+      }
+
       return {
         ...state,
         shipment: {
           ...state.shipment,
-          ...state.restaurant_address,
           shipment_method: action.shipmentMethod,
         },
       };

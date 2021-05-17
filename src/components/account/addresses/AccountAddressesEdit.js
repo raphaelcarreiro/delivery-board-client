@@ -56,9 +56,7 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
   const [postalCode] = useState(selectedAddress.postal_code || '');
   const [address, setAddress] = useState(selectedAddress.address);
   const [number, setNumber] = useState(selectedAddress.number);
-  const [complement, setComplement] = useState(
-    selectedAddress.address_complement ? selectedAddress.address_complement : ''
-  );
+  const [complement, setComplement] = useState(selectedAddress.complement ? selectedAddress.complement : '');
   const [district, setDistrict] = useState(selectedAddress.district);
   const [city] = useState(selectedAddress.city);
   const [region] = useState(selectedAddress.region);
@@ -137,7 +135,7 @@ function AccountAddressesEdit({ handleAddressUpdateSubmit, handleModalState, sav
     const data = {
       address,
       number,
-      address_complement: complement,
+      complement,
       district,
       region,
       city,

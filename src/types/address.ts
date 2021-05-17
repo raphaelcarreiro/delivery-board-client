@@ -9,7 +9,7 @@ export interface Address {
   id: number;
   address: string;
   number: string;
-  address_complement: string | null;
+  complement: string | null;
   postal_code: string;
   district: string;
   city: string;

@@ -29,7 +29,7 @@ export default function OrderShipment({ order }) {
       </Typography>
       <Typography>
         {`${order.shipment.address}, ${order.shipment.number}, ${order.shipment.district}${
-          order.shipment.address_complement ? `, ${order.shipment.address_complement}` : ''
+          order.shipment.complement ? `, ${order.shipment.complement}` : ''
         }${order.shipment.postal_code !== '00000000' && `, ${order.shipment.postal_code}`}`}
       </Typography>
       {order.shipment.scheduled_at && (
