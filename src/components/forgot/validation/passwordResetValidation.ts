@@ -22,10 +22,6 @@ export function usePasswordResetValidation(): UsePasswordResetValidation {
 
   async function validate(passwordResetData: PasswordResetData) {
     const schema = yup.object().shape({
-      email: yup
-        .string()
-        .email('Informe um e-mail válido')
-        .required('Informe o email'),
       password: yup
         .string()
         .min(8, 'A senha deve ter no mínimo 8 caracteres')

@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, TextField, Button, LinearProgress } from '@material-ui/core';
 import { api } from 'src/services/api';
@@ -9,13 +9,14 @@ import { useMessaging } from 'src/hooks/messaging';
 import { useSelector } from 'src/store/redux/selector';
 import { usePasswordResetValidation } from './validation/passwordResetValidation';
 import { useApp } from 'src/hooks/app';
+import { useForgot } from './hook/useForgot';
 
 const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
     border: `2px solid #ddd`,
-    height: 475,
+    height: 550,
     padding: '35px',
     margin: '0 15px',
     justifyContent: 'space-between',
@@ -31,6 +32,7 @@ const useStyles = makeStyles(theme => ({
   action: {
     display: 'flex',
     flexDirection: 'column',
+    height: 100,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
@@ -69,7 +71,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const PasswordReset: React.FC = () => {
+const ForgotPasswordReset: React.FC = () => {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [validation, setValidation, validate] = usePasswordResetValidation();
@@ -79,6 +81,20 @@ const PasswordReset: React.FC = () => {
   const restaurant = useSelector(state => state.restaurant);
   const classes = useStyles();
   const router = useRouter();
+  const { setStep } = useForgot();
+
+  const inputs = {
+    password: useRef<HTMLInputElement>(null),
+    passowrd_confirmation: useRef<HTMLInputElement>(null),
+  };
+
+  useEffect(() => {
+    const [key] = Object.keys(validation) as [keyof typeof inputs];
+
+    if (!key) return;
+
+    inputs[key].current?.focus();
+  }, [validation]); // eslint-disable-line
 
   function handleValidation(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -177,8 +193,11 @@ const PasswordReset: React.FC = () => {
           </div>
         </div>
         <div className={classes.action}>
-          <Button type="submit" variant="contained" color="primary" disabled={loading} fullWidth>
+          <Button type="submit" variant="contained" color="primary" disabled={loading}>
             Confirmar
+          </Button>
+          <Button onClick={() => setStep('phone')} variant="text" color="primary">
+            voltar
           </Button>
         </div>
       </div>
@@ -186,4 +205,4 @@ const PasswordReset: React.FC = () => {
   );
 };
 
-export default PasswordReset;
+export default ForgotPasswordReset;

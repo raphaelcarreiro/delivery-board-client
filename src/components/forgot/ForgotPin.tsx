@@ -105,7 +105,7 @@ const ForgotPin: React.FC = () => {
         setStep('reset');
       })
       .catch(err => {
-        console.log(err);
+        setError(err.response ? err.response.data.error : 'Não foi possível validar o PIN');
       })
       .finally(() => {
         setLoading(false);
@@ -113,70 +113,66 @@ const ForgotPin: React.FC = () => {
   };
 
   return (
-    <Grid container justify="center" alignItems="center">
-      <Grid item xs={12} lg={4} xl={3} md={6}>
-        <form onSubmit={handleValidation}>
-          <div className={classes.container}>
-            {loading && (
-              <>
-                {app.isMobile || app.windowWidth < 960 ? (
-                  <Loading background="rgba(250,250,250,0.5)" />
-                ) : (
-                  <div className={classes.loading}>
-                    <LinearProgress className={classes.linearProgress} color="primary" />
-                  </div>
-                )}
-              </>
-            )}
-            <div className={classes.content}>
-              {restaurant && (
-                <div className={classes.logoContainer}>
-                  <NextLink href="/">
-                    <a>
-                      <img className={classes.logo} src={restaurant.image.imageUrl} alt="Logo" />
-                    </a>
-                  </NextLink>
-                </div>
-              )}
-              <Typography align="center" variant="h6" gutterBottom>
-                Esqueci minha senha
-              </Typography>
-              <Typography align="center" color="textSecondary">
-                Informe o número que enviamos para você
-              </Typography>
-              <div>
-                <TextField
-                  inputRef={input}
-                  error={!!error}
-                  helperText={error}
-                  variant="outlined"
-                  label="Código de 4 digitos"
-                  placeholder="Informe o código que enviamos"
-                  autoFocus
-                  fullWidth
-                  value={pin}
-                  onChange={event => setPin(event.target.value)}
-                  margin="normal"
-                  inputMode="tel"
-                  inputProps={{
-                    maxLength: 4,
-                    inputMode: 'numeric',
-                  }}
-                />
+    <form onSubmit={handleValidation}>
+      <div className={classes.container}>
+        {loading && (
+          <>
+            {app.isMobile || app.windowWidth < 960 ? (
+              <Loading background="rgba(250,250,250,0.5)" />
+            ) : (
+              <div className={classes.loading}>
+                <LinearProgress className={classes.linearProgress} color="primary" />
               </div>
+            )}
+          </>
+        )}
+        <div className={classes.content}>
+          {restaurant && (
+            <div className={classes.logoContainer}>
+              <NextLink href="/">
+                <a>
+                  <img className={classes.logo} src={restaurant.image.imageUrl} alt="Logo" />
+                </a>
+              </NextLink>
             </div>
-            <div className={classes.action}>
-              <Button disabled={pin.length < 4 || loading} type="submit" variant="contained" color="primary">
-                Prosseguir
-              </Button>
-              <Button variant="text" onClick={() => setStep('phone')}>
-                voltar
-              </Button>
-            </div>
+          )}
+          <Typography align="center" variant="h6" gutterBottom>
+            Esqueci minha senha
+          </Typography>
+          <Typography align="center" color="textSecondary">
+            Informe o número que enviamos para você
+          </Typography>
+          <div>
+            <TextField
+              inputRef={input}
+              error={!!error}
+              helperText={error}
+              variant="outlined"
+              label="Código de 4 digitos"
+              placeholder="Informe o código que enviamos"
+              autoFocus
+              fullWidth
+              value={pin}
+              onChange={event => setPin(event.target.value)}
+              margin="normal"
+              inputMode="tel"
+              inputProps={{
+                maxLength: 4,
+                inputMode: 'numeric',
+              }}
+            />
           </div>
-        </form>
-      </Grid>
-    </Grid>
+        </div>
+        <div className={classes.action}>
+          <Button disabled={pin.length < 4 || loading} type="submit" variant="contained" color="primary">
+            Prosseguir
+          </Button>
+          <Button variant="text" onClick={() => setStep('phone')}>
+            voltar
+          </Button>
+        </div>
+      </div>
+    </form>
   );
 };
 
