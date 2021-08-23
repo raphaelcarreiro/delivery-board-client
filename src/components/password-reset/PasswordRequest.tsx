@@ -147,8 +147,8 @@ const PasswordRequest: React.FC<PasswordRequestProps> = ({ user }) => {
                     error={validation.email.length > 0}
                     helperText={validation.email.length > 0 && validation.email[0]}
                     variant="outlined"
-                    label="E-mail ou telefone"
-                    placeholder="Informe seu email ou telefone"
+                    label="E-mail"
+                    placeholder="Informe seu email"
                     autoFocus
                     fullWidth
                     value={email}
