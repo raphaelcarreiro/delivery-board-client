@@ -12,7 +12,8 @@ const authPaths = [
   '/guest-register',
   '/password-request',
   '/password-reset/[token]',
-  '/forgot',
+  '/forgot/email',
+  '/forgot/sms',
 ];
 
 const checkoutPaths = ['/checkout'];

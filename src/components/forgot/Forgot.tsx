@@ -6,7 +6,11 @@ import ForgotPin from './ForgotPin';
 import { ForgotProvider, ForgotStep } from './hook/useForgot';
 import { Pin } from 'src/types/pin';
 
-const Forgot: React.FC = () => {
+type PasswordRequestProps = {
+  phoneProp?: string | null;
+};
+
+const Forgot: React.FC<PasswordRequestProps> = ({ phoneProp }) => {
   const [step, setStep] = useState<ForgotStep>('phone');
   const [pin, setPin] = useState<Pin>({
     firstDigit: '',
@@ -14,7 +18,7 @@ const Forgot: React.FC = () => {
     thirthDigit: '',
     fourthDigit: '',
   });
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState(phoneProp || '');
 
   const formattedPin = useMemo(() => `${pin.firstDigit}${pin.secondDigit}${pin.thirthDigit}${pin.fourthDigit}`, [pin]);
 

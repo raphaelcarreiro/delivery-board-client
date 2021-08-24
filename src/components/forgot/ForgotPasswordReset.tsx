@@ -33,8 +33,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     height: 100,
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   loading: {
     top: 0,
@@ -64,7 +64,7 @@ const useStyles = makeStyles(theme => ({
   },
   logoContainer: {
     textAlign: 'center',
-    marginBottom: 40,
+    marginBottom: 20,
   },
   logo: {
     width: 70,
@@ -161,8 +161,8 @@ const ForgotPasswordReset: React.FC = () => {
               </NextLink>
             </div>
           )}
-          <Typography align="center" variant="h5">
-            Nova senha
+          <Typography align="center" variant="h6">
+            nova senha
           </Typography>
           <div>
             <TextField

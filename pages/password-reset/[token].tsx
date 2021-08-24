@@ -1,5 +1,5 @@
 import React from 'react';
-import PasswordReset from 'src/components/password-reset/PasswordReset';
+import PasswordReset from 'src/components/forgot-email/PasswordReset';
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 

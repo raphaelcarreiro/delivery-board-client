@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FormEvent } from 'react';
+import React, { useState, useEffect, FormEvent, useMemo } from 'react';
 import LoginEmailStep from './LoginEmailStep';
 import LoginPasswordStep from './LoginPasswordStep';
 import NextLink from 'next/link';
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     border: `1px solid #ddd`,
-    height: 550,
+    height: 500,
     padding: '35px',
     margin: '0 15px',
     justifyContent: 'space-between',
@@ -71,7 +71,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     height: 300,
-    justifyContent: 'space-between',
   },
   btnBack: {
     position: 'absolute',
@@ -80,7 +79,7 @@ const useStyles = makeStyles(theme => ({
   },
   logoContainer: {
     textAlign: 'center',
-    marginBottom: 40,
+    marginBottom: 20,
   },
   logo: {
     width: 70,
@@ -113,6 +112,8 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ emailParam, phoneParam }) => {
   const [userNotFound, setUserNotFound] = useState(false);
   const [registerUrl, setRegisterUrl] = useState('');
 
+  const type = useMemo(() => (/^\d+$/.test(email) ? 'phone' : email.includes('@') ? 'email' : null), [email]);
+
   useEffect(() => {
     if (checkAuth()) router.push('account');
   }, [router, checkAuth]);
@@ -144,7 +145,6 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ emailParam, phoneParam }) => {
         .catch(err => {
           setUserNotFound(true);
           setError(error => ({ ...error, email: err.message }));
-          const type = /^\d+$/.test(email) ? 'phone' : email.includes('@') ? 'email' : null;
           if (type) setRegisterUrl(`/register?${type}=${email}`);
           else setRegisterUrl('/register');
         })
@@ -220,6 +220,18 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ emailParam, phoneParam }) => {
                   passwordError={error.password}
                 />
               )}
+              {step === 'password' && (
+                <CustomLink
+                  color="primary"
+                  href={{
+                    pathname: type === 'phone' ? '/forgot/sms' : '/forgot/email',
+                    query: type === 'email' ? { email } : type === 'phone' ? { phone: email } : undefined,
+                  }}
+                  className={classes.forgot}
+                >
+                  esqueci minha senha
+                </CustomLink>
+              )}
             </div>
             <div className={classes.actions}>
               <Button type="submit" variant="contained" color="primary" disabled={loading}>
@@ -228,15 +240,6 @@ const LoginEmail: React.FC<LoginEmailProps> = ({ emailParam, phoneParam }) => {
               {step === 'email' && (
                 <CustomLink href="/login" color="primary">
                   voltar
-                </CustomLink>
-              )}
-              {step === 'password' && (
-                <CustomLink
-                  color="primary"
-                  href={{ pathname: '/password-request', query: { user: email } }}
-                  className={classes.forgot}
-                >
-                  esqueci minha senha
                 </CustomLink>
               )}
             </div>

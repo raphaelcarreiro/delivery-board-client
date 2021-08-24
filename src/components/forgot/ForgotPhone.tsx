@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     border: `2px solid #ddd`,
-    height: 550,
+    height: 500,
     padding: '35px',
     margin: '0 15px',
     justifyContent: 'space-between',
@@ -56,7 +56,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     height: 300,
-    justifyContent: 'space-between',
   },
   btnBack: {
     position: 'absolute',
@@ -65,7 +64,7 @@ const useStyles = makeStyles(theme => ({
   },
   logoContainer: {
     textAlign: 'center',
-    marginBottom: 40,
+    marginBottom: 20,
   },
   logo: {
     width: 70,
@@ -89,9 +88,9 @@ const ForgotPhone: React.FC = () => {
     const schema = yup.string().test('stringLength', 'Informe um número de telefone válido', value => {
       if (!value) return false;
 
-      const rawValue = value.replace(/\D/, '');
+      const rawValue = value.replace(/\D/g, '');
 
-      if (rawValue.length < 12) return false;
+      if (rawValue.length < 10) return false;
 
       return true;
     });
@@ -119,7 +118,10 @@ const ForgotPhone: React.FC = () => {
         });
         setStep('pin');
       })
-      .catch(err => console.error(err))
+      .catch(err => {
+        console.error(err);
+        setError(err.response ? err.response.data.error : 'Aconteceu um erro');
+      })
       .finally(() => {
         setLoading(false);
       });
@@ -149,12 +151,14 @@ const ForgotPhone: React.FC = () => {
               </NextLink>
             </div>
           )}
-          <Typography align="center" variant="h6" gutterBottom>
-            Esqueci minha senha
-          </Typography>
-          <Typography align="center" color="textSecondary">
-            Informe seu número de telefone
-          </Typography>
+          <div>
+            <Typography align="center" variant="h6">
+              esqueci minha senha
+            </Typography>
+            <Typography align="center" color="textSecondary">
+              informe seu número de telefone
+            </Typography>
+          </div>
           <div>
             <TextField
               inputRef={input}
@@ -171,11 +175,9 @@ const ForgotPhone: React.FC = () => {
               InputProps={{
                 inputComponent: PhoneInput as any,
               }}
-              inputProps={{
-                inputMode: 'numeric',
-              }}
+              type="tel"
             />
-            <CustomLink color="primary" href="/password-request">
+            <CustomLink color="primary" href="/forgot/email">
               recuperar senha usando e-mail
             </CustomLink>
           </div>

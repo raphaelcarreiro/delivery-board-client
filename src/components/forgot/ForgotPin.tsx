@@ -150,11 +150,11 @@ const ForgotPin: React.FC = () => {
             </NextLink>
           </div>
         )}
-        <Typography align="center" variant="h6" gutterBottom>
-          Esqueci minha senha
+        <Typography align="center" variant="h6">
+          esqueci minha senha
         </Typography>
         <Typography align="center" color="textSecondary">
-          Informe o número que enviamos para você por SMS
+          informe o número que enviamos para você por SMS
         </Typography>
         <div className={classes.inputContainer}>
           <input

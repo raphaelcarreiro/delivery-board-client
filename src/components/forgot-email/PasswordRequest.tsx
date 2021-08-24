@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     border: `2px solid #ddd`,
-    height: 550,
+    height: 500,
     padding: '35px',
     margin: '0 15px',
     justifyContent: 'space-between',
@@ -54,7 +54,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     height: 300,
-    justifyContent: 'space-between',
   },
   btnBack: {
     position: 'absolute',
@@ -63,7 +62,7 @@ const useStyles = makeStyles(theme => ({
   },
   logoContainer: {
     textAlign: 'center',
-    marginBottom: 40,
+    marginBottom: 20,
   },
   logo: {
     width: 70,
@@ -71,11 +70,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 type PasswordRequestProps = {
-  user?: string;
+  emailProp?: string;
 };
 
-const PasswordRequest: React.FC<PasswordRequestProps> = ({ user }) => {
-  const [email, setEmail] = useState(user || '');
+const PasswordRequest: React.FC<PasswordRequestProps> = ({ emailProp }) => {
+  const [email, setEmail] = useState(emailProp || '');
   const [validation, setValidation] = useState({ email: [] });
   const [loading, setLoading] = useState(false);
   const messaging = useMessaging();
@@ -137,11 +136,11 @@ const PasswordRequest: React.FC<PasswordRequestProps> = ({ user }) => {
                     </NextLink>
                   </div>
                 )}
-                <Typography align="center" variant="h6" gutterBottom>
-                  Esqueci minha senha
+                <Typography align="center" variant="h6">
+                  esqueci minha senha
                 </Typography>
                 <Typography variant="body1" align="center" color="textSecondary">
-                  Você receberá um link para redefinir sua senha
+                  você receberá um link para redefinir sua senha
                 </Typography>
                 <div>
                   <TextField
@@ -157,7 +156,7 @@ const PasswordRequest: React.FC<PasswordRequestProps> = ({ user }) => {
                     required
                     margin="normal"
                   />
-                  <CustomLink href="/forgot" color="primary">
+                  <CustomLink href="/forgot/sms" color="primary">
                     tentar outro método
                   </CustomLink>
                 </div>
