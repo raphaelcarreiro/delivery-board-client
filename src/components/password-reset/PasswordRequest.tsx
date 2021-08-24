@@ -63,6 +63,7 @@ const useStyles = makeStyles(theme => ({
   },
   logoContainer: {
     textAlign: 'center',
+    marginBottom: 40,
   },
   logo: {
     width: 70,
@@ -139,8 +140,8 @@ const PasswordRequest: React.FC<PasswordRequestProps> = ({ user }) => {
                 <Typography align="center" variant="h6" gutterBottom>
                   Esqueci minha senha
                 </Typography>
-                <Typography variant="body2" align="center" color="textSecondary">
-                  Você receberá informações de como criar uma nova senha no seu e-mail.
+                <Typography variant="body1" align="center" color="textSecondary">
+                  Você receberá um link para redefinir sua senha
                 </Typography>
                 <div>
                   <TextField
@@ -157,7 +158,7 @@ const PasswordRequest: React.FC<PasswordRequestProps> = ({ user }) => {
                     margin="normal"
                   />
                   <CustomLink href="/forgot" color="primary">
-                    Tentar outro método
+                    tentar outro método
                   </CustomLink>
                 </div>
               </div>
@@ -166,7 +167,7 @@ const PasswordRequest: React.FC<PasswordRequestProps> = ({ user }) => {
                   Enviar
                 </Button>
                 <CustomLink color="primary" href="/login/email">
-                  voltar
+                  voltar ao login
                 </CustomLink>
               </div>
             </div>

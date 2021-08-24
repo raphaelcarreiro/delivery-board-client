@@ -1,14 +1,16 @@
 import { createContext, Dispatch, SetStateAction, useContext } from 'react';
+import { Pin } from 'src/types/pin';
 
 export type ForgotStep = 'phone' | 'pin' | 'reset';
 
 export interface ForgotContextValue {
   step: ForgotStep;
   setStep: Dispatch<SetStateAction<ForgotStep>>;
-  pin: string;
-  setPin: Dispatch<SetStateAction<string>>;
+  pin: Pin;
+  setPin: Dispatch<SetStateAction<Pin>>;
   phone: string;
   setPhone: Dispatch<SetStateAction<string>>;
+  formattedPin: string;
 }
 
 const ForgotContext = createContext<ForgotContextValue>({} as ForgotContextValue);

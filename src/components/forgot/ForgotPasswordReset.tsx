@@ -81,11 +81,11 @@ const ForgotPasswordReset: React.FC = () => {
   const restaurant = useSelector(state => state.restaurant);
   const classes = useStyles();
   const router = useRouter();
-  const { setStep, phone, pin } = useForgot();
+  const { setStep, phone, formattedPin } = useForgot();
 
   const inputs = {
     password: useRef<HTMLInputElement>(null),
-    passowrd_confirmation: useRef<HTMLInputElement>(null),
+    password_confirmation: useRef<HTMLInputElement>(null),
   };
 
   useEffect(() => {
@@ -115,22 +115,22 @@ const ForgotPasswordReset: React.FC = () => {
     const data = {
       password,
       password_confirmation: passwordConfirm,
-      pin,
+      pin: formattedPin,
       phone,
     };
 
     api
-      .post('/password/reset', data)
+      .post('/password-reset', data)
       .then(response => {
         return response.data;
       })
       .then(() => {
-        messaging.handleOpen('Senha atualizada');
+        messaging.handleOpen('Senha atualizada', { variant: 'default' });
         router.push('/login');
       })
       .catch(err => {
         if (err.response && err.response.data.error) messaging.handleOpen(err.response.data.error);
-        else messaging.handleOpen('Não foi possível atualizar a senha');
+        else messaging.handleOpen('Não foi possível atualizar a senha', { variant: 'default' });
       })
       .finally(() => {
         setLoading(false);

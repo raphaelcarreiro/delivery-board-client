@@ -1,4 +1,4 @@
-import React, { FormEvent, useState, useRef } from 'react';
+import React, { FormEvent, useState, useRef, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, TextField, Button, LinearProgress } from '@material-ui/core';
 import { api } from 'src/services/api';
@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     border: `2px solid #ddd`,
-    height: 475,
+    height: 550,
     padding: '35px',
     margin: '0 15px',
     justifyContent: 'space-between',
@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme => ({
   content: {
     display: 'flex',
     flexDirection: 'column',
-    height: 250,
+    height: 300,
     justifyContent: 'space-between',
   },
   btnBack: {
@@ -79,7 +79,7 @@ const ForgotPhone: React.FC = () => {
   const classes = useStyles();
   const restaurant = useSelector(state => state.restaurant);
   const input = useRef<HTMLInputElement>(null);
-  const { phone, setPhone, setStep } = useForgot();
+  const { phone, setPhone, setStep, setPin } = useForgot();
 
   function handleValidation(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -111,6 +111,12 @@ const ForgotPhone: React.FC = () => {
     api
       .post('password/sms', { phone })
       .then(() => {
+        setPin({
+          firstDigit: '',
+          secondDigit: '',
+          thirthDigit: '',
+          fourthDigit: '',
+        });
         setStep('pin');
       })
       .catch(err => console.error(err))
@@ -167,6 +173,9 @@ const ForgotPhone: React.FC = () => {
                 inputComponent: PhoneInput as any,
               }}
             />
+            <CustomLink color="primary" href="/password-request">
+              tentar recuperar usando e-mail
+            </CustomLink>
           </div>
         </div>
         <div className={classes.action}>
@@ -174,7 +183,7 @@ const ForgotPhone: React.FC = () => {
             Prosseguir
           </Button>
           <CustomLink color="primary" href="/login/email">
-            Voltar
+            voltar ao login
           </CustomLink>
         </div>
       </div>

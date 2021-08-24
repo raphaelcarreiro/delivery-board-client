@@ -1,12 +1,11 @@
-import React, { FormEvent, useState, useRef } from 'react';
+import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Typography, TextField, Button, LinearProgress } from '@material-ui/core';
+import { Typography, Button, LinearProgress } from '@material-ui/core';
 import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
 import NextLink from 'next/link';
 import { useSelector } from 'src/store/redux/selector';
 import { useApp } from 'src/hooks/app';
-import * as yup from 'yup';
 import { useForgot } from './hook/useForgot';
 
 const useStyles = makeStyles(theme => ({
@@ -14,7 +13,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     border: `2px solid #ddd`,
-    height: 475,
+    height: 550,
     padding: '35px',
     margin: '0 15px',
     justifyContent: 'space-between',
@@ -53,7 +52,7 @@ const useStyles = makeStyles(theme => ({
   content: {
     display: 'flex',
     flexDirection: 'column',
-    height: 250,
+    height: 300,
     justifyContent: 'space-between',
   },
   btnBack: {
@@ -63,9 +62,24 @@ const useStyles = makeStyles(theme => ({
   },
   logoContainer: {
     textAlign: 'center',
+    marginBottom: 40,
   },
   logo: {
     width: 70,
+  },
+  inputPin: {
+    border: '2px solid #eee',
+    borderRadius: 4,
+    textAlign: 'center',
+    padding: 10,
+    fontSize: 20,
+    height: 50,
+    width: 50,
+  },
+  inputContainer: {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    margin: '30px 0 10px',
   },
 }));
 
@@ -77,30 +91,25 @@ const ForgotPin: React.FC = () => {
   const app = useApp();
   const classes = useStyles();
   const restaurant = useSelector(state => state.restaurant);
-  const input = useRef<HTMLInputElement>(null);
-  const { pin, setPin, phone, setStep } = useForgot();
+  const { pin, setPin, phone, setStep, formattedPin } = useForgot();
+  const inputs = {
+    firstDigit: useRef<HTMLInputElement>(null),
+    secondDigit: useRef<HTMLInputElement>(null),
+    thirthDigit: useRef<HTMLInputElement>(null),
+    fourthDigit: useRef<HTMLInputElement>(null),
+  };
+  const [isFocused, setIsFocused] = useState(false);
 
-  function handleValidation(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const isPinValid = useMemo(() => !!pin.firstDigit && !!pin.secondDigit && !!pin.thirthDigit && !!pin.fourthDigit, [
+    pin,
+  ]);
 
+  const handleSubmit = useCallback(() => {
     setError('');
-
-    const schema = yup.string().min(4, 'Código inválido');
-
-    schema
-      .validate(pin)
-      .then(handleSubmit)
-      .catch(err => {
-        setError(err.message);
-        input.current?.focus();
-      });
-  }
-
-  const handleSubmit = () => {
     setLoading(true);
 
     api
-      .post('password/pin-validation', { pin, phone })
+      .post('password/pin-validation', { pin: formattedPin, phone })
       .then(() => {
         setStep('reset');
       })
@@ -110,69 +119,105 @@ const ForgotPin: React.FC = () => {
       .finally(() => {
         setLoading(false);
       });
-  };
+  }, [formattedPin, phone, setStep]);
+
+  useEffect(() => {
+    if (isPinValid && isFocused) handleSubmit();
+  }, [isPinValid, handleSubmit, isFocused]);
+
+  useEffect(() => console.log(isFocused), [isFocused]);
 
   return (
-    <form onSubmit={handleValidation}>
-      <div className={classes.container}>
-        {loading && (
-          <>
-            {app.isMobile || app.windowWidth < 960 ? (
-              <Loading background="rgba(250,250,250,0.5)" />
-            ) : (
-              <div className={classes.loading}>
-                <LinearProgress className={classes.linearProgress} color="primary" />
-              </div>
-            )}
-          </>
-        )}
-        <div className={classes.content}>
-          {restaurant && (
-            <div className={classes.logoContainer}>
-              <NextLink href="/">
-                <a>
-                  <img className={classes.logo} src={restaurant.image.imageUrl} alt="Logo" />
-                </a>
-              </NextLink>
+    <div className={classes.container}>
+      {loading && (
+        <>
+          {app.isMobile || app.windowWidth < 960 ? (
+            <Loading background="rgba(250,250,250,0.5)" />
+          ) : (
+            <div className={classes.loading}>
+              <LinearProgress className={classes.linearProgress} color="primary" />
             </div>
           )}
-          <Typography align="center" variant="h6" gutterBottom>
-            Esqueci minha senha
-          </Typography>
-          <Typography align="center" color="textSecondary">
-            Informe o número que enviamos para você
-          </Typography>
-          <div>
-            <TextField
-              inputRef={input}
-              error={!!error}
-              helperText={error}
-              variant="outlined"
-              label="Código de 4 digitos"
-              placeholder="Informe o código que enviamos"
-              autoFocus
-              fullWidth
-              value={pin}
-              onChange={event => setPin(event.target.value)}
-              margin="normal"
-              inputMode="tel"
-              inputProps={{
-                maxLength: 4,
-                inputMode: 'numeric',
-              }}
-            />
+        </>
+      )}
+      <div className={classes.content}>
+        {restaurant && (
+          <div className={classes.logoContainer}>
+            <NextLink href="/">
+              <a>
+                <img className={classes.logo} src={restaurant.image.imageUrl} alt="Logo" />
+              </a>
+            </NextLink>
           </div>
+        )}
+        <Typography align="center" variant="h6" gutterBottom>
+          Esqueci minha senha
+        </Typography>
+        <Typography align="center" color="textSecondary">
+          Informe o número que enviamos para você por SMS
+        </Typography>
+        <div className={classes.inputContainer}>
+          <input
+            value={pin.firstDigit}
+            onChange={e => {
+              setPin(state => ({ ...state, firstDigit: e.target.value }));
+              if (e.target.value.length === 1) inputs.secondDigit.current?.focus();
+            }}
+            ref={inputs.firstDigit}
+            type="text"
+            className={classes.inputPin}
+            maxLength={1}
+            inputMode="numeric"
+            autoFocus
+          />
+          <input
+            ref={inputs.secondDigit}
+            value={pin.secondDigit}
+            onChange={e => {
+              setPin(state => ({ ...state, secondDigit: e.target.value }));
+              if (e.target.value.length === 1) inputs.thirthDigit.current?.focus();
+            }}
+            type="text"
+            className={classes.inputPin}
+            maxLength={1}
+            inputMode="numeric"
+          />
+          <input
+            ref={inputs.thirthDigit}
+            value={pin.thirthDigit}
+            onChange={e => {
+              setPin(state => ({ ...state, thirthDigit: e.target.value }));
+              if (e.target.value.length === 1) inputs.fourthDigit.current?.focus();
+            }}
+            type="text"
+            className={classes.inputPin}
+            inputMode="numeric"
+            maxLength={1}
+          />
+          <input
+            value={pin.fourthDigit}
+            onChange={e => setPin(state => ({ ...state, fourthDigit: e.target.value }))}
+            ref={inputs.fourthDigit}
+            type="text"
+            className={classes.inputPin}
+            inputMode="numeric"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
         </div>
-        <div className={classes.action}>
-          <Button disabled={pin.length < 4 || loading} type="submit" variant="contained" color="primary">
-            Prosseguir
-          </Button>
-          <Button variant="text" onClick={() => setStep('phone')}>
-            voltar
-          </Button>
-        </div>
+        <Typography align="center" variant="body2" color="error">
+          {error}
+        </Typography>
       </div>
-    </form>
+      <div className={classes.action}>
+        <Button disabled={!isPinValid || loading} onClick={handleSubmit} variant="contained" color="primary">
+          Prosseguir
+        </Button>
+        <Button color="primary" variant="text" onClick={() => setStep('phone')}>
+          voltar
+        </Button>
+      </div>
+    </div>
   );
 };
 

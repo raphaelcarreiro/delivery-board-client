@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   return {
     props: {
-      user: user ? String(user) : undefined,
+      user: user ? String(user) : '',
     },
   };
 };

@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     border: `1px solid #ddd`,
-    height: 475,
+    height: 550,
     padding: '35px',
     margin: '0 15px',
     justifyContent: 'space-between',
@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     flexDirection: 'column',
     marginTop: 20,
-    height: 160,
+    height: 120,
     justifyContent: 'space-around',
   },
   loading: {
@@ -70,7 +70,7 @@ const useStyles = makeStyles(theme => ({
   content: {
     display: 'flex',
     flexDirection: 'column',
-    height: 250,
+    height: 300,
     justifyContent: 'space-between',
   },
   btnBack: {
@@ -80,6 +80,7 @@ const useStyles = makeStyles(theme => ({
   },
   logoContainer: {
     textAlign: 'center',
+    marginBottom: 40,
   },
   logo: {
     width: 70,
