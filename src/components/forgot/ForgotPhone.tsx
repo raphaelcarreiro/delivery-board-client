@@ -176,7 +176,7 @@ const ForgotPhone: React.FC = () => {
               }}
             />
             <CustomLink color="primary" href="/password-request">
-              tentar recuperar usando e-mail
+              recuperar senha usando e-mail
             </CustomLink>
           </div>
         </div>
