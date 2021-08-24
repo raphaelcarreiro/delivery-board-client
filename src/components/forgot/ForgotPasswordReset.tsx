@@ -81,7 +81,7 @@ const ForgotPasswordReset: React.FC = () => {
   const restaurant = useSelector(state => state.restaurant);
   const classes = useStyles();
   const router = useRouter();
-  const { setStep } = useForgot();
+  const { setStep, phone, pin } = useForgot();
 
   const inputs = {
     password: useRef<HTMLInputElement>(null),
@@ -115,6 +115,8 @@ const ForgotPasswordReset: React.FC = () => {
     const data = {
       password,
       password_confirmation: passwordConfirm,
+      pin,
+      phone,
     };
 
     api

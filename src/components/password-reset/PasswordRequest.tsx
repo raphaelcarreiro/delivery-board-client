@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     border: `2px solid #ddd`,
-    height: 475,
+    height: 550,
     padding: '35px',
     margin: '0 15px',
     justifyContent: 'space-between',
@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
   content: {
     display: 'flex',
     flexDirection: 'column',
-    height: 250,
+    height: 300,
     justifyContent: 'space-between',
   },
   btnBack: {
@@ -94,7 +94,7 @@ const PasswordRequest: React.FC<PasswordRequestProps> = ({ user }) => {
         return response.data;
       })
       .then(() => {
-        messaging.handleOpen('Enviamos uma mensagem no seu e-mail');
+        messaging.handleOpen('Enviamos uma mensagem no seu e-mail', { variant: 'default' });
       })
       .catch(err => {
         if (err.response) {
@@ -156,6 +156,9 @@ const PasswordRequest: React.FC<PasswordRequestProps> = ({ user }) => {
                     required
                     margin="normal"
                   />
+                  <CustomLink href="/forgot" color="primary">
+                    Tentar outro método
+                  </CustomLink>
                 </div>
               </div>
               <div className={classes.action}>
@@ -163,7 +166,7 @@ const PasswordRequest: React.FC<PasswordRequestProps> = ({ user }) => {
                   Enviar
                 </Button>
                 <CustomLink color="primary" href="/login/email">
-                  Voltar
+                  voltar
                 </CustomLink>
               </div>
             </div>

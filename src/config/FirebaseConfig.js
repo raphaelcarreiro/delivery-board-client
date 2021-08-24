@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/messaging';
+import 'firebase/auth';
 
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY,
@@ -27,5 +28,9 @@ function isSupported() {
   return firebase.messaging.isSupported();
 }
 
+function getFirebaseAuth() {
+  return firebase.auth;
+}
+
 export { isSupported as firebaseMessagingIsSupported };
-export { getFirebaseMessaging };
+export { getFirebaseMessaging, getFirebaseAuth };
