@@ -1,4 +1,4 @@
-import React, { FormEvent, useState, useRef, useEffect } from 'react';
+import React, { FormEvent, useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, TextField, Button, LinearProgress } from '@material-ui/core';
 import { api } from 'src/services/api';
@@ -168,9 +168,11 @@ const ForgotPhone: React.FC = () => {
               value={phone}
               onChange={event => setPhone(event.target.value)}
               margin="normal"
-              inputMode="tel"
               InputProps={{
                 inputComponent: PhoneInput as any,
+              }}
+              inputProps={{
+                inputMode: 'numeric',
               }}
             />
             <CustomLink color="primary" href="/password-request">
