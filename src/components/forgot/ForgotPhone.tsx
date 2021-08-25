@@ -10,6 +10,7 @@ import { useApp } from 'src/hooks/app';
 import * as yup from 'yup';
 import PhoneInput from '../masked-input/PhoneInput';
 import { useForgot } from './hook/useForgot';
+import { useMessaging } from 'src/hooks/messaging';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -79,6 +80,7 @@ const ForgotPhone: React.FC = () => {
   const restaurant = useSelector(state => state.restaurant);
   const input = useRef<HTMLInputElement>(null);
   const { phone, setPhone, setStep, setPin } = useForgot();
+  const messaging = useMessaging();
 
   function handleValidation(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -119,8 +121,9 @@ const ForgotPhone: React.FC = () => {
         setStep('pin');
       })
       .catch(err => {
-        console.error(err);
-        setError(err.response ? err.response.data.error : 'Aconteceu um erro');
+        const message = err.response && err.response.data.error ? err.response.data.error : 'Aconteceu um erro';
+        setError(message);
+        messaging.handleOpen(message, { variant: 'default' });
       })
       .finally(() => {
         setLoading(false);
