@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { CircularProgress } from '@material-ui/core';
-import AccountAddressesAction from './AccountAddressesAction';
+import AccountAddressesAction from '../AccountAddressesAction';
 import { makeStyles } from '@material-ui/core/styles';
 import { api } from 'src/services/api';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { useMessaging } from 'src/hooks/messaging';
 import { useSelector } from 'src/store/redux/selector';
-import { useAddressValidation } from './validation/useAddressValidation';
-import { AreaRegion, NewAddress } from 'src/types/address';
+import { useAddressValidation } from '../validation/useAddressValidation';
+import { Address, AreaRegion } from 'src/types/address';
 import CustomDialogForm from 'src/components/dialog/CustomDialogForm';
-import AddressForm from './AddressForm';
+import NewAddressInputSearch from './InputSearch';
+import Places from './Places';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -52,31 +53,49 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const interval = 500;
 let timer;
 
-interface NewAddressPlacesApiProps {
-  handleAddressSubmit(address: NewAddress): Promise<void>;
+const INITIAL_STATE = {
+  address: '',
+  number: '',
+  complement: '',
+  city: '',
+  region: '',
+  district: '',
+  area_region: null,
+  distance: 0,
+  distance_tax: 0,
+  postal_code: '',
+  is_main: false,
+  id: 0,
+  formattedDistanceTax: '',
+  area_region_id: null,
+};
+
+interface NewAddressProps {
+  handleAddressSubmit(address: Address): Promise<void>;
   onExited(): void;
   saving: boolean;
 }
 
-const NewAddressPlacesApi: React.FC<NewAddressPlacesApiProps> = ({ handleAddressSubmit, onExited, saving }) => {
+const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, saving }) => {
   const restaurant = useSelector(state => state.restaurant);
-  const mainAddress = restaurant?.addresses.find(address => address.is_main);
   const [regions, setRegions] = useState<AreaRegion[]>([]);
   const [loading, setLoading] = useState(false);
-  const [postalCode, setPostalCode] = useState('');
-  const [address, setAddress] = useState('');
-  const [number, setNumber] = useState('');
-  const [complement, setComplement] = useState('');
-  const [district, setDistrict] = useState('');
-  const [city, setCity] = useState(mainAddress?.city || '');
-  const [region, setRegion] = useState(mainAddress?.region || '');
-  const [areaRegionId, setAreaRegionId] = useState<null | number>(null);
   const messaging = useMessaging();
   const classes = useStyles();
   const [validation, setValidation, validate] = useAddressValidation();
+  const [address, setAddress] = useState<Address>(INITIAL_STATE);
+  const [searchText, setSearchText] = useState('');
+  const [places, setPlaces] = useState<google.maps.places.QueryAutocompletePrediction[]>([]);
+
+  useEffect(() => {
+    console.log(places);
+  }, [places]);
+
+  useEffect(() => {
+    if (!searchText) setPlaces([]);
+  }, [searchText]);
 
   useEffect(() => {
     if (restaurant?.configs.tax_mode !== 'district') return;
@@ -101,48 +120,41 @@ const NewAddressPlacesApi: React.FC<NewAddressPlacesApiProps> = ({ handleAddress
   }, [restaurant]);
 
   function handleValidation() {
-    const data = {
-      address,
-      number,
-      complement,
-      district,
-      region,
-      city,
-      area_region_id: areaRegionId,
-      postal_code: restaurant?.configs.use_postalcode ? postalCode : '00000000',
-    };
-
-    validate(data, restaurant?.configs.tax_mode || 'no_tax')
+    validate(address, restaurant?.configs.tax_mode || 'no_tax')
       .then(handleSubmit)
       .catch(err => console.error(err));
   }
 
   async function handleSubmit() {
-    const data = {
-      address,
-      number,
-      complement,
-      district,
-      region,
-      city,
-      area_region_id: areaRegionId,
-      postal_code: restaurant?.configs.use_postalcode ? postalCode : '00000000',
-    };
-
     setValidation({});
-    await handleAddressSubmit(data).catch(err => {
+    await handleAddressSubmit(address).catch(err => {
       messaging.handleOpen(err.response.data.error);
     });
   }
 
-  function handleDistrictSelectChange(value: string) {
-    setAreaRegionId(parseInt(value));
+  function handleGooglePlacesSearch(value: string) {
+    setSearchText(value);
 
-    const region = regions.find(r => r.id === parseInt(value));
+    const service = new google.maps.places.AutocompleteService();
+    const options = {
+      // bounds: defaultBounds,
+      componentRestrictions: { country: 'br' },
+      // fields: ["address_components", "geometry", "icon", "name"],
+      // strictBounds: false,
+      // types: ["establishment"],
+    };
 
-    if (!region) return;
+    clearTimeout(timer);
 
-    setDistrict(region.name);
+    if (value.length < 10) return;
+
+    timer = setTimeout(() => {
+      service.getQueryPredictions({ input: value, componentRestrictions: { country: 'BR' } }, predections => {
+        if (!predections) return;
+
+        setPlaces(predections);
+      });
+    }, 500);
   }
 
   return (
@@ -162,14 +174,11 @@ const NewAddressPlacesApi: React.FC<NewAddressPlacesApiProps> = ({ handleAddress
         </div>
       )}
 
-      <AddressForm
-        handleDistrictSelectChange={handleDistrictSelectChange}
-        validation={validation}
-        regions={regions}
-        areaRegionId={areaRegionId}
-      />
+      <NewAddressInputSearch handleSearch={handleGooglePlacesSearch} searchText={searchText} />
+
+      <Places places={places} />
     </CustomDialogForm>
   );
 };
 
-export default NewAddressPlacesApi;
+export default NewAddress;

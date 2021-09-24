@@ -4,7 +4,6 @@ import { ListItem, List, Typography, Menu, MenuItem, IconButton, Tooltip } from 
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import StarIcon from '@material-ui/icons/Star';
 import PropTypes from 'prop-types';
-import AccountAddressesNew from './AccountAddressesNew';
 import AccountAddressesEdit from './AccountAddressesEdit';
 import { api } from '../../../services/api';
 import { useDispatch } from 'react-redux';
@@ -15,6 +14,7 @@ import {
 } from '../../../store/redux/modules/user/actions';
 import Loading from 'src/components/loading/Loading';
 import { useMessaging } from 'src/hooks/messaging';
+import NewAddressPlacesApi from './places-api/NewAddress';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -136,7 +136,7 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
     <Fragment>
       {saving && <Loading background="rgba(255, 255, 255, 0.5)" />}
       {dialogNewAddress && (
-        <AccountAddressesNew
+        <NewAddressPlacesApi
           handleAddressSubmit={handleAddressSubmit}
           handleModalState={handleDialogNewAddress}
           saving={savingAddress}

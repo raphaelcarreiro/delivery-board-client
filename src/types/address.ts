@@ -16,18 +16,8 @@ export interface Address {
   region: string;
   is_main: boolean;
   area_region: AreaRegion | null;
+  area_region_id: number | null;
   distance: number | null;
   distance_tax: number | null;
   formattedDistanceTax: string | number;
-}
-
-export interface NewAddress {
-  address: string;
-  number: string;
-  complement: string | null;
-  postal_code: string;
-  district: string;
-  city: string;
-  region: string;
-  area_region_id: number | null;
 }

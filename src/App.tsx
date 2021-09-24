@@ -30,6 +30,7 @@ import RestaurantAddressSelector from './components/restaurant-address-selector/
 import { Restaurant, RestaurantAddress } from './types/restaurant';
 import { setRestaurantAddress } from './store/redux/modules/order/actions';
 import { setCustomerAddresses } from './store/redux/modules/user/actions';
+import LocationProvider from './providers/location';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -270,9 +271,11 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
                 <FacebookLoginProvider>
                   <Sidebar />
                   <InstallAppNotification />
-                  <LayoutHandler>
-                    <Component {...pageProps} />
-                  </LayoutHandler>
+                  <LocationProvider>
+                    <LayoutHandler>
+                      <Component {...pageProps} />
+                    </LayoutHandler>
+                  </LocationProvider>
                 </FacebookLoginProvider>
               </GoogleLoginProvider>
             </MessagingProvider>

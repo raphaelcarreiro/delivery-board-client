@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState } from 'react';
-import { NewAddress } from 'src/types/address';
+import { Address } from 'src/types/address';
 import { RestaurantConfigTaxMode } from 'src/types/restaurant';
 import * as yup from 'yup';
 
@@ -16,11 +16,11 @@ export interface AddressValidation {
 type UseAddressValidation = [
   AddressValidation,
   Dispatch<SetStateAction<AddressValidation>>,
-  (address: NewAddress, taxMode: RestaurantConfigTaxMode) => Promise<void>
+  (address: Address, taxMode: RestaurantConfigTaxMode) => Promise<void>
 ];
 
 export function useAddressValidation(): UseAddressValidation {
-  async function handleValidation(address: NewAddress, taxMode: RestaurantConfigTaxMode = 'no_tax') {
+  async function handleValidation(address: Address, taxMode: RestaurantConfigTaxMode = 'no_tax') {
     const schema = yup.object().shape({
       region: yup.string().required('O estado é obrigatório'),
       city: yup.string().required('A cidade é obrigatória'),
