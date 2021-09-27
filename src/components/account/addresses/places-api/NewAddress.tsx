@@ -11,6 +11,8 @@ import { Address, AreaRegion } from 'src/types/address';
 import CustomDialogForm from 'src/components/dialog/CustomDialogForm';
 import NewAddressInputSearch from './InputSearch';
 import Places from './Places';
+import { CustomerAddressProvider } from './hooks/useCustomerAddress';
+import GoogleMap from './GoogleMap';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -88,6 +90,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
   const [address, setAddress] = useState<Address>(INITIAL_STATE);
   const [searchText, setSearchText] = useState('');
   const [places, setPlaces] = useState<google.maps.places.QueryAutocompletePrediction[]>([]);
+  const [coordinate, setCoordinate] = useState<null | { lat: number; lng: number }>(null);
 
   useEffect(() => {
     console.log(places);
@@ -136,25 +139,27 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
     setSearchText(value);
 
     const service = new google.maps.places.AutocompleteService();
-    const options = {
-      // bounds: defaultBounds,
-      componentRestrictions: { country: 'br' },
-      // fields: ["address_components", "geometry", "icon", "name"],
-      // strictBounds: false,
-      // types: ["establishment"],
-    };
 
     clearTimeout(timer);
 
     if (value.length < 10) return;
 
     timer = setTimeout(() => {
-      service.getQueryPredictions({ input: value, componentRestrictions: { country: 'BR' } }, predections => {
+      service.getPlacePredictions({ input: value, componentRestrictions: { country: 'br' } }, predections => {
         if (!predections) return;
 
         setPlaces(predections);
       });
     }, 500);
+  }
+
+  function handleGetPlaceLatitudeLongitude(address: string) {
+    api
+      .get('/coordinates', { params: { address } })
+      .then(response => {
+        setCoordinate(response.data.location);
+      })
+      .catch(err => console.error(err));
   }
 
   return (
@@ -176,7 +181,10 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
 
       <NewAddressInputSearch handleSearch={handleGooglePlacesSearch} searchText={searchText} />
 
-      <Places places={places} />
+      <CustomerAddressProvider value={{ handleGetPlaceLatitudeLongitude }}>
+        <Places places={places} />
+      </CustomerAddressProvider>
+      {coordinate && <GoogleMap lat={coordinate.lat} lng={coordinate.lng} />}
     </CustomDialogForm>
   );
 };
