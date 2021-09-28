@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState, useContext } from 'react';
 
 interface LocationContextValue {
   location: Location;
@@ -39,5 +39,10 @@ const LocationProvider: React.FC = ({ children }) => {
 
   return <LocationContext.Provider value={{ location }}>{children}</LocationContext.Provider>;
 };
+
+export function useLocation(): LocationContextValue {
+  const context = useContext(LocationContext);
+  return context;
+}
 
 export default LocationProvider;

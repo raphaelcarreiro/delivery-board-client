@@ -1,16 +1,30 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import { makeStyles } from '@material-ui/core';
+import { Button, makeStyles } from '@material-ui/core';
 import { mapStyle } from './mapStyle';
+import { useCustomerAddress } from '../hooks/useCustomerAddress';
 
 const styles = makeStyles({
   map: {
     height: '70vh',
     width: '100%',
     borderRadius: 4,
+    position: 'relative',
     '@media (max-width: 600px)': {
-      height: 300,
+      height: '100vh',
     },
   },
+  actions: {
+    background: 'transparent',
+    position: 'absolute',
+    right: 0,
+    left: 0,
+    bottom: 0,
+    padding: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {},
 });
 
 interface Coordinate {
@@ -21,10 +35,7 @@ interface Coordinate {
 const GoogleMap: React.FC<Coordinate> = ({ lat, lng }) => {
   const classes = styles();
   const [selectedAddress, setSelectedAddress] = useState<google.maps.GeocoderResult | null>(null);
-
-  useEffect(() => {
-    console.log(selectedAddress);
-  }, [selectedAddress]);
+  const { handleSetAddress } = useCustomerAddress();
 
   const handleGetAddress = useCallback(latlng => {
     const geocoder = new google.maps.Geocoder();
@@ -38,7 +49,7 @@ const GoogleMap: React.FC<Coordinate> = ({ lat, lng }) => {
     const position = { lat, lng };
 
     const map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
-      zoom: 16,
+      zoom: 17,
       center: position,
       mapTypeId: google.maps.MapTypeId.TERRAIN,
       disableDefaultUI: true,
@@ -67,7 +78,17 @@ const GoogleMap: React.FC<Coordinate> = ({ lat, lng }) => {
     initMap();
   }, [initMap]);
 
-  return <div className={classes.map} id="map"></div>;
+  return (
+    <>
+      <div className={classes.map} id="map" />
+
+      <div className={classes.actions}>
+        <Button variant="contained" color="primary" size="large" onClick={() => handleSetAddress(selectedAddress)}>
+          Confirmar endereço
+        </Button>
+      </div>
+    </>
+  );
 };
 
 export default GoogleMap;

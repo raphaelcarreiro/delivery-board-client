@@ -3,16 +3,18 @@ import { CircularProgress } from '@material-ui/core';
 import AccountAddressesAction from '../AccountAddressesAction';
 import { makeStyles } from '@material-ui/core/styles';
 import { api } from 'src/services/api';
-import { moneyFormat } from 'src/helpers/numberFormat';
 import { useMessaging } from 'src/hooks/messaging';
 import { useSelector } from 'src/store/redux/selector';
 import { useAddressValidation } from '../validation/useAddressValidation';
-import { Address, AreaRegion } from 'src/types/address';
+import { Address } from 'src/types/address';
 import NewAddressInputSearch from './InputSearch';
 import Places from './Places';
 import { CustomerAddressProvider } from './hooks/useCustomerAddress';
-import GoogleMap from './GoogleMap';
+import GoogleMap from './map/GoogleMap';
 import CustomDialog from 'src/components/dialog/CustomDialog';
+import { useLocation } from 'src/providers/location';
+import PlacesLoading from './PlacesLoading';
+import Form from './Form';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -82,16 +84,17 @@ interface NewAddressProps {
 
 const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, saving }) => {
   const restaurant = useSelector(state => state.restaurant);
-  const [regions, setRegions] = useState<AreaRegion[]>([]);
   const [loading, setLoading] = useState(false);
   const messaging = useMessaging();
   const classes = useStyles();
   const [validation, setValidation, validate] = useAddressValidation();
   const [address, setAddress] = useState<Address>(INITIAL_STATE);
   const [searchText, setSearchText] = useState('');
-  const [places, setPlaces] = useState<google.maps.places.QueryAutocompletePrediction[]>([]);
+  const [places, setPlaces] = useState<google.maps.places.AutocompletePrediction[]>([]);
   const [coordinate, setCoordinate] = useState<null | { lat: number; lng: number }>(null);
   const [step, setStep] = useState<number>(1);
+  const { location } = useLocation();
+  const [showNotFound, setShowNotFound] = useState(false);
 
   useEffect(() => {
     console.log(places);
@@ -100,28 +103,6 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
   useEffect(() => {
     if (!searchText) setPlaces([]);
   }, [searchText]);
-
-  useEffect(() => {
-    if (restaurant?.configs.tax_mode !== 'district') return;
-
-    setLoading(true);
-    api
-      .get('/areas')
-      .then(response => {
-        setRegions(
-          response.data.regions.map(r => {
-            r.formattedTax = moneyFormat(r.tax);
-            return r;
-          })
-        );
-      })
-      .catch(() => {
-        console.log('Não foi possível carregar os bairros');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [restaurant]);
 
   function handleValidation() {
     validate(address, restaurant?.configs.tax_mode || 'no_tax')
@@ -143,13 +124,19 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
 
     clearTimeout(timer);
 
-    if (value.length < 10) return;
+    if (value.length < 10) {
+      setShowNotFound(false);
+      return;
+    }
 
     timer = setTimeout(() => {
+      setLoading(true);
       service.getPlacePredictions({ input: value, componentRestrictions: { country: 'br' } }, predections => {
         if (!predections) return;
 
         setPlaces(predections);
+        setShowNotFound(true);
+        setLoading(false);
       });
     }, 500);
   }
@@ -172,18 +159,42 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
     setStep(step => step - 1);
   }
 
+  function handleChange(index: keyof Address, value: any) {
+    setAddress(state => ({
+      ...state,
+      [index]: value,
+    }));
+  }
+
   function handleRendering() {
     const components = {
       1: (
-        <CustomerAddressProvider value={{ handleGetPlaceLatitudeLongitude }}>
+        <>
           <NewAddressInputSearch handleSearch={handleGooglePlacesSearch} searchText={searchText} />
-          <Places places={places} />
-        </CustomerAddressProvider>
+          {loading ? <PlacesLoading /> : <Places places={places} showNotFound={showNotFound} />}
+        </>
       ),
       2: <GoogleMap lat={coordinate?.lat} lng={coordinate?.lng} />,
+      3: <Form handleChange={handleChange} validation={validation} address={address} />,
     };
 
     return components[step as keyof typeof components];
+  }
+
+  function setBrowserLocation() {
+    setCoordinate({ lat: location.latitude, lng: location.longitude });
+    handleNext();
+  }
+
+  function handleSetAddress(payload: google.maps.GeocoderResult | null) {
+    if (!payload) return;
+
+    console.log(address);
+    handleNext();
+    setAddress(state => ({
+      ...state,
+      address: payload.address_components[0].long_name,
+    }));
   }
 
   return (
@@ -199,8 +210,19 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
           <CircularProgress color="primary" />
         </div>
       )}
-
-      {handleRendering()}
+      <CustomerAddressProvider
+        value={{
+          handleGetPlaceLatitudeLongitude,
+          setBrowserLocation,
+          handleChange,
+          handleSetAddress,
+          handleNext,
+          handleBack,
+          handleValidation,
+        }}
+      >
+        {handleRendering()}
+      </CustomerAddressProvider>
     </CustomDialog>
   );
 };

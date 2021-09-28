@@ -10,7 +10,7 @@ const styles = makeStyles({
     alignItems: 'center',
   },
   icon: {
-    color: '#666',
+    color: '#717171',
     marginRight: 20,
   },
   streetText: {
@@ -33,7 +33,7 @@ const Place: React.FC<PlaceProps> = ({ place }) => {
         <Typography className={classes.streetText} variant="body1">
           {place.terms[0].value}
         </Typography>
-        <Typography color="textSecondary">{`${place.structured_formatting.main_text}, ${place.structured_formatting.secondary_text}`}</Typography>
+        <Typography variant="body2">{`${place.structured_formatting.main_text}, ${place.structured_formatting.secondary_text}`}</Typography>
       </div>
     </ListItem>
   );
