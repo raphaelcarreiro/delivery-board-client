@@ -138,7 +138,7 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
       {dialogNewAddress && (
         <NewAddressPlacesApi
           handleAddressSubmit={handleAddressSubmit}
-          handleModalState={handleDialogNewAddress}
+          onExited={handleDialogNewAddress}
           saving={savingAddress}
         />
       )}

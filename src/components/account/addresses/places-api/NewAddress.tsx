@@ -8,11 +8,11 @@ import { useMessaging } from 'src/hooks/messaging';
 import { useSelector } from 'src/store/redux/selector';
 import { useAddressValidation } from '../validation/useAddressValidation';
 import { Address, AreaRegion } from 'src/types/address';
-import CustomDialogForm from 'src/components/dialog/CustomDialogForm';
 import NewAddressInputSearch from './InputSearch';
 import Places from './Places';
 import { CustomerAddressProvider } from './hooks/useCustomerAddress';
 import GoogleMap from './GoogleMap';
+import CustomDialog from 'src/components/dialog/CustomDialog';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -91,6 +91,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
   const [searchText, setSearchText] = useState('');
   const [places, setPlaces] = useState<google.maps.places.QueryAutocompletePrediction[]>([]);
   const [coordinate, setCoordinate] = useState<null | { lat: number; lng: number }>(null);
+  const [step, setStep] = useState<number>(1);
 
   useEffect(() => {
     console.log(places);
@@ -158,19 +159,39 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
       .get('/coordinates', { params: { address } })
       .then(response => {
         setCoordinate(response.data.location);
+        handleNext();
       })
       .catch(err => console.error(err));
   }
 
+  function handleNext() {
+    setStep(step => step + 1);
+  }
+
+  function handleBack() {
+    setStep(step => step - 1);
+  }
+
+  function handleRendering() {
+    const components = {
+      1: (
+        <CustomerAddressProvider value={{ handleGetPlaceLatitudeLongitude }}>
+          <NewAddressInputSearch handleSearch={handleGooglePlacesSearch} searchText={searchText} />
+          <Places places={places} />
+        </CustomerAddressProvider>
+      ),
+      2: <GoogleMap lat={coordinate?.lat} lng={coordinate?.lng} />,
+    };
+
+    return components[step as keyof typeof components];
+  }
+
   return (
-    <CustomDialogForm
+    <CustomDialog
       title="adicionar endereço"
       handleModalState={onExited}
-      handleSubmit={handleValidation}
-      closeOnSubmit
-      async
       componentActions={<AccountAddressesAction saving={saving} />}
-      maxWidth="sm"
+      maxWidth="md"
       height="80vh"
     >
       {saving && (
@@ -179,13 +200,8 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
         </div>
       )}
 
-      <NewAddressInputSearch handleSearch={handleGooglePlacesSearch} searchText={searchText} />
-
-      <CustomerAddressProvider value={{ handleGetPlaceLatitudeLongitude }}>
-        <Places places={places} />
-      </CustomerAddressProvider>
-      {coordinate && <GoogleMap lat={coordinate.lat} lng={coordinate.lng} />}
-    </CustomDialogForm>
+      {handleRendering()}
+    </CustomDialog>
   );
 };
 

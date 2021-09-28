@@ -18,6 +18,7 @@ const InputSearch: React.FC<InputSearchProps> = ({ searchText, handleSearch }) =
         value={searchText}
         onChange={e => handleSearch(e.target.value)}
         variant="outlined"
+        autoFocus
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
