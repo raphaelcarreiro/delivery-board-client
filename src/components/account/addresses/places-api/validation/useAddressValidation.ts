@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Address } from 'src/types/address';
-import { RestaurantConfigTaxMode } from 'src/types/restaurant';
 import * as yup from 'yup';
 
 export interface AddressValidation {
@@ -14,7 +13,7 @@ export interface AddressValidation {
 type UseAddressValidation = [
   AddressValidation,
   Dispatch<SetStateAction<AddressValidation>>,
-  (address: Address, taxMode: RestaurantConfigTaxMode) => Promise<void>
+  (address: Address) => Promise<void>
 ];
 
 export function useAddressValidation(): UseAddressValidation {

@@ -5,7 +5,8 @@ interface CustomerAddressContextValue {
   handleGetPlaceLatitudeLongitude(address: string): void;
   setBrowserLocation(): void;
   handleChange(index: keyof Address, value: any): void;
-  handleSetAddress(address: google.maps.GeocoderResult | null): void;
+  handleSetAddressGeoCodeResult(address: google.maps.GeocoderResult | null): void;
+  handleSetAddressAutocompletePrediction(address: google.maps.places.AutocompletePrediction): void;
   handleNext(): void;
   handleBack(): void;
   handleValidation(): void;

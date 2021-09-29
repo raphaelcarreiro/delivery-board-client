@@ -35,11 +35,12 @@ interface Coordinate {
 const GoogleMap: React.FC<Coordinate> = ({ lat, lng }) => {
   const classes = styles();
   const [selectedAddress, setSelectedAddress] = useState<google.maps.GeocoderResult | null>(null);
-  const { handleSetAddress } = useCustomerAddress();
+  const { handleSetAddressGeoCodeResult } = useCustomerAddress();
 
   const handleGetAddress = useCallback(latlng => {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ location: latlng }).then(response => {
+      console.log(response.results);
       if (response.results[0]) setSelectedAddress(response.results[0]);
     });
   }, []);
@@ -83,7 +84,12 @@ const GoogleMap: React.FC<Coordinate> = ({ lat, lng }) => {
       <div className={classes.map} id="map" />
 
       <div className={classes.actions}>
-        <Button variant="contained" color="primary" size="large" onClick={() => handleSetAddress(selectedAddress)}>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          onClick={() => handleSetAddressGeoCodeResult(selectedAddress)}
+        >
           Confirmar endereço
         </Button>
       </div>

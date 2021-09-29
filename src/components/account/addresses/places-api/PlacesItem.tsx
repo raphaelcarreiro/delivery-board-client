@@ -26,8 +26,12 @@ const Place: React.FC<PlaceProps> = ({ place }) => {
   const classes = styles();
   const { handleGetPlaceLatitudeLongitude } = useCustomerAddress();
 
+  function handlePlaceClick(place: google.maps.places.AutocompletePrediction) {
+    handleGetPlaceLatitudeLongitude(place);
+  }
+
   return (
-    <ListItem button className={classes.place} onClick={() => handleGetPlaceLatitudeLongitude(place.description)}>
+    <ListItem button className={classes.place} onClick={() => handlePlaceClick(place)}>
       <PlaceOutlined className={classes.icon} />
       <div>
         <Typography className={classes.streetText} variant="body1">
