@@ -2,11 +2,10 @@ import { createContext, useContext } from 'react';
 import { Address } from 'src/types/address';
 
 interface CustomerAddressContextValue {
-  handleGetPlaceLatitudeLongitude(address: string): void;
+  handleGetPlaceLatitudeLongitude(place: google.maps.places.AutocompletePrediction): void;
   setBrowserLocation(): void;
   handleChange(index: keyof Address, value: any): void;
   handleSetAddressGeoCodeResult(address: google.maps.GeocoderResult | null): void;
-  handleSetAddressAutocompletePrediction(address: google.maps.places.AutocompletePrediction): void;
   handleNext(): void;
   handleBack(): void;
   handleValidation(): void;
