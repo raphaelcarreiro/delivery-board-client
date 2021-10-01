@@ -9,6 +9,7 @@ interface ModalStyleProps {
   title: boolean;
   displayBottomActions: boolean;
   height: string;
+  disablePadding: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -42,15 +43,13 @@ const useStyles = makeStyles(theme => ({
       height: height,
     },
   }),
-  content: ({ title, displayBottomActions }: ModalStyleProps) => ({
+  content: ({ title, displayBottomActions, disablePadding }: ModalStyleProps) => ({
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
     marginTop: title ? 64 : 15,
     marginBottom: displayBottomActions ? 72 : 0,
-    paddingTop: 15,
-    paddingLeft: 15,
-    paddingRight: 15,
+    padding: disablePadding ? 0 : '15px 15px 0 15px',
     overflowY: 'auto',
     [theme.breakpoints.down('sm')]: {
       marginTop: title ? 56 : 15,
@@ -71,6 +70,7 @@ interface ModalProps {
   height?: string;
   backAction?(): void;
   maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | false;
+  disablePadding?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -84,11 +84,11 @@ const Modal: React.FC<ModalProps> = ({
   maxWidth = 'md',
   height = '100vh',
   backAction,
-  ...rest
+  disablePadding = false,
 }) => {
   const [open, setOpen] = useState(true);
   const app = useApp();
-  const styleProps = { backgroundColor, title: !!title, displayBottomActions, height };
+  const styleProps = { backgroundColor, title: !!title, displayBottomActions, height, disablePadding };
   const classes = useStyles(styleProps);
 
   function handleModalClose() {
@@ -97,7 +97,6 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <Dialog
-      {...rest}
       classes={{ root: classes.root, paper: classes.paper }}
       hideBackdrop={hideBackdrop}
       open={open}

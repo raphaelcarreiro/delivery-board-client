@@ -9,6 +9,7 @@ interface CustomerAddressContextValue {
   handleNext(): void;
   handleBack(): void;
   handleValidation(): void;
+  handleGetAddress(location): void;
 }
 
 const CustomerAddressContext = createContext<CustomerAddressContextValue>({} as CustomerAddressContextValue);

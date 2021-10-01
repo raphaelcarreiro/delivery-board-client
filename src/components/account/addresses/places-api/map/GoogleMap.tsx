@@ -1,9 +1,10 @@
-import React, { useEffect, useCallback, useState } from 'react';
-import { Button, makeStyles } from '@material-ui/core';
+import React, { useEffect, useCallback } from 'react';
+import { Button, makeStyles, Typography } from '@material-ui/core';
 import { mapStyle } from './mapStyle';
 import { useCustomerAddress } from '../hooks/useCustomerAddress';
+import { Address } from 'src/types/address';
 
-const styles = makeStyles({
+const styles = makeStyles(theme => ({
   map: {
     height: '70vh',
     width: '100%',
@@ -24,26 +25,40 @@ const styles = makeStyles({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  button: {},
-});
+  button: {
+    height: 60,
+    width: '40%',
+    [theme.breakpoints.down('sm')]: {
+      width: '80%',
+    },
+  },
+  mapHeader: {
+    position: 'absolute',
+    right: 0,
+    left: 0,
+    top: 64,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.8) 25%, white 100%)',
+    padding: 30,
+    '& > p': {
+      fontWeight: 500,
+      fontSize: 18,
+    },
+  },
+}));
 
-interface Coordinate {
+interface GoogleMapProps {
   lat?: number;
   lng?: number;
+  address: Address;
 }
 
-const GoogleMap: React.FC<Coordinate> = ({ lat, lng }) => {
+const GoogleMap: React.FC<GoogleMapProps> = ({ lat, lng, address }) => {
   const classes = styles();
-  const [selectedAddress, setSelectedAddress] = useState<google.maps.GeocoderResult | null>(null);
-  const { handleSetAddressGeoCodeResult } = useCustomerAddress();
-
-  const handleGetAddress = useCallback(latlng => {
-    const geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ location: latlng }).then(response => {
-      console.log(response.results);
-      if (response.results[0]) setSelectedAddress(response.results[0]);
-    });
-  }, []);
+  const { handleGetAddress, handleNext } = useCustomerAddress();
 
   const initMap = useCallback(() => {
     if (!lat || !lng) return;
@@ -83,13 +98,17 @@ const GoogleMap: React.FC<Coordinate> = ({ lat, lng }) => {
     <>
       <div className={classes.map} id="map" />
 
+      <div className={classes.mapHeader}>
+        <Typography>{`${address.address}, ${address.number}`}</Typography>
+        {address.district ? (
+          <Typography color="textSecondary">{`${address.district}, ${address.city}, ${address.region}`}</Typography>
+        ) : (
+          <Typography color="textSecondary">{`${address.city}, ${address.region}`}</Typography>
+        )}
+      </div>
+
       <div className={classes.actions}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={() => handleSetAddressGeoCodeResult(selectedAddress)}
-        >
+        <Button className={classes.button} variant="contained" color="primary" size="large" onClick={handleNext}>
           Confirmar endereço
         </Button>
       </div>

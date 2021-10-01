@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AccountAddressesAction from '../AccountAddressesAction';
 import { api } from 'src/services/api';
 import { useMessaging } from 'src/hooks/messaging';
@@ -13,6 +13,7 @@ import Form from './Form';
 import Modal from 'src/components/modal/Modal';
 import InsideSaving from 'src/components/loading/InsideSaving';
 import { useAddressValidation } from './validation/useAddressValidation';
+import { useAddressComponents } from './hooks/useAddressComponents';
 
 let timer;
 
@@ -50,6 +51,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }
   const { location } = useLocation();
   const [showNotFound, setShowNotFound] = useState(false);
   const [saving, setSaving] = useState(false);
+  const { getAddressComponent } = useAddressComponents();
 
   useEffect(() => {
     console.log(places);
@@ -58,6 +60,46 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }
   useEffect(() => {
     if (!searchText) setPlaces([]);
   }, [searchText]);
+
+  const handleSetAddressGeoCodeResult = useCallback(
+    (payload: google.maps.GeocoderResult | null) => {
+      if (!payload) {
+        return;
+      }
+
+      const number = getAddressComponent(payload.address_components, 'street_number', 'long_name');
+      const address = getAddressComponent(payload.address_components, 'route', 'long_name');
+      const district = getAddressComponent(payload.address_components, 'sublocality', 'long_name');
+      const city = getAddressComponent(payload.address_components, 'administrative_area_level_2', 'long_name');
+      const region = getAddressComponent(payload.address_components, 'administrative_area_level_1', 'short_name');
+
+      setAddress({
+        ...INITIAL_STATE,
+        number,
+        address,
+        district,
+        city,
+        region,
+      });
+    },
+    [getAddressComponent]
+  );
+
+  const handleGetAddress = useCallback(
+    latlng => {
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ location: latlng }).then(response => {
+        console.log(response.results);
+        if (response.results[0]) handleSetAddressGeoCodeResult(response.results[0]);
+      });
+    },
+    [handleSetAddressGeoCodeResult]
+  );
+
+  /*   useEffect(() => {
+    if (!coordinate) return;
+    handleGetAddress(coordinate);
+  }, [coordinate, handleGetAddress]); */
 
   function handleValidation() {
     validate(address)
@@ -116,41 +158,27 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }
     handleNext();
   }
 
-  function handleSetAddressGeoCodeResult(payload: google.maps.GeocoderResult | null) {
-    console.log(address);
-
-    if (!payload) return;
-
-    handleNext();
-    setAddress(state => ({
-      ...state,
-      number: payload.address_components[0].long_name,
-      address: payload.address_components[1].long_name,
-      city: payload.address_components[2].long_name,
-      region: payload.address_components[3].short_name,
-    }));
-  }
-
   function handleGetPlaceLatitudeLongitude(place: google.maps.places.AutocompletePrediction) {
     setSaving(true);
 
     api
       .get('/coordinates', { params: { address: place.description } })
       .then(response => {
-        setCoordinate(response.data.location);
-        handleSetAddressAutocompletePrediction(place);
-        // handleNext();
+        const geometryLocation = response.data.geometry.location;
+        const _address = response.data.address;
+        setCoordinate(geometryLocation);
+        setAddress({
+          ...INITIAL_STATE,
+          address: _address.street,
+          number: _address.street_number,
+          district: _address.neighborhood,
+          region: _address.state,
+          city: _address.city,
+        });
+        handleNext();
       })
       .catch(err => console.error(err))
       .finally(() => setSaving(false));
-  }
-
-  function handleSetAddressAutocompletePrediction(place: google.maps.places.AutocompletePrediction) {
-    handleNext();
-    setAddress(state => ({
-      ...state,
-      address: place.terms[0].value,
-    }));
   }
 
   function handleRendering() {
@@ -161,7 +189,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }
           {loading ? <PlacesLoading /> : <Places places={places} showNotFound={showNotFound} />}
         </>
       ),
-      2: <GoogleMap lat={coordinate?.lat} lng={coordinate?.lng} />,
+      2: <GoogleMap lat={coordinate?.lat} lng={coordinate?.lng} address={address} />,
       3: <Form handleChange={handleChange} validation={validation} address={address} />,
     };
 
@@ -176,6 +204,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }
       componentActions={<AccountAddressesAction saving={saving} />}
       maxWidth="md"
       height="80vh"
+      disablePadding={step === 2}
     >
       {saving && <InsideSaving />}
       <CustomerAddressProvider
@@ -187,6 +216,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }
           handleNext,
           handleBack,
           handleValidation,
+          handleGetAddress,
         }}
       >
         {handleRendering()}
