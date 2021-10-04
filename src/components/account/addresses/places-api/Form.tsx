@@ -1,7 +1,15 @@
 import React, { useEffect, useRef } from 'react';
-import { TextField } from '@material-ui/core';
+import { makeStyles, TextField } from '@material-ui/core';
 import { Address } from 'src/types/address';
 import { AddressValidation } from './validation/useAddressValidation';
+
+const styles = makeStyles({
+  street: {
+    display: 'grid',
+    gridTemplateColumns: '30% 1fr',
+    gap: '15px',
+  },
+});
 
 interface FormProps {
   validation: AddressValidation;
@@ -10,6 +18,8 @@ interface FormProps {
 }
 
 const Form: React.FC<FormProps> = ({ validation, handleChange, address }) => {
+  const classes = styles();
+
   const inputs = {
     address: useRef<HTMLInputElement>(null),
     number: useRef<HTMLInputElement>(null),
@@ -29,20 +39,7 @@ const Form: React.FC<FormProps> = ({ validation, handleChange, address }) => {
 
   return (
     <div>
-      <div>
-        <TextField
-          error={!!validation.address}
-          helperText={!!validation.address && validation.address}
-          label="Endereço"
-          placeholder="Digite o endereço"
-          margin="normal"
-          fullWidth
-          value={address.address}
-          onChange={event => handleChange('address', event.target.value)}
-          autoCapitalize="words"
-          autoComplete="address"
-        />
-
+      <div className={classes.street}>
         <TextField
           inputRef={inputs.number}
           error={!!validation.number}
@@ -56,32 +53,50 @@ const Form: React.FC<FormProps> = ({ validation, handleChange, address }) => {
         />
 
         <TextField
-          inputRef={inputs.district}
-          error={!!validation.district}
-          helperText={validation.district}
-          label="Bairro"
-          placeholder="Digite o bairro"
+          error={!!validation.address}
+          helperText={!!validation.address && validation.address}
+          label="Endereço"
+          placeholder="Digite o endereço"
           margin="normal"
           fullWidth
-          value={address.district}
-          onChange={event => handleChange('district', event.target.value)}
+          value={address.address}
+          onChange={event => handleChange('address', event.target.value)}
+          autoCapitalize="words"
+          autoComplete="address"
         />
-
-        <TextField
-          label="Complemento"
-          placeholder="Digite o complemento"
-          margin="normal"
-          fullWidth
-          value={address.complement}
-          onChange={event => handleChange('complement', event.target.value)}
-        />
-
-        <TextField label="Cidade" placeholder="Digite a cidade" margin="normal" fullWidth defaultValue={address.city} />
-
-        <TextField label="Estado" placeholder="Digite o estado" margin="normal" fullWidth value={address.region} />
-
-        <button type="submit" style={{ display: 'none' }} />
       </div>
+
+      <TextField
+        inputRef={inputs.district}
+        error={!!validation.district}
+        helperText={validation.district}
+        label="Bairro"
+        placeholder="Digite o bairro"
+        margin="normal"
+        fullWidth
+        value={address.district}
+        onChange={event => handleChange('district', event.target.value)}
+      />
+
+      <TextField
+        label="Complemento"
+        placeholder="Digite o complemento"
+        margin="normal"
+        fullWidth
+        value={address.complement}
+        onChange={event => handleChange('complement', event.target.value)}
+      />
+
+      <TextField
+        label="Ponto de referência"
+        placeholder="Informe um ponto de referência"
+        margin="normal"
+        fullWidth
+        value={address.complement}
+        onChange={event => handleChange('reference_point', event.target.value)}
+      />
+
+      <button type="submit" style={{ display: 'none' }} />
     </div>
   );
 };

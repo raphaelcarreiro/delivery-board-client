@@ -106,23 +106,23 @@ const Modal: React.FC<ModalProps> = ({
       maxWidth={maxWidth}
       onExited={onExited}
     >
-      {title && (
-        <AppBar className={classes.appbar}>
-          <Toolbar>
-            <IconButton color="inherit" onClick={backAction || handleModalClose}>
-              <ArrowBackIcon />
-            </IconButton>
-            <Typography variant="h6" color="inherit" noWrap>
-              {title}
-            </Typography>
-            <div className={classes.grow} />
-            <div>{componentActions}</div>
-          </Toolbar>
-        </AppBar>
-      )}
-      <div className={classes.content}>
-        <ModalProvider value={{ handleModalClose }}>{children}</ModalProvider>
-      </div>
+      <ModalProvider value={{ handleModalClose }}>
+        {title && (
+          <AppBar className={classes.appbar}>
+            <Toolbar>
+              <IconButton color="inherit" onClick={backAction || handleModalClose}>
+                <ArrowBackIcon />
+              </IconButton>
+              <Typography variant="h6" color="inherit" noWrap>
+                {title}
+              </Typography>
+              <div className={classes.grow} />
+              <div>{componentActions}</div>
+            </Toolbar>
+          </AppBar>
+        )}
+        <div className={classes.content}>{children}</div>
+      </ModalProvider>
     </Dialog>
   );
 };

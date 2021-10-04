@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import ShipmentAddressesList from './ShipmentAddressesList';
 import PropTypes from 'prop-types';
 import Loading from 'src/components/loading/Loading';
-import AccountAddressesNew from 'src/components/account/addresses/AccountAddressesNew';
-import AccountAddressesEdit from 'src/components/account/addresses/AccountAddressesEdit';
+import AccountAddressesNew from 'src/components/account/addresses/AccountAddressNew';
+import AccountAddressesEdit from 'src/components/account/addresses/AccountAddressEdit';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCustomerAddress, updateCustomerAddress, deleteCustomerAddress } from 'src/store/redux/modules/user/actions';
 import { setShipmentAddress } from 'src/store/redux/modules/order/actions';
@@ -166,6 +166,7 @@ export default function Shipment({ addresses }) {
   return (
     <>
       {saving && <Loading background="rgba(255, 255, 255, 0.5)" />}
+
       {dialogNewAddress && (
         <AccountAddressesNew
           handleAddressSubmit={handleAddressSubmit}

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import AccountAddressesAction from '../AccountAddressesAction';
 import { api } from 'src/services/api';
 import { useMessaging } from 'src/hooks/messaging';
 import { Address } from 'src/types/address';
@@ -14,13 +13,14 @@ import Modal from 'src/components/modal/Modal';
 import InsideSaving from 'src/components/loading/InsideSaving';
 import { useAddressValidation } from './validation/useAddressValidation';
 import { useAddressComponents } from './hooks/useAddressComponents';
+import NewAddressActions from './NewAddressAction';
 
 let timer;
 
-const INITIAL_STATE = {
+const INITIAL_STATE: Address = {
   address: '',
   number: '',
-  complement: '',
+  complement: null,
   city: '',
   region: '',
   district: '',
@@ -32,15 +32,20 @@ const INITIAL_STATE = {
   id: 0,
   formattedDistanceTax: '',
   area_region_id: null,
+  reference_point: null,
+  latitude: null,
+  longitude: null,
 };
 
 interface NewAddressProps {
   handleAddressSubmit(address: Address): Promise<void>;
   onExited(): void;
+  saving: boolean;
 }
 
-const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }) => {
-  const [loading, setLoading] = useState(false);
+const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, saving }) => {
+  const [loadingAddresses, setLoadingAddresses] = useState(false);
+  const [loadingAddress, setLoadingAddress] = useState(false);
   const messaging = useMessaging();
   const [validation, setValidation, validate] = useAddressValidation();
   const [address, setAddress] = useState<Address>(INITIAL_STATE);
@@ -50,7 +55,6 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }
   const [step, setStep] = useState<number>(1);
   const { location } = useLocation();
   const [showNotFound, setShowNotFound] = useState(false);
-  const [saving, setSaving] = useState(false);
   const { getAddressComponent } = useAddressComponents();
 
   useEffect(() => {
@@ -80,6 +84,8 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }
         district,
         city,
         region,
+        latitude: payload.geometry.location.lat(),
+        longitude: payload.geometry.location.lng(),
       });
     },
     [getAddressComponent]
@@ -96,22 +102,19 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }
     [handleSetAddressGeoCodeResult]
   );
 
-  /*   useEffect(() => {
-    if (!coordinate) return;
-    handleGetAddress(coordinate);
-  }, [coordinate, handleGetAddress]); */
-
-  function handleValidation() {
+  function handleValidation(handleModalClose: () => void) {
     validate(address)
-      .then(handleSubmit)
+      .then(() => handleSubmit(handleModalClose))
       .catch(err => console.error(err));
   }
 
-  async function handleSubmit() {
+  function handleSubmit(handleModalClose: () => void) {
     setValidation({});
-    await handleAddressSubmit(address).catch(err => {
-      messaging.handleOpen(err.response.data.error);
-    });
+    handleAddressSubmit(address)
+      .then(handleModalClose)
+      .catch(err => {
+        messaging.handleOpen(err.response.data.error);
+      });
   }
 
   function handleGooglePlacesSearch(value: string) {
@@ -127,13 +130,13 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }
     }
 
     timer = setTimeout(() => {
-      setLoading(true);
+      setLoadingAddresses(true);
       service.getPlacePredictions({ input: value, componentRestrictions: { country: 'br' } }, predections => {
         if (!predections) return;
 
         setPlaces(predections);
         setShowNotFound(true);
-        setLoading(false);
+        setLoadingAddresses(false);
       });
     }, 500);
   }
@@ -159,7 +162,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }
   }
 
   function handleGetPlaceLatitudeLongitude(place: google.maps.places.AutocompletePrediction) {
-    setSaving(true);
+    setLoadingAddress(true);
 
     api
       .get('/coordinates', { params: { address: place.description } })
@@ -174,11 +177,13 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }
           district: _address.neighborhood,
           region: _address.state,
           city: _address.city,
+          latitude: geometryLocation.lat,
+          longitude: geometryLocation.lng,
         });
         handleNext();
       })
       .catch(err => console.error(err))
-      .finally(() => setSaving(false));
+      .finally(() => setLoadingAddress(false));
   }
 
   function handleRendering() {
@@ -186,7 +191,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }
       1: (
         <>
           <NewAddressInputSearch handleSearch={handleGooglePlacesSearch} searchText={searchText} />
-          {loading ? <PlacesLoading /> : <Places places={places} showNotFound={showNotFound} />}
+          {loadingAddresses ? <PlacesLoading /> : <Places places={places} showNotFound={showNotFound} />}
         </>
       ),
       2: <GoogleMap lat={coordinate?.lat} lng={coordinate?.lng} address={address} />,
@@ -201,12 +206,12 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited }
       title="adicionar endereço"
       onExited={onExited}
       backAction={step !== 1 ? handleBack : undefined}
-      componentActions={<AccountAddressesAction saving={saving} />}
-      maxWidth="md"
+      componentActions={<NewAddressActions saving={saving} handleValidation={handleValidation} />}
+      maxWidth="sm"
       height="80vh"
       disablePadding={step === 2}
     >
-      {saving && <InsideSaving />}
+      {(loadingAddress || saving) && <InsideSaving />}
       <CustomerAddressProvider
         value={{
           handleGetPlaceLatitudeLongitude,

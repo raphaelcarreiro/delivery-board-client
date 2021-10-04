@@ -3,6 +3,7 @@ export interface AreaRegion {
   name: string;
   tax: number;
   formattedTax: string;
+  area_region_id: number | null;
 }
 
 export interface Address {
@@ -20,4 +21,7 @@ export interface Address {
   distance: number | null;
   distance_tax: number | null;
   formattedDistanceTax: string | number;
+  reference_point: string | null;
+  latitude: number | null;
+  longitude: number | null;
 }

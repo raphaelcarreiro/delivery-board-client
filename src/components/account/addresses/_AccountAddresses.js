@@ -4,7 +4,7 @@ import { ListItem, List, Typography, Menu, MenuItem, IconButton, Tooltip } from 
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import StarIcon from '@material-ui/icons/Star';
 import PropTypes from 'prop-types';
-import AccountAddressesEdit from './AccountAddressesEdit';
+import AccountAddressesEdit from './AccountAddressEdit';
 import { api } from '../../../services/api';
 import { useDispatch } from 'react-redux';
 import {
@@ -93,7 +93,6 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
       setSavingAddress(true);
       const response = await api.post('/customerAddresses', address);
       dispatch(addCustomerAddress(response.data));
-      messaging.handleOpen('Endereço incluído');
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
       else messaging.handleOpen('Não foi possível salvar');
@@ -107,7 +106,6 @@ function AccountAddresses({ addresses, handleDeleteAddress }) {
       setSavingAddress(true);
       const response = await api.put(`/customerAddresses/${selectedAddress.id}`, address);
       dispatch(updateCustomerAddress(response.data));
-      messaging.handleOpen('Endereço alterado');
     } catch (err) {
       if (err.response) messaging.handleOpen(err.response.data.error);
     } finally {

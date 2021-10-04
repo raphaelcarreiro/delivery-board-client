@@ -8,7 +8,7 @@ interface CustomerAddressContextValue {
   handleSetAddressGeoCodeResult(address: google.maps.GeocoderResult | null): void;
   handleNext(): void;
   handleBack(): void;
-  handleValidation(): void;
+  handleValidation(handleModalClose: () => void): void;
   handleGetAddress(location): void;
 }
 

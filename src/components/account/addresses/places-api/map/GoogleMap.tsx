@@ -3,6 +3,7 @@ import { Button, makeStyles, Typography } from '@material-ui/core';
 import { mapStyle } from './mapStyle';
 import { useCustomerAddress } from '../hooks/useCustomerAddress';
 import { Address } from 'src/types/address';
+import { infoWindowContent } from './infoWindowContent';
 
 const styles = makeStyles(theme => ({
   map: {
@@ -12,6 +13,9 @@ const styles = makeStyles(theme => ({
     position: 'relative',
     '@media (max-width: 600px)': {
       height: '100vh',
+    },
+    '& .gm-style-iw-a button': {
+      visibility: 'hidden',
     },
   },
   actions: {
@@ -81,7 +85,25 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ lat, lng, address }) => {
 
     marker.setMap(map);
 
+    const infowindow = new google.maps.InfoWindow({
+      content: infoWindowContent,
+    });
+
+    const openWindow = () =>
+      infowindow.open({
+        anchor: marker,
+        map,
+        shouldFocus: true,
+      });
+
+    openWindow();
+
+    marker.addListener('dragstart', () => {
+      infowindow.close();
+    });
+
     marker.addListener('dragend', () => {
+      openWindow();
       const position = marker.getPosition();
       if (!position) return;
 

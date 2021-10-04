@@ -1,9 +1,8 @@
-import React, { useState, useRef } from 'react';
-import { TextField, MenuItem } from '@material-ui/core';
+import React, { useRef, useEffect } from 'react';
+import { TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useSelector } from 'src/store/redux/selector';
 import { AddressValidation } from './validation/useAddressValidation';
-import { AreaRegion } from 'src/types/address';
+import { Address } from 'src/types/address';
 
 const useStyles = makeStyles(theme => ({
   form: {
@@ -17,88 +16,81 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface AddressFormProps {
-  handleDistrictSelectChange(value: string): void;
+  handleChange(index: keyof Address, value: any): void;
   validation: AddressValidation;
-  regions: AreaRegion[];
-  areaRegionId: number | null;
+  address: Address;
 }
 
-const AddressForm: React.FC<AddressFormProps> = ({ handleDistrictSelectChange, validation, regions, areaRegionId }) => {
-  const restaurant = useSelector(state => state.restaurant);
-  const mainAddress = restaurant?.addresses.find(address => address.is_main);
-  const [address, setAddress] = useState('');
-  const [number, setNumber] = useState('');
-  const [complement, setComplement] = useState('');
-  const [district, setDistrict] = useState('');
+const AddressForm: React.FC<AddressFormProps> = ({ validation, handleChange, address }) => {
   const classes = useStyles();
-  const inputRefNumber = useRef<HTMLInputElement>(null);
+
+  const inputs = {
+    address: useRef<HTMLInputElement>(null),
+    number: useRef<HTMLInputElement>(null),
+    district: useRef<HTMLInputElement>(null),
+  };
+
+  useEffect(() => {
+    const [key] = Object.keys(validation) as [keyof typeof inputs];
+    if (!key) return;
+    if (!inputs[key]) return;
+
+    inputs[key].current?.focus();
+  }, [validation]); // eslint-disable-line
 
   return (
     <div className={classes.form}>
       <TextField
+        inputRef={inputs.address}
         error={!!validation.address}
-        helperText={!!validation.address && validation.address}
+        helperText={validation.address}
         label="Endereço"
         placeholder="Digite o endereço"
         margin="normal"
         fullWidth
-        value={address}
-        onChange={event => setAddress(event.target.value)}
+        value={address.address}
+        onChange={event => handleChange('address', event.target.value)}
       />
+
       <TextField
-        inputRef={inputRefNumber}
+        inputRef={inputs.number}
         error={!!validation.number}
-        helperText={!!validation.number && validation.number}
+        helperText={validation.number}
         label="Número"
         placeholder="Digite o número"
         margin="normal"
         fullWidth
-        value={number}
-        onChange={event => setNumber(event.target.value)}
+        value={address.number}
+        onChange={event => handleChange('number', event.target.value)}
       />
-      {restaurant?.configs.tax_mode === 'district' ? (
-        <TextField
-          error={!!validation.areaRegionId}
-          helperText={!!validation.areaRegionId && validation.areaRegionId}
-          select
-          label="Selecione um bairro"
-          fullWidth
-          value={areaRegionId}
-          onChange={event => handleDistrictSelectChange(event.target.value)}
-          margin="normal"
-        >
-          {regions.map(region => (
-            <MenuItem key={region.id} value={region.id}>
-              {region.name} - {region.formattedTax} (taxa de entrega)
-            </MenuItem>
-          ))}
-        </TextField>
-      ) : (
-        <TextField
-          error={!!validation.district}
-          helperText={!!validation.district && validation.district}
-          label="Bairro"
-          placeholder="Digite o bairro"
-          margin="normal"
-          fullWidth
-          value={district}
-          onChange={event => setDistrict(event.target.value)}
-        />
-      )}
+
+      <TextField
+        inputRef={inputs.district}
+        error={!!validation.district}
+        helperText={validation.district}
+        label="Bairro"
+        placeholder="Digite o bairro"
+        margin="normal"
+        fullWidth
+        value={address.district}
+        onChange={event => handleChange('district', event.target.value)}
+      />
+
       <TextField
         label="Complemento"
         placeholder="Digite o complemento"
         margin="normal"
         fullWidth
-        value={complement}
-        onChange={event => setComplement(event.target.value)}
+        value={address.complement}
+        onChange={event => handleChange('complement', event.target.value)}
       />
+
       <TextField
         label="Cidade"
         placeholder="Digite a cidade"
         margin="normal"
         fullWidth
-        defaultValue={mainAddress?.city}
+        defaultValue={address.city}
         disabled
       />
       <TextField
@@ -106,7 +98,7 @@ const AddressForm: React.FC<AddressFormProps> = ({ handleDistrictSelectChange, v
         placeholder="Digite o estado"
         margin="normal"
         fullWidth
-        defaultValue={mainAddress?.region}
+        defaultValue={address.region}
         disabled
       />
       <button type="submit" style={{ display: 'none' }} />

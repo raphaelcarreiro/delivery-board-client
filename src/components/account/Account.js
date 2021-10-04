@@ -86,7 +86,6 @@ export default function Account() {
     api
       .delete(`/customerAddresses/${selectedAddress.id}`)
       .then(() => {
-        messaging.handleOpen('Excluído');
         dispatch(deleteCustomerAddress(selectedAddress.id));
       })
       .catch(err => {
