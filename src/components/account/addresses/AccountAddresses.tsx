@@ -57,8 +57,8 @@ const AccountAddresses: React.FC<AccountAddressProps> = ({ addresses, handleDele
       dispatch(addCustomerAddress(response.data));
     } catch (err) {
       const error = err as AxiosError;
-      if (error.response) messaging.handleOpen(error.response.data.error);
-      else messaging.handleOpen('Não foi possível salvar');
+      if (error.response) throw new Error(error.response.data.error);
+      else throw new Error('Não foi possível salvar');
     } finally {
       setSavingAddress(false);
     }

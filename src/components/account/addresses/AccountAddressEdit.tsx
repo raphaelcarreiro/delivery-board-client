@@ -60,23 +60,6 @@ const AccountAddressEdit: React.FC<AccountAddressEditProps> = ({
     >
       {saving && <InsideSaving />}
 
-      {restaurant?.configs.use_postalcode && (
-        <Grid item xs={12} xl={4} md={6} lg={4} style={{ flexBasis: 0 }}>
-          <TextField
-            label="CEP"
-            placeholder="Digite o CEP"
-            margin="normal"
-            fullWidth
-            value={address.postal_code}
-            InputProps={{
-              inputComponent: PostalCodeInput as any,
-            }}
-            required
-            disabled
-          />
-        </Grid>
-      )}
-
       <AddressForm validation={validation} handleChange={handleChange} address={address} />
     </Modal>
   );

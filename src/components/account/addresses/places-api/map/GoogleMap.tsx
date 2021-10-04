@@ -1,8 +1,9 @@
 import React, { useEffect, useCallback } from 'react';
-import { Button, makeStyles, Typography } from '@material-ui/core';
+import { Button, makeStyles } from '@material-ui/core';
 import { mapStyle } from './mapStyle';
 import { useCustomerAddress } from '../hooks/useCustomerAddress';
 import { Address } from 'src/types/address';
+import GoogleMapHeader from './GoogleMapHeader';
 import { infoWindowContent } from './infoWindowContent';
 
 const styles = makeStyles(theme => ({
@@ -13,9 +14,6 @@ const styles = makeStyles(theme => ({
     position: 'relative',
     '@media (max-width: 600px)': {
       height: '100vh',
-    },
-    '& .gm-style-iw-a button': {
-      visibility: 'hidden',
     },
   },
   actions: {
@@ -34,22 +32,6 @@ const styles = makeStyles(theme => ({
     width: '40%',
     [theme.breakpoints.down('sm')]: {
       width: '80%',
-    },
-  },
-  mapHeader: {
-    position: 'absolute',
-    right: 0,
-    left: 0,
-    top: 64,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.8) 25%, white 100%)',
-    padding: 30,
-    '& > p': {
-      fontWeight: 500,
-      fontSize: 18,
     },
   },
 }));
@@ -103,7 +85,6 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ lat, lng, address }) => {
     });
 
     marker.addListener('dragend', () => {
-      openWindow();
       const position = marker.getPosition();
       if (!position) return;
 
@@ -120,14 +101,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ lat, lng, address }) => {
     <>
       <div className={classes.map} id="map" />
 
-      <div className={classes.mapHeader}>
-        <Typography>{`${address.address}, ${address.number}`}</Typography>
-        {address.district ? (
-          <Typography color="textSecondary">{`${address.district}, ${address.city}, ${address.region}`}</Typography>
-        ) : (
-          <Typography color="textSecondary">{`${address.city}, ${address.region}`}</Typography>
-        )}
-      </div>
+      <GoogleMapHeader address={address} />
 
       <div className={classes.actions}>
         <Button className={classes.button} variant="contained" color="primary" size="large" onClick={handleNext}>

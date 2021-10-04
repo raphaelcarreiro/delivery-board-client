@@ -92,7 +92,7 @@ const Form: React.FC<FormProps> = ({ validation, handleChange, address }) => {
         placeholder="Informe um ponto de referência"
         margin="normal"
         fullWidth
-        value={address.complement}
+        value={address.reference_point}
         onChange={event => handleChange('reference_point', event.target.value)}
       />
 

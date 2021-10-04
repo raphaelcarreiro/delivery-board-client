@@ -8,7 +8,10 @@ import { useAccountAddresses } from './hooks/useAccountAddresses';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
-    display: 'block',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
     backgroundColor: '#fff',
     boxShadow: '1px 1px 9px 1px #eee',
     borderRadius: theme.shape.borderRadius,
@@ -47,8 +50,6 @@ const AccountAddress: React.FC<AccountAddressProps> = ({ address }) => {
       <Typography color="textSecondary">
         {address.city}, {address.region}
       </Typography>
-
-      {address.postal_code !== '00000000' && <Typography color="textSecondary">{address.postal_code}</Typography>}
 
       <IconButton className={classes.iconButton} onClick={event => handleMoreClick(event, address)}>
         <MoreVertIcon />
