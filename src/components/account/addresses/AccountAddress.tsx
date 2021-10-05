@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#fff',
     boxShadow: '1px 1px 9px 1px #eee',
     borderRadius: theme.shape.borderRadius,
+    minHeight: 150,
   },
   iconButton: {
     position: 'absolute',

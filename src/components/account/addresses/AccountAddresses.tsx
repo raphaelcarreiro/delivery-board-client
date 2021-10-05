@@ -7,7 +7,6 @@ import {
   updateCustomerAddress,
   setMainCustomerAddress,
 } from '../../../store/redux/modules/user/actions';
-import Loading from 'src/components/loading/Loading';
 import { useMessaging } from 'src/hooks/messaging';
 import NewAddressPlacesApi from './places-api/NewAddress';
 import { Address } from 'src/types/address';
@@ -26,7 +25,6 @@ const AccountAddresses: React.FC<AccountAddressProps> = ({ addresses, handleDele
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [dialogNewAddress, setDialogNewAddress] = useState(false);
   const [dialogEditAddress, setDialogEditAddress] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [savingAddress, setSavingAddress] = useState(false);
   const messaging = useMessaging();
   const dispatch = useDispatch();
@@ -81,16 +79,11 @@ const AccountAddresses: React.FC<AccountAddressProps> = ({ addresses, handleDele
   function handleUpdateIsMainAddress() {
     if (!selectedAddress) return;
 
-    setSaving(true);
-
     api
       .put(`customer/addresses/main/${selectedAddress.id}`)
       .then(() => dispatch(setMainCustomerAddress(selectedAddress.id)))
       .catch(err => {
         if (err.response) messaging.handleOpen(err.response.data.error);
-      })
-      .finally(() => {
-        setSaving(false);
       });
   }
 
@@ -98,8 +91,6 @@ const AccountAddresses: React.FC<AccountAddressProps> = ({ addresses, handleDele
     <AccountAddressesProvider
       value={{ selectedAddress, handleDialogEditAddress, handleDialogNewAddress, handleMoreClick }}
     >
-      {saving && <Loading background="rgba(255, 255, 255, 0.5)" />}
-
       {dialogNewAddress && (
         <NewAddressPlacesApi
           handleAddressSubmit={handleAddressSubmit}

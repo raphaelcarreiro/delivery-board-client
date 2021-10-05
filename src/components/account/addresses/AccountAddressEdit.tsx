@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { TextField, Grid } from '@material-ui/core';
 import AccountAddressesAction from './AccountAddressesAction';
-import PostalCodeInput from '../../masked-input/PostalCodeInput';
 import { useMessaging } from 'src/hooks/messaging';
 import { Address } from 'src/types/address';
-import { useSelector } from 'src/store/redux/selector';
 import { useAddressValidation } from './validation/useAddressValidation';
 import { AxiosError } from 'axios';
 import AddressForm from './AddressForm';
@@ -25,7 +22,6 @@ const AccountAddressEdit: React.FC<AccountAddressEditProps> = ({
   selectedAddress,
 }) => {
   const messaging = useMessaging();
-  const restaurant = useSelector(state => state.restaurant);
   const [address, setAddress] = useState<Address>(selectedAddress);
   const [validation, setValidation, validate] = useAddressValidation();
 
