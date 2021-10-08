@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import AccountAddressesEdit from './AccountAddressEdit';
 import { api } from '../../../services/api';
 import { useDispatch } from 'react-redux';
 import {
@@ -8,12 +7,13 @@ import {
   setMainCustomerAddress,
 } from '../../../store/redux/modules/user/actions';
 import { useMessaging } from 'src/hooks/messaging';
-import NewAddressPlacesApi from './places-api/NewAddress';
 import { Address } from 'src/types/address';
 import { AxiosError } from 'axios';
 import AccountAddressesMenu from './AccountAddressesMenu';
 import { AccountAddressesProvider } from './hooks/useAccountAddresses';
 import AccountAddressList from './AccountAddressList';
+import NewAddressPlacesAPI from './places-api/NewAddress';
+import EditAddress from './places-api/edit/EditAddress';
 
 interface AccountAddressProps {
   addresses: Address[];
@@ -92,7 +92,7 @@ const AccountAddresses: React.FC<AccountAddressProps> = ({ addresses, handleDele
       value={{ selectedAddress, handleDialogEditAddress, handleDialogNewAddress, handleMoreClick }}
     >
       {dialogNewAddress && (
-        <NewAddressPlacesApi
+        <NewAddressPlacesAPI
           handleAddressSubmit={handleAddressSubmit}
           onExited={handleDialogNewAddress}
           saving={savingAddress}
@@ -100,13 +100,22 @@ const AccountAddresses: React.FC<AccountAddressProps> = ({ addresses, handleDele
       )}
 
       {dialogEditAddress && selectedAddress && (
+        <EditAddress
+          handleAddressUpdateSubmit={handleAddressUpdateSubmit}
+          selectedAddress={selectedAddress}
+          onExited={() => setDialogEditAddress(false)}
+          saving={savingAddress}
+        />
+      )}
+
+      {/*  {dialogEditAddress && selectedAddress && (
         <AccountAddressesEdit
           handleAddressUpdateSubmit={handleAddressUpdateSubmit}
           selectedAddress={selectedAddress}
           handleModalState={() => setDialogEditAddress(false)}
           saving={savingAddress}
         />
-      )}
+      )} */}
 
       {selectedAddress && (
         <AccountAddressesMenu

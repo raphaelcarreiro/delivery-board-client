@@ -27,7 +27,7 @@ const Place: React.FC<PlaceProps> = ({ place }) => {
   const { handleGetPlaceLatitudeLongitude } = useCustomerAddress();
 
   function handlePlaceClick(place: google.maps.places.AutocompletePrediction) {
-    handleGetPlaceLatitudeLongitude(place);
+    handleGetPlaceLatitudeLongitude(place.description);
   }
 
   return (

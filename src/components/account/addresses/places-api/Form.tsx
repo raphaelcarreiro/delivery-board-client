@@ -39,6 +39,18 @@ const Form: React.FC<FormProps> = ({ validation, handleChange, address }) => {
 
   return (
     <div>
+      <TextField
+        error={!!validation.address}
+        helperText={!!validation.address && validation.address}
+        label="Endereço"
+        placeholder="Digite o endereço"
+        margin="normal"
+        fullWidth
+        value={address.address}
+        onChange={event => handleChange('address', event.target.value)}
+        autoCapitalize="words"
+        autoComplete="address"
+      />
       <div className={classes.street}>
         <TextField
           inputRef={inputs.number}
@@ -51,32 +63,18 @@ const Form: React.FC<FormProps> = ({ validation, handleChange, address }) => {
           value={address.number}
           onChange={event => handleChange('number', event.target.value)}
         />
-
         <TextField
-          error={!!validation.address}
-          helperText={!!validation.address && validation.address}
-          label="Endereço"
-          placeholder="Digite o endereço"
+          inputRef={inputs.district}
+          error={!!validation.district}
+          helperText={validation.district}
+          label="Bairro"
+          placeholder="Digite o bairro"
           margin="normal"
           fullWidth
-          value={address.address}
-          onChange={event => handleChange('address', event.target.value)}
-          autoCapitalize="words"
-          autoComplete="address"
+          value={address.district}
+          onChange={event => handleChange('district', event.target.value)}
         />
       </div>
-
-      <TextField
-        inputRef={inputs.district}
-        error={!!validation.district}
-        helperText={validation.district}
-        label="Bairro"
-        placeholder="Digite o bairro"
-        margin="normal"
-        fullWidth
-        value={address.district}
-        onChange={event => handleChange('district', event.target.value)}
-      />
 
       <TextField
         label="Complemento"
