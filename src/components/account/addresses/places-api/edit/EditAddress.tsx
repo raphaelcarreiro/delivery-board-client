@@ -3,7 +3,7 @@ import { api } from 'src/services/api';
 import { useMessaging } from 'src/hooks/messaging';
 import { Address } from 'src/types/address';
 import { CustomerAddressProvider } from '../hooks/useCustomerAddress';
-import GoogleMap from '../map/GoogleMap';
+import GoogleMap from '../map/CopyGoogleMap';
 import { useLocation } from 'src/providers/location';
 import Form from '../Form';
 import Modal from 'src/components/modal/Modal';
@@ -158,7 +158,7 @@ const EditAddress: React.FC<EditAddressProps> = ({ handleAddressUpdateSubmit, on
 
   function handleRendering() {
     const components = {
-      1: <GoogleMap lat={coordinate?.lat} lng={coordinate?.lng} address={address} />,
+      1: <>{coordinate && <GoogleMap lat={coordinate?.lat} lng={coordinate?.lng} address={address} />}</>,
       2: <Form handleChange={handleChange} validation={validation} address={address} />,
     };
 

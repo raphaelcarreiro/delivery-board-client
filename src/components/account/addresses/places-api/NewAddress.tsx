@@ -5,7 +5,6 @@ import { Address } from 'src/types/address';
 import NewAddressInputSearch from './new/InputSearch';
 import Places from './Places';
 import { CustomerAddressProvider } from './hooks/useCustomerAddress';
-import GoogleMap from './map/GoogleMap';
 import { useLocation } from 'src/providers/location';
 import PlacesLoading from './PlacesLoading';
 import Form from './Form';
@@ -15,6 +14,7 @@ import { useAddressValidation } from './validation/useAddressValidation';
 import { useAddressComponents } from './hooks/useAddressComponents';
 import NewAddressActions from './NewAddressAction';
 import { useSelector } from 'src/store/redux/selector';
+import CopyGoogleMap from './map/CopyGoogleMap';
 
 let timer;
 
@@ -207,7 +207,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
           {loadingAddresses ? <PlacesLoading /> : <Places places={places} showNotFound={showNotFound} />}
         </>
       ),
-      2: <GoogleMap lat={coordinate?.lat} lng={coordinate?.lng} address={address} />,
+      2: <>{coordinate && <CopyGoogleMap lat={coordinate.lat} lng={coordinate.lng} address={address} />}</>,
       3: <Form handleChange={handleChange} validation={validation} address={address} />,
     };
 

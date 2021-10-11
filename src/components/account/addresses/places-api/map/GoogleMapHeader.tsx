@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles, Typography } from '@material-ui/core';
 import { Address } from 'src/types/address';
 
-const styles = makeStyles({
+const styles = makeStyles(theme => ({
   mapHeader: {
     position: 'absolute',
     right: 0,
@@ -18,14 +18,21 @@ const styles = makeStyles({
       fontWeight: 500,
       fontSize: 18,
     },
+    [theme.breakpoints.down('md')]: {
+      top: 56,
+      padding: '15px 15px 20px',
+    },
+    [theme.breakpoints.between('xs', 'xs') + ' and (orientation: landscape)']: {
+      top: 50,
+    },
   },
-});
+}));
 
 interface GoogleMapHeaderProps {
   address: Address;
 }
 
-const GoogleMap: React.FC<GoogleMapHeaderProps> = ({ address }) => {
+const GoogleMapHeader: React.FC<GoogleMapHeaderProps> = ({ address }) => {
   const classes = styles();
 
   return (
@@ -52,4 +59,4 @@ const GoogleMap: React.FC<GoogleMapHeaderProps> = ({ address }) => {
   );
 };
 
-export default GoogleMap;
+export default GoogleMapHeader;

@@ -24,7 +24,7 @@ const AccountPage: NextPage = () => {
         <title>Minha conta</title>
         <script
           async
-          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}&libraries=places`}
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}&libraries=places,geometry`}
         />
       </Head>
       {isAuthenticated && <Account />}
