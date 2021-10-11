@@ -23,6 +23,9 @@ const styles = makeStyles(theme => ({
     '& .gm-style-iw-c': {
       padding: 0,
     },
+    '& .gm-style-iw-d': {
+      overflow: 'hidden !important',
+    },
   },
   actions: {
     background: 'transparent',
