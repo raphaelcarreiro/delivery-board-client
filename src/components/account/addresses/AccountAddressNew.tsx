@@ -28,7 +28,7 @@ let timer;
 
 interface AccountAddressNewProps {
   handleAddressSubmit(address: Address): Promise<void>;
-  handleModalState(): void;
+  onExited(): void;
   saving: boolean;
 }
 
@@ -52,7 +52,7 @@ const initialAddressValue: Address = {
   longitude: null,
 };
 
-const AccountAddressNew: React.FC<AccountAddressNewProps> = ({ handleAddressSubmit, handleModalState, saving }) => {
+const AccountAddressNew: React.FC<AccountAddressNewProps> = ({ handleAddressSubmit, onExited, saving }) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [validation, setValidation, validate] = useAddressValidation();
@@ -158,7 +158,7 @@ const AccountAddressNew: React.FC<AccountAddressNewProps> = ({ handleAddressSubm
   return (
     <Modal
       title="adicionar endereço"
-      onExited={handleModalState}
+      onExited={onExited}
       componentActions={<AccountAddressesAction handleValidation={handleValidation} saving={saving} />}
       maxWidth="sm"
       height="80vh"

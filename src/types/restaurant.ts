@@ -28,6 +28,7 @@ export interface RestaurantConfig {
   order_minimum_products_amount: number;
   cart_accumulate_discount: boolean;
   restaurant_address_selection: boolean;
+  use_google_map_addresses: boolean;
 }
 
 export interface RestaurantAddress {

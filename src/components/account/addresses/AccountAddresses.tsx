@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, MouseEvent } from 'react';
 import { api } from '../../../services/api';
 import { useDispatch } from 'react-redux';
 import {
@@ -14,6 +14,9 @@ import { AccountAddressesProvider } from './hooks/useAccountAddresses';
 import AccountAddressList from './AccountAddressList';
 import NewAddressPlacesAPI from './places-api/NewAddress';
 import EditAddress from './places-api/edit/EditAddress';
+import { useSelector } from 'src/store/redux/selector';
+import AccountAddressEdit from './AccountAddressEdit';
+import AccountAddressNew from './AccountAddressNew';
 
 interface AccountAddressProps {
   addresses: Address[];
@@ -28,8 +31,9 @@ const AccountAddresses: React.FC<AccountAddressProps> = ({ addresses, handleDele
   const [savingAddress, setSavingAddress] = useState(false);
   const messaging = useMessaging();
   const dispatch = useDispatch();
+  const restaurant = useSelector(state => state.restaurant);
 
-  function handleMoreClick(event, address) {
+  function handleMoreClick(event: MouseEvent<HTMLButtonElement>, address: Address) {
     setAnchorEl(event.currentTarget);
     setSelectedAddress(address);
     event.stopPropagation();
@@ -91,7 +95,7 @@ const AccountAddresses: React.FC<AccountAddressProps> = ({ addresses, handleDele
     <AccountAddressesProvider
       value={{ selectedAddress, handleDialogEditAddress, handleDialogNewAddress, handleMoreClick }}
     >
-      {dialogNewAddress && (
+      {dialogNewAddress && restaurant?.configs.use_google_map_addresses && (
         <NewAddressPlacesAPI
           handleAddressSubmit={handleAddressSubmit}
           onExited={handleDialogNewAddress}
@@ -99,7 +103,15 @@ const AccountAddresses: React.FC<AccountAddressProps> = ({ addresses, handleDele
         />
       )}
 
-      {dialogEditAddress && selectedAddress && (
+      {dialogNewAddress && !restaurant?.configs.use_google_map_addresses && (
+        <AccountAddressNew
+          handleAddressSubmit={handleAddressSubmit}
+          onExited={handleDialogNewAddress}
+          saving={savingAddress}
+        />
+      )}
+
+      {dialogEditAddress && selectedAddress && restaurant?.configs.use_google_map_addresses && (
         <EditAddress
           handleAddressUpdateSubmit={handleAddressUpdateSubmit}
           selectedAddress={selectedAddress}
@@ -108,14 +120,14 @@ const AccountAddresses: React.FC<AccountAddressProps> = ({ addresses, handleDele
         />
       )}
 
-      {/*  {dialogEditAddress && selectedAddress && (
-        <AccountAddressesEdit
+      {dialogEditAddress && selectedAddress && !restaurant?.configs.use_google_map_addresses && (
+        <AccountAddressEdit
           handleAddressUpdateSubmit={handleAddressUpdateSubmit}
           selectedAddress={selectedAddress}
           handleModalState={() => setDialogEditAddress(false)}
           saving={savingAddress}
         />
-      )} */}
+      )}
 
       {selectedAddress && (
         <AccountAddressesMenu
