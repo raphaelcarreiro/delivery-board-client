@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import ShipmentAddressesList from './ShipmentAddressesList';
 import PropTypes from 'prop-types';
 import Loading from 'src/components/loading/Loading';
-import AccountAddressesNew from 'src/components/account/addresses/AccountAddressNew';
-import AccountAddressesEdit from 'src/components/account/addresses/AccountAddressEdit';
+import AccountAddressNew from 'src/components/account/addresses/AccountAddressNew';
+import NewAddressGoogleAPI from 'src/components/account/addresses/places-api/NewAddress';
+import AccountAddressEdit from 'src/components/account/addresses/AccountAddressEdit';
+import EditAddressGoogleAPI from 'src/components/account/addresses/places-api/edit/EditAddress';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCustomerAddress, updateCustomerAddress, deleteCustomerAddress } from 'src/store/redux/modules/user/actions';
 import { setShipmentAddress } from 'src/store/redux/modules/order/actions';
@@ -167,21 +169,40 @@ export default function Shipment({ addresses }) {
     <>
       {saving && <Loading background="rgba(255, 255, 255, 0.5)" />}
 
-      {dialogNewAddress && (
-        <AccountAddressesNew
+      {dialogNewAddress && restaurant?.configs.use_google_map_addresses && (
+        <NewAddressGoogleAPI
           handleAddressSubmit={handleAddressSubmit}
-          handleModalState={savingAddress ? () => {} : handleDialogNewAddress}
+          onExited={handleDialogNewAddress}
           saving={savingAddress}
         />
       )}
-      {dialogEditAddress && (
-        <AccountAddressesEdit
+
+      {dialogNewAddress && !restaurant?.configs.use_google_map_addresses && (
+        <AccountAddressNew
+          handleAddressSubmit={handleAddressSubmit}
+          onExited={handleDialogNewAddress}
+          saving={savingAddress}
+        />
+      )}
+
+      {dialogEditAddress && selectedAddress && restaurant?.configs.use_google_map_addresses && (
+        <EditAddressGoogleAPI
+          handleAddressUpdateSubmit={handleAddressUpdateSubmit}
+          selectedAddress={selectedAddress}
+          onExited={() => setDialogEditAddress(false)}
+          saving={savingAddress}
+        />
+      )}
+
+      {dialogEditAddress && selectedAddress && !restaurant?.configs.use_google_map_addresses && (
+        <AccountAddressEdit
           handleAddressUpdateSubmit={handleAddressUpdateSubmit}
           selectedAddress={selectedAddress}
           handleModalState={() => setDialogEditAddress(false)}
           saving={savingAddress}
         />
       )}
+
       {dialogDeleteAddress && (
         <DialogDelete
           title="Excluir endereço"
@@ -191,6 +212,7 @@ export default function Shipment({ addresses }) {
           buttonText="Sim, excluir"
         />
       )}
+
       <Grid container>
         <Grid item xs={12}>
           <ShipmentAddressesList

@@ -42,6 +42,10 @@ const CheckoutPage: NextPage = () => {
         {restaurant?.payment_gateway === 'mercadopago' && (
           <script src="https://secure.mlstatic.com/sdk/javascript/v1/mercadopago.js"></script>
         )}
+        <script
+          async
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}&libraries=places,geometry`}
+        />
       </Head>
       {!restaurant?.is_open && <CartClosedRestaurant onExited={handleExitModal} />}
       {isAuthenticated && restaurant?.is_open && <Checkout />}
