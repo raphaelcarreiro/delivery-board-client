@@ -156,7 +156,7 @@ const CopyGoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
     const circle = createCircle(map);
     const infowindow = createInfoWindow();
 
-    map.addListener('center_changed', () => {
+    map.addListener('drag', () => {
       infowindow.close();
       marker.setPosition(map.getCenter());
     });
