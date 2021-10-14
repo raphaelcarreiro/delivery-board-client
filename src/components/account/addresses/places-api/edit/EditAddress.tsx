@@ -20,7 +20,7 @@ interface EditAddressProps {
 }
 
 const EditAddress: React.FC<EditAddressProps> = ({ handleAddressUpdateSubmit, onExited, saving, selectedAddress }) => {
-  const [loadingAddress, setLoadingAddress] = useState(false);
+  const [loadingAddress, setLoadingAddress] = useState(true);
   const messaging = useMessaging();
   const [validation, setValidation, validate] = useAddressValidation();
   const [address, setAddress] = useState<Address>(selectedAddress);
@@ -35,6 +35,7 @@ const EditAddress: React.FC<EditAddressProps> = ({ handleAddressUpdateSubmit, on
         lat: selectedAddress.latitude,
         lng: selectedAddress.longitude,
       });
+      setLoadingAddress(false);
       return;
     }
     const fullAddress = `${selectedAddress.address} ${selectedAddress.number} ${selectedAddress.district} ${selectedAddress.city} ${selectedAddress.region}`;
