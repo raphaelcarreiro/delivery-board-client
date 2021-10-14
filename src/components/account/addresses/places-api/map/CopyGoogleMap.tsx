@@ -47,6 +47,8 @@ const styles = makeStyles(theme => ({
   },
 }));
 
+let timer;
+
 interface CopyGoogleMapProps {
   lat: number;
   lng: number;
@@ -94,7 +96,6 @@ const CopyGoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
 
       const marker = new google.maps.Marker({
         position,
-        draggable: true,
         icon: '/images/mark_map.png',
       });
 
@@ -155,6 +156,11 @@ const CopyGoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
     const circle = createCircle(map);
     const infowindow = createInfoWindow();
 
+    map.addListener('center_changed', () => {
+      infowindow.close();
+      marker.setPosition(map.getCenter());
+    });
+
     const openWindow = () =>
       infowindow.open({
         anchor: marker,
@@ -164,18 +170,18 @@ const CopyGoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
 
     openWindow();
 
-    marker.addListener('dragstart', () => {
-      infowindow.close();
-    });
-
-    marker.addListener('dragend', () => {
-      openWindow();
-      const position = marker.getPosition();
-      if (!position) return;
-
-      handleGetAddress({ lat: position.toJSON().lat, lng: position.toJSON().lng });
+    marker.addListener('position_changed', () => {
+      clearTimeout(timer);
 
       calculateDistance(marker, circle);
+
+      timer = setTimeout(() => {
+        openWindow();
+        const position = marker.getPosition();
+        if (!position) return;
+
+        handleGetAddress({ lat: position.toJSON().lat, lng: position.toJSON().lng });
+      }, 500);
     });
 
     calculateDistance(marker, circle);
