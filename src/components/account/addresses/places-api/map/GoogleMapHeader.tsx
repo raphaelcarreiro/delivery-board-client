@@ -14,6 +14,7 @@ const styles = makeStyles(theme => ({
     alignItems: 'center',
     background: 'linear-gradient(0deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.8) 25%, white 100%)',
     padding: 30,
+    textAlign: 'center',
     '& > p': {
       fontWeight: 500,
       fontSize: 18,
