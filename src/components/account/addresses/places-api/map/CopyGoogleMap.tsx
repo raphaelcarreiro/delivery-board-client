@@ -67,7 +67,7 @@ const CopyGoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
     distance,
   ]);
 
-  const circleRadius = useMemo(() => (restaurant ? restaurant.delivery_max_distance * 100 : 0), [restaurant]);
+  const circleRadius = useMemo(() => (restaurant ? restaurant.delivery_max_distance * 1000 : 0), [restaurant]);
 
   const restaurantAddressCoordinates = useMemo(() => {
     return {
@@ -142,10 +142,10 @@ const CopyGoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
       const restaurantAddressLatLng = new google.maps.LatLng(restaurantAddressCoordinates);
       const newDistance = google.maps.geometry.spherical.computeDistanceBetween(restaurantAddressLatLng, position);
 
-      if (restaurant && newDistance / 100 > restaurant.delivery_max_distance) circle.setVisible(true);
+      if (restaurant && newDistance / 1000 > restaurant.delivery_max_distance) circle.setVisible(true);
       else circle.setVisible(false);
 
-      setDistance(newDistance / 100);
+      setDistance(newDistance / 1000);
     },
     [restaurant, restaurantAddressCoordinates]
   );
