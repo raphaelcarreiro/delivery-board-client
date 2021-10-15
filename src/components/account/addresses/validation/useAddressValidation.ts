@@ -20,12 +20,30 @@ type UseAddressValidation = [
 export function useAddressValidation(): UseAddressValidation {
   async function handleValidation(address: Address) {
     const schema = yup.object().shape({
-      region: yup.string().required('O estado é obrigatório'),
-      city: yup.string().required('A cidade é obrigatória'),
-      district: yup.string().required('O bairro é obrigatório'),
-      number: yup.string().required('O número é obrigatório'),
-      address: yup.string().required('O logradouro é obrigatório'),
-      postal_code: yup.string().required('O CEP é obrigatório'),
+      region: yup
+        .string()
+        .typeError('O estado é obrigatório')
+        .required('O estado é obrigatório'),
+      city: yup
+        .string()
+        .typeError('A cidade é obrigatório')
+        .required('A cidade é obrigatória'),
+      district: yup
+        .string()
+        .typeError('O bairro é obrigatório')
+        .required('O bairro é obrigatório'),
+      number: yup
+        .string()
+        .typeError('O número é obrigatório')
+        .required('O número é obrigatório'),
+      address: yup
+        .string()
+        .typeError('O logradouro é obrigatório')
+        .required('O logradouro é obrigatório'),
+      postal_code: yup
+        .string()
+        .typeError('O CEP é obrigatório')
+        .required('O CEP é obrigatório'),
     });
 
     try {

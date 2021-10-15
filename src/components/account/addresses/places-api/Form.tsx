@@ -30,7 +30,7 @@ const Form: React.FC<FormProps> = ({ validation, handleChange, address }) => {
   };
 
   useEffect(() => {
-    const [key] = Object.keys(inputs) as [keyof typeof inputs];
+    const [key] = Object.keys(validation) as [keyof typeof inputs];
 
     if (!key || !inputs[key]) return;
 
