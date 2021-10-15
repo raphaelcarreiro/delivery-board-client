@@ -140,7 +140,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
         {
           input: value,
           location: new google.maps.LatLng({ lat: restaurantAddress.latitude, lng: restaurantAddress.longitude }),
-          radius: restaurant?.delivery_max_distance,
+          radius: (restaurant?.delivery_max_distance || 0) * 1000,
           componentRestrictions: { country: 'br' },
         },
         predections => {
