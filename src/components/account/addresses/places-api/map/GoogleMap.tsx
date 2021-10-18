@@ -36,6 +36,10 @@ const styles = makeStyles(theme => ({
       width: '80%',
     },
   },
+  marker: {
+    position: 'absolute',
+    transform: 'translate(-50%, calc(-50% - 15px))',
+  },
 }));
 
 interface GoogleMapProps {
@@ -143,6 +147,10 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ lat, lng, address }) => {
       <div className={classes.map} id="map" />
 
       {outOfDeliverableArea ? <OutOfDeliverableAreaAlert /> : <GoogleMapHeader address={address} />}
+
+      <span className={classes.marker}>
+        <img src="/mark_map.pnh" />
+      </span>
 
       <div className={classes.actions}>
         <Button

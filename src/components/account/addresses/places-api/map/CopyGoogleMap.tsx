@@ -45,6 +45,11 @@ const styles = makeStyles(theme => ({
       width: '80%',
     },
   },
+  marker: {
+    position: 'absolute',
+    top: 'calc(50% + 2px)',
+    left: 'calc(50% - 15px)',
+  },
 }));
 
 let timer;
@@ -97,6 +102,8 @@ const CopyGoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
       const marker = new google.maps.Marker({
         position,
         icon: '/images/mark_map.png',
+        opacity: 0,
+        // visible: false,
       });
 
       marker.setMap(map);
@@ -197,6 +204,10 @@ const CopyGoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
       <div className={classes.map} id="map" />
 
       {outOfDeliverableArea ? <OutOfDeliverableAreaAlert /> : <GoogleMapHeader address={address} />}
+
+      <span className={classes.marker}>
+        <img src="/images/mark_map.png" />
+      </span>
 
       <div className={classes.actions}>
         <Button
