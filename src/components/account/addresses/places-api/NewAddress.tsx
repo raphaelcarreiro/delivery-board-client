@@ -98,7 +98,6 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
     latlng => {
       const geocoder = new google.maps.Geocoder();
       geocoder.geocode({ location: latlng }).then(response => {
-        console.log(response.results);
         if (response.results[0]) handleSetAddressGeoCodeResult(response.results[0]);
       });
     },

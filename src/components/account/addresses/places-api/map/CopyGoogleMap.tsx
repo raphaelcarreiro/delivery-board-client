@@ -168,6 +168,12 @@ const CopyGoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
       marker.setPosition(map.getCenter());
     });
 
+    map.addListener('zoom_changed', () => {
+      const position = marker.getPosition();
+
+      if (position) map.panTo(position);
+    });
+
     const openWindow = () =>
       infowindow.open({
         anchor: marker,
