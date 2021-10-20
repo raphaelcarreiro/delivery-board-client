@@ -1,7 +1,9 @@
-import React, { createContext, useEffect, useState, useContext } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
 interface LocationContextValue {
-  location: Location;
+  location: Location | null;
+  isPermittionDenied: boolean;
+  askPermittionForLocation(): void;
 }
 
 interface Location {
@@ -12,15 +14,14 @@ interface Location {
 const LocationContext = createContext<LocationContextValue>({} as LocationContextValue);
 
 const LocationProvider: React.FC = ({ children }) => {
-  const [location, setLocation] = useState<Location>({
-    latitude: 0,
-    longitude: 0,
-  });
+  const [location, setLocation] = useState<Location | null>(null);
+  const [isPermittionDenied, setIsPermittionDenied] = useState(false);
 
-  useEffect(() => {
+  function askPermittionForLocation() {
+    setIsPermittionDenied(false);
+
     navigator.geolocation.getCurrentPosition(
       success => {
-        console.log(success);
         setLocation({
           latitude: success.coords.latitude,
           longitude: success.coords.longitude,
@@ -28,6 +29,7 @@ const LocationProvider: React.FC = ({ children }) => {
       },
       error => {
         console.error(error);
+        setIsPermittionDenied(true);
       },
       {
         enableHighAccuracy: true,
@@ -35,9 +37,13 @@ const LocationProvider: React.FC = ({ children }) => {
         timeout: 5000,
       }
     );
-  }, []);
+  }
 
-  return <LocationContext.Provider value={{ location }}>{children}</LocationContext.Provider>;
+  return (
+    <LocationContext.Provider value={{ location, askPermittionForLocation, isPermittionDenied }}>
+      {children}
+    </LocationContext.Provider>
+  );
 };
 
 export function useLocation(): LocationContextValue {

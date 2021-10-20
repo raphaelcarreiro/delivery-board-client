@@ -54,15 +54,26 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
   const [places, setPlaces] = useState<google.maps.places.AutocompletePrediction[]>([]);
   const [coordinate, setCoordinate] = useState<null | { lat: number; lng: number }>(null);
   const [step, setStep] = useState<number>(1);
-  const { location } = useLocation();
+  const { location, askPermittionForLocation, isPermittionDenied } = useLocation();
   const [showNotFound, setShowNotFound] = useState(false);
   const { getAddressComponent } = useAddressComponents();
   const order = useSelector(state => state.order);
   const restaurant = useSelector(state => state.restaurant);
 
+  const handleNext = useCallback(() => {
+    setStep(step => step + 1);
+  }, []);
+
+  const handleBack = useCallback(() => {
+    setStep(step => step - 1);
+  }, []);
+
   useEffect(() => {
-    console.log(places);
-  }, [places]);
+    if (!location) return;
+
+    setCoordinate({ lat: location.latitude, lng: location.longitude });
+    handleNext();
+  }, [location, handleNext, messaging]);
 
   useEffect(() => {
     if (!searchText) setPlaces([]);
@@ -153,14 +164,6 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
     }, 500);
   }
 
-  function handleNext() {
-    setStep(step => step + 1);
-  }
-
-  function handleBack() {
-    setStep(step => step - 1);
-  }
-
   function handleChange(index: keyof Address, value: any) {
     setAddress(state => ({
       ...state,
@@ -169,8 +172,9 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
   }
 
   function setBrowserLocation() {
-    setCoordinate({ lat: location.latitude, lng: location.longitude });
-    handleNext();
+    if (isPermittionDenied) messaging.handleOpen('Você precisa permitir a localização para buscar no mapa');
+
+    askPermittionForLocation();
   }
 
   function handleGetPlaceLatitudeLongitude(addressDescription: string) {
