@@ -47,7 +47,7 @@ interface NewAddressProps {
 const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, saving }) => {
   const [loadingAddresses, setLoadingAddresses] = useState(false);
   const [loadingAddress, setLoadingAddress] = useState(false);
-  const messaging = useMessaging();
+  const { handleOpen } = useMessaging();
   const [validation, setValidation, validate] = useAddressValidation();
   const [address, setAddress] = useState<Address>(INITIAL_STATE);
   const [searchText, setSearchText] = useState('');
@@ -59,6 +59,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
   const { getAddressComponent } = useAddressComponents();
   const order = useSelector(state => state.order);
   const restaurant = useSelector(state => state.restaurant);
+  const [notFoundAddressLinkClicked, setNotFoundAddressLinkClicked] = useState(false);
 
   const handleNext = useCallback(() => {
     setStep(step => step + 1);
@@ -69,11 +70,30 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
   }, []);
 
   useEffect(() => {
+    if (!notFoundAddressLinkClicked) return;
+
+    if (isPermittionDenied) {
+      setCoordinate({
+        lat: order.restaurant_address.latitude,
+        lng: order.restaurant_address.longitude,
+      });
+      handleNext();
+      return;
+    }
+
     if (!location) return;
 
     setCoordinate({ lat: location.latitude, lng: location.longitude });
     handleNext();
-  }, [location, handleNext, messaging]);
+  }, [
+    location,
+    handleNext,
+    handleOpen,
+    isPermittionDenied,
+    notFoundAddressLinkClicked,
+    order.restaurant_address.latitude,
+    order.restaurant_address.longitude,
+  ]);
 
   useEffect(() => {
     if (!searchText) setPlaces([]);
@@ -126,7 +146,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
     handleAddressSubmit(address)
       .then(handleModalClose)
       .catch(err => {
-        messaging.handleOpen(err.response.data.error);
+        handleOpen(err.response.data.error);
       });
   }
 
@@ -172,9 +192,8 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
   }
 
   function setBrowserLocation() {
-    if (isPermittionDenied) messaging.handleOpen('Você precisa permitir a localização para buscar no mapa');
-
     askPermittionForLocation();
+    setNotFoundAddressLinkClicked(true);
   }
 
   function handleGetPlaceLatitudeLongitude(addressDescription: string) {
@@ -228,6 +247,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
       disablePadding={step === 2}
     >
       {(loadingAddress || saving) && <InsideSaving />}
+
       <CustomerAddressProvider
         value={{
           handleGetPlaceLatitudeLongitude,

@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { name, version } from '../../../../../package.json';
+import packageInfo from '../../../../../package.json';
 
 const INITIAL_STATE = {
   shipment: {},
@@ -22,8 +22,8 @@ const INITIAL_STATE = {
   tax: 0,
   discount: 0,
   origin: {
-    version,
-    app_name: name,
+    version: packageInfo.version,
+    app_name: packageInfo.name,
     platform: 'web-app',
   },
   restaurant_address: null,
