@@ -79,10 +79,13 @@ export function useCardValidation(): UseCardValidation {
     try {
       await schema.validate(card);
     } catch (err) {
-      setValidation({
-        [err.path]: err.message,
-      });
-      throw new Error(err.message);
+      if (err instanceof yup.ValidationError) {
+        setValidation({
+          [err.path]: err.message,
+        });
+        throw new Error(err.message);
+      }
+      throw new Error(err as string);
     }
   }
 

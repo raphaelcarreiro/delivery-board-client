@@ -50,8 +50,11 @@ export function useUserRegisterValidation(): UseUserRegisterValidation {
     try {
       await schema.validate(user);
     } catch (err) {
-      setValidation({ [err.path]: err.message });
-      throw new Error(err.message);
+      if (err instanceof yup.ValidationError) {
+        setValidation({ [err.path]: err.message });
+        throw new Error(err.message);
+      }
+      throw new Error(err as string);
     }
   }
 

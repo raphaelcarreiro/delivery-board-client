@@ -135,7 +135,7 @@ const Login: React.FC = () => {
         const status = await googleLoadProfile();
         setHasGoogleLoadedProfile(status);
       } catch (err) {
-        messaging.handleOpen(err.message);
+        messaging.handleOpen(err as string);
       }
       return;
     }
@@ -164,7 +164,7 @@ const Login: React.FC = () => {
         const status = await facebookLoadProfile();
         setHasFacebookLoadedProfile(status);
       } catch (err) {
-        messaging.handleOpen(err.message);
+        messaging.handleOpen(err as string);
       }
       return; // cancela a execução da function
     }

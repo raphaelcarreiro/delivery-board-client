@@ -1,5 +1,5 @@
 import React from 'react';
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import Head from 'next/head';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { makeStyles } from '@material-ui/core/styles';
@@ -119,10 +119,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       revalidate: 180,
     };
   } catch (err) {
-    if (err.response)
+    const error = err as AxiosError;
+    if (error.response)
       return {
         props: {
-          error: err.response.status === 404 ? '404 - página não encontrada' : 'aconteceu um erro ao carregar a página',
+          error:
+            error.response.status === 404 ? '404 - página não encontrada' : 'aconteceu um erro ao carregar a página',
         },
       };
 

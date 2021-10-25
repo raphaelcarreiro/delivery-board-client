@@ -127,7 +127,7 @@ const EditAddress: React.FC<EditAddressProps> = ({ handleAddressUpdateSubmit, on
   }
 
   function setBrowserLocation() {
-    setCoordinate({ lat: location.latitude, lng: location.longitude });
+    if (location) setCoordinate({ lat: location.latitude, lng: location.longitude });
     handleNext();
   }
 
