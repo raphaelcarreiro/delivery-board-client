@@ -2,9 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import LinkNext from 'next/link';
 import { useSelector } from 'react-redux';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import { Typography } from '@material-ui/core';
-import { useApp } from 'src/hooks/app';
 import { PAGE_MAX_WIDTH } from 'src/constants/constants';
 import HeaderRestaurantAddress from './HeaderRestaurantAddress';
 
@@ -68,11 +65,6 @@ export default function CheckoutHeader() {
   const restaurant = useSelector(state => state.restaurant);
   const cart = useSelector(state => state.cart);
   const classes = useStyles({ cartItems: cart.products.length > 0 });
-  const app = useApp();
-
-  function handleCartClick() {
-    app.handleCartVisibility();
-  }
 
   return (
     <>

@@ -58,7 +58,7 @@ interface CopyGoogleMapProps {
   lat: number;
   lng: number;
   address: Address;
-  isLocationFromDevice: boolean;
+  isLocationFromDevice?: boolean;
 }
 
 const CopyGoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address, isLocationFromDevice = false }) => {
