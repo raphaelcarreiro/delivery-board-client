@@ -5,12 +5,20 @@ import { useSelector } from 'src/store/redux/selector';
 const ConfirmShipmentAddressText: React.FC = () => {
   const order = useSelector(state => state.order);
 
+  function getformattedPostalCode() {
+    return order.shipment.postal_code !== '00000000' ? `, ${order.shipment.postal_code}` : '';
+  }
+
+  function getFormattedComplement() {
+    return order.shipment.complement ? `, ${order.shipment.complement}` : '';
+  }
+
+  function getFormattedAddressNumberDistrict() {
+    return `${order.shipment.address}, ${order.shipment.number}, ${order.shipment.district}`;
+  }
+
   return (
-    <Typography>
-      {`${order.shipment.address}, ${order.shipment.number}, ${order.shipment.district}${
-        order.shipment.complement ? `, ${order.shipment.complement}` : ''
-      }${order.shipment.postal_code !== '00000000' && `, ${order.shipment.postal_code}`}`}
-    </Typography>
+    <Typography>{`${getFormattedAddressNumberDistrict()}${getFormattedComplement()}${getformattedPostalCode()}`}</Typography>
   );
 };
 

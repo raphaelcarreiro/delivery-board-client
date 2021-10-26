@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItem, ListItemIcon, ListItemText, Typography, Avatar, useTheme } from '@material-ui/core';
+import { ListItem, ListItemIcon, ListItemText, Typography, Avatar } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
@@ -11,8 +11,7 @@ import { useSelector } from 'react-redux';
 import Link from '../link/Link';
 import ChatIcon from '@material-ui/icons/Chat';
 import LocalOfferIcons from '@material-ui/icons/LocalOffer';
-import { FiLogIn, FiLogOut } from 'react-icons/fi';
-import { useAuth } from 'src/hooks/auth';
+import { FiLogIn } from 'react-icons/fi';
 import { MENU_WIDTH } from 'src/constants/constants';
 import { useApp } from 'src/hooks/app';
 import SidebarItem from './SidebarItem';
@@ -81,18 +80,12 @@ function Sidebar() {
   const restaurant = useSelector(state => state.restaurant);
   const cart = useSelector(state => state.cart);
   const { readyToInstall, handleOpenMenu, isOpenMenu } = useApp();
-  const theme = useTheme();
-  const { logout } = useAuth();
+
   const classes = useStyles({
     cartItems: cart.products.length > 0,
     restaurantIsOpen: restaurant && restaurant.is_open,
     readyToInstall: readyToInstall,
   });
-
-  function handleLogoutClick() {
-    logout();
-    handleOpenMenu();
-  }
 
   return (
     <Drawer
@@ -130,13 +123,6 @@ function Sidebar() {
             href="/account"
             label={user.name}
           />
-
-          <ListItem button onClick={handleLogoutClick}>
-            <ListItemIcon className={classes.sidebarItem}>
-              <FiLogOut size={22} color={theme.palette.primary.main} />
-            </ListItemIcon>
-            <ListItemText classes={{ primary: classes.sidebarItem }} primary="sair" />
-          </ListItem>
         </>
       ) : (
         <SidebarItem icon={<FiLogIn size={20} />} href="/login" label="entrar" />

@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TextField, Grid, Button, Typography } from '@material-ui/core';
+import { TextField, Grid, Button, Typography, darken } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import AccountImage from './AccountImage';
 import PhoneInput from '../masked-input/PhoneInput';
 import CpfInput from '../masked-input/CpfInput';
+import { useAuth } from 'src/hooks/auth';
 
 const useStyles = makeStyles(theme => ({
   actions: {
@@ -23,10 +24,25 @@ const useStyles = makeStyles(theme => ({
       marginRight: 0,
     },
   },
+  disconnectButton: {
+    marginTop: 30,
+    display: 'none',
+    backgroundColor: theme.palette.error.main,
+    width: '100%',
+    color: 'white',
+    height: 45,
+    '&:hover': {
+      backgroundColor: darken(theme.palette.error.main, 0.1),
+    },
+    [theme.breakpoints.down('sm')]: {
+      display: 'block',
+    },
+  },
 }));
 
 export default function AccountForm({ userCustomer, handleValidation, saving, validation, handleUserCustomerChange }) {
   const classes = useStyles();
+  const { logout } = useAuth();
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -97,6 +113,11 @@ export default function AccountForm({ userCustomer, handleValidation, saving, va
           <div className={classes.actions}>
             <Button type="submit" variant="contained" color="primary" disabled={saving}>
               Confirmar
+            </Button>
+          </div>
+          <div>
+            <Button onClick={logout} className={classes.disconnectButton} variant="contained">
+              Desconectar
             </Button>
           </div>
         </Grid>

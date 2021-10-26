@@ -58,9 +58,10 @@ interface CopyGoogleMapProps {
   lat: number;
   lng: number;
   address: Address;
+  isLocationFromDevice: boolean;
 }
 
-const CopyGoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
+const CopyGoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address, isLocationFromDevice = false }) => {
   const classes = styles();
   const { handleGetAddress, handleNext } = useCustomerAddress();
   const order = useSelector(state => state.order);
@@ -157,6 +158,16 @@ const CopyGoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
     [restaurant, restaurantAddressCoordinates]
   );
 
+  const getAddressFromMarker = useCallback(
+    (marker: google.maps.Marker) => {
+      const position = marker.getPosition();
+      if (!position) return;
+
+      handleGetAddress({ lat: position.toJSON().lat, lng: position.toJSON().lng });
+    },
+    [handleGetAddress]
+  );
+
   const initMap = useCallback(() => {
     const map = createMap();
     const marker = createMarker(map);
@@ -190,15 +201,21 @@ const CopyGoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
 
       timer = setTimeout(() => {
         openWindow();
-        const position = marker.getPosition();
-        if (!position) return;
-
-        handleGetAddress({ lat: position.toJSON().lat, lng: position.toJSON().lng });
+        getAddressFromMarker(marker);
       }, 500);
     });
 
     calculateDistance(marker, circle);
-  }, [createMap, createMarker, createCircle, createInfoWindow, calculateDistance, handleGetAddress]);
+    if (isLocationFromDevice) getAddressFromMarker(marker);
+  }, [
+    createMap,
+    createMarker,
+    createCircle,
+    createInfoWindow,
+    calculateDistance,
+    isLocationFromDevice,
+    getAddressFromMarker,
+  ]);
 
   useEffect(() => {
     if (typeof google === 'undefined') return;

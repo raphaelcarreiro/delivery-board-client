@@ -77,6 +77,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
         lat: order.restaurant_address.latitude,
         lng: order.restaurant_address.longitude,
       });
+      setAddress(order.restaurant_address);
       handleNext();
       return;
     }
@@ -85,15 +86,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
 
     setCoordinate({ lat: location.latitude, lng: location.longitude });
     handleNext();
-  }, [
-    location,
-    handleNext,
-    handleOpen,
-    isPermittionDenied,
-    notFoundAddressLinkClicked,
-    order.restaurant_address.latitude,
-    order.restaurant_address.longitude,
-  ]);
+  }, [location, handleNext, handleOpen, isPermittionDenied, notFoundAddressLinkClicked, order.restaurant_address]);
 
   useEffect(() => {
     if (!searchText) setPlaces([]);
@@ -229,7 +222,18 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
           {loadingAddresses ? <PlacesLoading /> : <Places places={places} showNotFound={showNotFound} />}
         </>
       ),
-      2: <>{coordinate && <CopyGoogleMap lat={coordinate.lat} lng={coordinate.lng} address={address} />}</>,
+      2: (
+        <>
+          {coordinate && (
+            <CopyGoogleMap
+              isLocationFromDevice={notFoundAddressLinkClicked}
+              lat={coordinate.lat}
+              lng={coordinate.lng}
+              address={address}
+            />
+          )}
+        </>
+      ),
       3: <Form handleChange={handleChange} validation={validation} address={address} />,
     };
 
