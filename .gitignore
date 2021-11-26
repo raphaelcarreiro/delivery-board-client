@@ -5,4 +5,5 @@
 /public/*sw*
 /public/*workbox*
 public/sitemap.xml
+.env.development
 
