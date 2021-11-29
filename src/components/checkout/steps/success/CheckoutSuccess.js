@@ -100,7 +100,7 @@ export default function CheckoutSuccess() {
       <Link
         className={classes.linkFollowOrder}
         href="account/orders/[id]"
-        as={`account/orders/${order.encrypted_id}`}
+        as={`account/orders/${order.uuid}`}
         color="primary"
       >
         <a className={classes.linkFollowOrder}>acompanhar pedido</a>

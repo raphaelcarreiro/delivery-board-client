@@ -76,13 +76,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 Order.propTypes = {
-  cryptId: PropTypes.string.isRequired,
+  uuid: PropTypes.string.isRequired,
 };
 
-export default function Order({ cryptId }) {
+export default function Order({ uuid }) {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
-  const messaging = useMessaging();
+  const { handleOpen } = useMessaging();
   const classes = useStyles();
 
   useEffect(() => {
@@ -114,7 +114,7 @@ export default function Order({ cryptId }) {
   const handleSetOrders = useCallback(() => {
     setLoading(true);
     api
-      .get(`orders/${cryptId}`)
+      .get(`orders/${uuid}`)
       .then(response => {
         const _order = response.data;
         const formattedId = formatId(_order.id);
@@ -169,13 +169,13 @@ export default function Order({ cryptId }) {
         if (err.response)
           if (err.response.status === 404) {
             document.title = 'Pedido não encontrado!';
-            messaging.handleOpen('Pedido não encontrado');
-          } else messaging.handleOpen('Não foi possível carregar o pedido');
+            handleOpen('Pedido não encontrado');
+          } else handleOpen('Não foi possível carregar o pedido');
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [cryptId]); // eslint-disable-line
+  }, [uuid, handleOpen]);
 
   useEffect(() => {
     handleSetOrders();
