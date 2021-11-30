@@ -8,8 +8,6 @@ import { useSelector } from 'react-redux';
 import { firebaseMessagingIsSupported } from 'src/config/FirebaseConfig';
 
 OrderAction.propTypes = {
-  user: PropTypes.bool.isRequired,
-  isSupported: PropTypes.bool.isRequired,
   loading: PropTypes.bool.isRequired,
   handleRefresh: PropTypes.func.isRequired,
 };

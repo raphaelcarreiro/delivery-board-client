@@ -82,13 +82,13 @@ interface PixPayment {
 
 export interface CreatedOrder {
   id: number;
+  uuid: string;
   formattedId: string;
   customer: Customer;
   payment_method: PaymentMethod;
   shipment: OrderShipment;
   products: CreatedOrderProduct[];
   coupon: Coupon;
-  encrypted_id: string;
   created_at: string;
   formattedDate: string;
   dateDistance: string;

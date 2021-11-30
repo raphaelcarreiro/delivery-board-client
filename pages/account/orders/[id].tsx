@@ -7,10 +7,10 @@ import { GetServerSideProps } from 'next';
 import { useApp } from 'src/hooks/app';
 
 type OrderPageProps = {
-  cryptId: string;
+  uuid: string;
 };
 
-const OrderPage: React.FC<OrderPageProps> = ({ cryptId }) => {
+const OrderPage: React.FC<OrderPageProps> = ({ uuid }) => {
   const router = useRouter();
   const { checkAuth, isAuthenticated } = useAuth();
   const { setRedirect } = useApp();
@@ -18,16 +18,16 @@ const OrderPage: React.FC<OrderPageProps> = ({ cryptId }) => {
   useEffect(() => {
     if (!checkAuth()) {
       router.push('/login');
-      setRedirect(`/account/orders/${cryptId}`);
+      setRedirect(`/account/orders/${uuid}`);
     }
-  }, [cryptId, router, setRedirect, isAuthenticated, checkAuth]);
+  }, [uuid, router, setRedirect, isAuthenticated, checkAuth]);
 
   return (
     <>
       <Head>
         <title>Meus pedidos</title>
       </Head>
-      {isAuthenticated && <Order cryptId={cryptId} />}
+      {isAuthenticated && <Order uuid={uuid} />}
     </>
   );
 };
@@ -37,7 +37,7 @@ export default OrderPage;
 export const getServerSideProps: GetServerSideProps<OrderPageProps> = async ({ query }) => {
   return {
     props: {
-      cryptId: query.id ? String(query.id) : '',
+      uuid: query.id ? String(query.id) : '',
     },
   };
 };
