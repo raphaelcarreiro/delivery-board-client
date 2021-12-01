@@ -72,6 +72,10 @@ export default class MyDocument extends Document<DocumentProps> {
           <link rel="icon" href="/images/favicon.png" />
           <link rel="manifest" href="/manifest.json" />
           {themeColor && <meta name="theme-color" content={themeColor} />}
+          <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700&display=swap"
+            rel="stylesheet"
+          />
 
           <script async src={`https://www.googletagmanager.com/gtag/js?id=G-287R3N6K2F`} />
           <script dangerouslySetInnerHTML={this.setGoogleAnalyticsTag('G-287R3N6K2F')}></script>
