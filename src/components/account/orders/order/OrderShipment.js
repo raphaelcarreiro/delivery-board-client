@@ -36,10 +36,10 @@ export default function OrderShipment({ order }) {
 
   return (
     <>
-      <Typography
-        gutterBottom
-        variant="h6"
-      >{`${getFormattedAddressNumberDistrict()}${getFormattedComplement()}${getformattedPostalCode()}`}</Typography>
+      <Typography variant="h6" gutterBottom>
+        {order.shipment.shipment_method === 'delivery' ? 'endereço de entrega' : 'endereço para retirada'}
+      </Typography>
+      <Typography>{`${getFormattedAddressNumberDistrict()}${getFormattedComplement()}${getformattedPostalCode()}`}</Typography>
       {order.shipment.scheduled_at && (
         <Typography variant="body2" className={classes.scheduleAt}>
           <WatchLaterIcon /> agendado para {order.shipment.formattedScheduledAt}
