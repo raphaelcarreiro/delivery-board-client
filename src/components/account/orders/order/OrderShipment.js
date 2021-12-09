@@ -22,16 +22,24 @@ OrderShipment.propTypes = {
 export default function OrderShipment({ order }) {
   const classes = useStyles();
 
+  function getformattedPostalCode() {
+    return order.shipment.postal_code !== '00000000' ? `, ${order.shipment.postal_code}` : '';
+  }
+
+  function getFormattedComplement() {
+    return order.shipment.complement ? `, ${order.shipment.complement}` : '';
+  }
+
+  function getFormattedAddressNumberDistrict() {
+    return `${order.shipment.address}, ${order.shipment.number}, ${order.shipment.district}`;
+  }
+
   return (
     <>
-      <Typography variant="h6" gutterBottom>
-        {order.shipment.shipment_method === 'delivery' ? 'endereço de entrega' : 'endereço para retirada'}
-      </Typography>
-      <Typography>
-        {`${order.shipment.address}, ${order.shipment.number}, ${order.shipment.district}${
-          order.shipment.complement ? `, ${order.shipment.complement}` : ''
-        }${order.shipment.postal_code !== '00000000' && `, ${order.shipment.postal_code}`}`}
-      </Typography>
+      <Typography
+        gutterBottom
+        variant="h6"
+      >{`${getFormattedAddressNumberDistrict()}${getFormattedComplement()}${getformattedPostalCode()}`}</Typography>
       {order.shipment.scheduled_at && (
         <Typography variant="body2" className={classes.scheduleAt}>
           <WatchLaterIcon /> agendado para {order.shipment.formattedScheduledAt}
