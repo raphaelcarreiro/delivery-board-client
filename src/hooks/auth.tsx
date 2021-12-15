@@ -16,6 +16,7 @@ interface AuthContextData {
   isAuthenticated: boolean;
   isLoading: boolean;
   loggingOff: boolean;
+  refreshToken: () => void;
 }
 
 export type SocialLoginResponse = {
@@ -36,6 +37,16 @@ const AuthProvider: React.FC = ({ children }) => {
   const [loggingOff, setLoggingOff] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const dispatch = useDispatch();
+
+  const refreshToken = useCallback(() => {
+    api
+      .post('auth/refresh')
+      .then(response => {
+        if (process.env.NEXT_PUBLIC_TOKEN_NAME)
+          localStorage.setItem(process.env.NEXT_PUBLIC_TOKEN_NAME, response.data.token);
+      })
+      .catch(err => console.error(err));
+  }, []);
 
   useEffect(() => {
     if (!process.env.NEXT_PUBLIC_TOKEN_NAME) return;
@@ -65,7 +76,7 @@ const AuthProvider: React.FC = ({ children }) => {
           setIsLoading(false);
         });
     }
-  }, [dispatch]);
+  }, [dispatch, refreshToken]);
 
   const login = useCallback(
     async (email: string, password: string): Promise<boolean> => {
@@ -246,6 +257,7 @@ const AuthProvider: React.FC = ({ children }) => {
         isAuthenticated,
         isLoading,
         loggingOff,
+        refreshToken,
       }}
     >
       {children}
