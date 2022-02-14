@@ -82,7 +82,7 @@ const Form: React.FC<FormProps> = ({ validation, handleChange, address }) => {
         placeholder="Digite o complemento"
         margin="normal"
         fullWidth
-        value={address.complement}
+        value={address.complement || ''}
         onChange={event => handleChange('complement', event.target.value)}
       />
 
