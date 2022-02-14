@@ -106,11 +106,12 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
           componentRestrictions: { country: 'br' },
         },
         predections => {
-          if (!predections) return;
-
-          setPlaces(predections);
           setShowNotFound(true);
           setLoadingAddresses(false);
+
+          if (predections) {
+            setPlaces(predections);
+          }
         }
       );
     }, 500);
