@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { api } from 'src/services/api';
 import { useMessaging } from 'src/hooks/messaging';
 import { Address } from 'src/types/address';
 import { CustomerAddressProvider } from '../hooks/useCustomerAddress';
-import GoogleMap from '../map/CopyGoogleMap';
+import GoogleMap from '../map/GoogleMap';
 import { useLocation } from 'src/providers/location';
 import Form from '../Form';
 import Modal from 'src/components/modal/Modal';
 import InsideSaving from 'src/components/loading/InsideSaving';
 import { useAddressValidation } from '../validation/useAddressValidation';
-import { useAddressComponents } from '../hooks/useAddressComponents';
-import NewAddressActions from '../NewAddressAction';
+import NewAddressActions from '../new/NewAddressAction';
+import GoogleMapsProvider from 'src/providers/google-maps/GoogleMapsProvider';
+import { Position } from 'src/types/position';
 
 interface EditAddressProps {
   handleAddressUpdateSubmit(address: Address): Promise<void>;
@@ -24,10 +25,9 @@ const EditAddress: React.FC<EditAddressProps> = ({ handleAddressUpdateSubmit, on
   const messaging = useMessaging();
   const [validation, setValidation, validate] = useAddressValidation();
   const [address, setAddress] = useState<Address>(selectedAddress);
-  const [coordinate, setCoordinate] = useState<null | { lat: number; lng: number }>(null);
+  const [coordinate, setCoordinate] = useState<null | Position>(null);
   const [step, setStep] = useState<number>(1);
   const { location } = useLocation();
-  const { getAddressComponent } = useAddressComponents();
 
   useEffect(() => {
     if (selectedAddress.latitude && selectedAddress.longitude) {
@@ -59,42 +59,6 @@ const EditAddress: React.FC<EditAddressProps> = ({ handleAddressUpdateSubmit, on
       .catch(err => console.error(err))
       .finally(() => setLoadingAddress(false));
   }, [selectedAddress]);
-
-  const handleSetAddressGeoCodeResult = useCallback(
-    (payload: google.maps.GeocoderResult | null) => {
-      if (!payload) {
-        return;
-      }
-
-      const number = getAddressComponent(payload.address_components, 'street_number', 'long_name');
-      const address = getAddressComponent(payload.address_components, 'route', 'long_name');
-      const district = getAddressComponent(payload.address_components, 'sublocality', 'long_name');
-      const city = getAddressComponent(payload.address_components, 'administrative_area_level_2', 'long_name');
-      const region = getAddressComponent(payload.address_components, 'administrative_area_level_1', 'short_name');
-
-      setAddress(state => ({
-        ...state,
-        number,
-        address,
-        district,
-        city,
-        region,
-        latitude: payload.geometry.location.lat(),
-        longitude: payload.geometry.location.lng(),
-      }));
-    },
-    [getAddressComponent]
-  );
-
-  const handleGetAddress = useCallback(
-    latlng => {
-      const geocoder = new google.maps.Geocoder();
-      geocoder.geocode({ location: latlng }).then(response => {
-        if (response.results[0]) handleSetAddressGeoCodeResult(response.results[0]);
-      });
-    },
-    [handleSetAddressGeoCodeResult]
-  );
 
   function handleValidation(handleModalClose: () => void) {
     validate(address)
@@ -176,20 +140,22 @@ const EditAddress: React.FC<EditAddressProps> = ({ handleAddressUpdateSubmit, on
       disablePadding={step === 1}
     >
       {(loadingAddress || saving) && <InsideSaving />}
-      <CustomerAddressProvider
-        value={{
-          handleGetPlaceLatitudeLongitude,
-          setBrowserLocation,
-          handleChange,
-          handleSetAddressGeoCodeResult,
-          handleNext,
-          handleBack,
-          handleValidation,
-          handleGetAddress,
-        }}
-      >
-        {handleRendering()}
-      </CustomerAddressProvider>
+      <GoogleMapsProvider>
+        <CustomerAddressProvider
+          value={{
+            handleGetPlaceLatitudeLongitude,
+            setBrowserLocation,
+            handleChange,
+            handleNext,
+            handleBack,
+            handleValidation,
+            setCoordinate,
+            setAddress,
+          }}
+        >
+          {handleRendering()}
+        </CustomerAddressProvider>
+      </GoogleMapsProvider>
     </Modal>
   );
 };

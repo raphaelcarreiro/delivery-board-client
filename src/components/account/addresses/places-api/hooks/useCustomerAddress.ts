@@ -1,15 +1,15 @@
-import { createContext, useContext } from 'react';
+import { createContext, Dispatch, SetStateAction, useContext } from 'react';
 import { Address } from 'src/types/address';
 
 interface CustomerAddressContextValue {
   handleGetPlaceLatitudeLongitude(addressDescription: string): void;
   setBrowserLocation(): void;
   handleChange(index: keyof Address, value: any): void;
-  handleSetAddressGeoCodeResult(address: google.maps.GeocoderResult | null): void;
   handleNext(): void;
   handleBack(): void;
   handleValidation(handleModalClose: () => void): void;
-  handleGetAddress(location): void;
+  setCoordinate: Dispatch<SetStateAction<null | { lat: number; lng: number }>>;
+  setAddress: Dispatch<SetStateAction<Address>>;
 }
 
 const CustomerAddressContext = createContext<CustomerAddressContextValue>({} as CustomerAddressContextValue);

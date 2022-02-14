@@ -2,7 +2,7 @@ import React from 'react';
 import { ListItem, Typography } from '@material-ui/core';
 import { PlaceOutlined } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/styles';
-import { useCustomerAddress } from './hooks/useCustomerAddress';
+import { useCustomerAddress } from '../../hooks/useCustomerAddress';
 
 const styles = makeStyles({
   place: {

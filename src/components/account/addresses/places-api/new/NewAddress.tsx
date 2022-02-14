@@ -2,19 +2,19 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { api } from 'src/services/api';
 import { useMessaging } from 'src/hooks/messaging';
 import { Address } from 'src/types/address';
-import NewAddressInputSearch from './new/InputSearch';
-import Places from './Places';
-import { CustomerAddressProvider } from './hooks/useCustomerAddress';
+import NewAddressInputSearch from './InputSearch';
+import Places from './places/Places';
+import { CustomerAddressProvider } from '../hooks/useCustomerAddress';
 import { useLocation } from 'src/providers/location';
-import PlacesLoading from './PlacesLoading';
-import Form from './Form';
+import Form from '../Form';
 import Modal from 'src/components/modal/Modal';
 import InsideSaving from 'src/components/loading/InsideSaving';
-import { useAddressValidation } from './validation/useAddressValidation';
-import { useAddressComponents } from './hooks/useAddressComponents';
+import { useAddressValidation } from '../validation/useAddressValidation';
 import NewAddressActions from './NewAddressAction';
 import { useSelector } from 'src/store/redux/selector';
-import CopyGoogleMap from './map/CopyGoogleMap';
+import GoogleMap from '../map/GoogleMap';
+import GoogleMapsProvider, { useGoogleMaps } from 'src/providers/google-maps/GoogleMapsProvider';
+import PlacesLoading from './places/PlacesLoading';
 
 let timer;
 
@@ -25,14 +25,12 @@ const INITIAL_STATE: Address = {
   city: '',
   region: '',
   district: '',
-  area_region: null,
   distance: 0,
   distance_tax: 0,
   postal_code: '',
   is_main: false,
   id: 0,
   formattedDistanceTax: '',
-  area_region_id: null,
   reference_point: null,
   latitude: null,
   longitude: null,
@@ -56,10 +54,10 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
   const [step, setStep] = useState<number>(1);
   const { location, askPermittionForLocation, isPermittionDenied } = useLocation();
   const [showNotFound, setShowNotFound] = useState(false);
-  const { getAddressComponent } = useAddressComponents();
   const order = useSelector(state => state.order);
   const restaurant = useSelector(state => state.restaurant);
   const [notFoundAddressLinkClicked, setNotFoundAddressLinkClicked] = useState(false);
+  const { getAddressFromLocation } = useGoogleMaps();
 
   const handleNext = useCallback(() => {
     setStep(step => step + 1);
@@ -85,48 +83,24 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
     if (!location) return;
 
     setCoordinate({ lat: location.latitude, lng: location.longitude });
-    handleNext();
-  }, [location, handleNext, handleOpen, isPermittionDenied, notFoundAddressLinkClicked, order.restaurant_address]);
+    getAddressFromLocation({ lat: location.latitude, lng: location.longitude }).then(response => {
+      if (response) {
+        setAddress(response);
+        handleNext();
+      }
+    });
+  }, [
+    location,
+    handleNext,
+    isPermittionDenied,
+    notFoundAddressLinkClicked,
+    order.restaurant_address,
+    getAddressFromLocation,
+  ]);
 
   useEffect(() => {
     if (!searchText) setPlaces([]);
   }, [searchText]);
-
-  const handleSetAddressGeoCodeResult = useCallback(
-    (payload: google.maps.GeocoderResult | null) => {
-      if (!payload) {
-        return;
-      }
-
-      const number = getAddressComponent(payload.address_components, 'street_number', 'long_name');
-      const address = getAddressComponent(payload.address_components, 'route', 'long_name');
-      const district = getAddressComponent(payload.address_components, 'sublocality', 'long_name');
-      const city = getAddressComponent(payload.address_components, 'administrative_area_level_2', 'long_name');
-      const region = getAddressComponent(payload.address_components, 'administrative_area_level_1', 'short_name');
-
-      setAddress({
-        ...INITIAL_STATE,
-        number,
-        address,
-        district,
-        city,
-        region,
-        latitude: payload.geometry.location.lat(),
-        longitude: payload.geometry.location.lng(),
-      });
-    },
-    [getAddressComponent]
-  );
-
-  const handleGetAddress = useCallback(
-    latlng => {
-      const geocoder = new google.maps.Geocoder();
-      geocoder.geocode({ location: latlng }).then(response => {
-        if (response.results[0]) handleSetAddressGeoCodeResult(response.results[0]);
-      });
-    },
-    [handleSetAddressGeoCodeResult]
-  );
 
   function handleValidation(handleModalClose: () => void) {
     validate(address)
@@ -222,18 +196,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
           {loadingAddresses ? <PlacesLoading /> : <Places places={places} showNotFound={showNotFound} />}
         </>
       ),
-      2: (
-        <>
-          {coordinate && (
-            <CopyGoogleMap
-              isLocationFromDevice={notFoundAddressLinkClicked}
-              lat={coordinate.lat}
-              lng={coordinate.lng}
-              address={address}
-            />
-          )}
-        </>
-      ),
+      2: <>{coordinate && <GoogleMap lat={coordinate.lat} lng={coordinate.lng} address={address} />}</>,
       3: <Form handleChange={handleChange} validation={validation} address={address} />,
     };
 
@@ -251,21 +214,22 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
       disablePadding={step === 2}
     >
       {(loadingAddress || saving) && <InsideSaving />}
-
-      <CustomerAddressProvider
-        value={{
-          handleGetPlaceLatitudeLongitude,
-          setBrowserLocation,
-          handleChange,
-          handleSetAddressGeoCodeResult,
-          handleNext,
-          handleBack,
-          handleValidation,
-          handleGetAddress,
-        }}
-      >
-        {handleRendering()}
-      </CustomerAddressProvider>
+      <GoogleMapsProvider>
+        <CustomerAddressProvider
+          value={{
+            handleGetPlaceLatitudeLongitude,
+            setBrowserLocation,
+            handleChange,
+            handleNext,
+            handleBack,
+            handleValidation,
+            setCoordinate,
+            setAddress,
+          }}
+        >
+          {handleRendering()}
+        </CustomerAddressProvider>
+      </GoogleMapsProvider>
     </Modal>
   );
 };

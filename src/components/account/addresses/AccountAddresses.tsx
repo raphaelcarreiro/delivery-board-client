@@ -12,7 +12,7 @@ import { AxiosError } from 'axios';
 import AccountAddressesMenu from './AccountAddressesMenu';
 import { AccountAddressesProvider } from './hooks/useAccountAddresses';
 import AccountAddressList from './AccountAddressList';
-import NewAddressPlacesAPI from './places-api/NewAddress';
+import NewAddressPlacesAPI from './places-api/new/NewAddress';
 import EditAddress from './places-api/edit/EditAddress';
 import { useSelector } from 'src/store/redux/selector';
 import AccountAddressEdit from './AccountAddressEdit';

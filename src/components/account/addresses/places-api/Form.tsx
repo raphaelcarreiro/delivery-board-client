@@ -73,6 +73,7 @@ const Form: React.FC<FormProps> = ({ validation, handleChange, address }) => {
           fullWidth
           value={address.district}
           onChange={event => handleChange('district', event.target.value)}
+          autoFocus
         />
       </div>
 

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useCallback } from 'react';
 
 interface LocationContextValue {
   location: Location | null;
@@ -17,7 +17,7 @@ const LocationProvider: React.FC = ({ children }) => {
   const [location, setLocation] = useState<Location | null>(null);
   const [isPermittionDenied, setIsPermittionDenied] = useState(false);
 
-  function askPermittionForLocation() {
+  const askPermittionForLocation = useCallback(() => {
     setIsPermittionDenied(false);
 
     navigator.geolocation.getCurrentPosition(
@@ -37,7 +37,7 @@ const LocationProvider: React.FC = ({ children }) => {
         timeout: 5000,
       }
     );
-  }
+  }, []);
 
   return (
     <LocationContext.Provider value={{ location, askPermittionForLocation, isPermittionDenied }}>

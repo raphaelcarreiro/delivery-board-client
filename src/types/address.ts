@@ -16,8 +16,6 @@ export interface Address {
   city: string;
   region: string;
   is_main: boolean;
-  area_region: AreaRegion | null;
-  area_region_id: number | null;
   distance: number | null;
   distance_tax: number | null;
   formattedDistanceTax: string | number;

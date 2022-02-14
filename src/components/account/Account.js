@@ -24,6 +24,7 @@ import * as yup from 'yup';
 import { cpfValidation } from 'src/helpers/cpfValidation';
 import { useMessaging } from 'src/hooks/messaging';
 import { useApp } from 'src/hooks/app';
+import GoogleMapsProvider from 'src/providers/google-maps/GoogleMapsProvider';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -202,7 +203,9 @@ export default function Account() {
             </AccountContext.Provider>
           ) : (
             tabIndex === 1 && (
-              <AccountAddresses handleDeleteAddress={handleDeleteAddress} addresses={user.customer.addresses} />
+              <GoogleMapsProvider>
+                <AccountAddresses handleDeleteAddress={handleDeleteAddress} addresses={user.customer.addresses} />
+              </GoogleMapsProvider>
             )
           )}
         </div>

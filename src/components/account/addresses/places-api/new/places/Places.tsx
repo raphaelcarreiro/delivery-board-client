@@ -1,7 +1,7 @@
 import { ListItem, makeStyles, Typography } from '@material-ui/core';
 import { LocationSearching } from '@material-ui/icons';
 import React from 'react';
-import { useCustomerAddress } from './hooks/useCustomerAddress';
+import { useCustomerAddress } from '../../hooks/useCustomerAddress';
 import Place from './PlacesItem';
 
 const styles = makeStyles({
