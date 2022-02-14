@@ -18,7 +18,7 @@ interface GoogleMapsContextValue {
 const GoogleMapsContext = createContext<GoogleMapsContextValue>({} as GoogleMapsContextValue);
 export const GoogleMapsConsumer = GoogleMapsContext.Consumer;
 
-export function useGoogleMaps(): GoogleMapsContextValue {
+export function useMap(): GoogleMapsContextValue {
   return useContext(GoogleMapsContext);
 }
 

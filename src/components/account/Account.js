@@ -24,7 +24,7 @@ import * as yup from 'yup';
 import { cpfValidation } from 'src/helpers/cpfValidation';
 import { useMessaging } from 'src/providers/MessageProvider';
 import { useApp } from 'src/providers/AppProvider';
-import GoogleMapsProvider from 'src/providers/google-maps/GoogleMapsProvider';
+import GoogleMapsProvider from 'src/providers/google-maps/MapProvider';
 
 const useStyles = makeStyles(theme => ({
   container: {
