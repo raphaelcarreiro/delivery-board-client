@@ -5,7 +5,7 @@ import { moneyFormat } from '../../../../helpers/numberFormat';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import { useSelector } from 'react-redux';
 import InsideLoading from 'src/components/loading/InsideLoading';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 import { useProducts } from 'src/components/products/hooks/useProducts';
 import ProductAdd from '../addToCart/ProductAdd';
 import { fetchPizzaProduct } from './fetchPizzaProduct';

@@ -17,20 +17,20 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import defaultTheme from './theme';
 import io from 'socket.io-client';
 import reactGA from 'react-ga';
-import MessagingProvider from './hooks/messaging';
-import AuthProvider from './hooks/auth';
-import FirebaseProvider from './hooks/firebase';
-import GoogleLoginProvider from './hooks/googleLogin';
-import FacebookLoginProvider from './hooks/facebookLogin';
+import MessagingProvider from './providers/MessageProvider';
+import AuthProvider from './providers/AuthProvider';
+import FirebaseProvider from './providers/FirebaseProvider';
+import GoogleLoginProvider from './providers/GoogleProvider';
+import FacebookLoginProvider from './providers/FacebookProvider';
 import LayoutHandler from './components/layout/LayoutHandler';
-import { AppProvider, AppContextValue } from './hooks/app';
+import { AppProvider, AppContextValue } from './providers/AppProvider';
 import { useWindowSize } from './hooks/windowSize';
 import InstallAppNotification from './components/install-app-notification/InstallAppNotification';
 import RestaurantAddressSelector from './components/restaurant-address-selector/RestaurantAddressSelector';
 import { Restaurant, RestaurantAddress } from './types/restaurant';
 import { setRestaurantAddress } from './store/redux/modules/order/actions';
 import { setCustomerAddresses } from './store/redux/modules/user/actions';
-import LocationProvider from './providers/location';
+import LocationProvider from './providers/LocationProvider';
 
 const useStyles = makeStyles({
   progressBar: {

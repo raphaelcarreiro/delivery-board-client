@@ -1,7 +1,7 @@
 import React, { ReactElement, useState } from 'react';
 import { Dialog, AppBar, Toolbar, IconButton, Typography, makeStyles } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 import { ModalProvider } from './hooks/useModal';
 
 interface ModalStyleProps {

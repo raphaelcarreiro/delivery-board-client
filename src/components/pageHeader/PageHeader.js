@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Typography } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 
 const useStyles = makeStyles({
   header: {

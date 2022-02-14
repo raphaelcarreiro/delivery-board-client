@@ -5,7 +5,7 @@ import { makeStyles, fade } from '@material-ui/core/styles';
 import { api } from '../../services/api';
 import { useAccount } from './Account';
 import { userChange, imageDelete } from 'src/store/context-api/modules/user-customer/actions';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 import { APPBAR_HEIGHT } from 'src/constants/constants';
 
 const useStyles = makeStyles(theme => ({

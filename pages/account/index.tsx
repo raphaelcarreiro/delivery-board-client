@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Account from 'src/components/account/Account';
-import { useAuth } from 'src/hooks/auth';
+import { useAuth } from 'src/providers/AuthProvider';
 import { NextPage } from 'next';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 
 const AccountPage: NextPage = () => {
   const router = useRouter();

@@ -15,9 +15,9 @@ import Coupon from './coupon/Coupon';
 import CartCouponButton from './CartCouponButton';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import { useMessaging } from 'src/hooks/messaging';
-import { useAuth } from 'src/hooks/auth';
-import { useApp } from 'src/hooks/app';
+import { useMessaging } from 'src/providers/MessageProvider';
+import { useAuth } from 'src/providers/AuthProvider';
+import { useApp } from 'src/providers/AppProvider';
 import { CartProvider } from './hooks/useCart';
 
 const useStyles = makeStyles(theme => ({

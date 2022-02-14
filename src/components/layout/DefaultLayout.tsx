@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core';
 import Cart from '../cart/Cart';
 import DialogFullscreen from 'src/components/dialog/DialogFullscreen';
 import { APPBAR_HEIGHT, CART_WIDTH, PAGE_MAX_WIDTH } from '../../constants/constants';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 
 const useStyles = makeStyles(theme => ({
   container: {

@@ -5,7 +5,7 @@ import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
 import NextLink from 'next/link';
 import { useSelector } from 'src/store/redux/selector';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 import { useForgot } from './hook/useForgot';
 
 const useStyles = makeStyles(theme => ({

@@ -10,7 +10,7 @@ import PaymentCardActions from './PaymentCardActions';
 import { useCardValidation } from '../validation/useCardValidation';
 import { useSelector } from 'src/store/redux/selector';
 import { format } from 'date-fns';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 import { useCheckout } from '../../../hooks/useCheckout';
 
 declare global {

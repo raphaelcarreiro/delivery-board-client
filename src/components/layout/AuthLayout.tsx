@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 
 const useStyles = makeStyles({
   container: (props: { windowHeight: number }) => ({

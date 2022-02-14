@@ -4,7 +4,7 @@ import Login from 'src/components/login/Login';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { useSelector } from 'src/store/redux/selector';
-import { useAuth } from 'src/hooks/auth';
+import { useAuth } from 'src/providers/AuthProvider';
 
 const LoginPage: NextPage = () => {
   const router = useRouter();

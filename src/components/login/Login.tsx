@@ -4,12 +4,12 @@ import { Typography, Button } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { FaFacebookF, FaGoogle } from 'react-icons/fa';
 import { useSelector } from 'src/store/redux/selector';
-import { useGoogleLogin } from 'src/hooks/googleLogin';
-import { useFacebookLogin } from 'src/hooks/facebookLogin';
-import { useMessaging } from 'src/hooks/messaging';
-import { useAuth } from 'src/hooks/auth';
+import { useGoogleLogin } from 'src/providers/GoogleProvider';
+import { useFacebookLogin } from 'src/providers/FacebookProvider';
+import { useMessaging } from 'src/providers/MessageProvider';
+import { useAuth } from 'src/providers/AuthProvider';
 import Loading from '../loading/Loading';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 import Link from 'next/link';
 
 const useStyles = makeStyles({

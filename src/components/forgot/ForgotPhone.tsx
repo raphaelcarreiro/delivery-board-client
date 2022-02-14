@@ -6,11 +6,11 @@ import Loading from '../loading/Loading';
 import NextLink from 'next/link';
 import CustomLink from '../link/CustomLink';
 import { useSelector } from 'src/store/redux/selector';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 import * as yup from 'yup';
 import PhoneInput from '../masked-input/PhoneInput';
 import { useForgot } from './hook/useForgot';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 
 const useStyles = makeStyles(theme => ({
   container: {

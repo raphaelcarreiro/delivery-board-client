@@ -3,7 +3,7 @@ import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/co
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { makeStyles } from '@material-ui/core/styles';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 
 const useStyles = makeStyles(theme => ({
   modal: {

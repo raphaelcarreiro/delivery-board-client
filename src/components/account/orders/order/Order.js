@@ -19,7 +19,7 @@ import OrderStatusList from './OrderStatusList';
 import OrderShipment from './OrderShipment';
 import OrderPayment from './OrderPayment';
 import OrderTotals from './OrderTotals';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 
 const useStyles = makeStyles(theme => ({
   section: {

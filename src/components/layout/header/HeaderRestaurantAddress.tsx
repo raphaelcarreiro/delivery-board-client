@@ -1,7 +1,7 @@
 import { makeStyles, Typography } from '@material-ui/core';
 import { RoomOutlined } from '@material-ui/icons';
 import React from 'react';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 import { useSelector } from 'src/store/redux/selector';
 
 const useStyles = makeStyles({

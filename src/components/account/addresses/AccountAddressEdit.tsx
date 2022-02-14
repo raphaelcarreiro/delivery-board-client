@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AccountAddressesAction from './AccountAddressesAction';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 import { Address } from 'src/types/address';
 import { useAddressValidation } from './validation/useAddressValidation';
 import { AxiosError } from 'axios';

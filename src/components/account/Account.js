@@ -22,8 +22,8 @@ import {
 } from 'src/store/context-api/modules/user-customer/actions';
 import * as yup from 'yup';
 import { cpfValidation } from 'src/helpers/cpfValidation';
-import { useMessaging } from 'src/hooks/messaging';
-import { useApp } from 'src/hooks/app';
+import { useMessaging } from 'src/providers/MessageProvider';
+import { useApp } from 'src/providers/AppProvider';
 import GoogleMapsProvider from 'src/providers/google-maps/GoogleMapsProvider';
 
 const useStyles = makeStyles(theme => ({

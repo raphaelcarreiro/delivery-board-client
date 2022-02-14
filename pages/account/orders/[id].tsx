@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import Head from 'next/head';
 import Order from 'src/components/account/orders/order/Order';
 import { useRouter } from 'next/router';
-import { useAuth } from 'src/hooks/auth';
+import { useAuth } from 'src/providers/AuthProvider';
 import { GetServerSideProps } from 'next';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 
 type OrderPageProps = {
   uuid: string;

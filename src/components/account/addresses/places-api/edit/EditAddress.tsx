@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { api } from 'src/services/api';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 import { Address } from 'src/types/address';
 import { CustomerAddressProvider } from '../hooks/useCustomerAddress';
 import GoogleMap from '../map/GoogleMap';
-import { useLocation } from 'src/providers/location';
+import { useLocation } from 'src/providers/LocationProvider';
 import Form from '../Form';
 import Modal from 'src/components/modal/Modal';
 import InsideSaving from 'src/components/loading/InsideSaving';

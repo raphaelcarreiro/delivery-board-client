@@ -8,8 +8,8 @@ import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { firebaseMessagingIsSupported as isSupported } from 'src/config/FirebaseConfig';
 import { FiCheck } from 'react-icons/fi';
-import { useFirebase } from 'src/hooks/firebase';
-import { useApp } from 'src/hooks/app';
+import { useFirebase } from 'src/providers/FirebaseProvider';
+import { useApp } from 'src/providers/AppProvider';
 import { useCheckout } from '../../hooks/useCheckout';
 import CheckoutSucessPix from './CheckoutSuccessPix';
 

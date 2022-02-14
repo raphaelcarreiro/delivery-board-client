@@ -1,6 +1,6 @@
 import { Button, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 import { Restaurant } from 'src/types/restaurant';
 import DialogInput, { DialogInputContext } from '../dialog/DialogInput';
 

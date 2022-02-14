@@ -9,7 +9,7 @@ import { api } from 'src/services/api';
 import CpfInput from '../../../masked-input/CpfInput';
 import * as yup from 'yup';
 import { cpfValidation } from '../../../../helpers/cpfValidation';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 
 const useStyles = makeStyles(theme => ({
   actions: {

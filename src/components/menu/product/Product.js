@@ -15,8 +15,8 @@ import { Grid, Typography, TextField, InputAdornment } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
 import { useRouter } from 'next/router';
-import { useMessaging } from 'src/hooks/messaging';
-import { useApp } from 'src/hooks/app';
+import { useMessaging } from 'src/providers/MessageProvider';
+import { useApp } from 'src/providers/AppProvider';
 
 const useStyles = makeStyles(theme => ({
   pageHeader: {

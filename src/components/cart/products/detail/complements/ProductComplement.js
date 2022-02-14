@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import CustomDialog from 'src/components/dialog/CustomDialog';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 import { useCart } from '../../../hooks/useCart';
 import { calculateProductComplementsPrice } from 'src/components/products/detail/complement/calculateProductComplementsPrice';
 import { handleSelectProductComplement } from 'src/components/products/detail/complement/handleSelectProductComplement';

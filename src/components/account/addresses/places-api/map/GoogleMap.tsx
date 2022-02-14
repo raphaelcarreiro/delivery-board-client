@@ -5,7 +5,7 @@ import { Address } from 'src/types/address';
 import GoogleMapHeader from './GoogleMapHeader';
 import { useSelector } from 'src/store/redux/selector';
 import OutOfDeliverableAreaAlert from './OutOfDeliverableAreaAlert';
-import { useLocation } from 'src/providers/location';
+import { useLocation } from 'src/providers/LocationProvider';
 import { GpsFixed } from '@material-ui/icons';
 import { useGoogleMaps } from 'src/providers/google-maps/GoogleMapsProvider';
 import { Position } from 'src/types/position';

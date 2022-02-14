@@ -4,9 +4,9 @@ import { useRouter } from 'next/router';
 import Checkout from 'src/components/checkout/Checkout';
 import CartClosedRestaurant from 'src/components/cart/CartClosedRestaurant';
 import { NextPage } from 'next';
-import { useAuth } from 'src/hooks/auth';
+import { useAuth } from 'src/providers/AuthProvider';
 import { useSelector } from 'src/store/redux/selector';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 
 const CheckoutPage: NextPage = () => {
   const router = useRouter();

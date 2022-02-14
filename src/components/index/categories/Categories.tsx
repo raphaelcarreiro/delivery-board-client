@@ -5,7 +5,7 @@ import CategoryList from './CategoryList';
 import { AnimatedBackground } from 'src/styles/animatedBackground';
 import { api } from 'src/services/api';
 import Slider from 'src/components/slider/Slider';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 import CategoryItem from './CategoryItem';
 
 const useStyles = makeStyles(theme => ({

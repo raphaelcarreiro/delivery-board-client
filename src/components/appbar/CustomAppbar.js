@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { APPBAR_HEIGHT, MENU_WIDTH } from '../../constants/constants';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 import { useSelector } from 'react-redux';
 import { RoomOutlined } from '@material-ui/icons';
 

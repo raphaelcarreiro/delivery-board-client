@@ -8,8 +8,8 @@ import LocalOfferIcons from '@material-ui/icons/LocalOffer';
 import Link from '../../link/Link';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { useAuth } from 'src/hooks/auth';
-import { useApp } from 'src/hooks/app';
+import { useAuth } from 'src/providers/AuthProvider';
+import { useApp } from 'src/providers/AppProvider';
 import { PAGE_MAX_WIDTH } from 'src/constants/constants';
 import HeaderRestaurantAddress from './HeaderRestaurantAddress';
 

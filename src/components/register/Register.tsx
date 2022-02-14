@@ -9,12 +9,12 @@ import RegisterSucess from './RegisterSuccess';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'src/store/redux/modules/user/actions';
-import { useMessaging } from 'src/hooks/messaging';
-import { useApp } from 'src/hooks/app';
+import { useMessaging } from 'src/providers/MessageProvider';
+import { useApp } from 'src/providers/AppProvider';
 import { useUserRegisterReducer } from 'src/store/context-api/modules/user/reducer';
 import { useUserRegisterValidation } from './validation/registerValidation';
 import { UserRegister } from 'src/types/userRegister';
-import { useAuth } from 'src/hooks/auth';
+import { useAuth } from 'src/providers/AuthProvider';
 
 const useStyles = makeStyles(theme => ({
   paper: {

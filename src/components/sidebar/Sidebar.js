@@ -13,7 +13,7 @@ import ChatIcon from '@material-ui/icons/Chat';
 import LocalOfferIcons from '@material-ui/icons/LocalOffer';
 import { FiLogIn } from 'react-icons/fi';
 import { MENU_WIDTH } from 'src/constants/constants';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 import SidebarItem from './SidebarItem';
 
 const useStyles = makeStyles(theme => ({

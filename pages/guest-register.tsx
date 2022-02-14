@@ -4,7 +4,7 @@ import GuestRegister from 'src/components/register/guest/GuestRegister';
 import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import { useSelector } from 'src/store/redux/selector';
-import { useAuth } from 'src/hooks/auth';
+import { useAuth } from 'src/providers/AuthProvider';
 
 const GuestRegisterPage: NextPage = () => {
   const router = useRouter();

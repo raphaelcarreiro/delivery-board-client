@@ -11,8 +11,8 @@ import { api } from 'src/services/api';
 import userReducer, { INITIAL_STATE as userInitiaState } from 'src/store/context-api/modules/user/reducer';
 import Link from 'src/components/link/Link';
 import { userChange } from 'src/store/context-api/modules/user/actions';
-import { useMessaging } from 'src/hooks/messaging';
-import { useApp } from 'src/hooks/app';
+import { useMessaging } from 'src/providers/MessageProvider';
+import { useApp } from 'src/providers/AppProvider';
 
 GuestRegister.propTypes = {
   name: PropTypes.string,

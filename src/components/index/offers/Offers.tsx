@@ -6,7 +6,7 @@ import ProductPizzaComplement from 'src/components/products/detail/pizza_complem
 import ProductSimple from 'src/components/products/detail/simple/ProductSimple';
 import { ProductsProvider } from 'src/components/products/hooks/useProducts';
 import { moneyFormat } from 'src/helpers/numberFormat';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 import { api } from 'src/services/api';
 import { addToCart, prepareProduct } from 'src/store/redux/modules/cart/actions';
 import { useSelector } from 'src/store/redux/selector';

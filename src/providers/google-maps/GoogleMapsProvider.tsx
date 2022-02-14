@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext } from 'react';
-import { useAddressComponents } from './useAddressComponents';
+import { useAddressComponents } from '../../hooks/useAddressComponents';
 import { Address } from 'src/types/address';
 import { infoWindowContent } from './infoWindowContent';
 import { mapStyle } from './mapStyle';

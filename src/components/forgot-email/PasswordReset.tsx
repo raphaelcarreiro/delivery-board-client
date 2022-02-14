@@ -5,10 +5,10 @@ import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 import { useSelector } from 'src/store/redux/selector';
 import { usePasswordResetValidation } from './validation/passwordResetValidation';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 
 const useStyles = makeStyles(theme => ({
   container: {

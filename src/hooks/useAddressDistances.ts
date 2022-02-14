@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { api } from 'src/services/api';
 import { setCustomerAddresses } from 'src/store/redux/modules/user/actions';

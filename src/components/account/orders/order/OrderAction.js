@@ -3,7 +3,7 @@ import { Button, Tooltip, IconButton } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import RefreshIcon from '@material-ui/icons/Refresh';
-import { useFirebase } from 'src/hooks/firebase';
+import { useFirebase } from 'src/providers/FirebaseProvider';
 import { useSelector } from 'react-redux';
 import { firebaseMessagingIsSupported } from 'src/config/FirebaseConfig';
 

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { isFacebookNavigator } from 'src/helpers/isFacebookNavigator';
 import { setRestaurantConfig } from 'src/store/redux/modules/restaurant/actions';
 import { useSelector } from 'src/store/redux/selector';
-import { SocialLoginResponse, useAuth } from './auth';
+import { SocialLoginResponse, useAuth } from './AuthProvider';
 
 type FacebookLoginContextValue = {
   facebookUser: any;

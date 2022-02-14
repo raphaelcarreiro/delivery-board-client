@@ -7,11 +7,11 @@ import { Grid, Button, Typography, LinearProgress, IconButton } from '@material-
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import Loading from '../loading/Loading';
-import { useAuth } from 'src/hooks/auth';
+import { useAuth } from 'src/providers/AuthProvider';
 import { useSelector } from 'src/store/redux/selector';
 import CustomLink from '../link/CustomLink';
 import { User } from 'src/types/user';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 import LoginUserNotFound from './LoginUserNotFound';
 import DialogInput from '../dialog/DialogInput';
 

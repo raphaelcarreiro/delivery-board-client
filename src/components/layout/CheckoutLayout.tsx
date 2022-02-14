@@ -1,7 +1,7 @@
 import React from 'react';
 import CheckoutHeader from './header/CheckoutHeader';
 import { makeStyles } from '@material-ui/core/styles';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 import { APPBAR_HEIGHT, PAGE_MAX_WIDTH } from 'src/constants/constants';
 
 const useStyles = makeStyles(theme => ({

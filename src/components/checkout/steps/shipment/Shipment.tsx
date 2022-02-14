@@ -9,7 +9,7 @@ import { addCustomerAddress, updateCustomerAddress, deleteCustomerAddress } from
 import { setShipmentAddress } from 'src/store/redux/modules/order/actions';
 import { api } from 'src/services/api';
 import DialogDelete from 'src/components/dialog/delete/DialogDelete';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 import { useCheckout } from '../../hooks/useCheckout';
 import { Address } from 'src/types/address';
 import { useSelector } from 'src/store/redux/selector';

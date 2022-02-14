@@ -4,7 +4,7 @@ import PostalCodeInput from '../../masked-input/PostalCodeInput';
 import AccountAddressesAction from './AccountAddressesAction';
 import { postalCodeSearch } from 'src/services/postalCodeSearch';
 import { makeStyles } from '@material-ui/core/styles';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 import { useAddressValidation } from './validation/useAddressValidation';
 import { useSelector } from 'src/store/redux/selector';
 import { Address } from 'src/types/address';

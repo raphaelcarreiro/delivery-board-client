@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCoupon } from 'src/store/redux/modules/cart/actions';
 import { api } from 'src/services/api';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 
 const useStyles = makeStyles({
   container: {

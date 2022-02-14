@@ -4,7 +4,7 @@ import ProductPizzaComplementAdditional from 'src/components/products/detail/piz
 import ProductPizzaComplementIngredient from 'src/components/products/detail/pizza_complement/ProductPizzaComplementIngredient';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 import { handleSelectPizzaProductComplement } from 'src/components/products/detail/pizza_complement/handleSelectPizzaProductComplement';
 import { calculatePizzaProductComplementPrice } from 'src/components/products/detail/pizza_complement/calculatePizzaProductComplementsPrice';
 import { useCart } from '../../../hooks/useCart';

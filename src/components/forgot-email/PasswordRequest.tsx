@@ -4,10 +4,10 @@ import { Grid, Typography, TextField, Button, LinearProgress } from '@material-u
 import { api } from 'src/services/api';
 import Loading from '../loading/Loading';
 import NextLink from 'next/link';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 import CustomLink from '../link/CustomLink';
 import { useSelector } from 'src/store/redux/selector';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 
 const useStyles = makeStyles(theme => ({
   container: {

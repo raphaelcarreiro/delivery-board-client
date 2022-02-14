@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AccountImage from './AccountImage';
 import PhoneInput from '../masked-input/PhoneInput';
 import CpfInput from '../masked-input/CpfInput';
-import { useAuth } from 'src/hooks/auth';
+import { useAuth } from 'src/providers/AuthProvider';
 
 const useStyles = makeStyles(theme => ({
   actions: {

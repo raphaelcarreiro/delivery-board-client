@@ -10,14 +10,14 @@ import { Grid, Typography, TextField, InputAdornment } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
 import { useRouter } from 'next/router';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 import { Product } from 'src/types/product';
 import ImagePreview from '../image-preview/ImagePreview';
 import ProductSimple from './detail/simple/ProductSimple';
 import ProductPizzaComplement from './detail/pizza_complement/ProductPizzaComplement';
 import { useSelector } from 'src/store/redux/selector';
 import ProductComplement from './detail/complement/ProductComplement';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 import { ProductsContextValue, ProductsProvider } from './hooks/useProducts';
 
 const useStyles = makeStyles(theme => ({

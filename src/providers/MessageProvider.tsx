@@ -1,7 +1,7 @@
 import React, { useState, useContext, useCallback, CSSProperties } from 'react';
 import Messaging from 'src/components/messaging/Messaging';
 import MessagingLarge from 'src/components/messaging/MessagingLarge';
-import { useApp } from './app';
+import { useApp } from './AppProvider';
 interface MessagingContextData {
   handleClose(): void;
   handleOpen(message: string, messagingOptions?: MessagingOptions): void;

@@ -1,7 +1,7 @@
 import { ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import React, { ReactElement } from 'react';
-import { useApp } from 'src/hooks/app';
+import { useApp } from 'src/providers/AppProvider';
 
 const useStyles = makeStyles(theme => ({
   sidebarItem: {

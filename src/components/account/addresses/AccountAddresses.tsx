@@ -6,7 +6,7 @@ import {
   updateCustomerAddress,
   setMainCustomerAddress,
 } from '../../../store/redux/modules/user/actions';
-import { useMessaging } from 'src/hooks/messaging';
+import { useMessaging } from 'src/providers/MessageProvider';
 import { Address } from 'src/types/address';
 import { AxiosError } from 'axios';
 import AccountAddressesMenu from './AccountAddressesMenu';
