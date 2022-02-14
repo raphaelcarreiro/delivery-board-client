@@ -4,6 +4,7 @@ interface LocationContextValue {
   location: Location | null;
   isPermittionDenied: boolean;
   askPermittionForLocation(): void;
+  positionWasRequested: boolean;
 }
 
 interface Location {
@@ -16,9 +17,11 @@ const LocationContext = createContext<LocationContextValue>({} as LocationContex
 const LocationProvider: React.FC = ({ children }) => {
   const [location, setLocation] = useState<Location | null>(null);
   const [isPermittionDenied, setIsPermittionDenied] = useState(false);
+  const [positionWasRequested, setPositionWasRequested] = useState(false);
 
   const askPermittionForLocation = useCallback(() => {
     setIsPermittionDenied(false);
+    setPositionWasRequested(true);
 
     navigator.geolocation.getCurrentPosition(
       success => {
@@ -40,7 +43,7 @@ const LocationProvider: React.FC = ({ children }) => {
   }, []);
 
   return (
-    <LocationContext.Provider value={{ location, askPermittionForLocation, isPermittionDenied }}>
+    <LocationContext.Provider value={{ location, askPermittionForLocation, isPermittionDenied, positionWasRequested }}>
       {children}
     </LocationContext.Provider>
   );
