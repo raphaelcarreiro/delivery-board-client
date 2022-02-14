@@ -5,7 +5,6 @@ import { Address } from 'src/types/address';
 import NewAddressInputSearch from './InputSearch';
 import Places from './places/Places';
 import { CustomerAddressProvider } from '../hooks/useCustomerAddress';
-import { useLocation } from 'src/providers/LocationProvider';
 import Form from '../Form';
 import Modal from 'src/components/modal/Modal';
 import InsideSaving from 'src/components/loading/InsideSaving';
@@ -13,10 +12,10 @@ import { useAddressValidation } from '../validation/useAddressValidation';
 import NewAddressActions from './NewAddressAction';
 import { useSelector } from 'src/store/redux/selector';
 import GoogleMap from '../map/GoogleMap';
-import GoogleMapsProvider, { useGoogleMaps } from 'src/providers/google-maps/GoogleMapsProvider';
+import GoogleMapsProvider from 'src/providers/google-maps/MapProvider';
 import PlacesLoading from './places/PlacesLoading';
 
-let timer;
+let timer: NodeJS.Timeout;
 
 const INITIAL_STATE: Address = {
   address: '',
@@ -50,14 +49,11 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
   const [address, setAddress] = useState<Address>(INITIAL_STATE);
   const [searchText, setSearchText] = useState('');
   const [places, setPlaces] = useState<google.maps.places.AutocompletePrediction[]>([]);
-  const [coordinate, setCoordinate] = useState<null | { lat: number; lng: number }>(null);
+  const [position, setPosition] = useState<null | { lat: number; lng: number }>(null);
   const [step, setStep] = useState<number>(1);
-  const { location, askPermittionForLocation, isPermittionDenied } = useLocation();
   const [showNotFound, setShowNotFound] = useState(false);
   const order = useSelector(state => state.order);
   const restaurant = useSelector(state => state.restaurant);
-  const [notFoundAddressLinkClicked, setNotFoundAddressLinkClicked] = useState(false);
-  const { getAddressFromLocation } = useGoogleMaps();
 
   const handleNext = useCallback(() => {
     setStep(step => step + 1);
@@ -66,37 +62,6 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
   const handleBack = useCallback(() => {
     setStep(step => step - 1);
   }, []);
-
-  useEffect(() => {
-    if (!notFoundAddressLinkClicked) return;
-
-    if (isPermittionDenied) {
-      setCoordinate({
-        lat: order.restaurant_address.latitude,
-        lng: order.restaurant_address.longitude,
-      });
-      setAddress(order.restaurant_address);
-      handleNext();
-      return;
-    }
-
-    if (!location) return;
-
-    setCoordinate({ lat: location.latitude, lng: location.longitude });
-    getAddressFromLocation({ lat: location.latitude, lng: location.longitude }).then(response => {
-      if (response) {
-        setAddress(response);
-        handleNext();
-      }
-    });
-  }, [
-    location,
-    handleNext,
-    isPermittionDenied,
-    notFoundAddressLinkClicked,
-    order.restaurant_address,
-    getAddressFromLocation,
-  ]);
 
   useEffect(() => {
     if (!searchText) setPlaces([]);
@@ -158,11 +123,6 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
     }));
   }
 
-  function setBrowserLocation() {
-    askPermittionForLocation();
-    setNotFoundAddressLinkClicked(true);
-  }
-
   function handleGetPlaceLatitudeLongitude(addressDescription: string) {
     setLoadingAddress(true);
 
@@ -171,7 +131,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
       .then(response => {
         const geometryLocation = response.data.geometry.location;
         const _address = response.data.address;
-        setCoordinate(geometryLocation);
+        setPosition(geometryLocation);
         setAddress({
           ...INITIAL_STATE,
           address: _address.street,
@@ -196,7 +156,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
           {loadingAddresses ? <PlacesLoading /> : <Places places={places} showNotFound={showNotFound} />}
         </>
       ),
-      2: <>{coordinate && <GoogleMap lat={coordinate.lat} lng={coordinate.lng} address={address} />}</>,
+      2: <>{position && <GoogleMap position={position} address={address} />}</>,
       3: <Form handleChange={handleChange} validation={validation} address={address} />,
     };
 
@@ -204,33 +164,32 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
   }
 
   return (
-    <Modal
-      title="adicionar endereço"
-      onExited={onExited}
-      backAction={step !== 1 ? handleBack : undefined}
-      componentActions={<NewAddressActions saving={saving} handleValidation={handleValidation} />}
-      maxWidth="sm"
-      height="80vh"
-      disablePadding={step === 2}
+    <CustomerAddressProvider
+      value={{
+        handleGetPlaceLatitudeLongitude,
+        handleChange,
+        handleNext,
+        handleBack,
+        handleValidation,
+        setPosition,
+        setAddress,
+        setStep,
+        step,
+      }}
     >
-      {(loadingAddress || saving) && <InsideSaving />}
-      <GoogleMapsProvider>
-        <CustomerAddressProvider
-          value={{
-            handleGetPlaceLatitudeLongitude,
-            setBrowserLocation,
-            handleChange,
-            handleNext,
-            handleBack,
-            handleValidation,
-            setCoordinate,
-            setAddress,
-          }}
-        >
-          {handleRendering()}
-        </CustomerAddressProvider>
-      </GoogleMapsProvider>
-    </Modal>
+      <Modal
+        title="adicionar endereço"
+        onExited={onExited}
+        backAction={step !== 1 ? handleBack : undefined}
+        componentActions={<NewAddressActions saving={saving} handleValidation={handleValidation} />}
+        maxWidth="sm"
+        height="80vh"
+        disablePadding={step === 2}
+      >
+        {(loadingAddress || saving) && <InsideSaving />}
+        <GoogleMapsProvider>{handleRendering()}</GoogleMapsProvider>
+      </Modal>
+    </CustomerAddressProvider>
   );
 };
 

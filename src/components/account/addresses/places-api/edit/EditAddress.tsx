@@ -4,13 +4,12 @@ import { useMessaging } from 'src/providers/MessageProvider';
 import { Address } from 'src/types/address';
 import { CustomerAddressProvider } from '../hooks/useCustomerAddress';
 import GoogleMap from '../map/GoogleMap';
-import { useLocation } from 'src/providers/LocationProvider';
 import Form from '../Form';
 import Modal from 'src/components/modal/Modal';
 import InsideSaving from 'src/components/loading/InsideSaving';
 import { useAddressValidation } from '../validation/useAddressValidation';
 import NewAddressActions from '../new/NewAddressAction';
-import GoogleMapsProvider from 'src/providers/google-maps/GoogleMapsProvider';
+import GoogleMapsProvider from 'src/providers/google-maps/MapProvider';
 import { Position } from 'src/types/position';
 
 interface EditAddressProps {
@@ -25,13 +24,12 @@ const EditAddress: React.FC<EditAddressProps> = ({ handleAddressUpdateSubmit, on
   const messaging = useMessaging();
   const [validation, setValidation, validate] = useAddressValidation();
   const [address, setAddress] = useState<Address>(selectedAddress);
-  const [coordinate, setCoordinate] = useState<null | Position>(null);
+  const [position, setPosition] = useState<null | Position>(null);
   const [step, setStep] = useState<number>(1);
-  const { location } = useLocation();
 
   useEffect(() => {
     if (selectedAddress.latitude && selectedAddress.longitude) {
-      setCoordinate({
+      setPosition({
         lat: selectedAddress.latitude,
         lng: selectedAddress.longitude,
       });
@@ -44,7 +42,7 @@ const EditAddress: React.FC<EditAddressProps> = ({ handleAddressUpdateSubmit, on
       .then(response => {
         const geometryLocation = response.data.geometry.location;
         const _address = response.data.address;
-        setCoordinate(geometryLocation);
+        setPosition(geometryLocation);
         setAddress(state => ({
           ...state,
           address: _address.street,
@@ -90,11 +88,6 @@ const EditAddress: React.FC<EditAddressProps> = ({ handleAddressUpdateSubmit, on
     }));
   }
 
-  function setBrowserLocation() {
-    if (location) setCoordinate({ lat: location.latitude, lng: location.longitude });
-    handleNext();
-  }
-
   function handleGetPlaceLatitudeLongitude(addressDescription: string) {
     setLoadingAddress(true);
 
@@ -103,7 +96,7 @@ const EditAddress: React.FC<EditAddressProps> = ({ handleAddressUpdateSubmit, on
       .then(response => {
         const geometryLocation = response.data.geometry.location;
         const _address = response.data.address;
-        setCoordinate(geometryLocation);
+        setPosition(geometryLocation);
         setAddress(state => ({
           ...state,
           address: _address.street,
@@ -122,7 +115,7 @@ const EditAddress: React.FC<EditAddressProps> = ({ handleAddressUpdateSubmit, on
 
   function handleRendering() {
     const components = {
-      1: <>{coordinate && <GoogleMap lat={coordinate?.lat} lng={coordinate?.lng} address={address} />}</>,
+      1: <>{position && <GoogleMap position={position} address={address} />}</>,
       2: <Form handleChange={handleChange} validation={validation} address={address} />,
     };
 
@@ -130,33 +123,32 @@ const EditAddress: React.FC<EditAddressProps> = ({ handleAddressUpdateSubmit, on
   }
 
   return (
-    <Modal
-      title="editar endereço"
-      onExited={onExited}
-      backAction={step !== 1 ? handleBack : undefined}
-      componentActions={<NewAddressActions saving={saving} handleValidation={handleValidation} />}
-      maxWidth="sm"
-      height="80vh"
-      disablePadding={step === 1}
+    <CustomerAddressProvider
+      value={{
+        handleGetPlaceLatitudeLongitude,
+        handleChange,
+        handleNext,
+        handleBack,
+        handleValidation,
+        setPosition,
+        setAddress,
+        setStep,
+        step,
+      }}
     >
-      {(loadingAddress || saving) && <InsideSaving />}
-      <GoogleMapsProvider>
-        <CustomerAddressProvider
-          value={{
-            handleGetPlaceLatitudeLongitude,
-            setBrowserLocation,
-            handleChange,
-            handleNext,
-            handleBack,
-            handleValidation,
-            setCoordinate,
-            setAddress,
-          }}
-        >
-          {handleRendering()}
-        </CustomerAddressProvider>
-      </GoogleMapsProvider>
-    </Modal>
+      <Modal
+        title="editar endereço"
+        onExited={onExited}
+        backAction={step !== 1 ? handleBack : undefined}
+        componentActions={<NewAddressActions saving={saving} handleValidation={handleValidation} />}
+        maxWidth="sm"
+        height="80vh"
+        disablePadding={step === 1}
+      >
+        {(loadingAddress || saving) && <InsideSaving />}
+        <GoogleMapsProvider>{handleRendering()}</GoogleMapsProvider>
+      </Modal>
+    </CustomerAddressProvider>
   );
 };
 

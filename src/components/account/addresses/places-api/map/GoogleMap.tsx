@@ -5,10 +5,12 @@ import { Address } from 'src/types/address';
 import GoogleMapHeader from './GoogleMapHeader';
 import { useSelector } from 'src/store/redux/selector';
 import OutOfDeliverableAreaAlert from './OutOfDeliverableAreaAlert';
-import { useLocation } from 'src/providers/LocationProvider';
 import { GpsFixed } from '@material-ui/icons';
-import { useGoogleMaps } from 'src/providers/google-maps/GoogleMapsProvider';
+import { useMap } from 'src/providers/google-maps/MapProvider';
 import { Position } from 'src/types/position';
+import { useMaxDistance } from 'src/hooks/useMaxDistance';
+import { useRestaurantAddressPosition } from 'src/hooks/useRestaurantAddressPosition';
+import { useLocation } from 'src/providers/LocationProvider';
 
 const styles = makeStyles(theme => ({
   map: {
@@ -57,26 +59,34 @@ const styles = makeStyles(theme => ({
     bottom: '20%',
     right: '5%',
     zIndex: 1,
+    backgroundColor: 'white',
+    border: '1px solid #ccc',
+    '&:hover': {
+      backgroundColor: 'white',
+    },
   },
 }));
 
 let timer: NodeJS.Timeout;
 
 interface CopyGoogleMapProps {
-  lat: number;
-  lng: number;
+  position: Position;
   address: Address;
 }
 
-const GoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
+let marker: google.maps.Marker;
+let map: google.maps.Map;
+
+const GoogleMap: React.FC<CopyGoogleMapProps> = ({ position, address }) => {
   const classes = styles();
-  const { handleNext, setCoordinate, setAddress } = useCustomerAddress();
-  const order = useSelector(state => state.order);
+  const { handleNext, setPosition, setAddress } = useCustomerAddress();
   const restaurant = useSelector(state => state.restaurant);
   const [distance, setDistance] = useState(0);
-  const { askPermittionForLocation, location: deviceLocation } = useLocation();
-  const [locationWasRequested, setLocationWasRequested] = useState(false);
   const [markerPosition, setMarkerPosition] = useState<Position | null>(null);
+  const maxDistance = useMaxDistance();
+  const { location: deviceLocation, askPermittionForLocation } = useLocation();
+  const restaurantAddressPosition = useRestaurantAddressPosition();
+  const [devicePositionRequested, setDeviceLocationRequested] = useState(false);
   const {
     createMap,
     createMarker,
@@ -84,12 +94,7 @@ const GoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
     createInfoWindow,
     getDistanceMarkerPosition,
     getAddressFromMarker,
-    getAddressFromLocation,
-  } = useGoogleMaps();
-
-  const location = useMemo((): Position => ({ lat, lng }), [lat, lng]);
-
-  const maxDistance = useMemo(() => restaurant?.delivery_max_distance || 0, [restaurant]);
+  } = useMap();
 
   const outOfDeliverableArea = useMemo(() => (restaurant ? distance > restaurant?.delivery_max_distance : false), [
     restaurant,
@@ -98,17 +103,17 @@ const GoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
 
   const circleRadius = useMemo(() => (restaurant ? restaurant.delivery_max_distance * 1000 : 0), [restaurant]);
 
-  const restaurantAddressCoordinate = useMemo(() => {
-    return {
-      lat: order.restaurant_address.latitude as number,
-      lng: order.restaurant_address.longitude as number,
-    };
-  }, [order.restaurant_address]);
+  const setPositionFromDevice = useCallback(async () => {
+    if (!deviceLocation) return;
+
+    map.panTo({ lat: deviceLocation.latitude, lng: deviceLocation.longitude });
+    marker.setPosition({ lat: deviceLocation.latitude, lng: deviceLocation.longitude });
+  }, [deviceLocation]);
 
   const initMap = useCallback(() => {
-    const map = createMap(location);
-    const marker = createMarker(map, location);
-    const circle = createCircle(map, circleRadius, location);
+    map = createMap(position);
+    marker = createMarker(map, position);
+    const circle = createCircle(map, circleRadius, position);
     const infowindow = createInfoWindow();
 
     map.addListener('drag', () => {
@@ -131,77 +136,68 @@ const GoogleMap: React.FC<CopyGoogleMapProps> = ({ lat, lng, address }) => {
 
     openWindow();
 
-    marker.addListener('position_changed', () => {
-      clearTimeout(timer);
-
-      const newDistance = getDistanceMarkerPosition(marker, restaurantAddressCoordinate);
+    const calculateDistance = () => {
+      const newDistance = getDistanceMarkerPosition(marker, restaurantAddressPosition);
+      setDistance(newDistance);
 
       if (newDistance / 1000 > maxDistance) {
         circle.setVisible(true);
-      } else {
-        circle.setVisible(false);
+        return;
       }
 
-      setDistance(newDistance);
+      circle.setVisible(false);
+    };
+
+    calculateDistance();
+
+    marker.addListener('position_changed', () => {
+      clearTimeout(timer);
+
+      calculateDistance();
 
       timer = setTimeout(() => {
         openWindow();
         getAddressFromMarker(marker).then(address => {
-          if (address) {
-            setAddress(address);
-          }
+          if (!address) return;
+          setAddress(address);
         });
         const position = marker.getPosition();
-        if (position) {
-          setMarkerPosition({ lat: position.toJSON().lat, lng: position.toJSON().lng });
-        }
+        if (!position) return;
+        setMarkerPosition({ lat: position.toJSON().lat, lng: position.toJSON().lng });
       }, 500);
     });
   }, [
     createMap,
-    location,
+    position,
     createMarker,
     createCircle,
     circleRadius,
     createInfoWindow,
     getDistanceMarkerPosition,
-    restaurantAddressCoordinate,
+    restaurantAddressPosition,
     maxDistance,
-    setAddress,
     getAddressFromMarker,
+    setAddress,
   ]);
-
-  useEffect(() => {
-    if (!deviceLocation) {
-      return;
-    }
-
-    if (!locationWasRequested) {
-      return;
-    }
-
-    setCoordinate({ lat: deviceLocation.latitude, lng: deviceLocation.longitude });
-    setMarkerPosition({ lat: deviceLocation.latitude, lng: deviceLocation.longitude });
-
-    getAddressFromLocation({ lat: deviceLocation.latitude, lng: deviceLocation.longitude }).then(address => {
-      if (address) {
-        setAddress(address);
-      }
-    });
-  }, [deviceLocation, setCoordinate, locationWasRequested, initMap, getAddressFromLocation, setAddress]);
 
   useEffect(() => {
     if (typeof google === 'undefined') return;
     initMap();
   }, [initMap]);
 
+  useEffect(() => {
+    if (!devicePositionRequested) return;
+
+    setPositionFromDevice();
+  }, [devicePositionRequested, setPositionFromDevice]);
+
   function handleCurrentLocationClick() {
     askPermittionForLocation();
-    setLocationWasRequested(true);
+    setDeviceLocationRequested(true);
   }
 
   function handleConfirm() {
-    setCoordinate(markerPosition);
+    setPosition(markerPosition);
     handleNext();
   }
 
