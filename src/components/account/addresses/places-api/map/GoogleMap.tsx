@@ -112,7 +112,7 @@ const GoogleMap: React.FC<CopyGoogleMapProps> = ({ position, address }) => {
     setLastMarkerPosition({ lat: markerPosition.toJSON().lat, lng: markerPosition.toJSON().lng });
   };
 
-  const setPositionFromDevice = useCallback(async () => {
+  const setPositionFromDevice = useCallback(() => {
     if (!deviceLocation) return;
 
     map.panTo({ lat: deviceLocation.latitude, lng: deviceLocation.longitude });
