@@ -31,12 +31,7 @@ export const cartMiddlware = store => next => action => {
   if (action.type === '@order/SET_SHIPMENT_METHOD') {
     const restaurant = store.getState().restaurant;
     const order = store.getState().order;
-    if (restaurant.configs.tax_mode === 'district') {
-      const { area_region } = order.shipment;
-      if (!area_region) return;
-      const tax = area_region.tax;
-      store.dispatch(setTax(tax));
-    } else if (restaurant.configs.tax_mode === 'distance') {
+    if (restaurant.configs.tax_mode === 'distance') {
       const { distance_tax } = order.shipment;
       if (!distance_tax) return;
       const tax = distance_tax;
@@ -46,12 +41,7 @@ export const cartMiddlware = store => next => action => {
 
   if (action.type === '@order/SET_SHIPMENT_ADDRESS') {
     const restaurant = store.getState().restaurant;
-    if (restaurant.configs.tax_mode === 'district') {
-      const { area_region } = action.address;
-      if (!area_region) return;
-      const tax = area_region.tax;
-      store.dispatch(setTax(tax));
-    } else if (restaurant.configs.tax_mode === 'distance') {
+    if (restaurant.configs.tax_mode === 'distance') {
       const { distance_tax } = action.address;
       if (!distance_tax) return;
       const tax = distance_tax;

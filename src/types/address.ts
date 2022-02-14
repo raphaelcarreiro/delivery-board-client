@@ -1,11 +1,3 @@
-export interface AreaRegion {
-  id: number;
-  name: string;
-  tax: number;
-  formattedTax: string;
-  area_region_id: number | null;
-}
-
 export interface Address {
   id: number;
   address: string;

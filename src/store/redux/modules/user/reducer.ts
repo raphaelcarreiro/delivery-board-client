@@ -21,10 +21,6 @@ export default function user(state = INITIAL_STATE, action: UserActionsType): Us
         customer: {
           ...action.user.customer,
           addresses: action.user.customer.addresses.map(address => {
-            address.area_region = address.area_region && {
-              ...address.area_region,
-              formattedTax: moneyFormat(address.area_region.tax),
-            };
             address.formattedDistanceTax = moneyFormat(address.distance_tax);
             return address;
           }),
@@ -82,10 +78,6 @@ export default function user(state = INITIAL_STATE, action: UserActionsType): Us
             ...state.customer.addresses,
             {
               ...action.address,
-              area_region: action.address.area_region && {
-                ...action.address.area_region,
-                formattedTax: moneyFormat(action.address.area_region.tax),
-              },
               formattedDistanceTax: moneyFormat(action.address.distance_tax),
             },
           ],
@@ -110,10 +102,6 @@ export default function user(state = INITIAL_STATE, action: UserActionsType): Us
         if (address.id === action.address.id) {
           return {
             ...action.address,
-            area_region: action.address.area_region && {
-              ...action.address.area_region,
-              formattedTax: moneyFormat(action.address.area_region.tax),
-            },
             formattedDistanceTax: moneyFormat(action.address.distance_tax),
           };
         }
@@ -147,12 +135,6 @@ export default function user(state = INITIAL_STATE, action: UserActionsType): Us
     case '@user/SET_CUSTOMER_ADDRESSES': {
       const addresses = action.addresses.map(address => {
         address.formattedDistanceTax = moneyFormat(address.distance_tax);
-        address.area_region = address.area_region
-          ? {
-              ...address.area_region,
-              formattedTax: moneyFormat(address.area_region.tax),
-            }
-          : null;
 
         return address;
       });
