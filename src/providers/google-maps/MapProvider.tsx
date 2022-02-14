@@ -27,7 +27,7 @@ const GoogleMapsProvider: React.FC = ({ children }) => {
 
   const createMap = useCallback((position: Position): google.maps.Map => {
     const map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
-      zoom: 16,
+      zoom: 17,
       center: position,
       mapTypeId: google.maps.MapTypeId.TERRAIN,
       disableDefaultUI: true,
