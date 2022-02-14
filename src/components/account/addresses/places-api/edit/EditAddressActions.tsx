@@ -4,17 +4,17 @@ import DoneIcon from '@material-ui/icons/Done';
 import { useModal } from 'src/components/modal/hooks/useModal';
 import { useCustomerAddress } from '../hooks/useCustomerAddress';
 
-interface NewAddressActionsProps {
+interface EditAddressActionsProps {
   handleValidation(handleModalClose: () => void): void;
   saving: boolean;
 }
 
-const NewAddressActions: React.FC<NewAddressActionsProps> = ({ handleValidation, saving }) => {
+const EditAddressActions: React.FC<EditAddressActionsProps> = ({ handleValidation, saving }) => {
   const { handleModalClose } = useModal();
   const { step } = useCustomerAddress();
   return (
     <>
-      {step === 3 && (
+      {step === 2 && (
         <Tooltip title="Salvar">
           <IconButton onClick={() => handleValidation(handleModalClose)} disabled={saving} color="inherit">
             <DoneIcon />
@@ -25,4 +25,4 @@ const NewAddressActions: React.FC<NewAddressActionsProps> = ({ handleValidation,
   );
 };
 
-export default NewAddressActions;
+export default EditAddressActions;
