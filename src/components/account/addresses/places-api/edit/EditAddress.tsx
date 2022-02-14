@@ -8,9 +8,9 @@ import Form from '../Form';
 import Modal from 'src/components/modal/Modal';
 import InsideSaving from 'src/components/loading/InsideSaving';
 import { useAddressValidation } from '../validation/useAddressValidation';
-import NewAddressActions from '../new/NewAddressAction';
 import GoogleMapsProvider from 'src/providers/google-maps/MapProvider';
 import { Position } from 'src/types/position';
+import EditAddressActions from './EditAddressActions';
 
 interface EditAddressProps {
   handleAddressUpdateSubmit(address: Address): Promise<void>;
@@ -140,7 +140,7 @@ const EditAddress: React.FC<EditAddressProps> = ({ handleAddressUpdateSubmit, on
         title="editar endereço"
         onExited={onExited}
         backAction={step !== 1 ? handleBack : undefined}
-        componentActions={<NewAddressActions saving={saving} handleValidation={handleValidation} />}
+        componentActions={<EditAddressActions saving={saving} handleValidation={handleValidation} />}
         maxWidth="sm"
         height="80vh"
         disablePadding={step === 1}
