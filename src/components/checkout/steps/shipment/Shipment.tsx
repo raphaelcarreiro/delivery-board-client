@@ -16,7 +16,7 @@ import { useSelector } from 'src/store/redux/selector';
 import { AxiosError } from 'axios';
 import ShipmentAddresses from './ShipmentAddresses';
 import { ShipmentProvider } from './hook/useCheckoutShipment';
-import GoogleMapsProvider from 'src/providers/google-maps/GoogleMapsProvider';
+import GoogleMapsProvider from 'src/providers/google-maps/MapProvider';
 
 interface ShipmentProps {
   addresses: Address[];
@@ -134,7 +134,7 @@ const Shipment: React.FC<ShipmentProps> = ({ addresses }) => {
     }
 
     if (!address.latitude || !address.longitude) {
-      messaging.handleOpen('Por favor, confirme se seu endereço aparece correto no mapa');
+      messaging.handleOpen('Seu endereço precisa ser atualizado');
       setSelectedAddress(address);
       setDialogEditAddress(true);
       return;
