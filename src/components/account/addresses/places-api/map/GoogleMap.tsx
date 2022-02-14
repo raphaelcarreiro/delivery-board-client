@@ -82,7 +82,7 @@ const GoogleMap: React.FC<CopyGoogleMapProps> = ({ position, address }) => {
   const { handleNext, setPosition, setAddress } = useCustomerAddress();
   const restaurant = useSelector(state => state.restaurant);
   const [distance, setDistance] = useState(0);
-  const [markerPosition, setMarkerPosition] = useState<Position | null>(null);
+  const [lastMarkerPosition, setLastMarkerPosition] = useState<Position | null>(null);
   const maxDistance = useMaxDistance();
   const { location: deviceLocation, askPermittionForLocation } = useLocation();
   const restaurantAddressPosition = useRestaurantAddressPosition();
@@ -103,11 +103,21 @@ const GoogleMap: React.FC<CopyGoogleMapProps> = ({ position, address }) => {
 
   const circleRadius = useMemo(() => (restaurant ? restaurant.delivery_max_distance * 1000 : 0), [restaurant]);
 
+  const setMarkerPosition = () => {
+    const markerPosition = marker.getPosition();
+    if (!markerPosition) {
+      return;
+    }
+
+    setLastMarkerPosition({ lat: markerPosition.toJSON().lat, lng: markerPosition.toJSON().lng });
+  };
+
   const setPositionFromDevice = useCallback(async () => {
     if (!deviceLocation) return;
 
     map.panTo({ lat: deviceLocation.latitude, lng: deviceLocation.longitude });
     marker.setPosition({ lat: deviceLocation.latitude, lng: deviceLocation.longitude });
+    setMarkerPosition();
   }, [deviceLocation]);
 
   const initMap = useCallback(() => {
@@ -116,25 +126,12 @@ const GoogleMap: React.FC<CopyGoogleMapProps> = ({ position, address }) => {
     const circle = createCircle(map, circleRadius, position);
     const infowindow = createInfoWindow();
 
-    map.addListener('drag', () => {
-      infowindow.close();
-      marker.setPosition(map.getCenter());
-    });
-
-    map.addListener('zoom_changed', () => {
-      const position = marker.getPosition();
-
-      if (position) map.panTo(position);
-    });
-
     const openWindow = () =>
       infowindow.open({
         anchor: marker,
         map,
         shouldFocus: true,
       });
-
-    openWindow();
 
     const calculateDistance = () => {
       const newDistance = getDistanceMarkerPosition(marker, restaurantAddressPosition);
@@ -148,7 +145,16 @@ const GoogleMap: React.FC<CopyGoogleMapProps> = ({ position, address }) => {
       circle.setVisible(false);
     };
 
-    calculateDistance();
+    map.addListener('drag', () => {
+      infowindow.close();
+      marker.setPosition(map.getCenter());
+      setMarkerPosition();
+    });
+
+    map.addListener('zoom_changed', () => {
+      const position = marker.getPosition();
+      if (position) map.panTo(position);
+    });
 
     marker.addListener('position_changed', () => {
       clearTimeout(timer);
@@ -161,11 +167,12 @@ const GoogleMap: React.FC<CopyGoogleMapProps> = ({ position, address }) => {
           if (!address) return;
           setAddress(address);
         });
-        const position = marker.getPosition();
-        if (!position) return;
-        setMarkerPosition({ lat: position.toJSON().lat, lng: position.toJSON().lng });
       }, 500);
     });
+
+    openWindow();
+    calculateDistance();
+    setMarkerPosition();
   }, [
     createMap,
     position,
@@ -197,7 +204,7 @@ const GoogleMap: React.FC<CopyGoogleMapProps> = ({ position, address }) => {
   }
 
   function handleConfirm() {
-    setPosition(markerPosition);
+    setPosition(lastMarkerPosition);
     handleNext();
   }
 
