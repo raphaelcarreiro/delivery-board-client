@@ -14,6 +14,7 @@ import { useSelector } from 'src/store/redux/selector';
 import GoogleMap from '../map/GoogleMap';
 import GoogleMapsProvider from 'src/providers/google-maps/MapProvider';
 import PlacesLoading from './places/PlacesLoading';
+import MyLocation from './places/MyLocation';
 
 let timer: NodeJS.Timeout;
 
@@ -154,6 +155,7 @@ const NewAddress: React.FC<NewAddressProps> = ({ handleAddressSubmit, onExited, 
       1: (
         <>
           <NewAddressInputSearch handleSearch={handleGooglePlacesSearch} searchText={searchText} />
+          {!showNotFound && <MyLocation />}
           {loadingAddresses ? <PlacesLoading /> : <Places places={places} showNotFound={showNotFound} />}
         </>
       ),
