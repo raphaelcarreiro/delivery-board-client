@@ -4,7 +4,7 @@ import { ListItem, Typography, IconButton, Tooltip } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import StarIcon from '@material-ui/icons/Star';
 import { Address } from 'src/types/address';
-import { useAccountAddresses } from './hooks/useAccountAddresses';
+import { useAccountAddresses } from '../hooks/useAccountAddresses';
 
 const useStyles = makeStyles(theme => ({
   listItem: {

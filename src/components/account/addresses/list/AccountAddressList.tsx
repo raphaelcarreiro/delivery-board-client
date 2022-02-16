@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { ListItem, List, Typography } from '@material-ui/core';
 import { Address } from 'src/types/address';
 import AccountAddress from './AccountAddress';
-import { useAccountAddresses } from './hooks/useAccountAddresses';
+import { useAccountAddresses } from '../hooks/useAccountAddresses';
 
 const useStyles = makeStyles(theme => ({
   listItemNewAddress: {

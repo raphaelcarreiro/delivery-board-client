@@ -231,7 +231,7 @@ const GoogleMap: React.FC<CopyGoogleMapProps> = ({ position, address }) => {
           size="large"
           onClick={handleConfirm}
         >
-          Confirmar endereço
+          Continuar
         </Button>
       </div>
     </>

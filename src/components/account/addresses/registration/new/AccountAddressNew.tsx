@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { TextField, Grid } from '@material-ui/core';
-import PostalCodeInput from '../../masked-input/PostalCodeInput';
-import AccountAddressesAction from './AccountAddressesAction';
+import PostalCodeInput from '../../../../masked-input/PostalCodeInput';
+import AccountAddressesAction from '../AccountAddressesAction';
 import { postalCodeSearch } from 'src/services/postalCodeSearch';
 import { makeStyles } from '@material-ui/core/styles';
 import { useMessaging } from 'src/providers/MessageProvider';
-import { useAddressValidation } from './validation/useAddressValidation';
+import { useAddressValidation } from '../validation/useAddressValidation';
 import { useSelector } from 'src/store/redux/selector';
 import { Address } from 'src/types/address';
 import { AxiosError } from 'axios';
-import AddressForm from './AddressForm';
+import AddressForm from '../AddressForm';
 import InsideSaving from 'src/components/loading/InsideSaving';
 import Modal from 'src/components/modal/Modal';
 

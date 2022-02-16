@@ -1,22 +1,22 @@
 import React, { useState, MouseEvent } from 'react';
-import { api } from '../../../services/api';
+import { api } from '../../../../services/api';
 import { useDispatch } from 'react-redux';
 import {
   addCustomerAddress,
   updateCustomerAddress,
   setMainCustomerAddress,
-} from '../../../store/redux/modules/user/actions';
+} from '../../../../store/redux/modules/user/actions';
 import { useMessaging } from 'src/providers/MessageProvider';
 import { Address } from 'src/types/address';
 import { AxiosError } from 'axios';
 import AccountAddressesMenu from './AccountAddressesMenu';
-import { AccountAddressesProvider } from './hooks/useAccountAddresses';
+import { AccountAddressesProvider } from '../hooks/useAccountAddresses';
 import AccountAddressList from './AccountAddressList';
-import NewAddressPlacesAPI from './places-api/new/NewAddress';
-import EditAddress from './places-api/edit/EditAddress';
+import NewAddressPlacesAPI from '../registration/places-api/new/NewAddress';
+import EditAddress from '../registration/places-api/edit/EditAddress';
 import { useSelector } from 'src/store/redux/selector';
-import AccountAddressEdit from './AccountAddressEdit';
-import AccountAddressNew from './AccountAddressNew';
+import AccountAddressNew from '../registration/new/AccountAddressNew';
+import AccountAddressEdit from '../registration/edit/AccountAddressEdit';
 
 interface AccountAddressProps {
   addresses: Address[];

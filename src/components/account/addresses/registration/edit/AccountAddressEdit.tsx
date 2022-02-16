@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import AccountAddressesAction from './AccountAddressesAction';
+import AccountAddressesAction from '../AccountAddressesAction';
 import { useMessaging } from 'src/providers/MessageProvider';
 import { Address } from 'src/types/address';
-import { useAddressValidation } from './validation/useAddressValidation';
+import { useAddressValidation } from '../validation/useAddressValidation';
 import { AxiosError } from 'axios';
-import AddressForm from './AddressForm';
+import AddressForm from '../AddressForm';
 import InsideSaving from 'src/components/loading/InsideSaving';
 import Modal from 'src/components/modal/Modal';
 

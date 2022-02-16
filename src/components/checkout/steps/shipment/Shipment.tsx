@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Loading from 'src/components/loading/Loading';
-import AccountAddressNew from 'src/components/account/addresses/AccountAddressNew';
-import NewAddressGoogleAPI from 'src/components/account/addresses/places-api/new/NewAddress';
-import AccountAddressEdit from 'src/components/account/addresses/AccountAddressEdit';
-import EditAddressGoogleAPI from 'src/components/account/addresses/places-api/edit/EditAddress';
+import AccountAddressNew from 'src/components/account/addresses/registration/new/AccountAddressNew';
+import NewAddressGoogleAPI from 'src/components/account/addresses/registration/places-api/new/NewAddress';
+import EditAddressGoogleAPI from 'src/components/account/addresses/registration/places-api/edit/EditAddress';
 import { useDispatch } from 'react-redux';
 import { addCustomerAddress, updateCustomerAddress, deleteCustomerAddress } from 'src/store/redux/modules/user/actions';
 import { setShipmentAddress } from 'src/store/redux/modules/order/actions';
@@ -17,6 +16,7 @@ import { AxiosError } from 'axios';
 import ShipmentAddresses from './ShipmentAddresses';
 import { ShipmentProvider } from './hook/useCheckoutShipment';
 import GoogleMapsProvider from 'src/providers/google-maps/MapProvider';
+import AccountAddressEdit from 'src/components/account/addresses/registration/edit/AccountAddressEdit';
 
 interface ShipmentProps {
   addresses: Address[];

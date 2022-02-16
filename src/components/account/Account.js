@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import AccountForm from './AccountForm';
 import AccountTabs from './AccountTabs';
 import AccountTabsAppbar from './AccountTabsAppbar';
-import AccountAddresses from './addresses/AccountAddresses';
+import AccountAddresses from './addresses/list/AccountAddresses';
 import Loading from '../loading/Loading';
 import DialogDelete from '../dialog/delete/DialogDelete';
 import PageHeader from 'src/components/pageHeader/PageHeader';
