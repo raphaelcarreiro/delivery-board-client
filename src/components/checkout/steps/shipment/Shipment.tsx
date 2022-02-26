@@ -133,7 +133,7 @@ const Shipment: React.FC<ShipmentProps> = ({ addresses }) => {
       }
     }
 
-    if (!address.latitude || !address.longitude) {
+    if ((!address.latitude || !address.longitude) && restaurant?.configs.use_google_map_addresses) {
       messaging.handleOpen('Seu endereço precisa ser atualizado');
       setSelectedAddress(address);
       setDialogEditAddress(true);
