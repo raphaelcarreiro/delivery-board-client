@@ -42,6 +42,8 @@ const useStyles = makeStyles(theme => ({
   },
   img: {
     width: 70,
+    height: 70,
+    objectFit: 'cover',
   },
   cartBadge: {
     position: 'absolute',
