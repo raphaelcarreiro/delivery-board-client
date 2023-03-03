@@ -29,6 +29,7 @@ export interface RestaurantConfig {
   cart_accumulate_discount: boolean;
   restaurant_address_selection: boolean;
   use_google_map_addresses: boolean;
+  checkout_allow_change_address: boolean;
 }
 
 export interface RestaurantAddress {

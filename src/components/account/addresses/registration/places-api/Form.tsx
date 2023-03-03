@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { makeStyles, TextField } from '@material-ui/core';
 import { Address } from 'src/types/address';
 import { AddressValidation } from './validation/useAddressValidation';
+import { useSelector } from 'src/store/redux/selector';
 
 const styles = makeStyles({
   street: {
@@ -18,6 +19,7 @@ interface FormProps {
 }
 
 const Form: React.FC<FormProps> = ({ validation, handleChange, address }) => {
+  const restaurant = useSelector(state => state.restaurant);
   const classes = styles();
 
   const inputs = {
@@ -37,9 +39,12 @@ const Form: React.FC<FormProps> = ({ validation, handleChange, address }) => {
     inputs[key].current?.focus();
   }, [validation]); //eslint-disable-line
 
+  console.log(!restaurant?.configs.checkout_allow_change_address);
+
   return (
     <div>
       <TextField
+        disabled={!restaurant?.configs.checkout_allow_change_address}
         error={!!validation.address}
         helperText={!!validation.address && validation.address}
         label="Endereço"
