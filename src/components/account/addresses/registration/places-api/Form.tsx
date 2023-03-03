@@ -52,7 +52,11 @@ const Form: React.FC<FormProps> = ({ validation, handleChange, address }) => {
         margin="normal"
         fullWidth
         value={address.address}
-        onChange={event => handleChange('address', event.target.value)}
+        onChange={
+          restaurant?.configs.checkout_allow_change_address
+            ? event => handleChange('address', event.target.value)
+            : undefined
+        }
         autoCapitalize="words"
         autoComplete="address"
       />
