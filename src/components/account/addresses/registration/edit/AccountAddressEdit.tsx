@@ -41,8 +41,11 @@ const AccountAddressEdit: React.FC<AccountAddressEditProps> = ({
     handleAddressUpdateSubmit(address)
       .then(handleModalClose)
       .catch(err => {
-        const error = err as AxiosError;
-        if (error.response) messaging.handleOpen(error.response.data.error);
+        const error = err as AxiosError<any>;
+
+        if (error.response) {
+          messaging.handleOpen(error.response.data.error);
+        }
       });
   }
 

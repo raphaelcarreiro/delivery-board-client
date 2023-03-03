@@ -58,9 +58,13 @@ const AccountAddresses: React.FC<AccountAddressProps> = ({ addresses, handleDele
       const response = await api.post('/customerAddresses', address);
       dispatch(addCustomerAddress(response.data));
     } catch (err) {
-      const error = err as AxiosError;
-      if (error.response) throw new Error(error.response.data.error);
-      else throw new Error('Não foi possível salvar');
+      const error = err as AxiosError<any>;
+
+      if (error.response) {
+        throw new Error(error.response.data.error);
+      }
+
+      throw new Error('Não foi possível salvar');
     } finally {
       setSavingAddress(false);
     }
@@ -72,9 +76,14 @@ const AccountAddresses: React.FC<AccountAddressProps> = ({ addresses, handleDele
       const response = await api.put(`/customerAddresses/${selectedAddress?.id}`, address);
       dispatch(updateCustomerAddress(response.data));
     } catch (err) {
-      const error = err as AxiosError;
-      if (error.response) messaging.handleOpen(error.response.data.error);
-      else messaging.handleOpen('Não foi possível salvar');
+      const error = err as AxiosError<any>;
+
+      if (error.response) {
+        messaging.handleOpen(error.response.data.error);
+        return;
+      }
+
+      messaging.handleOpen('Não foi possível salvar');
     } finally {
       setSavingAddress(false);
     }

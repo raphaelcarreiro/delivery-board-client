@@ -119,7 +119,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       revalidate: 180,
     };
   } catch (err) {
-    const error = err as AxiosError;
+    const error = err as AxiosError<any>;
+
     if (error.response)
       return {
         props: {

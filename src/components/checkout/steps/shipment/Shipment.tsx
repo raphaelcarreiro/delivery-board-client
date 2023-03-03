@@ -68,8 +68,10 @@ const Shipment: React.FC<ShipmentProps> = ({ addresses }) => {
 
       checkout.handleSetStepById('STEP_PAYMENT');
     } catch (err) {
-      const error = err as AxiosError;
+      const error = err as AxiosError<any>;
+
       messaging.handleOpen(error.response ? error.response.data.error : 'Não foi possível salvar');
+
       setSavingAddress(false);
     }
   }
@@ -97,7 +99,8 @@ const Shipment: React.FC<ShipmentProps> = ({ addresses }) => {
       dispatch(setShipmentAddress(updatedAddress));
     } catch (err) {
       setSavingAddress(false);
-      const error = err as AxiosError;
+      const error = err as AxiosError<any>;
+
       messaging.handleOpen(error.response ? error.response.data.error : 'Não foi possível salvar');
     }
   }
