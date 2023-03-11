@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Typography, Grid, TextField } from '@material-ui/core';
-import { makeStyles, fade } from '@material-ui/core/styles';
+import { Typography, Grid, TextField, alpha } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import ProductPizzaComplementItem from './ProductPizzaComplementItem';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
   header: {
-    border: `1px solid ${fade(theme.palette.primary.main, 0.1)}`,
+    border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
     padding: '7px 15px',
     display: 'flex',
     flexDirection: 'row',

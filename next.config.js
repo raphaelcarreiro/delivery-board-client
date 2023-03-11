@@ -1,21 +1,17 @@
-const withPWA = require('next-pwa');
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+  // register: true,
+  // scope: '/app',
+  // sw: 'service-worker.js',
+  // ...
+});
 
-const config = {
+module.exports = withPWA({
   images: {
     domains: ['sg-delivery.s3.sa-east-1.amazonaws.com'],
   },
   compiler: {
     styledComponents: true,
   },
-};
-
-const pwaConfig = {
-  ...config,
-  pwa: {
-    dest: 'public',
-  },
-};
-
-const production = process.env.NODE_ENV === 'production';
-
-module.exports = production ? withPWA(pwaConfig) : config;
+});

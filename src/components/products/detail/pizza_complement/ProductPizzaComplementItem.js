@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { List, ListItem, Typography, Menu, MenuItem, IconButton } from '@material-ui/core';
-import { makeStyles, fade } from '@material-ui/core/styles';
+import { List, ListItem, Typography, Menu, MenuItem, IconButton, makeStyles, alpha } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import PropTypes from 'prop-types';
@@ -22,13 +21,13 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderBottom: '1px solid #eaeaea',
-    backgroundColor: fade(theme.palette.primary.main, 0.05),
+    backgroundColor: alpha(theme.palette.primary.main, 0.05),
     position: 'relative',
     '&:focus': {
-      backgroundColor: fade(theme.palette.primary.main, 0.05),
+      backgroundColor: alpha(theme.palette.primary.main, 0.05),
     },
     '&:hover': {
-      backgroundColor: fade(theme.palette.primary.main, 0.15),
+      backgroundColor: alpha(theme.palette.primary.main, 0.15),
     },
   },
   list: {

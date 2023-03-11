@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import AddPhotoIcon from '@material-ui/icons/AddAPhoto';
-import { CircularProgress, Zoom, Button } from '@material-ui/core';
-import { makeStyles, fade } from '@material-ui/core/styles';
+import { CircularProgress, Zoom, Button, makeStyles, alpha } from '@material-ui/core';
 import { api } from '../../services/api';
 import { useAccount } from './Account';
 import { userChange, imageDelete } from 'src/store/context-api/modules/user-customer/actions';
@@ -18,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     width: 200,
     height: 200,
-    border: `2px dashed ${fade(theme.palette.primary.main, 0.2)}`,
+    border: `2px dashed ${alpha(theme.palette.primary.main, 0.2)}`,
     borderRadius: 4,
     alignItems: 'center',
     justifyContent: 'center',
@@ -41,7 +40,7 @@ const useStyles = makeStyles(theme => ({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: fade(theme.palette.primary.main, 0.2),
+    backgroundColor: alpha(theme.palette.primary.main, 0.2),
   },
   label: {
     display: 'flex',

@@ -1,11 +1,11 @@
-import { fade, makeStyles, Typography } from '@material-ui/core';
+import { alpha, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { useProductComplement } from '../hooks/useProductComplement';
 import ProductComplementItem from './ProductComplementItem';
 
 const useStyles = makeStyles(theme => ({
   header: {
-    border: `1px solid ${fade(theme.palette.primary.main, 0.1)}`,
+    border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
     padding: '7px 15px',
     display: 'flex',
     flexDirection: 'row',

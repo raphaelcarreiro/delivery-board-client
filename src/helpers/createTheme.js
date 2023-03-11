@@ -1,7 +1,7 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme as createDefaultTheme } from '@material-ui/core';
 
 export function createTheme(primaryColor, secondaryColor) {
-  return createMuiTheme({
+  return createDefaultTheme({
     palette: {
       primary: {
         main: primaryColor,

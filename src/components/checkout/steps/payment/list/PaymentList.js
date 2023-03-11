@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { List, ListItem, Typography } from '@material-ui/core';
+import { alpha, List, ListItem, makeStyles, Typography } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-import { makeStyles, fade } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import PaymentChange from 'src/components/checkout/steps/payment/PaymentChange';
 import { useSelector, useDispatch } from 'react-redux';
@@ -39,13 +38,13 @@ const useStyles = makeStyles(theme => ({
     padding: 15,
     boxShadow: '1px 1px 9px 1px #eee',
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.primary.main, 0.2),
+    backgroundColor: alpha(theme.palette.primary.main, 0.2),
     position: 'relative',
     '&:focus': {
-      backgroundColor: fade(theme.palette.primary.main, 0.2),
+      backgroundColor: alpha(theme.palette.primary.main, 0.2),
     },
     '&:hover': {
-      backgroundColor: fade(theme.palette.primary.main, 0.25),
+      backgroundColor: alpha(theme.palette.primary.main, 0.25),
     },
   },
   checkIcon: {

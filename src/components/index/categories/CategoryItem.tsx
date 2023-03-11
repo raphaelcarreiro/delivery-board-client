@@ -32,20 +32,18 @@ const CategoryItem: React.FC<CategoryItemProps> = ({ category, ...rest }) => {
 
   return (
     <Link href={`/menu/${category.url}`}>
-      <a>
-        <li className={classes.li} key={category.id} {...rest}>
-          <img
-            className={classes.image}
-            src={category.image.imageThumbUrl ? category.image.imageThumbUrl : category.image.imageUrl}
-            alt={category.name}
-          />
-          <div className={classes.promotionDescription}>
-            <Typography align="center" color="textSecondary">
-              {category.name}
-            </Typography>
-          </div>
-        </li>
-      </a>
+      <li className={classes.li} key={category.id} {...rest}>
+        <img
+          className={classes.image}
+          src={category.image.imageThumbUrl ? category.image.imageThumbUrl : category.image.imageUrl}
+          alt={category.name}
+        />
+        <div className={classes.promotionDescription}>
+          <Typography align="center" color="textSecondary">
+            {category.name}
+          </Typography>
+        </div>
+      </li>
     </Link>
   );
 };

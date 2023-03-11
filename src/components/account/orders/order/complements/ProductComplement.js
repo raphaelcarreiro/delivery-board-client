@@ -1,13 +1,12 @@
 import React, { useState, Fragment } from 'react';
-import { Typography, Grid, TextField } from '@material-ui/core';
-import { makeStyles, fade } from '@material-ui/core/styles';
+import { Typography, Grid, TextField, makeStyles, alpha } from '@material-ui/core';
 import ProductComplementItem from './ProductComplementItem';
 import PropTypes from 'prop-types';
 import CustomDialog from 'src/components/dialog/CustomDialog';
 
 const useStyles = makeStyles(theme => ({
   header: {
-    border: `1px solid ${fade(theme.palette.primary.main, 0.1)}`,
+    border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
     padding: '7px 15px',
     display: 'flex',
     flexDirection: 'row',

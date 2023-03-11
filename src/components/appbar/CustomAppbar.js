@@ -3,7 +3,6 @@ import AppBar from '@material-ui/core/AppBar/AppBar';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import { fade, makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -11,6 +10,7 @@ import { APPBAR_HEIGHT, MENU_WIDTH } from '../../constants/constants';
 import { useApp } from 'src/providers/AppProvider';
 import { useSelector } from 'react-redux';
 import { RoomOutlined } from '@material-ui/icons';
+import { alpha, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
   restaurantAddressContainer: {
     padding: '7px 0',
     margin: '0 15px',
-    borderBottom: `1px solid ${fade(theme.palette.primary.contrastText, 0.1)}`,
+    borderBottom: `1px solid ${alpha(theme.palette.primary.contrastText, 0.1)}`,
     display: 'flex',
     alignItems: 'center',
     '& .content': {

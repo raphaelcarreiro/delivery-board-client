@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, fade } from '@material-ui/core/styles';
-import { Typography, IconButton } from '@material-ui/core';
+import { Typography, IconButton, makeStyles, alpha } from '@material-ui/core';
 import IconSearch from '@material-ui/icons/Search';
 import ProductPizzaComplementSearchBox from './ProductPizzaComplementSearchBox';
 
 const useStyles = makeStyles(theme => ({
   header: {
-    border: `1px solid ${fade(theme.palette.primary.main, 0.1)}`,
+    border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
     padding: '0 15px',
     display: 'flex',
     flexDirection: 'row',

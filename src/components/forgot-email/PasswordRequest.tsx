@@ -130,9 +130,7 @@ const PasswordRequest: React.FC<PasswordRequestProps> = ({ emailProp }) => {
                 {restaurant && (
                   <div className={classes.logoContainer}>
                     <NextLink href="/">
-                      <a>
-                        <img className={classes.logo} src={restaurant.image.imageUrl} alt="Logo" />
-                      </a>
+                      <img className={classes.logo} src={restaurant.image.imageUrl} alt="Logo" />
                     </NextLink>
                   </div>
                 )}

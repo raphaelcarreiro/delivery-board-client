@@ -1,10 +1,8 @@
 import React, { Dispatch, MouseEvent, SetStateAction } from 'react';
-import { ListItem, Typography, Tooltip, IconButton } from '@material-ui/core';
+import { ListItem, Typography, Tooltip, IconButton, makeStyles, alpha } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import StarIcon from '@material-ui/icons/Star';
-import { fade } from '@material-ui/core/styles/colorManipulator';
-import { makeStyles } from '@material-ui/core/styles';
 import { Address } from 'src/types/address';
 import { useSelector } from 'src/store/redux/selector';
 import { useShipment } from './hook/useCheckoutShipment';
@@ -14,15 +12,15 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     boxShadow: '1px 1px 9px 1px #eee',
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.primary.main, 0.2),
+    backgroundColor: alpha(theme.palette.primary.main, 0.2),
     position: 'relative',
     alignItems: 'center',
     minHeight: 165,
     '&:focus': {
-      backgroundColor: fade(theme.palette.primary.main, 0.2),
+      backgroundColor: alpha(theme.palette.primary.main, 0.2),
     },
     '&:hover': {
-      backgroundColor: fade(theme.palette.primary.main, 0.25),
+      backgroundColor: alpha(theme.palette.primary.main, 0.25),
     },
   },
   listItem: {
