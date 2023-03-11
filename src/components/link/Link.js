@@ -9,11 +9,7 @@ import MuiLink from '@material-ui/core/Link';
 const NextComposed = React.forwardRef(function NextComposed(props, ref) {
   const { as, href, prefetch, ...other } = props;
 
-  return (
-    <NextLink href={href} prefetch={prefetch} as={as}>
-      <a ref={ref} {...other} />
-    </NextLink>
-  );
+  return <NextLink href={href} prefetch={prefetch} as={as} {...other} ref={ref}></NextLink>;
 });
 
 NextComposed.propTypes = {
@@ -22,8 +18,6 @@ NextComposed.propTypes = {
   prefetch: PropTypes.bool,
 };
 
-// A styled version of the Next.js Link component:
-// https://nextjs.org/docs/#with-link
 function Link(props) {
   const { activeClassName = 'active', className: classNameProps, innerRef, naked, ...other } = props;
   const router = useRouter();

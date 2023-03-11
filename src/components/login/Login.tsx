@@ -194,9 +194,7 @@ const Login: React.FC = () => {
         {restaurant && restaurant.image && (
           <div className={classes.logoContainer}>
             <Link href="/">
-              <a>
-                <img src={restaurant.image.imageUrl} className={classes.logo} />
-              </a>
+              <img src={restaurant.image.imageUrl} className={classes.logo} />
             </Link>
           </div>
         )}

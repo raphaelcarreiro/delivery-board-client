@@ -18,8 +18,8 @@ const CustomLink: React.FC<CustomLinkProps> = ({ color, className, children, ...
   const classes = useStyles({ color });
 
   return (
-    <Link {...rest}>
-      <a className={className ? `${classes.link} ${className}` : classes.link}>{children}</a>
+    <Link {...rest} className={className ? `${classes.link} ${className}` : classes.link}>
+      {children}
     </Link>
   );
 };

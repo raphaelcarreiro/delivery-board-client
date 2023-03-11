@@ -51,7 +51,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({ category }) => {
 
   return (
     <Link href={'/menu/[url]'} as={`/menu/${category.url}`}>
-      <ListItem className={classes.listItem} button component="a">
+      <ListItem className={classes.listItem} button>
         <div className={classes.content}>
           <div className={classes.data}>
             <Typography variant="h6" className={classes.productName}>

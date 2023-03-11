@@ -113,34 +113,22 @@ const Footer: React.FC = () => {
           <div>
             <ul className={classes.links}>
               <li>
-                <Link href="/">
-                  <a>início</a>
-                </Link>
+                <Link href="/">início</Link>
               </li>
               <li>
-                <Link href="/menu">
-                  <a>cardápio</a>
-                </Link>
+                <Link href="/menu">cardápio</Link>
               </li>
               <li>
-                <Link href="/offers">
-                  <a>ofertas</a>
-                </Link>
+                <Link href="/offers">ofertas</Link>
               </li>
               <li>
-                <Link href="/account">
-                  <a>minha conta</a>
-                </Link>
+                <Link href="/account">minha conta</Link>
               </li>
               <li>
-                <Link href="/account/orders">
-                  <a>meus pedidos</a>
-                </Link>
+                <Link href="/account/orders">meus pedidos</Link>
               </li>
               <li>
-                <Link href="/contact">
-                  <a>contato</a>
-                </Link>
+                <Link href="/contact">contato</Link>
               </li>
             </ul>
           </div>

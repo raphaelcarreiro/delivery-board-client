@@ -4,9 +4,9 @@ const config = {
   images: {
     domains: ['sg-delivery.s3.sa-east-1.amazonaws.com'],
   },
-  webpack5: true,
-  // reactStrictMode: true,
-  'typescript.tsconfigPath': './tsconfig.json',
+  compiler: {
+    styledComponents: true,
+  },
 };
 
 const pwaConfig = {
