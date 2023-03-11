@@ -14,7 +14,7 @@ import BottomNavigator from './components/sidebar/BottomNavigator';
 import InitialLoading from './components/loading/InitialLoading';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import defaultTheme from './theme';
-import io from 'socket.io-client';
+import io, { Socket } from 'socket.io-client';
 import reactGA from 'react-ga';
 import MessagingProvider from './providers/MessageProvider';
 import AuthProvider from './providers/AuthProvider';
@@ -28,6 +28,8 @@ import { Restaurant, RestaurantAddress } from './types/restaurant';
 import { setRestaurantAddress } from './store/redux/modules/order/actions';
 import { setCustomerAddresses } from './store/redux/modules/user/actions';
 import LocationProvider from './providers/LocationProvider';
+import { useFetchBoardMovement } from './hooks/useFetchBoardMovement';
+import { useBoardControlSocket } from './hooks/useBoardControlSocket';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -43,7 +45,7 @@ interface AppProps {
   Component: NextComponentType;
 }
 
-export const socket: SocketIOClient.Socket = io.connect(process.env.NEXT_PUBLIC_SOCKET + '/client');
+export const socket: Socket = io(process.env.NEXT_PUBLIC_SOCKET + '/client');
 let defferedPromptPwa;
 
 const App: React.FC<AppProps> = ({ pageProps, Component }) => {
@@ -60,9 +62,10 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const restaurant = useSelector(state => state.restaurant);
   const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
   const windowSize = useWindowSize();
-  const [dialogRestaurantAddress, setDialogRestaurantAddress] = useState(false);
   const order = useSelector(state => state.order);
   const user = useSelector(state => state.user);
+  const [isBoardMovementLoading] = useFetchBoardMovement(router.query.session as string | undefined);
+  const [isSocketBoardConnected] = useBoardControlSocket(router.query.session as string | undefined);
 
   const handleCartVisibility = useCallback((state?: boolean) => {
     setIsCartVisible(oldValue => (state === undefined ? !oldValue : state));
@@ -125,8 +128,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
         const _restaurant = response.data;
         const { configs } = _restaurant;
         let restaurantAddress: RestaurantAddress | undefined;
-
-        if (configs.restaurant_address_selection) setDialogRestaurantAddress(true);
 
         const restaurantAddressId = localStorage.getItem('restaurantAddressId');
 
@@ -243,7 +244,8 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     setRedirect: handleSetRedirect,
     handleInstallApp,
     handleShowPlayStoreBanner,
-    setDialogRestaurantAddress,
+    isBoardMovementLoading,
+    isSocketBoardConnected,
   };
 
   return (

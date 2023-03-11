@@ -94,28 +94,48 @@ const BottomNavigator: FC = () => {
   return (
     <nav className={classes.nav}>
       <div className={classes.content}>
-        <Link href="/" onClick={() => setActivePage('home')} className={getClassName('home')}>
+        <Link
+          href={{ pathname: '/', query: router.query }}
+          onClick={() => setActivePage('home')}
+          className={getClassName('home')}
+        >
           <HomeOutlined />
           <span>início</span>
         </Link>
 
-        <Link href="/offers" onClick={() => setActivePage('offers')} className={getClassName('offers')}>
+        <Link
+          href={{ pathname: '/offers', query: router.query }}
+          onClick={() => setActivePage('offers')}
+          className={getClassName('offers')}
+        >
           <LocalOfferOutlined />
           <span>ofertas</span>
         </Link>
 
-        <Link href="/menu" onClick={() => setActivePage('menu')} className={getClassName('menu')}>
+        <Link
+          href={{ pathname: '/menu', query: router.query }}
+          onClick={() => setActivePage('menu')}
+          className={getClassName('menu')}
+        >
           <RestaurantMenuOutlined />
           <span>cardápio</span>
         </Link>
 
-        <Link href="/cart" onClick={() => setActivePage('cart')} className={getClassName('cart')}>
+        <Link
+          href={{ pathname: '/cart', query: router.query }}
+          onClick={() => setActivePage('cart')}
+          className={getClassName('cart')}
+        >
           <ShoppingCartOutlined />
           {cart.products.length > 0 && <span className={classes.cartBadge}>{cart.products.length}</span>}
           <span>carrinho</span>
         </Link>
 
-        <Link href="/board" onClick={() => setActivePage('board')} className={getClassName('board')}>
+        <Link
+          href={{ pathname: '/board', query: router.query }}
+          onClick={() => setActivePage('board')}
+          className={getClassName('board')}
+        >
           <AssignmentOutlined />
           <span>mesa</span>
         </Link>

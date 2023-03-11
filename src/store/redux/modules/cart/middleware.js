@@ -2,8 +2,7 @@ import { createHistory, setConfigs, updateTotal, setTax } from './actions';
 
 import checkPromotion from './promotion/checkPromotion';
 
-export const cartMiddlware = store => next => action => {
-  // actions para atualizar total e salvar carrinho em local storage
+export const middleware = store => next => action => {
   const actionsToSaveCart = [
     '@cart/ADD_PRODUCT',
     '@cart/REMOVE_PRODUCT',

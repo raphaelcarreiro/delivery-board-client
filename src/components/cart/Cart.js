@@ -175,7 +175,7 @@ export default function Cart() {
           <CartCouponButton setCouponView={setCouponView} />
           <CartTotal />
           <div className={classes.action}>
-            <Button size="large" onClick={handleCheckoutClick} variant="contained" color="primary" fullWidth>
+            <Button disabled size="large" onClick={handleCheckoutClick} variant="contained" color="primary" fullWidth>
               enviar pedido
             </Button>
             <Button

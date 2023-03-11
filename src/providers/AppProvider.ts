@@ -1,4 +1,5 @@
-import { createContext, Dispatch, SetStateAction, useContext } from 'react';
+import { createContext, useContext } from 'react';
+import { Socket } from 'socket.io-client';
 
 export type AppContextValue = {
   isMobile: boolean;
@@ -7,7 +8,7 @@ export type AppContextValue = {
   isOpenMenu: boolean;
   isCartVisible: boolean;
   redirect: string | null;
-  socket: SocketIOClient.Socket | null;
+  socket: Socket | null;
   readyToInstall: boolean;
   shownPlayStoreBanner: boolean;
   setRedirect(uri: string | null): void;
@@ -15,7 +16,8 @@ export type AppContextValue = {
   handleCartVisibility(state: boolean): void;
   handleInstallApp(): void;
   handleShowPlayStoreBanner(): void;
-  setDialogRestaurantAddress: Dispatch<SetStateAction<boolean>>;
+  isBoardMovementLoading: boolean;
+  isSocketBoardConnected: boolean;
 };
 
 const AppContext = createContext<AppContextValue>({} as AppContextValue);
