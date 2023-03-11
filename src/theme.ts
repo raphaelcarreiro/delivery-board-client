@@ -1,19 +1,14 @@
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core';
 
 const theme = createTheme({
   palette: {
     primary: {
-      // light: will be calculated from palette.primary.main,
       main: '#f0592a',
-      // dark: will be calculated from palette.primary.main,
-      // contrastText: will be calculated to contrast with palette.primary.main
     },
     secondary: {
       main: '#4b4b4d',
-      // dark: will be calculated from palette.secondary.main,
       contrastText: '#fff',
     },
-    // error: will use the default color
   },
   typography: {
     fontWeightLight: 200,

@@ -9,7 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography, TextField, InputAdornment } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
-import { useRouter } from 'next/router';
 import { useMessaging } from 'src/providers/MessageProvider';
 import { Product } from 'src/types/product';
 import ImagePreview from '../image-preview/ImagePreview';
@@ -59,14 +58,13 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
   const { handleCartVisibility } = useApp();
   const { handleClose } = useMessaging();
   const dispatch = useDispatch();
-  const ref = useRef<HTMLInputElement>(null);
-  const router = useRouter();
   const restaurant = useSelector(state => state.restaurant);
   const [imagePreview, setImagePreview] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const [search, setSearch] = useState('');
+  const ref = useRef<HTMLInputElement>(null);
 
   const isPizza = useMemo(() => {
     return !!selectedProduct?.category.is_pizza;
@@ -106,10 +104,7 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
   const handleAddProductToCart = useCallback(() => {
     dispatch(addToCart());
     handleCartVisibility(true);
-    if (restaurant?.configs.facebook_pixel_id) fbq('track', 'AddToCart');
-    // handleCancelSearch();
-    // if (categoryType === 'NORMAL') router.push('/menu');
-  }, [handleCartVisibility, dispatch, restaurant]);
+  }, [handleCartVisibility, dispatch]);
 
   const handleProductClick = useCallback(
     product => {
@@ -161,6 +156,7 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
           <Typography variant="h5" color="primary">
             {categoryName}
           </Typography>
+
           {filteredProducts.length > 0 ? (
             <Typography variant="body1" color="textSecondary">
               exibindo {filteredProducts.length} {filteredProducts.length > 1 ? 'produtos' : 'produto'}
@@ -193,17 +189,14 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
           }}
         />
       </Grid>
+
       <CustomAppbar
-        cancelAction={isSearching ? handleCancelSearch : () => router.push('/menu')}
         title={isSearching ? '' : categoryName}
         actionComponent={
-          <ProductsActions
-            isSearching={isSearching}
-            openSearchBox={() => setIsSearching(true)}
-            handleSearch={handleSearch}
-          />
+          <ProductsActions isSearching={isSearching} handleSearch={handleSearch} setIsSearching={setIsSearching} />
         }
       />
+
       {imagePreview && selectedProduct && (
         <ImagePreview
           src={selectedProduct.image.imageUrl}

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PageHeader from '../pageHeader/PageHeader';
 import CustomAppbar from '../appbar/CustomAppbar';
-import { Grid } from '@material-ui/core';
-import IndexAppbarActions from 'src/components/index/IndexAppbarActions';
 import { Category } from 'src/types/category';
 import CategoryList from './CategoryList';
 
@@ -19,7 +17,8 @@ const Categories: React.FC<CategoryProps> = ({ categories }) => {
 
   return (
     <>
-      <CustomAppbar title="cardápio" actionComponent={<IndexAppbarActions />} />
+      <CustomAppbar title="cardápio" />
+
       <PageHeader
         title="cardápio"
         description={
@@ -30,11 +29,10 @@ const Categories: React.FC<CategoryProps> = ({ categories }) => {
             : ''
         }
       />
-      <Grid container>
-        <Grid item xs={12}>
-          <CategoryList categories={categories} />
-        </Grid>
-      </Grid>
+
+      <div>
+        <CategoryList categories={categories} />
+      </div>
     </>
   );
 };

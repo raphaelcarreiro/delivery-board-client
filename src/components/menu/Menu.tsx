@@ -20,6 +20,7 @@ const Menu: React.FC<MenuProps> = ({ categories }) => {
   return (
     <>
       <CustomAppbar title="cardápio" actionComponent={<IndexAppbarActions />} />
+
       <PageHeader
         title="cardápio"
         description={

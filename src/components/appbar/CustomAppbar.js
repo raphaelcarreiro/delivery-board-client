@@ -77,8 +77,7 @@ const useStyles = makeStyles(theme => ({
 function CustomAppbar({ actionComponent, title, TabComponent, cancelAction }) {
   const [appBarTabs] = useState(true);
   const classes = useStyles();
-  const { handleOpenMenu, isMobile, windowWidth, setDialogRestaurantAddress } = useApp();
-  const order = useSelector(state => state.order);
+  const { isMobile, windowWidth } = useApp();
 
   return (
     <Fragment>
@@ -89,21 +88,13 @@ function CustomAppbar({ actionComponent, title, TabComponent, cancelAction }) {
             position="fixed"
             color="primary"
           >
-            {order.restaurant_address && (
-              <div onClick={() => setDialogRestaurantAddress(true)} className={classes.restaurantAddressContainer}>
-                <RoomOutlined />
-                <div className="content">
-                  <Typography noWrap className="restaurant-address" align="center" variant="caption">
-                    {order.restaurant_address.nickname} - {order.restaurant_address.address},{' '}
-                    {order.restaurant_address.number}
-                  </Typography>
-                </div>
-              </div>
-            )}
             <Toolbar>
-              <IconButton onClick={cancelAction || handleOpenMenu} color="inherit">
-                {cancelAction ? <ArrowBackIcon /> : <MenuIcon />}
-              </IconButton>
+              {cancelAction && (
+                <IconButton onClick={cancelAction} color="inherit">
+                  <ArrowBackIcon />
+                </IconButton>
+              )}
+
               {title && (
                 <Typography variant="h6" color="inherit" className={classes.appBarTitle}>
                   {title}
@@ -113,6 +104,7 @@ function CustomAppbar({ actionComponent, title, TabComponent, cancelAction }) {
               {actionComponent}
             </Toolbar>
           </AppBar>
+
           {TabComponent && (
             <Fragment>
               <AppBar className={`${classes.appBarTabs}`}>{TabComponent}</AppBar>

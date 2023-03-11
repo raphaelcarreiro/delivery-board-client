@@ -176,7 +176,7 @@ export default function Cart() {
           <CartTotal />
           <div className={classes.action}>
             <Button size="large" onClick={handleCheckoutClick} variant="contained" color="primary" fullWidth>
-              Fechar pedido
+              enviar pedido
             </Button>
             <Button
               variant="text"
@@ -190,20 +190,6 @@ export default function Cart() {
             >
               Continuar comprando
             </Button>
-          </div>
-          <div className={classes.info}>
-            {restaurant.configs.delivery_time > 0 && (
-              <Typography color="textSecondary" variant="body2" className={classes.infoItem}>
-                <WatchLaterIcon />
-                tempo estimado para entrega {restaurant.configs.delivery_time} minutos
-              </Typography>
-            )}
-            {restaurant.configs.order_minimum_value > 0 && restaurant.configs.tax_mode !== 'order_value' && (
-              <Typography color="textSecondary" variant="body2" align="center" className={classes.infoItem}>
-                <MonetizationOnIcon />
-                {restaurant.configs.formattedOrderMinimumValue} pedido mínimo
-              </Typography>
-            )}
           </div>
         </div>
       ) : (

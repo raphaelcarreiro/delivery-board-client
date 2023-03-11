@@ -4,7 +4,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import SearchIcon from '@material-ui/icons/Search';
 import ClearIcon from '@material-ui/icons/Clear';
 import PropTypes from 'prop-types';
-import { MuiThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider, createTheme, makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
 import { useApp } from 'src/providers/AppProvider';
 
@@ -31,7 +31,7 @@ ProductAction.propTypes = {
   handleSearch: PropTypes.func.isRequired,
 };
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: '#fff',

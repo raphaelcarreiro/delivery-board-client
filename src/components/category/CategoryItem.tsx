@@ -12,6 +12,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius: theme.shape.borderRadius,
     minHeight: 120,
     padding: '0 0 0 15px',
+    color: theme.palette.common.black,
   },
   content: {
     display: 'flex',

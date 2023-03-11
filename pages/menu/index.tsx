@@ -26,12 +26,12 @@ const MenuPage: NextPage<MenuPageProps> = ({ categories, error, restaurant }) =>
       </>
     );
 
+  const title = `${restaurant?.name} - Cardápio - ${restaurant?.description}`;
+
   return (
     <>
       <Head>
-        <title>
-          {restaurant?.name} - Cardápio - {restaurant?.description}
-        </title>
+        <title>{title}</title>
         <meta name="description" content={`${restaurant?.name} - cardápio - ${restaurant?.description}`} />
       </Head>
 

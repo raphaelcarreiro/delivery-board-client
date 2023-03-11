@@ -13,13 +13,14 @@ type OffersPageProps = {
 };
 
 const OffersPage: React.FC<OffersPageProps> = ({ products, restaurant }) => {
+  const title = `Ofertas em ${restaurant.name} - ${restaurant.description}`;
+
   return (
     <>
       <Head>
-        <title>
-          Ofertas em {restaurant.name} - {restaurant.description}
-        </title>
+        <title>{title}</title>
       </Head>
+
       <Offers products={products} />
     </>
   );
@@ -38,6 +39,7 @@ export const getStaticProps: GetStaticProps<OffersPageProps> = async () => {
   const response: AxiosResponse<Product[]> = await api.get('/products');
 
   const restaurantResponse = await api.get('/restaurants');
+
   const restaurant = restaurantResponse.data;
 
   const products = response.data.map(product => {

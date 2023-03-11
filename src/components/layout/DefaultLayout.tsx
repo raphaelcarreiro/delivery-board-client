@@ -43,6 +43,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: 80,
     [theme.breakpoints.down('sm')]: {
       marginTop: APPBAR_HEIGHT,
+      marginBottom: 60,
     },
   },
   cart: ({ isCartVisible }: { isCartVisible: boolean }) => ({

@@ -10,8 +10,7 @@ import { setPromotions } from './store/redux/modules/promotion/actions';
 import { NextComponentType } from 'next';
 import { useSelector } from './store/redux/selector';
 import { LinearProgress } from '@material-ui/core';
-import { initialize as reactotronInitialize } from 'src/config/ReactotronInitialize';
-import Sidebar from './components/sidebar/Sidebar';
+import BottomNavigator from './components/sidebar/BottomNavigator';
 import InitialLoading from './components/loading/InitialLoading';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import defaultTheme from './theme';
@@ -25,8 +24,6 @@ import FacebookLoginProvider from './providers/FacebookProvider';
 import LayoutHandler from './components/layout/LayoutHandler';
 import { AppProvider, AppContextValue } from './providers/AppProvider';
 import { useWindowSize } from './hooks/windowSize';
-import InstallAppNotification from './components/install-app-notification/InstallAppNotification';
-import RestaurantAddressSelector from './components/restaurant-address-selector/RestaurantAddressSelector';
 import { Restaurant, RestaurantAddress } from './types/restaurant';
 import { setRestaurantAddress } from './store/redux/modules/order/actions';
 import { setCustomerAddresses } from './store/redux/modules/user/actions';
@@ -83,7 +80,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     setShownPlayStoreBanner(oldValue => !oldValue);
   }, []);
 
-  // function to pwa installation
   const handleInstallApp = useCallback(() => {
     defferedPromptPwa.prompt();
     defferedPromptPwa.userChoice.then(choiceResult => {
@@ -185,11 +181,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   }, [dispatch, restaurant]);
 
   useEffect(() => {
-    reactotronInitialize();
-  }, []);
-
-  // set webscoket connection
-  useEffect(() => {
     function getRestaurantState() {
       api
         .get('/restaurant/state')
@@ -215,7 +206,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     }
   }, [dispatch, restaurant]);
 
-  // set actions on router changes, to display loading
   useEffect(() => {
     router.events.on('routeChangeStart', handleRouteChangeStart);
     router.events.on('routeChangeComplete', handleRouteChangeComplete);
@@ -262,15 +252,13 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
       <AppProvider value={appProviderValue}>
         {initialLoading && <InitialLoading />}
         {isProgressBarVisible && <LinearProgress color="secondary" className={classes.progressBar} />}
-        {dialogRestaurantAddress && <RestaurantAddressSelector onExited={() => setDialogRestaurantAddress(false)} />}
 
         <AuthProvider>
           <FirebaseProvider>
             <MessagingProvider>
               <GoogleLoginProvider>
                 <FacebookLoginProvider>
-                  <Sidebar />
-                  <InstallAppNotification />
+                  <BottomNavigator />
                   <LocationProvider>
                     <LayoutHandler>
                       <Component {...pageProps} />

@@ -52,7 +52,6 @@ const useStyles = makeStyles(theme => ({
   },
   socialLinks: {
     paddingTop: 30,
-    marginBottom: 30,
     marginTop: 30,
     borderTop: `1px solid ${theme.palette.secondary.light}`,
     display: 'flex',
@@ -76,7 +75,6 @@ const useStyles = makeStyles(theme => ({
     marginTop: 30,
   },
   developer: {
-    margin: '30px 0 0',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -89,7 +87,6 @@ const useStyles = makeStyles(theme => ({
 const Footer: React.FC = () => {
   const classes = useStyles();
   const restaurant = useSelector(state => state.restaurant);
-  const mainAddress = restaurant && restaurant.addresses.find(address => address.is_main);
 
   return (
     <footer className={classes.footer}>
@@ -102,14 +99,8 @@ const Footer: React.FC = () => {
             <Typography className={classes.restaurantName} variant="body2" color="inherit" gutterBottom>
               {restaurant?.working_hours}
             </Typography>
-            {restaurant?.play_store_link && (
-              <div className={classes.stores}>
-                <a href={restaurant.play_store_link} target="blank">
-                  <img className={classes.playStoreImg} src="/images/playstore.png" alt="Google Play Store" />
-                </a>
-              </div>
-            )}
           </div>
+
           <div>
             <ul className={classes.links}>
               <li>
@@ -122,17 +113,12 @@ const Footer: React.FC = () => {
                 <Link href="/offers">ofertas</Link>
               </li>
               <li>
-                <Link href="/account">minha conta</Link>
-              </li>
-              <li>
-                <Link href="/account/orders">meus pedidos</Link>
-              </li>
-              <li>
-                <Link href="/contact">contato</Link>
+                <Link href="/contact">mesa</Link>
               </li>
             </ul>
           </div>
         </div>
+
         <div className={classes.socialLinks}>
           {restaurant?.facebook_link && (
             <a target="blank" href={restaurant?.facebook_link}>
@@ -150,19 +136,7 @@ const Footer: React.FC = () => {
             </a>
           )}
         </div>
-        <div>
-          <Typography variant="body2" color="inherit">
-            {restaurant?.corporate_name}
-          </Typography>
-          <Typography variant="body2" color="inherit">
-            CNPJ {restaurant?.cnpj}
-          </Typography>
-          {mainAddress && (
-            <Typography variant="body2" color="inherit">
-              {`${mainAddress.address}, ${mainAddress.number}, ${mainAddress.district}, ${mainAddress.city} - ${mainAddress.region}, ${mainAddress.postal_code}`}
-            </Typography>
-          )}
-        </div>
+
         <div className={classes.developer}>
           <a target="blank" href="https://www.sgrande.delivery">
             SGrande Delivery

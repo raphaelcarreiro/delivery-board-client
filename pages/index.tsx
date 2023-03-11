@@ -29,9 +29,6 @@ const IndexPage: NextPage<IndexPageProps> = ({ restaurant }) => {
 };
 
 export const getStaticProps: GetStaticProps<IndexPageProps> = async () => {
-  console.log(process.env.NEXT_PUBLIC_API);
-  console.log(process.env.NEXT_PUBLIC_RESTAURANT_ID);
-
   const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API,
     headers: {

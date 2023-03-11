@@ -1,7 +1,5 @@
 import React, { Fragment } from 'react';
-import CustomAppbar from '../appbar/CustomAppbar';
-import IndexAppbarActions from './IndexAppbarActions';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core';
 import Cover from './Cover';
 import Info from './Info';
 import { useSelector } from 'src/store/redux/selector';
@@ -58,7 +56,6 @@ const Index: React.FC = () => {
 
   return (
     <>
-      <CustomAppbar title="início" actionComponent={<IndexAppbarActions />} />
       <div className={classes.container}>
         <Cover restaurant={restaurant} />
         <div className={classes.main}>
