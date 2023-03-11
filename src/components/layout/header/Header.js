@@ -11,9 +11,8 @@ import { useSelector } from 'react-redux';
 import { useAuth } from 'src/providers/AuthProvider';
 import { useApp } from 'src/providers/AppProvider';
 import { PAGE_MAX_WIDTH } from 'src/constants/constants';
-import HeaderRestaurantAddress from './HeaderRestaurantAddress';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     maxWidth: PAGE_MAX_WIDTH,
@@ -115,9 +114,9 @@ export default function Header() {
   const { logout } = useAuth();
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
-  const restaurant = useSelector(state => state.restaurant) || {};
-  const user = useSelector(state => state.user);
-  const cart = useSelector(state => state.cart);
+  const restaurant = useSelector((state) => state.restaurant) || {};
+  const user = useSelector((state) => state.user);
+  const cart = useSelector((state) => state.cart);
   const classes = useStyles({
     cartItems: cart.products.length > 0,
     restaurantIsOpen: restaurant && restaurant.is_open,
@@ -159,7 +158,6 @@ export default function Header() {
               <span>Carregando...</span>
             )}
           </div>
-          <HeaderRestaurantAddress />
           <div className={classes.headerLinks}>
             <div>
               <Link href="/offers" className={classes.link}>
@@ -209,7 +207,7 @@ export default function Header() {
                     <MenuItem onClick={handleMyOrdersClick}>meus pedidos</MenuItem>
                     <MenuItem onClick={handleLogoutClick}>sair</MenuItem>
                   </Menu>
-                  <IconButton className={classes.btnAvatar} onClick={event => setAnchorEl(event.currentTarget)}>
+                  <IconButton className={classes.btnAvatar} onClick={(event) => setAnchorEl(event.currentTarget)}>
                     {user.image ? (
                       <Avatar src={user.image.imageUrl} className={classes.avatar} />
                     ) : (

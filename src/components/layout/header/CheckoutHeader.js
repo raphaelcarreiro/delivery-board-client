@@ -3,9 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import LinkNext from 'next/link';
 import { useSelector } from 'react-redux';
 import { PAGE_MAX_WIDTH } from 'src/constants/constants';
-import HeaderRestaurantAddress from './HeaderRestaurantAddress';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     maxWidth: PAGE_MAX_WIDTH,
@@ -62,8 +61,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function CheckoutHeader() {
-  const restaurant = useSelector(state => state.restaurant);
-  const cart = useSelector(state => state.cart);
+  const restaurant = useSelector((state) => state.restaurant);
+  const cart = useSelector((state) => state.cart);
   const classes = useStyles({ cartItems: cart.products.length > 0 });
 
   return (
@@ -77,7 +76,6 @@ export default function CheckoutHeader() {
               </LinkNext>
             )}
           </div>
-          <HeaderRestaurantAddress />
         </div>
       </header>
     </>
