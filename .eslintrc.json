@@ -1,10 +1,15 @@
 {
   "env": {
     "browser": true,
-    "es6": true,
-    "node": true
+    "es2020": true
   },
-  "extends": ["plugin:react/recommended", "standard", "prettier", "plugin:prettier/recommended"],
+  "extends": [
+    "plugin:react/recommended",
+    "standard",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly",
@@ -14,37 +19,37 @@
     "fbq": true,
     "gtag": "readonly"
   },
-  "parser": "babel-eslint",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 2018,
+    "ecmaVersion": 2020,
     "sourceType": "module"
   },
-  "plugins": ["react", "prettier", "react-hooks"],
+  "plugins": ["react", "@typescript-eslint", "prettier", "react-hooks"],
   "rules": {
     "prettier/prettier": "error",
-    "no-unused-vars": "warn",
-    "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
-    "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
+    "react/prop-types": "off",
     "camelcase": "off",
-    "semi": "off",
-    "no-empty-function": "off"
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "@typescript-eslint/no-var-requires": "off",
+    "prefer-regex-literals": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-unused-vars": "warn"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
   },
   "overrides": [
     {
-      "extends": ["plugin:@typescript-eslint/recommended", "prettier/@typescript-eslint"],
-      "files": ["**/*.tsx", "**/*.ts"],
-      "parser": "@typescript-eslint/parser",
-      "plugins": ["@typescript-eslint", "prettier"],
-      "rules": {
-        "react/prop-types": "off",
-        "@typescript-eslint/no-empty-function": ["off"],
-        "@typescript-eslint/ban-types": "off",
-        "no-unused-expressions": "off",
-        "@typescript-eslint/no-explicit-any": "off"
-      }
+      "extends": ["standard", "prettier"],
+      "files": ["**/*.js"],
+      "rules": {}
     }
   ]
 }
