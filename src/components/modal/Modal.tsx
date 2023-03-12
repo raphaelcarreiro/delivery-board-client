@@ -104,7 +104,9 @@ const Modal: React.FC<ModalProps> = ({
       fullWidth
       fullScreen={app.isMobile || app.windowWidth < 960}
       maxWidth={maxWidth}
-      onExited={onExited}
+      TransitionProps={{
+        onExited,
+      }}
     >
       <ModalProvider value={{ handleModalClose }}>
         {title && (
