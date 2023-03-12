@@ -13,14 +13,12 @@ import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import CartClosedRestaurant from 'src/components/cart/CartClosedRestaurant';
 import Coupon from './coupon/Coupon';
 import CartCouponButton from './CartCouponButton';
-import WatchLaterIcon from '@material-ui/icons/WatchLater';
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import { useMessaging } from 'src/providers/MessageProvider';
 import { useAuth } from 'src/providers/AuthProvider';
 import { useApp } from 'src/providers/AppProvider';
 import { CartProvider } from './hooks/useCart';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   cart: {
     display: 'flex',
     flexDirection: 'column',
@@ -78,13 +76,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Cart() {
-  const cart = useSelector(state => state.cart);
+  const cart = useSelector((state) => state.cart);
   const classes = useStyles();
   const router = useRouter();
   const dispatch = useDispatch();
   const messaging = useMessaging();
   const { handleCartVisibility, setRedirect } = useApp();
-  const restaurant = useSelector(state => state.restaurant);
+  const restaurant = useSelector((state) => state.restaurant);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [dialogClosedRestaurant, setDialogClosedRestaurant] = useState(false);
   const [couponView, setCouponView] = useState(false);
@@ -152,16 +150,21 @@ export default function Cart() {
   const cartContextValue = {
     selectedProduct,
     handleUpdateCartProduct: handleUpdateCartProduct,
-    setSelectedProduct: product => setSelectedProduct(product),
+    setSelectedProduct: (product) => setSelectedProduct(product),
   };
 
   return (
     <CartProvider value={cartContextValue}>
       {router.route === '/cart' && <CustomAppbar title="carrinho" />}
+
       {dialogClosedRestaurant && <CartClosedRestaurant onExited={() => setDialogClosedRestaurant(false)} />}
+
       {isSimple && <ProductSimple onExited={() => setSelectedProduct(null)} />}
+
       {isPizza && <ProductPizzaComplement onExited={() => setSelectedProduct(null)} />}
+
       {isComplement && <ProductComplement onExited={() => setSelectedProduct(null)} />}
+
       {couponView ? (
         <>
           <Coupon setClosedCouponView={() => setCouponView(false)} />
@@ -171,9 +174,13 @@ export default function Cart() {
           <Typography className={classes.title} variant="h5" color="primary">
             carrinho
           </Typography>
+
           <CartProductList handleClickUpdateProduct={handleClickUpdateProduct} products={cart.products} />
+
           <CartCouponButton setCouponView={setCouponView} />
+
           <CartTotal />
+
           <div className={classes.action}>
             <Button disabled size="large" onClick={handleCheckoutClick} variant="contained" color="primary" fullWidth>
               enviar pedido
