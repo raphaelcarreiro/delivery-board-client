@@ -1,7 +1,6 @@
 import React from 'react';
-import { ListItem, List, Typography } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { ListItem, List, Typography, makeStyles } from '@material-ui/core';
+import { ComplementCategory } from 'src/types/product';
 
 const useStyles = makeStyles({
   list: {
@@ -30,11 +29,11 @@ const useStyles = makeStyles({
   },
 });
 
-CartProductListComplements.propTypes = {
-  categories: PropTypes.array.isRequired,
-};
+interface BoardProductItemComplementsProps {
+  categories: ComplementCategory[];
+}
 
-export default function CartProductListComplements({ categories }) {
+export default function BoardProductItemComplements({ categories }: BoardProductItemComplementsProps) {
   const classes = useStyles();
 
   return (

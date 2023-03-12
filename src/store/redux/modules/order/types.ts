@@ -1,4 +1,3 @@
-import { Address } from 'src/types/address';
 import { CartProduct } from 'src/types/cart';
 import { Coupon } from 'src/types/coupon';
 import { Customer } from 'src/types/customer';

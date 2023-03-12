@@ -49,10 +49,9 @@ const useStyles = makeStyles(theme => ({
 Product.propTypes = {
   products: PropTypes.array.isRequired,
   categoryName: PropTypes.string.isRequired,
-  categoryUrl: PropTypes.string.isRequired,
 };
 
-export default function Product({ products, categoryName, categoryUrl }) {
+export default function Product({ products, categoryName }) {
   const classes = useStyles();
   const app = useApp();
   const messaging = useMessaging();

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { prepareProduct, addToCart } from 'src/store/redux/modules/cart/actions';
+import { addToCart } from 'src/store/redux/modules/cart/actions';
 import ProductList from './ProductList';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import ProductsActions from './ProductsActions';
@@ -18,6 +18,7 @@ import { useSelector } from 'src/store/redux/selector';
 import ProductComplement from './detail/complement/ProductComplement';
 import { useApp } from 'src/providers/AppProvider';
 import { ProductsContextValue, ProductsProvider } from './hooks/useProducts';
+import { CartProduct } from 'src/types/cart';
 
 const useStyles = makeStyles(theme => ({
   pageHeader: {
@@ -101,10 +102,13 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
     ref.current?.focus();
   }, [handleSearch]);
 
-  const handleAddProductToCart = useCallback(() => {
-    dispatch(addToCart());
-    handleCartVisibility(true);
-  }, [handleCartVisibility, dispatch]);
+  const handleAddProductToCart = useCallback(
+    (product: CartProduct, amount: number) => {
+      dispatch(addToCart(product, amount));
+      handleCartVisibility(true);
+    },
+    [handleCartVisibility, dispatch]
+  );
 
   const handleProductClick = useCallback(
     product => {
@@ -112,13 +116,6 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
       handleClose();
     },
     [handleClose]
-  );
-
-  const handlePrepareProduct = useCallback(
-    (product, amount) => {
-      dispatch(prepareProduct(product, amount));
-    },
-    [dispatch]
   );
 
   useEffect(() => {
@@ -140,7 +137,6 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
 
   const productsContextValue: ProductsContextValue = {
     selectedProduct,
-    handlePrepareProduct,
     handleSelectProduct: (product: Product | null) => setSelectedProduct(product),
     handleAddProductToCart,
     isPizza,

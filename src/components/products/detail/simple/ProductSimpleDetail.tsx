@@ -36,23 +36,31 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function ProductSimpleDetail() {
+const ProductSimpleDetail: React.FC = () => {
   const classes = useStyles();
   const { product, handleClickAdditional, handleClickIngredient, setProduct } = useProduct();
 
   return (
-    <div className={classes.container}>
-      <ProductDetailImage product={product} />
-      <div className={classes.options}>
-        <ProductDetailDescription product={product} />
-        {product.ingredients.length > 0 && (
-          <ProductViewIngredients ingredients={product.ingredients} handleClickIngredient={handleClickIngredient} />
-        )}
-        {product.additional.length > 0 && (
-          <ProductViewAdditional additional={product.additional} handleClickAdditional={handleClickAdditional} />
-        )}
-        <ProductDetailInputAnnotation product={product} setProduct={setProduct} />
+    product && (
+      <div className={classes.container}>
+        <ProductDetailImage product={product} />
+
+        <div className={classes.options}>
+          <ProductDetailDescription product={product} />
+
+          {product.ingredients.length > 0 && (
+            <ProductViewIngredients ingredients={product.ingredients} handleClickIngredient={handleClickIngredient} />
+          )}
+
+          {product.additional.length > 0 && (
+            <ProductViewAdditional additional={product.additional} handleClickAdditional={handleClickAdditional} />
+          )}
+
+          <ProductDetailInputAnnotation product={product} setProduct={setProduct} />
+        </div>
       </div>
-    </div>
+    )
   );
-}
+};
+
+export default ProductSimpleDetail;

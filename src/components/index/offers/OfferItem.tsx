@@ -3,7 +3,7 @@ import React from 'react';
 import { useProducts } from 'src/components/products/hooks/useProducts';
 import { Product } from 'src/types/product';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   li: {
     position: 'relative',
     width: 200,
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     borderTop: '1px solid #eee',
     marginTop: 10,
   },
-}));
+});
 
 interface OfferItemProps {
   product: Product;

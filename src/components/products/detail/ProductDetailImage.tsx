@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 type ProductDetailImageProps = {
-  product: Product;
+  product: Product | null;
 };
 
 const ProductDetailImage: React.FC<ProductDetailImageProps> = ({ product }) => {
@@ -37,17 +37,22 @@ const ProductDetailImage: React.FC<ProductDetailImageProps> = ({ product }) => {
 
   return (
     <>
-      {imagePreview && product.image && (
-        <ImagePreview src={product.image.imageUrl} description={product.name} onExited={() => setImagePreview(false)} />
+      {imagePreview && product?.image && (
+        <ImagePreview
+          src={product?.image.imageUrl}
+          description={product?.name}
+          onExited={() => setImagePreview(false)}
+        />
       )}
+
       <div className={classes.imageWrapper}>
         <div className={classes.imageContainer}>
-          {product.image && (
+          {product?.image && (
             <img
               onClick={() => setImagePreview(true)}
               className={classes.image}
-              src={product.image.imageUrl}
-              alt={product.name}
+              src={product?.image.imageUrl}
+              alt={product?.name}
             />
           )}
         </div>

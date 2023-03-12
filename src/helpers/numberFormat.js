@@ -10,7 +10,7 @@ function numberFormat(value, maximumFractionDigits = 2) {
   value = value === '' ? 0 : value;
 
   return value.toLocaleString('pt-BR', {
-    maximumFractionDigits: maximumFractionDigits,
+    maximumFractionDigits,
   });
 }
 
@@ -28,7 +28,7 @@ function moneyFormat(value, maximumFractionDigits = 2) {
   return value.toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-    maximumFractionDigits: maximumFractionDigits,
+    maximumFractionDigits,
   });
 }
 
@@ -45,7 +45,7 @@ function percentFormat(value, maximumFractionDigits = 2) {
 
   return (
     value.toLocaleString('pt-BR', {
-      maximumFractionDigits: maximumFractionDigits,
+      maximumFractionDigits,
     }) + '%'
   );
 }

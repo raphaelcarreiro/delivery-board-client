@@ -1,28 +1,36 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import CustomDialog from 'src/components/dialog/CustomDialog';
-import { moneyFormat } from 'src/helpers/numberFormat';
-import InsideLoading from 'src/components/loading/InsideLoading';
-import { useProducts } from 'src/components/products/hooks/useProducts';
-import ProductAdd from '../addToCart/ProductAdd';
 import { fetchSimpleProduct } from './fetchSimpleProduct';
 import ProductSimpleDetail from './ProductSimpleDetail';
 import { ProductSimpleProvider } from '../hooks/useProduct';
+import { useProducts } from '../../hooks/useProducts';
+import { moneyFormat } from 'src/helpers/numberFormat';
+import Modal from 'src/components/modal/Modal';
+import InsideLoading from 'src/components/loading/InsideLoading';
+import ProductAdd from '../addToCart/ProductAdd';
+import { Product } from 'src/types/product';
 
-export default function ProductSimple() {
+const ProductSimple: React.FC = () => {
   const [amount, setAmount] = useState(1);
   const [additionalPrice, setAdditionalPrice] = useState(0);
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const { selectedProduct, handlePrepareProduct, handleSelectProduct } = useProducts();
+  const { selectedProduct, handleSelectProduct } = useProducts();
 
   const formattedTotal = useMemo(() => {
-    if (!product) return moneyFormat(0);
+    if (!product) {
+      return moneyFormat(0);
+    }
+
     const productPrice = product.promotion_activated && product.special_price ? product.special_price : product.price;
     const total = (productPrice + additionalPrice) * amount;
     return moneyFormat(total);
   }, [additionalPrice, amount, product]);
 
   useEffect(() => {
+    if (!selectedProduct) {
+      return;
+    }
+
     fetchSimpleProduct(selectedProduct.id)
       .then(product => {
         setProduct(product);
@@ -41,9 +49,8 @@ export default function ProductSimple() {
           0
         )
       );
-      handlePrepareProduct(product, amount);
     }
-  }, [product, amount, handlePrepareProduct]);
+  }, [product, amount]);
 
   function handleAmountUp() {
     setAmount(amount + 1);
@@ -55,26 +62,41 @@ export default function ProductSimple() {
     }
   }
 
-  function handleClickIngredient(ingredientId) {
-    setProduct({
-      ...product,
-      ingredient: product.ingredients.map(ingredient => {
-        if (ingredient.id === ingredientId) ingredient.selected = !ingredient.selected;
-        return ingredient;
-      }),
+  function handleClickIngredient(ingredientId: number) {
+    setProduct(state => {
+      if (!state) {
+        return null;
+      }
+
+      return {
+        ...state,
+        ingredients: state.ingredients.map(ingredient => {
+          if (ingredient.id === ingredientId) {
+            ingredient.selected = !ingredient.selected;
+          }
+
+          return ingredient;
+        }),
+      };
     });
   }
 
-  function handleClickAdditional(additionalId, amount) {
-    setProduct({
-      ...product,
-      additional: product.additional.map(additional => {
-        if (additional.id === additionalId) {
-          additional.selected = amount > 0;
-          additional.amount = amount;
-        }
-        return additional;
-      }),
+  function handleClickAdditional(additionalId: number, amount: number) {
+    setProduct(state => {
+      if (!state) {
+        return null;
+      }
+
+      return {
+        ...state,
+        additional: state.additional.map(additional => {
+          if (additional.id === additionalId) {
+            additional.selected = amount > 0;
+            additional.amount = amount;
+          }
+          return additional;
+        }),
+      };
     });
   }
 
@@ -86,11 +108,11 @@ export default function ProductSimple() {
   };
 
   return (
-    <CustomDialog
+    <Modal
       maxWidth="lg"
-      title="adicionar ao carrinho"
+      title="adicionar ao pedido"
       backgroundColor="#fafafa"
-      handleModalState={() => handleSelectProduct(null)}
+      onExited={() => handleSelectProduct(null)}
       displayBottomActions
       height="80vh"
     >
@@ -101,6 +123,7 @@ export default function ProductSimple() {
           <ProductSimpleProvider value={productSimpleContext}>
             <ProductSimpleDetail />
           </ProductSimpleProvider>
+
           <ProductAdd
             total={formattedTotal}
             handleAmountDown={handleAmountDown}
@@ -110,6 +133,8 @@ export default function ProductSimple() {
           />
         </>
       )}
-    </CustomDialog>
+    </Modal>
   );
-}
+};
+
+export default ProductSimple;

@@ -25,7 +25,10 @@ export default function reducer(state = INITIAL_STATE, action: BoardMovementActi
 
       return {
         ...state,
-        products: action.products,
+        products: action.products.map(product => ({
+          ...product,
+          formattedTotal: moneyFormat(product.final_price),
+        })),
       };
     }
 
@@ -41,7 +44,7 @@ export default function reducer(state = INITIAL_STATE, action: BoardMovementActi
           ...action.products.map(product => ({
             ...product,
             formattedStatus: getOrderStatusText('board', product.status),
-            formattedTotal: moneyFormat(product.total),
+            formattedTotal: moneyFormat(product.final_price),
           })),
         ],
       };
@@ -109,7 +112,7 @@ export default function reducer(state = INITIAL_STATE, action: BoardMovementActi
         return state;
       }
 
-      const total = state.products.reduce((previous, product) => previous + product.total, 0);
+      const total = state.products.reduce((previous, product) => previous + product.final_price, 0);
       const totalPaid = state.payments.reduce((previous, payment) => previous + payment.value, 0);
 
       return {

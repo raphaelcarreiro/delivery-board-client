@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Typography, IconButton, makeStyles, alpha } from '@material-ui/core';
 import IconSearch from '@material-ui/icons/Search';
 import ProductPizzaComplementSearchBox from './ProductPizzaComplementSearchBox';
+import { Complement, ComplementCategory } from 'src/types/product';
 
 const useStyles = makeStyles(theme => ({
   header: {
@@ -36,13 +36,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-ProductPizzaComplementHeader.propTypes = {
-  category: PropTypes.object.isRequired,
-  complementSizeSelected: PropTypes.object.isRequired,
-  handleSearch: PropTypes.func.isRequired,
-};
+interface ProductPizzaComplementHeaderProps {
+  category: ComplementCategory;
+  complementSizeSelected: Complement | null;
+  handleSearch(categoryId: number, searchValue: string): void;
+}
 
-export default function ProductPizzaComplementHeader({ category, complementSizeSelected, handleSearch }) {
+const ProductPizzaComplementHeader: React.FC<ProductPizzaComplementHeaderProps> = ({
+  category,
+  complementSizeSelected,
+  handleSearch,
+}) => {
   const classes = useStyles();
   const [searchBox, setSearchBox] = useState(false);
 
@@ -62,13 +66,13 @@ export default function ProductPizzaComplementHeader({ category, complementSizeS
                 <Typography className={classes.categoryName} variant="h6">
                   {category.name}
                 </Typography>
-                {complementSizeSelected.taste_amount === 1 ? (
+                {complementSizeSelected?.taste_amount === 1 ? (
                   <Typography color="textSecondary" variant="body2">
                     Escolha 1 opção.
                   </Typography>
-                ) : complementSizeSelected.id ? (
+                ) : complementSizeSelected?.id ? (
                   <Typography color="textSecondary" variant="body2">
-                    Escolha até {complementSizeSelected.taste_amount} opções.
+                    Escolha até {complementSizeSelected?.taste_amount} opções.
                   </Typography>
                 ) : (
                   <Typography color="primary">Selecione o tamanho</Typography>
@@ -76,7 +80,7 @@ export default function ProductPizzaComplementHeader({ category, complementSizeS
               </div>
 
               <div>
-                {complementSizeSelected.id && (
+                {complementSizeSelected && (
                   <IconButton onClick={() => setSearchBox(true)}>
                     <IconSearch />
                   </IconButton>
@@ -110,11 +114,11 @@ export default function ProductPizzaComplementHeader({ category, complementSizeS
             <Typography className={classes.categoryName} variant="h6">
               {category.name}
             </Typography>
-            {category.max_quantity === 1 && complementSizeSelected.id ? (
+            {category.max_quantity === 1 && complementSizeSelected?.id ? (
               <Typography color="textSecondary" variant="body2">
                 Escolha 1 opção.
               </Typography>
-            ) : complementSizeSelected.id ? (
+            ) : complementSizeSelected?.id ? (
               <Typography color="textSecondary" variant="body2">
                 Escolha até {category.max_quantity} opções.
               </Typography>
@@ -127,4 +131,6 @@ export default function ProductPizzaComplementHeader({ category, complementSizeS
       )}
     </>
   );
-}
+};
+
+export default ProductPizzaComplementHeader;

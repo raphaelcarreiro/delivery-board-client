@@ -42,6 +42,7 @@ export default function ProductPizzaDetail() {
   return (
     <div className={classes.container}>
       <ProductDetailImage product={product} />
+
       <div className={classes.options}>
         <ProductDetailDescription product={product} />
         <ProductPizzaComplementCategories />

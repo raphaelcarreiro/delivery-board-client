@@ -46,7 +46,7 @@ export interface Order {
   id: string;
   formattedId: string;
   shipment: {
-    shipmentMethod: ShipmentMethods;
+    shipment_method: ShipmentMethods;
   };
   customer: Customer | null;
   paymentMethod: PaymentMethod | null;

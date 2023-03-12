@@ -29,14 +29,15 @@ const ProductPizzaComplementCategories: React.FC = () => {
 
   return (
     <div>
-      {filteredProduct.complement_categories.map(category => (
+      {filteredProduct?.complement_categories.map(category => (
         <section className={classes.category} key={category.id}>
           <ProductPizzaComplementHeader
             category={category}
             complementSizeSelected={complementSizeSelected}
             handleSearch={handleSearch}
           />
-          {(category.is_pizza_size || complementSizeSelected.id) && (
+
+          {(category.is_pizza_size || complementSizeSelected) && (
             <ProductPizzaComplementItem
               category={category}
               productId={filteredProduct.id}

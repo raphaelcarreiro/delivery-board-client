@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { CustomDialogContext } from 'src/components/dialog/CustomDialog';
 import { Product } from 'src/types/product';
 import { useProducts } from 'src/components/products/hooks/useProducts';
+import { CartProduct } from 'src/types/cart';
+import { useModal } from 'src/components/modal/hooks/useModal';
 
 const useStyles = makeStyles(theme => ({
   finalPrice: {
@@ -15,23 +16,27 @@ const useStyles = makeStyles(theme => ({
 }));
 
 type ProductAddButtonProps = {
-  product: Product;
+  product: Product | null;
   total: string;
+  amount: number;
 };
 
-const ProductAddButton: React.FC<ProductAddButtonProps> = ({ product, total }) => {
-  const classes = useStyles({ isSelected: !!product.ready });
-  const { handleCloseDialog } = useContext(CustomDialogContext);
+const ProductAddButton: React.FC<ProductAddButtonProps> = ({ product, total, amount }) => {
+  const classes = useStyles({ isSelected: !!product?.ready });
+  const { handleModalClose } = useModal();
   const { handleAddProductToCart } = useProducts();
 
   function handleConfirm() {
-    if (!product.ready) return;
-    handleAddProductToCart();
-    handleCloseDialog();
+    if (!product?.ready) {
+      return;
+    }
+
+    handleAddProductToCart(product as CartProduct, amount);
+    handleModalClose();
   }
 
   return (
-    <Button disabled={!product.ready} variant="contained" size="large" color="primary" onClick={handleConfirm}>
+    <Button disabled={!product?.ready} variant="contained" size="large" color="primary" onClick={handleConfirm}>
       <span>Adicionar</span>
       <Typography className={classes.finalPrice} color="textPrimary">
         {total}

@@ -2,8 +2,10 @@ import { moneyFormat } from 'src/helpers/numberFormat';
 import { api } from 'src/services/api';
 import { Complement, Product } from 'src/types/product';
 
-export async function fetchPizzaProduct(productId: number): Promise<{ product: Product; sizeSelected: Complement }> {
-  let sizeSelected: Complement = {} as Complement;
+export async function fetchPizzaProduct(
+  productId: number
+): Promise<{ product: Product; sizeSelected: Complement | null }> {
+  let sizeSelected: Complement | null = null;
 
   const response = await api.get<Product>(`/products/${productId}`);
   const product = response.data;
@@ -34,7 +36,7 @@ export async function fetchPizzaProduct(productId: number): Promise<{ product: P
         additional.product_complement_additional_id = additional.id;
         additional.prices = additional.prices.map(price => {
           price.product_complement_additional_price_id = price.id;
-          price.selected = price.product_complement_size_id === sizeSelected.id;
+          price.selected = price.product_complement_size_id === sizeSelected?.id;
           price.formattedPrice = price.price && moneyFormat(price.price);
           return price;
         });

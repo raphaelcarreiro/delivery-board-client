@@ -32,6 +32,10 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, error }) => {
     return <InitialLoading />;
   }
 
+  const title = category
+    ? `${category.name} em ${category.restaurant.name} - ${category.restaurant.description}`
+    : 'Menu';
+
   return (
     <>
       {error ? (
@@ -44,9 +48,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, error }) => {
         category && (
           <>
             <Head>
-              <title>
-                {category.name} em {category.restaurant.name} - {category.restaurant.description}
-              </title>
+              <title>{title}</title>
               <meta name="description" content={category.description} />
               <meta name="keywords" content={category.keywords} />
               <meta property="og:locale" content="pt_BR" />

@@ -101,9 +101,7 @@ const ProductsAction: React.FC<ProductsActionsProps> = ({ isSearching, handleSea
                     <ClearIcon />
                   </IconButton>
                 </InputAdornment>
-              ) : (
-                undefined
-              ),
+              ) : undefined,
               startAdornment: (
                 <InputAdornment position="start">
                   <IconButton size="small" onClick={() => setIsSearching(false)} color="inherit">

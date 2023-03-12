@@ -1,18 +1,21 @@
-import React, { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useState, useRef, useEffect } from 'react';
 import { TextField, InputAdornment, IconButton } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-ProductPizzaComplementSearchBox.propTypes = {
-  handleSearch: PropTypes.func.isRequired,
-  closeSearchBox: PropTypes.func.isRequired,
-  categoryId: PropTypes.number.isRequired,
-};
+interface ProductPizzaComplementSearchBoxProps {
+  handleSearch(categoryId: number, searchValue: string): void;
+  closeSearchBox(): void;
+  categoryId: number;
+}
 
-export default function ProductPizzaComplementSearchBox({ handleSearch, closeSearchBox, categoryId }) {
+export default function ProductPizzaComplementSearchBox({
+  handleSearch,
+  closeSearchBox,
+  categoryId,
+}: ProductPizzaComplementSearchBoxProps) {
   const [search, setSearch] = useState('');
-  const ref = useRef();
+  const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     handleSearch(categoryId, search);
@@ -24,7 +27,8 @@ export default function ProductPizzaComplementSearchBox({ handleSearch, closeSea
 
   function handleClearSearch() {
     setSearch('');
-    ref.current.focus();
+
+    ref.current?.focus();
   }
 
   function handleCloseBoxClick() {
@@ -55,7 +59,7 @@ export default function ProductPizzaComplementSearchBox({ handleSearch, closeSea
                   </InputAdornment>
                 ),
               }
-            : null
+            : undefined
         }
       />
     </>

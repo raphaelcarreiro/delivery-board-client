@@ -36,9 +36,7 @@ const styles = theme => ({
   },
 });
 
-export const DialogFullscreenFormContext = React.createContext({
-  handleCloseDialog: () => {},
-});
+export const DialogFullscreenFormContext = React.createContext({});
 
 class DialogFullscreenForm extends Component {
   constructor(props) {

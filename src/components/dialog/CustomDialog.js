@@ -56,7 +56,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const CustomDialogContext = React.createContext({
-  handleCloseDialog: () => {},
+  handleCloseDialog: () => {
+    //
+  },
 });
 
 export default function CustomDialog({

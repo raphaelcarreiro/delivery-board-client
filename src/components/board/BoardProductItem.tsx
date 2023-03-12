@@ -1,9 +1,7 @@
 import React, { FC } from 'react';
 import { ListItem, Typography, makeStyles } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
-import { removeFromCart } from 'src/store/redux/modules/cart/actions';
-import CartProductListComplements from './CartProductListComplements';
-import { CartProduct } from 'src/types/cart';
+import BoardProductItemComplements from './BoardProductItemComplements';
+import { BoardOrderProduct } from 'src/types/boardOrderProduct';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -81,27 +79,21 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-interface CartProductItemProps {
-  product: CartProduct;
-  handleClickUpdateProduct(product: CartProduct): void;
+interface BoardProductItemProps {
+  product: BoardOrderProduct;
 }
 
-const CartProductItem: FC<CartProductItemProps> = ({ product, handleClickUpdateProduct }) => {
+const BoardProductItem: FC<BoardProductItemProps> = ({ product }) => {
   const classes = useStyles();
-  const dispatch = useDispatch();
 
-  function handleRemoveFromCart(productUid: string) {
-    dispatch(removeFromCart(productUid));
-  }
-
-  function showAdditionalOrIngredients(product: CartProduct) {
+  function showAdditionalOrIngredients(product: BoardOrderProduct) {
     const showIngredients = product.ingredients.some(ingredient => !ingredient.selected);
     const showAdditional = product.additional.some(additional => additional.selected);
     return showAdditional || showIngredients;
   }
 
   return (
-    <ListItem disableGutters key={product.uid} className={classes.listItem}>
+    <ListItem disableGutters key={product.id} className={classes.listItem}>
       <div className={classes.product} id="product-data">
         <div>
           <div className={classes.imageContainer}>
@@ -115,35 +107,24 @@ const CartProductItem: FC<CartProductItemProps> = ({ product, handleClickUpdateP
           </div>
 
           <div>
-            <Typography variant="h6" className={classes.productName}>
+            <Typography variant="body1" className={classes.productName}>
               {product.amount}x {product.name}
             </Typography>
-
-            {product.promotion && (
-              <>
-                <Typography variant="caption" color="textSecondary" display="block">
-                  você ganhou esse produto!
-                </Typography>
-                <Typography variant="caption" color="textSecondary" display="block">
-                  promoção {product.promotion.name}
-                </Typography>
-              </>
-            )}
           </div>
         </div>
 
-        <Typography variant="h5" className={classes.price}>
+        <Typography variant="body1" className={classes.price}>
           {product.formattedFinalPrice}
         </Typography>
       </div>
 
-      {product.category.has_complement && <CartProductListComplements categories={product.complement_categories} />}
+      {product.category.has_complement && <BoardProductItemComplements categories={product.complement_categories} />}
 
       {showAdditionalOrIngredients(product) && (
         <div className={classes.options}>
           <div>
             {product.ingredients
-              .filter(ingredient => !ingredient.selected)
+              .filter(ingredient => ingredient.selected)
               .map(ingredient => (
                 <Typography key={ingredient.id} variant="body2" display="inline" className={classes.ingredients}>
                   s/ {ingredient.name}
@@ -162,19 +143,8 @@ const CartProductItem: FC<CartProductItemProps> = ({ product, handleClickUpdateP
           </div>
         </div>
       )}
-
-      {!product.promotion && (
-        <div className={classes.actions}>
-          <Typography onClick={() => handleClickUpdateProduct(product)} color="primary" className={classes.link}>
-            editar
-          </Typography>
-          <Typography className={classes.link} onClick={() => handleRemoveFromCart(product.uid)}>
-            excluir
-          </Typography>
-        </div>
-      )}
     </ListItem>
   );
 };
 
-export default CartProductItem;
+export default BoardProductItem;

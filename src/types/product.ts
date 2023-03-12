@@ -123,6 +123,7 @@ export interface CreatedOrderProduct {
   formattedFinalPrice: string;
   formattedProductPrice: string;
   amount: number;
+  product_id: number;
 }
 
 export interface OrderProductAdditional extends Additional {

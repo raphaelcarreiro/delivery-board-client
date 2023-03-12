@@ -34,7 +34,7 @@ const FirebaseProvider: React.FC = ({ children }) => {
             setFmHasToken(true);
 
             const param = {
-              token: token,
+              token,
               device: navigator.platform,
               type: 'client',
             };
@@ -71,7 +71,7 @@ const FirebaseProvider: React.FC = ({ children }) => {
           const token = await firebaseMessaging.getToken();
           setFmHasToken(true);
           const param = {
-            token: token,
+            token,
             device: navigator.platform,
             type: 'client',
           };

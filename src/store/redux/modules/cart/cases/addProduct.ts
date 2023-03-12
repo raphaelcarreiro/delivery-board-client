@@ -1,5 +1,4 @@
 import { moneyFormat } from 'src/helpers/numberFormat';
-import { RestaurantConfig } from 'src/types/restaurant';
 import { Complement, ComplementCategory, OrderProductAdditional } from 'src/types/product';
 import { v4 } from 'uuid';
 import { Cart, CartProduct, CartRestaurantConfigs } from 'src/types/cart';

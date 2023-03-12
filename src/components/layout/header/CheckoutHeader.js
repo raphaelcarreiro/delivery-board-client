@@ -4,7 +4,7 @@ import LinkNext from 'next/link';
 import { useSelector } from 'react-redux';
 import { PAGE_MAX_WIDTH } from 'src/constants/constants';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     maxWidth: PAGE_MAX_WIDTH,
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   img: {
     width: 70,
   },
-  cartLink: ({ cartItems }) => ({
+  cartLink: {
     display: 'flex',
     alignItems: 'center',
     fontSize: 16,
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 10,
     },
     cursor: 'pointer',
-  }),
+  },
   cartBadge: ({ cartItems }) => ({
     position: 'absolute',
     display: 'flex',
@@ -61,8 +61,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CheckoutHeader() {
-  const restaurant = useSelector((state) => state.restaurant);
-  const cart = useSelector((state) => state.cart);
+  const restaurant = useSelector(state => state.restaurant);
+  const cart = useSelector(state => state.cart);
   const classes = useStyles({ cartItems: cart.products.length > 0 });
 
   return (

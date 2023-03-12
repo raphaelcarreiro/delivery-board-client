@@ -18,7 +18,7 @@ import { useAuth } from 'src/providers/AuthProvider';
 import { useApp } from 'src/providers/AppProvider';
 import { CartProvider } from './hooks/useCart';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   cart: {
     display: 'flex',
     flexDirection: 'column',
@@ -76,13 +76,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Cart() {
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector(state => state.cart);
   const classes = useStyles();
   const router = useRouter();
   const dispatch = useDispatch();
   const messaging = useMessaging();
   const { handleCartVisibility, setRedirect } = useApp();
-  const restaurant = useSelector((state) => state.restaurant);
+  const restaurant = useSelector(state => state.restaurant);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [dialogClosedRestaurant, setDialogClosedRestaurant] = useState(false);
   const [couponView, setCouponView] = useState(false);
@@ -149,8 +149,8 @@ export default function Cart() {
 
   const cartContextValue = {
     selectedProduct,
-    handleUpdateCartProduct: handleUpdateCartProduct,
-    setSelectedProduct: (product) => setSelectedProduct(product),
+    handleUpdateCartProduct,
+    setSelectedProduct: product => setSelectedProduct(product),
   };
 
   return (

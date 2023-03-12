@@ -56,8 +56,8 @@ const MessagingProvider: React.FC = ({ children }) => {
   return (
     <MessagingContext.Provider
       value={{
-        handleClose: handleClose,
-        handleOpen: handleOpen,
+        handleClose,
+        handleOpen,
       }}
     >
       {children}

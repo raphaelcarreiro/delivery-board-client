@@ -1,5 +1,3 @@
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import { Order } from 'src/types/order';
 import { v4 } from 'uuid';
 import packageInfo from '../../../../../package.json';
@@ -8,7 +6,7 @@ import { OrderActions } from './types';
 const INITIAL_STATE: Order = {
   id: v4(),
   shipment: {
-    shipmentMethod: 'board',
+    shipment_method: 'board',
   },
   customer: null,
   paymentMethod: null,
@@ -41,7 +39,7 @@ export default function order(state = INITIAL_STATE, action: OrderActions): Orde
       return {
         ...state,
         shipment: {
-          shipmentMethod: 'board',
+          shipment_method: 'board',
         },
       };
     }

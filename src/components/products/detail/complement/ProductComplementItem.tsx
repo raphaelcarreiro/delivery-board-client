@@ -1,7 +1,7 @@
 import React from 'react';
-import { alpha, List, ListItem, makeStyles, Typography } from '@material-ui/core';
+import { List, ListItem, Typography, makeStyles, alpha } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import PropTypes from 'prop-types';
+import { Complement } from 'src/types/product';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -51,13 +51,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-ProductComplementItem.propTypes = {
-  complements: PropTypes.array.isRequired,
-  handleClickComplements: PropTypes.func.isRequired,
-  complementCategoryId: PropTypes.number.isRequired,
-};
+interface ProductComplementItemProps {
+  complements: Complement[];
+  handleClickComplements(complementCategoryId: number, complementId: number): void;
+  complementCategoryId: number;
+}
 
-export default function ProductComplementItem({ complements, handleClickComplements, complementCategoryId }) {
+export default function ProductComplementItem({
+  complements,
+  handleClickComplements,
+  complementCategoryId,
+}: ProductComplementItemProps) {
   const classes = useStyles();
 
   return (

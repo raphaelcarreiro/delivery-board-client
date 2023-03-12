@@ -1,46 +1,50 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import ProductPizzaComplementAdditional from './ProductPizzaComplementAdditional';
 import ProductPizzaComplementIngredient from './ProductPizzaComplementIngredient';
-import { moneyFormat } from '../../../../helpers/numberFormat';
-import CustomDialog from 'src/components/dialog/CustomDialog';
-import { useSelector } from 'react-redux';
-import InsideLoading from 'src/components/loading/InsideLoading';
-import { useMessaging } from 'src/providers/MessageProvider';
-import { useProducts } from 'src/components/products/hooks/useProducts';
 import ProductAdd from '../addToCart/ProductAdd';
 import { fetchPizzaProduct } from './fetchPizzaProduct';
 import { handleSelectPizzaProductComplement } from './handleSelectPizzaProductComplement';
-import { calculatePizzaProductComplementPrice } from './calculatePizzaProductComplementsPrice';
 import { handleSearchComplement } from './handleSearchComplement';
 import { ProductPizzaProvider } from '../hooks/useProductPizza';
 import ProductPizzaDetail from './ProductPizzaDetail';
+import Modal from 'src/components/modal/Modal';
+import { useProducts } from '../../hooks/useProducts';
+import { Complement, Product } from 'src/types/product';
+import { useMessaging } from 'src/providers/MessageProvider';
+import { useSelector } from 'src/store/redux/selector';
+import { moneyFormat } from 'src/helpers/numberFormat';
+import { getPizzaComplementsPrice } from 'src/store/redux/modules/cart/cases/addProduct';
+import InsideLoading from 'src/components/loading/InsideLoading';
 
-export default function ProductPizzaComplement() {
+const ProductPizzaComplement: React.FC = () => {
   const [amount, setAmount] = useState(1);
-  const [product, setProduct] = useState(null);
-  const [filteredProduct, setFilteredProduct] = useState(null);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [filteredProduct, setFilteredProduct] = useState<Product | null>(null);
   const [complementsPrice, setComplementsPrice] = useState(0);
   const [dialogIngredients, setDialogIngredients] = useState(false);
   const [dialogAdditional, setDialogAdditional] = useState(false);
-  const [complementIdSelected, setComplementIdSelected] = useState(null);
-  const [complementCategoryIdSelected, setComplementCategoryIdSelected] = useState(null);
-  const [complementSizeSelected, setComplementSizeSelected] = useState({});
+  const [complementIdSelected, setComplementIdSelected] = useState<number | null>(null);
+  const [complementCategoryIdSelected, setComplementCategoryIdSelected] = useState<number | null>(null);
+  const [complementSizeSelected, setComplementSizeSelected] = useState<Complement | null>(null);
   const messaging = useMessaging();
   const restaurant = useSelector(state => state.restaurant);
-  const [searchedCategoryId, setSearchedCategoryId] = useState(null);
+  const [searchedCategoryId, setSearchedCategoryId] = useState<number | null>(null);
   const [searchedValue, setSearchedValue] = useState('');
   const [loading, setLoading] = useState(true);
-  const { handlePrepareProduct, selectedProduct, handleSelectProduct } = useProducts();
+  const { selectedProduct, handleSelectProduct } = useProducts();
 
   const formattedTotal = useMemo(() => {
-    if (!product) return moneyFormat(0);
+    if (!product) {
+      return moneyFormat(0);
+    }
+
     const productPrice = product.promotion_activated && product.special_price ? product.special_price : product.price;
     const total = (complementsPrice + productPrice) * amount;
     return moneyFormat(total);
   }, [amount, complementsPrice, product]);
 
   const handleSearch = useCallback(
-    (categoryId, searchValue) => {
+    (categoryId: number, searchValue: string) => {
       setSearchedValue(searchValue);
 
       if (searchValue === '') {
@@ -51,6 +55,10 @@ export default function ProductPizzaComplement() {
 
       setSearchedCategoryId(categoryId);
 
+      if (!product) {
+        return;
+      }
+
       const newProduct = handleSearchComplement(product, searchValue, categoryId);
 
       setFilteredProduct(newProduct);
@@ -59,9 +67,14 @@ export default function ProductPizzaComplement() {
   );
 
   useEffect(() => {
-    fetchPizzaProduct(selectedProduct.id)
+    if (!selectedProduct) {
+      return;
+    }
+
+    fetchPizzaProduct(selectedProduct?.id)
       .then(payload => {
         setProduct(payload.product);
+        setFilteredProduct(payload.product);
         setComplementSizeSelected(payload.sizeSelected);
       })
       .catch(err => console.error(err))
@@ -69,24 +82,15 @@ export default function ProductPizzaComplement() {
   }, [selectedProduct]);
 
   useEffect(() => {
-    handleSearch(searchedCategoryId, searchedValue);
-  }, [handleSearch, searchedCategoryId, searchedValue]);
-
-  useEffect(() => {
-    if (!product) return;
-    handlePrepareProduct(product, amount);
-  }, [amount, product, handlePrepareProduct]);
-
-  useEffect(() => {
     if (!product || !restaurant) return;
 
-    const _complementsPrice = calculatePizzaProductComplementPrice(product, restaurant);
+    const _complementsPrice = getPizzaComplementsPrice(product.complement_categories, restaurant.configs);
 
     setComplementsPrice(_complementsPrice);
   }, [product, restaurant]);
 
   function handleAmountUp() {
-    if (!product.ready) {
+    if (!product?.ready) {
       messaging.handleOpen('Você precisa selecionar os itens obrigatórios');
       return;
     }
@@ -94,17 +98,22 @@ export default function ProductPizzaComplement() {
   }
 
   function handleAmountDown() {
-    if (!product.ready) {
+    if (!product?.ready) {
       messaging.handleOpen('Você precisa selecionar os itens obrigatórios');
       return;
     }
+
     if (amount > 1) {
       setAmount(amount - 1);
     }
   }
 
-  function handleClickPizzaComplements(productId, complementCategoryId, complementId) {
+  function handleClickPizzaComplements(productId: number, complementCategoryId: number, complementId: number) {
     try {
+      if (!product) {
+        return;
+      }
+
       const { newProduct, sizeSelected } = handleSelectPizzaProductComplement(
         product,
         complementCategoryId,
@@ -112,12 +121,17 @@ export default function ProductPizzaComplement() {
       );
 
       setProduct(newProduct);
-      handleSearch(searchedCategoryId, searchedValue);
       setComplementSizeSelected(sizeSelected);
 
-      if (newProduct.ready) handlePrepareProduct(newProduct);
+      if (!searchedCategoryId) {
+        return;
+      }
+
+      handleSearch(searchedCategoryId, searchedValue);
     } catch (err) {
-      messaging.handleOpen(err.message);
+      const error = err as any;
+
+      messaging.handleOpen(error.message);
     }
   }
 
@@ -137,10 +151,10 @@ export default function ProductPizzaComplement() {
   };
 
   return (
-    <CustomDialog
+    <Modal
       backgroundColor="#fafafa"
-      handleModalState={() => handleSelectProduct(null)}
-      title={`adicionar ao carrinho`}
+      onExited={() => handleSelectProduct(null)}
+      title={`adicionar ao pedido`}
       displayBottomActions
       maxWidth="lg"
       height="80vh"
@@ -149,6 +163,7 @@ export default function ProductPizzaComplement() {
         {dialogAdditional && <ProductPizzaComplementAdditional onExited={() => setDialogAdditional(false)} />}
         {dialogIngredients && <ProductPizzaComplementIngredient onExited={() => setDialogIngredients(false)} />}
       </ProductPizzaProvider>
+
       {loading ? (
         <InsideLoading />
       ) : (
@@ -156,6 +171,7 @@ export default function ProductPizzaComplement() {
           <ProductPizzaProvider value={productPizzaContextValue}>
             <ProductPizzaDetail />
           </ProductPizzaProvider>
+
           <ProductAdd
             amount={amount}
             handleAmountDown={handleAmountDown}
@@ -165,6 +181,8 @@ export default function ProductPizzaComplement() {
           />
         </>
       )}
-    </CustomDialog>
+    </Modal>
   );
-}
+};
+
+export default ProductPizzaComplement;

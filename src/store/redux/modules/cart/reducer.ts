@@ -137,16 +137,9 @@ export default function cart(state = INITIAL_STATE, action: CartActions): Cart {
     }
 
     case '@cart/SET_SETTINGS': {
-      if (!state.configs) {
-        return state;
-      }
-
       return {
         ...state,
-        configs: {
-          ...state.configs,
-          ...action.settings,
-        },
+        configs: action.settings,
       };
     }
 

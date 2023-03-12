@@ -1,6 +1,6 @@
 import { Middleware } from 'redux';
 import { RootState } from '../../selector';
-import { createHistory, setConfigs, updateTotal, setTax } from './actions';
+import { createHistory, setConfigs, updateTotal } from './actions';
 
 import checkPromotion from './promotion/checkPromotion';
 
@@ -19,7 +19,7 @@ export const middleware: Middleware<any, RootState> = store => next => action =>
   ];
 
   // actions para salvar configurações do restaurante no carrinho
-  const actionsToSetConfigs = ['@restaurant/SET_RESTAURANT', '@cart/SET_CART'];
+  const actionsToSetConfigs = ['@restaurant/SET_RESTAURANT'];
 
   // cria histórico para recuperar item excluído do carrinho
   if (action.type === '@cart/REMOVE_PRODUCT') {
@@ -28,27 +28,6 @@ export const middleware: Middleware<any, RootState> = store => next => action =>
   }
 
   next(action);
-
-  if (action.type === '@order/SET_SHIPMENT_METHOD') {
-    const restaurant = store.getState().restaurant;
-    const order = store.getState().order;
-    if (restaurant?.configs.tax_mode === 'distance') {
-      const { distance_tax } = order.shipment;
-      if (!distance_tax) return;
-      const tax = distance_tax;
-      store.dispatch(setTax(tax));
-    }
-  }
-
-  if (action.type === '@order/SET_SHIPMENT_ADDRESS') {
-    const restaurant = store.getState().restaurant;
-    if (restaurant?.configs.tax_mode === 'distance') {
-      const { distance_tax } = action.address;
-      if (!distance_tax) return;
-      const tax = distance_tax;
-      store.dispatch(setTax(tax));
-    }
-  }
 
   // atualiza as configurações do restaurante no carrinho para calculos
   if (actionsToSetConfigs.includes(action.type)) {
@@ -73,7 +52,7 @@ export const middleware: Middleware<any, RootState> = store => next => action =>
   // atualiza total do carrinho de acordo com a action emitida
   if (actionsToSaveCart.includes(action.type)) {
     const order = store.getState().order;
-    store.dispatch(updateTotal(order.shipment.shipment_method || 'delivery'));
+    store.dispatch(updateTotal(order.shipment.shipment_method));
   }
 
   /*

@@ -33,9 +33,10 @@ export default function ProductPizzaComplement({ onExited }) {
   const [searchedCategoryId, setSearchedCategoryId] = useState(null);
   const [searchedValue, setSearchedValue] = useState('');
 
-  const categoryComplementSize = useMemo(() => product.complement_categories.find(category => category.is_pizza_size), [
-    product,
-  ]);
+  const categoryComplementSize = useMemo(
+    () => product.complement_categories.find(category => category.is_pizza_size),
+    [product]
+  );
 
   const complementSizeSelected = useMemo(
     () => categoryComplementSize.complements.find(complement => complement.selected),

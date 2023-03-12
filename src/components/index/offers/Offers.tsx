@@ -8,9 +8,10 @@ import { ProductsProvider } from 'src/components/products/hooks/useProducts';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { useApp } from 'src/providers/AppProvider';
 import { api } from 'src/services/api';
-import { addToCart, prepareProduct } from 'src/store/redux/modules/cart/actions';
+import { addToCart } from 'src/store/redux/modules/cart/actions';
 import { useSelector } from 'src/store/redux/selector';
 import { AnimatedBackground } from 'src/styles/animatedBackground';
+import { CartProduct } from 'src/types/cart';
 import { Product } from 'src/types/product';
 import OffersList from './OffersList';
 
@@ -88,17 +89,16 @@ const ActivePromotions: React.FC = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleAddProductToCart = useCallback(() => {
-    dispatch(addToCart());
-    handleCartVisibility(true);
-    if (restaurant?.configs.facebook_pixel_id) fbq('track', 'AddToCart');
-  }, [dispatch, handleCartVisibility, restaurant]);
+  const handleAddProductToCart = useCallback(
+    (product: CartProduct, amount: number) => {
+      dispatch(addToCart(product, amount));
+      handleCartVisibility(true);
 
-  const handlePrepareProduct = useCallback(
-    (product, amount) => {
-      dispatch(prepareProduct(product, amount));
+      if (restaurant?.configs.facebook_pixel_id) {
+        fbq('track', 'AddToCart');
+      }
     },
-    [dispatch]
+    [dispatch, handleCartVisibility, restaurant]
   );
 
   if (products.length === 0 && !loading) return <Fragment />;
@@ -107,7 +107,6 @@ const ActivePromotions: React.FC = () => {
     <ProductsProvider
       value={{
         selectedProduct,
-        handlePrepareProduct,
         handleSelectProduct: (product: Product | null) => setSelectedProduct(product),
         handleAddProductToCart,
         isPizza,

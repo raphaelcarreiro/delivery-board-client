@@ -25,7 +25,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const DialogInputContext = React.createContext({
-  handleCloseDialog: () => {},
+  handleCloseDialog: () => {
+    //
+  },
 });
 
 export default function DialogInput({ onExited, children, backgroundColor, maxWidth = 'md' }) {

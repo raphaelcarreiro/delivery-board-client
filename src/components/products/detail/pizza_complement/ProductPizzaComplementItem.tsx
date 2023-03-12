@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
-import { List, ListItem, Typography, Menu, MenuItem, IconButton, makeStyles, alpha } from '@material-ui/core';
+import React, { Dispatch, MouseEvent, SetStateAction, useState } from 'react';
+import { List, ListItem, Typography, Menu, MenuItem, IconButton, makeStyles, Theme, alpha } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import PropTypes from 'prop-types';
+import { Complement, ComplementCategory } from 'src/types/product';
 import ImagePreview from 'src/components/image-preview/ImagePreview';
 
-const useStyles = makeStyles(theme => ({
+type UseStylesProps = {
+  isPizzaTaste: boolean;
+};
+
+const useStyles = makeStyles<Theme, UseStylesProps>(theme => ({
   listItem: {
     display: 'flex',
     flexDirection: 'row',
@@ -82,18 +86,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-ProductPizzaComplementItem.propTypes = {
-  complements: PropTypes.array.isRequired,
-  handleClickPizzaComplements: PropTypes.func.isRequired,
-  productId: PropTypes.number.isRequired,
-  category: PropTypes.object.isRequired,
-  setComplementCategoryIdSelected: PropTypes.func.isRequired,
-  setComplementIdSelected: PropTypes.func.isRequired,
-  openDialogAdditional: PropTypes.func.isRequired,
-  openDialogIngredients: PropTypes.func.isRequired,
-};
+interface ProductPizzaComplementItemProps {
+  complements: Complement[];
+  handleClickPizzaComplements(productId: number, complementCategoryId: number, complementId: number): void;
+  productId: number;
+  category: ComplementCategory;
+  setComplementCategoryIdSelected: Dispatch<SetStateAction<number | null>>;
+  setComplementIdSelected: Dispatch<SetStateAction<number | null>>;
+  openDialogAdditional(): void;
+  openDialogIngredients(): void;
+}
 
-export default function ProductPizzaComplementItem({
+const ProductPizzaComplementItem: React.FC<ProductPizzaComplementItemProps> = ({
   complements,
   handleClickPizzaComplements,
   productId,
@@ -102,13 +106,13 @@ export default function ProductPizzaComplementItem({
   setComplementIdSelected,
   openDialogAdditional,
   openDialogIngredients,
-}) {
+}) => {
   const classes = useStyles({ isPizzaTaste: category.is_pizza_taste });
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedComplement, setSelectedComplement] = useState({ additional: [], ingredients: [] });
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [selectedComplement, setSelectedComplement] = useState<null | Complement>(null);
   const [imagePreview, setImagePreview] = useState(false);
 
-  function handleClickMore(event, complement) {
+  function handleClickMore(event: MouseEvent<HTMLButtonElement>, complement: Complement) {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setComplementIdSelected(complement.id);
@@ -124,16 +128,17 @@ export default function ProductPizzaComplementItem({
 
   return (
     <>
-      {imagePreview && selectedComplement.image && (
+      {imagePreview && selectedComplement?.image && (
         <ImagePreview
           src={selectedComplement.image.imageUrl}
           onExited={() => setImagePreview(false)}
           description={selectedComplement.name}
         />
       )}
+
       {category.is_pizza_taste && (
         <Menu open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={() => setAnchorEl(null)}>
-          {selectedComplement.additional.length > 0 && (
+          {selectedComplement?.additional && selectedComplement.additional.length > 0 && (
             <MenuItem
               onClick={() => {
                 openDialogAdditional();
@@ -143,7 +148,8 @@ export default function ProductPizzaComplementItem({
               Adicionais
             </MenuItem>
           )}
-          {selectedComplement.ingredients.length > 0 && (
+
+          {selectedComplement?.ingredients && selectedComplement.ingredients.length > 0 && (
             <MenuItem
               onClick={() => {
                 openDialogIngredients();
@@ -155,6 +161,7 @@ export default function ProductPizzaComplementItem({
           )}
         </Menu>
       )}
+
       <List className={classes.list}>
         {complements.map(complement => (
           <ListItem
@@ -168,6 +175,7 @@ export default function ProductPizzaComplementItem({
                 <MoreHorizIcon />
               </IconButton>
             )}
+
             <div className={classes.complementData}>
               {complement.image && (
                 <div className={classes.imageContainer}>
@@ -186,7 +194,8 @@ export default function ProductPizzaComplementItem({
                 <Typography variant="body2" color="textSecondary">
                   {complement.description}
                 </Typography>
-                {complement.ingredients && complement.ingredients.some(i => !i.selected) > 0 && (
+
+                {complement.ingredients && complement.ingredients.some(i => !i.selected) && (
                   <div>
                     {complement.ingredients.map(
                       ingredient =>
@@ -198,18 +207,20 @@ export default function ProductPizzaComplementItem({
                     )}
                   </div>
                 )}
+
                 {complement.additional && complement.additional.some(a => a.selected) && (
                   <div>
                     {complement.additional.map(
                       additional =>
                         additional.selected && (
                           <Typography key={additional.id} variant="caption" className={classes.additional}>
-                            + {additional.name} {additional.prices.find(price => price.selected).formattedPrice}
+                            + {additional.name} {additional.prices.find(price => price.selected)?.formattedPrice}
                           </Typography>
                         )
                     )}
                   </div>
                 )}
+
                 {complement.prices.map(
                   price =>
                     price.selected &&
@@ -221,10 +232,13 @@ export default function ProductPizzaComplementItem({
                 )}
               </div>
             </div>
+
             {complement.selected && <CheckCircleIcon className={classes.icon} color="primary" />}
           </ListItem>
         ))}
       </List>
     </>
   );
-}
+};
+
+export default ProductPizzaComplementItem;

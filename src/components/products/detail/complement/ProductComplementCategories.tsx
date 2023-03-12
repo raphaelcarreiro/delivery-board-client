@@ -45,7 +45,7 @@ const ProductComplementCategories: React.FC = () => {
 
   return (
     <div>
-      {product.complement_categories.map(category => (
+      {product?.complement_categories.map(category => (
         <section className={classes.category} key={category.id}>
           <div className={classes.header}>
             <div>

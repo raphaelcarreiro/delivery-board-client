@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField, Typography } from '@material-ui/core';
 
 type LoginEmailStepProps = {
-  email: String;
+  email: string;
   setEmail(email: string): void;
   emailError: string;
 };

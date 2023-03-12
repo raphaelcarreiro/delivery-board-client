@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { useApp } from 'src/providers/AppProvider';
 
 const useStyles = makeStyles(theme => ({
-  cartBadge: ({ cartItems }) => ({
+  cartBadge: {
     position: 'absolute',
     display: 'flex',
     alignItems: 'center',
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     width: 20,
     fontSize: 12,
     color: '#FFF',
-  }),
+  },
 }));
 
 ProductAction.propTypes = {

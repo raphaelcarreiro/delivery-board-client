@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
+import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-// import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -47,7 +46,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const DialogFullscreenContext = React.createContext({
-  handleCloseDialog: () => {},
+  handleCloseDialog: () => {
+    //
+  },
 });
 
 function DialogFullscreen({ handleModalState, title, componentActions, children, backgroundColor }) {
@@ -105,11 +106,12 @@ DialogFullscreen.propTypes = {
 };
 
 // eslint-disable-next-line react/display-name
-export const withDialoagFullscreen = Component => props => (
-  <DialogFullscreenContext.Consumer>
-    {context => <Component {...props} {...context} />}
-  </DialogFullscreenContext.Consumer>
-);
+export const withDialoagFullscreen = Component => props =>
+  (
+    <DialogFullscreenContext.Consumer>
+      {context => <Component {...props} {...context} />}
+    </DialogFullscreenContext.Consumer>
+  );
 
 export default DialogFullscreen;
 export const DialogFullscreenConsumer = DialogFullscreenContext.Consumer;

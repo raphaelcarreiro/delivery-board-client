@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -58,7 +58,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const CustomDialogFormContext = React.createContext({
-  handleCloseDialog: () => {},
+  handleCloseDialog: () => {
+    //
+  },
 });
 
 export default function CustomDialogForm({

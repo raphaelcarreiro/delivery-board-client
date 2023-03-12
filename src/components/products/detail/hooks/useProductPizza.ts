@@ -1,19 +1,19 @@
-import { createContext, useContext } from 'react';
+import { createContext, Dispatch, SetStateAction, useContext } from 'react';
 import { Complement, Product } from 'src/types/product';
 
 export type ProductPizzaValue = {
-  product: Product;
-  filteredProduct: Product;
-  setProduct(product: Product): void;
+  product: Product | null;
+  filteredProduct: Product | null;
+  setProduct: Dispatch<SetStateAction<Product | null>>;
   handleSearch(categoryId: number, searchValue: string): void;
   handleClickPizzaComplements(productId: number, complementCategoryId: number, complementId: number): void;
   openDialogAdditional(): void;
   openDialogIngredients(): void;
-  complementSizeSelected: Complement;
-  setComplementCategoryIdSelected(complementCategoryId: number): void;
-  setComplementIdSelected(complementId: number): void;
-  complementCategoryIdSelected: number;
-  complementIdSelected: number;
+  complementSizeSelected: Complement | null;
+  setComplementCategoryIdSelected: Dispatch<SetStateAction<number | null>>;
+  setComplementIdSelected: Dispatch<SetStateAction<number | null>>;
+  complementCategoryIdSelected: number | null;
+  complementIdSelected: number | null;
 };
 
 const ProductPizzaContext = createContext<ProductPizzaValue>({} as ProductPizzaValue);

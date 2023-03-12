@@ -33,7 +33,7 @@ type ProductAddProps = {
   handleAmountDown(): void;
   handleAmountUp(): void;
   amount: number;
-  product: Product;
+  product: Product | null;
   total: string;
   redirect?: boolean;
 };
@@ -46,7 +46,7 @@ const ProductAdd: React.FC<ProductAddProps> = ({ handleAmountDown, handleAmountU
       <Grid item xs={12}>
         <div className={classes.actionContent}>
           <ProductAmountControl amount={amount} handleAmountDown={handleAmountDown} handleAmountUp={handleAmountUp} />
-          <ProductAddButton product={product} total={total} />
+          <ProductAddButton product={product} total={total} amount={amount} />
         </div>
       </Grid>
     </div>

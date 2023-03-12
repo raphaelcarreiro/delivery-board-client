@@ -1,6 +1,5 @@
 import { Cart, CartProduct, CartRestaurantConfigs } from 'src/types/cart';
 import { Coupon } from 'src/types/coupon';
-import { Product } from 'src/types/product';
 import { Promotion } from 'src/types/promotion';
 import { ShipmentMethods } from 'src/types/shipment';
 

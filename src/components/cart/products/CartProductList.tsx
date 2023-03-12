@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { List, makeStyles } from '@material-ui/core';
 import CartProductItem from './CartProductItem';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   list: {
     paddingTop: 0,
     [theme.breakpoints.down('md')]: {
@@ -21,7 +21,7 @@ const CartProductList: FC<CartProductListProps> = ({ products, handleClickUpdate
 
   return (
     <List className={classes.list}>
-      {products.map((product) => (
+      {products.map(product => (
         <CartProductItem product={product} handleClickUpdateProduct={handleClickUpdateProduct} key={product.uid} />
       ))}
     </List>

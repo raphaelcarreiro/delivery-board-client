@@ -1,14 +1,12 @@
 import { OrderStatusOptions } from './order';
+import { CreatedOrderProduct } from './product';
 
-export interface BoardOrderProduct {
-  id: number;
-  uuid: string;
-  description: string;
+export interface BoardOrderProduct extends CreatedOrderProduct {
+  order_id: number;
+  order_uuid: string;
   amount: number;
-  total: number;
   board_number: string;
   status: OrderStatusOptions;
-  formattedTotal: string;
   formattedStatus: string;
   name: string;
   product_id: number;

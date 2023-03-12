@@ -68,7 +68,7 @@ ImagePreview.propTypes = {
 };
 
 function ImagePreview({ src, description, onExited }) {
-  const classes = useStyles({ src: src });
+  const classes = useStyles({ src });
   const [open, setOpen] = useState(true);
 
   const handleClose = () => {

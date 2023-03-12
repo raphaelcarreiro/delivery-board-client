@@ -38,9 +38,9 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   paper: ({ backgroundColor, height }: ModalStyleProps) => ({
-    backgroundColor: backgroundColor,
+    backgroundColor,
     [theme.breakpoints.up('md')]: {
-      height: height,
+      height,
     },
   }),
   content: ({ title, displayBottomActions, disablePadding }: ModalStyleProps) => ({

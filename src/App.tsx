@@ -24,9 +24,7 @@ import FacebookLoginProvider from './providers/FacebookProvider';
 import LayoutHandler from './components/layout/LayoutHandler';
 import { AppProvider, AppContextValue } from './providers/AppProvider';
 import { useWindowSize } from './hooks/windowSize';
-import { Restaurant, RestaurantAddress } from './types/restaurant';
-import { setRestaurantAddress } from './store/redux/modules/order/actions';
-import { setCustomerAddresses } from './store/redux/modules/user/actions';
+import { Restaurant } from './types/restaurant';
 import LocationProvider from './providers/LocationProvider';
 import { useFetchBoardMovement } from './hooks/useFetchBoardMovement';
 import { useBoardControlSocket } from './hooks/useBoardControlSocket';
@@ -64,8 +62,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const restaurant = useSelector(state => state.restaurant);
   const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
   const windowSize = useWindowSize();
-  const order = useSelector(state => state.order);
-  const user = useSelector(state => state.user);
   const [isBoardMovementLoading] = useFetchBoardMovement(router.query.session as string | undefined);
   const [isSocketBoardConnected] = useBoardControlSocket(router.query.session as string | undefined);
 
@@ -108,40 +104,11 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   }, [restaurant]);
 
   useEffect(() => {
-    if (!user.id) return;
-
-    if (!order.restaurant_address) return;
-
-    localStorage.setItem('restaurantAddressId', order.restaurant_address.id.toString());
-
-    api
-      .post('/addressDistances', { restaurantAddressId: order.restaurant_address.id })
-      .then(response => {
-        const customerAddresses = response.data;
-        dispatch(setCustomerAddresses(customerAddresses));
-      })
-      .catch(err => console.error(err));
-  }, [dispatch, order.restaurant_address, user.id]);
-
-  useEffect(() => {
     api
       .get<Restaurant>('/restaurants')
       .then(response => {
         const _restaurant = response.data;
         const { configs } = _restaurant;
-        let restaurantAddress: RestaurantAddress | undefined;
-
-        const restaurantAddressId = localStorage.getItem('restaurantAddressId');
-
-        if (restaurantAddressId) {
-          restaurantAddress = _restaurant.addresses.find(address => address.id === parseInt(restaurantAddressId));
-          if (!restaurantAddress) restaurantAddress = _restaurant.addresses.find(address => address.is_main);
-        } else restaurantAddress = _restaurant.addresses.find(address => address.is_main);
-
-        if (restaurantAddress) {
-          dispatch(setRestaurantAddress(restaurantAddress));
-          localStorage.setItem('restaurantAddressId', restaurantAddress.id.toString());
-        }
 
         dispatch(
           setRestaurant({

@@ -1,7 +1,6 @@
 import { Product } from './product';
 import { Coupon } from './coupon';
 import { RestaurantConfigTaxMode, RestaurantConfigPizzaCalculate } from './restaurant';
-import { Promotion } from './promotion';
 
 export type CartRestaurantConfigs = {
   pizza_calculate: RestaurantConfigPizzaCalculate;
