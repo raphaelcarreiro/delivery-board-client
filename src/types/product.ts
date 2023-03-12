@@ -82,7 +82,6 @@ export interface Complement {
 
 export interface Product {
   id: number;
-  uid: number;
   name: string;
   url: string;
   activated: boolean;

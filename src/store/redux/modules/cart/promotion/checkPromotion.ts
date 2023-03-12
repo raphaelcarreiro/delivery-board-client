@@ -1,17 +1,19 @@
+import { Dispatch, MiddlewareAPI } from 'redux';
+import { RootState } from 'src/store/redux/selector';
 import {
   updateTotal,
   setDiscount,
-  prepareProduct,
   promotionAddToCart,
   promotionRemoveFromCart,
   inactivePromotionRemoveFromCart,
 } from '../actions';
+import { CartActions } from '../types';
 
 import { checkCategories } from './checkPromotionCategories';
 import { checkProducts } from './checkPromotionProducts';
 import { checkValue } from './checkPromotionValue';
 
-export default function checkPromotion(store) {
+export default function checkPromotion(store: MiddlewareAPI<Dispatch<CartActions>, RootState>) {
   const promotions = store.getState().promotions;
   const cart = store.getState().cart;
   const order = store.getState().order;
@@ -46,8 +48,7 @@ export default function checkPromotion(store) {
           case 'get': {
             store.dispatch(promotionRemoveFromCart(promotion.id));
             promotion.offered_products.forEach(product => {
-              store.dispatch(prepareProduct(product, product.amount));
-              store.dispatch(promotionAddToCart({ id: promotion.id, name: promotion.name }));
+              store.dispatch(promotionAddToCart(product as any, product.amount, promotion));
             });
             break;
           }

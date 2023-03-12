@@ -2,7 +2,9 @@ import { Customer } from './customer';
 import { CartProduct } from './cart';
 import { Coupon } from './coupon';
 import { PaymentMethod } from './paymentMethod';
-import { CreatedOrderProduct } from './product';
+import { CreatedOrderProduct, OrderProductAdditional, Product } from './product';
+import { RestaurantConfig } from './restaurant';
+import { ShipmentMethods } from './shipment';
 
 export interface CreditCart {
   number: string;
@@ -25,7 +27,7 @@ export interface OrderShipment {
   district: string;
   city: string;
   region: string;
-  shipment_method: 'delivery' | 'customer_collect';
+  shipment_method: ShipmentMethods;
   scheduled_at: string | null | Date;
   formattedScheduledAt: string | null;
   distance: number | null;
@@ -41,20 +43,23 @@ interface OrderStatus {
 }
 
 export interface Order {
-  id?: number;
-  formattedId?: string;
-  shipment: OrderShipment;
+  id: string;
+  formattedId: string;
+  shipment: {
+    shipmentMethod: ShipmentMethods;
+  };
   customer: Customer | null;
   paymentMethod: PaymentMethod | null;
   products: CartProduct[];
   change: number;
-  creditCard: CreditCart;
+  creditCard: CreditCart | null;
   coupon: Coupon | null;
   tax: number;
   discount: number;
   formattedChange: string;
   formattedTax: string;
   origin: OrderOrigin;
+  settings?: RestaurantConfig | null;
 }
 
 export interface OrderOrigin {
@@ -76,6 +81,21 @@ interface PixPayment {
   expires_at: string;
   paid_at: string;
   created_at: string;
+}
+
+export interface OrderProduct extends Product {
+  final_price: number;
+  product_price: number;
+  formattedFinalPrice: string;
+  formattedProductPrice: string;
+  amount: number;
+  additional: OrderProductAdditional[];
+  promotion_id: number | null;
+  product_id: any;
+  uid: string;
+  complementsPrice: number;
+  additionalPrice: number;
+  ready: boolean;
 }
 
 export interface CreatedOrder {

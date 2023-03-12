@@ -1,8 +1,10 @@
+import { Middleware } from 'redux';
+import { RootState } from '../../selector';
 import { createHistory, setConfigs, updateTotal, setTax } from './actions';
 
 import checkPromotion from './promotion/checkPromotion';
 
-export const middleware = store => next => action => {
+export const middleware: Middleware<any, RootState> = store => next => action => {
   const actionsToSaveCart = [
     '@cart/ADD_PRODUCT',
     '@cart/REMOVE_PRODUCT',
@@ -30,7 +32,7 @@ export const middleware = store => next => action => {
   if (action.type === '@order/SET_SHIPMENT_METHOD') {
     const restaurant = store.getState().restaurant;
     const order = store.getState().order;
-    if (restaurant.configs.tax_mode === 'distance') {
+    if (restaurant?.configs.tax_mode === 'distance') {
       const { distance_tax } = order.shipment;
       if (!distance_tax) return;
       const tax = distance_tax;
@@ -40,7 +42,7 @@ export const middleware = store => next => action => {
 
   if (action.type === '@order/SET_SHIPMENT_ADDRESS') {
     const restaurant = store.getState().restaurant;
-    if (restaurant.configs.tax_mode === 'distance') {
+    if (restaurant?.configs.tax_mode === 'distance') {
       const { distance_tax } = action.address;
       if (!distance_tax) return;
       const tax = distance_tax;
@@ -50,7 +52,12 @@ export const middleware = store => next => action => {
 
   // atualiza as configurações do restaurante no carrinho para calculos
   if (actionsToSetConfigs.includes(action.type)) {
-    const { configs } = store.getState().restaurant;
+    const configs = store.getState().restaurant?.configs;
+
+    if (!configs) {
+      return;
+    }
+
     store.dispatch(
       setConfigs({
         pizza_calculate: configs.pizza_calculate,

@@ -1,8 +1,12 @@
-export function checkCategories(cart, promotion) {
+import { Cart } from 'src/types/cart';
+import { Promotion } from 'src/types/promotion';
+
+export function checkCategories(cart: Cart, promotion: Promotion) {
   // monta array de categorias x total dos produtos
   // verifica se produtos no carrinho satisfação regra da promoção
 
-  const cartCategories = [];
+  const cartCategories: any[] = [];
+
   cart.products.forEach(product => {
     if (!product.fromPromotion)
       if (!cartCategories.includes(product.category.id)) cartCategories.push({ id: product.category.id, value: 0 });

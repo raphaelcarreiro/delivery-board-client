@@ -1,6 +1,7 @@
 import { Product } from './product';
 import { Coupon } from './coupon';
 import { RestaurantConfigTaxMode, RestaurantConfigPizzaCalculate } from './restaurant';
+import { Promotion } from './promotion';
 
 export type CartRestaurantConfigs = {
   pizza_calculate: RestaurantConfigPizzaCalculate;
@@ -12,14 +13,16 @@ export type CartRestaurantConfigs = {
 };
 
 export interface CartProduct extends CartPrepareProduct {
+  uid: string;
   additionalPrice: number;
   complementsPrice: number;
-  promotion: { id: number; name: string } | null;
   product_price: number;
   final_price: number;
   formattedFinalPrice: string;
   formattedProductPrice: string;
   fromPromotion?: boolean;
+  product_id: number;
+  promotion: { id: number; name: string } | null;
 }
 
 interface CartPrepareProduct extends Product {
@@ -31,7 +34,7 @@ export interface Cart {
   product: CartPrepareProduct | null;
   total: number;
   history: CartProduct[];
-  configs: CartRestaurantConfigs;
+  configs: CartRestaurantConfigs | null;
   coupon: Coupon | null;
   discount: number;
   subtotal: number;
