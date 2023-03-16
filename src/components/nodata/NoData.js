@@ -14,6 +14,7 @@ const useStyles = makeStyles({
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
+    textAlign: 'center',
   },
 });
 
@@ -22,7 +23,7 @@ function NoData({ message, action, buttonText, secondaryMessage }) {
 
   return (
     <div className={classes.container}>
-      <Typography variant="h5" color="textSecondary">
+      <Typography variant="body1" color="textSecondary">
         {message}
       </Typography>
       {secondaryMessage && (
@@ -32,7 +33,7 @@ function NoData({ message, action, buttonText, secondaryMessage }) {
       )}
       {buttonText && (
         <div className={classes.button}>
-          <Button variant="outlined" size="large" onClick={action} color="primary">
+          <Button variant="text" onClick={action} color="primary">
             {buttonText}
           </Button>
         </div>

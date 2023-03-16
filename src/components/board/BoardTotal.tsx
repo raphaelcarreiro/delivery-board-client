@@ -6,8 +6,9 @@ import { useSelector } from 'src/store/redux/selector';
 const styles = makeStyles({
   content: {
     display: 'flex',
-    padding: 0,
+    // padding: 10,
     flexDirection: 'column',
+    // border: '1px solid #eee',
     '& > .row': {
       display: 'grid',
       gridTemplateColumns: '1fr 3fr',

@@ -3,11 +3,61 @@ import { ptBR } from 'date-fns/locale';
 import { getOrderStatusText } from 'src/components/board/getOrderStatusText';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { BoardMovement } from 'src/types/boardMovement';
+import { Complement, ComplementCategory, OrderProductAdditional } from 'src/types/product';
 import { BoardMovementActions } from './types';
 
 const INITIAL_STATE: BoardMovement | null = null;
 
 export default function reducer(state = INITIAL_STATE, action: BoardMovementActions): BoardMovement | null {
+  const complementCategoriesMapping = (categories: ComplementCategory[]) => {
+    let sizeSelected: Complement | null = null;
+
+    return categories.map(category => {
+      category.product_complement_category_id = category.id;
+      category.complements = category.complements.map(complement => {
+        complement.product_complement_id = complement.id;
+        complement.formattedPrice = complement.price ? moneyFormat(complement.price) : '';
+
+        if (category.is_pizza_size && category.complements.length === 1) {
+          complement.selected = true;
+          sizeSelected = complement;
+        } else complement.selected = !!complement.selected;
+
+        complement.prices = complement.prices.map((price, index) => {
+          price.product_complement_price_id = price.id;
+          price.formattedPrice = price.price ? moneyFormat(price.price) : '';
+          price.selected = index === 0;
+          return price;
+        });
+
+        complement.ingredients = complement.ingredients.map(ingredient => {
+          ingredient.product_complement_ingredient_id = ingredient.id;
+          return ingredient;
+        });
+
+        complement.additional = complement.additional.map(additional => {
+          additional.product_complement_additional_id = additional.id;
+          additional.prices = additional.prices.map(price => {
+            price.product_complement_additional_price_id = price.id;
+            price.selected = price.product_complement_size_id === sizeSelected?.id;
+            price.formattedPrice = price.price ? moneyFormat(price.price) : '';
+            return price;
+          });
+          return additional;
+        });
+        return complement;
+      });
+      return category;
+    });
+  };
+
+  const additionalMapping = (additional: OrderProductAdditional[]) => {
+    return additional.map(additional => ({
+      ...additional,
+      formattedPrice: moneyFormat(additional.price),
+    }));
+  };
+
   switch (action.type) {
     case '@boardMovement/SET_BOARD_MOVEMENT': {
       return {
@@ -27,7 +77,13 @@ export default function reducer(state = INITIAL_STATE, action: BoardMovementActi
         ...state,
         products: action.products.map(product => ({
           ...product,
-          formattedTotal: moneyFormat(product.final_price),
+          formattedFinalPrice: moneyFormat(product.final_price),
+          additional: additionalMapping(product.additional),
+          complement_categories: complementCategoriesMapping(product.complement_categories),
+          formattedPrice: moneyFormat(product.price),
+          formattedProductPrice: moneyFormat(product.product_price),
+          formattedSpecialPrice: moneyFormat(product.special_price),
+          formattedStatus: getOrderStatusText('board', product.status),
         })),
       };
     }
@@ -43,8 +99,13 @@ export default function reducer(state = INITIAL_STATE, action: BoardMovementActi
           ...state.products,
           ...action.products.map(product => ({
             ...product,
+            formattedFinalPrice: moneyFormat(product.final_price),
+            additional: additionalMapping(product.additional),
+            complement_categories: complementCategoriesMapping(product.complement_categories),
+            formattedPrice: moneyFormat(product.price),
+            formattedProductPrice: moneyFormat(product.product_price),
+            formattedSpecialPrice: moneyFormat(product.special_price),
             formattedStatus: getOrderStatusText('board', product.status),
-            formattedTotal: moneyFormat(product.final_price),
           })),
         ],
       };

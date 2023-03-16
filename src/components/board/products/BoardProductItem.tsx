@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { ListItem, Typography, makeStyles } from '@material-ui/core';
 import BoardProductItemComplements from './BoardProductItemComplements';
 import { BoardOrderProduct } from 'src/types/boardOrderProduct';
+import { useBoard } from '../hooks/useBoard';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -85,6 +86,11 @@ interface BoardProductItemProps {
 
 const BoardProductItem: FC<BoardProductItemProps> = ({ product }) => {
   const classes = useStyles();
+  const context = useBoard();
+
+  function handleDetailClick() {
+    context.setSelectedProduct(product);
+  }
 
   function showAdditionalOrIngredients(product: BoardOrderProduct) {
     const showIngredients = product.ingredients.some(ingredient => !ingredient.selected);
@@ -143,6 +149,12 @@ const BoardProductItem: FC<BoardProductItemProps> = ({ product }) => {
           </div>
         </div>
       )}
+
+      <div className={classes.actions}>
+        <Typography color="primary" className={classes.link} onClick={handleDetailClick}>
+          detalhes
+        </Typography>
+      </div>
     </ListItem>
   );
 };
