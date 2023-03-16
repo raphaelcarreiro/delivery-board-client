@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { Complement, Product } from 'types/product';
+import { Complement, Product } from 'src/types/product';
 
 export type ProductPizzaValue = {
   product: Product | null;

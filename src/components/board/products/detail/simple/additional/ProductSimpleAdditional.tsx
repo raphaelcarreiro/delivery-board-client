@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { ListItem, List, Typography, makeStyles, alpha } from '@material-ui/core';
 import ProductViewAmountControl from './ProductSimpleAmountControl';
-import { OrderProductAdditional } from 'types/product';
+import { OrderProductAdditional } from 'src/types/product';
 
 const useStyles = makeStyles(theme => ({
   listItem: {

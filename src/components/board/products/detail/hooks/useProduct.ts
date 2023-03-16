@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { Product } from 'types/product';
+import { Product } from 'src/types/product';
 
 export type ProductValue = {
   product: Product | null;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { List, ListItem, Typography, makeStyles, alpha } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { Complement } from 'types/product';
+import { Complement } from 'src/types/product';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -56,7 +56,7 @@ interface ProductComplementItemProps {
   complementCategoryId: number;
 }
 
-export default function ProductComplementItem({ complements, complementCategoryId }: ProductComplementItemProps) {
+export default function ProductComplementItem({ complements }: ProductComplementItemProps) {
   const classes = useStyles();
 
   return (

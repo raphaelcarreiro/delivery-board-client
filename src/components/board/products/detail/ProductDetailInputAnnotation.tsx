@@ -1,6 +1,6 @@
 import { Grid, makeStyles, TextField } from '@material-ui/core';
 import { ChangeEvent, Dispatch, FC, SetStateAction } from 'react';
-import { Product } from 'types/product';
+import { Product } from 'src/types/product';
 
 const useStyles = makeStyles({
   annotationContainer: {

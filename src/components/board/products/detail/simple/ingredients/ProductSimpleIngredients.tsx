@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import { ListItem, List, Typography, makeStyles, alpha } from '@material-ui/core';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { Ingredient } from 'types/product';
+import { Ingredient } from 'src/types/product';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
