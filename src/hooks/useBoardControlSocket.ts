@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 import { BoardMovementPayment } from 'src/types/boardMovementPayment';
 import { BoardOrderProduct } from 'src/types/boardOrderProduct';
 import { useDispatch } from 'react-redux';
-import { addBoardPayment, addBoardProducts } from 'src/store/redux/modules/boardMovement/actions';
+import { addBoardPayment, addBoardProducts, removeBoardProduct } from 'src/store/redux/modules/boardMovement/actions';
 
 const socket = io(`${process.env.NEXT_PUBLIC_SOCKET}/board`);
 
@@ -29,6 +29,13 @@ export function useBoardControlSocket(boardMovementId?: string): UseBoardControl
     [dispatch]
   );
 
+  const handleProductDeleted = useCallback(
+    (orderProductId: number) => {
+      dispatch(removeBoardProduct(orderProductId));
+    },
+    [dispatch]
+  );
+
   useEffect(() => {
     if (!boardMovementId) {
       return;
@@ -40,6 +47,10 @@ export function useBoardControlSocket(boardMovementId?: string): UseBoardControl
 
     socket.on('board_payment_added', (payment: BoardMovementPayment) => handlePaymentAdded(payment));
 
+    socket.on('board_product_deleted', (payload: { order_product_id: number }) =>
+      handleProductDeleted(payload.order_product_id)
+    );
+
     socket.on('reconnect', () => {
       socket.emit('register', boardMovementId);
     });
@@ -47,7 +58,7 @@ export function useBoardControlSocket(boardMovementId?: string): UseBoardControl
     return () => {
       socket.off(boardMovementId);
     };
-  }, [handleProductsAdded, handlePaymentAdded, boardMovementId]);
+  }, [handleProductsAdded, handlePaymentAdded, handleProductDeleted, boardMovementId]);
 
   return [isConnected];
 }

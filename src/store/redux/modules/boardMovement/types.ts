@@ -41,6 +41,11 @@ interface UpdateBoardMovementTotal {
   type: '@boardMovement/UPDATE_TOTAL';
 }
 
+interface SetBoardMovementCustomerAction {
+  type: '@boardMovement/SET_CUSTOMER';
+  name: string;
+}
+
 export type BoardMovementActions =
   | SetBoardMovementAction
   | SetBoardMovementProducts
@@ -49,4 +54,5 @@ export type BoardMovementActions =
   | AddBoardMovementPayment
   | RemoveBoardMovementPayment
   | UpdateBoardMovementTotal
-  | SetBoardMovementPayments;
+  | SetBoardMovementPayments
+  | SetBoardMovementCustomerAction;

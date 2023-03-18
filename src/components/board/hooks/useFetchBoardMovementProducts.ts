@@ -6,7 +6,7 @@ import { setBoardProducts } from 'src/store/redux/modules/boardMovement/actions'
 export type UseFecthBoardMovementProducts = [boolean];
 
 export function useFecthBoardMovementProducts(id?: string): UseFecthBoardMovementProducts {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!!id);
   const dispatch = useDispatch();
 
   useEffect(() => {

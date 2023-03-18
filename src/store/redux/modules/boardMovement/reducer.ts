@@ -118,7 +118,7 @@ export default function reducer(state = INITIAL_STATE, action: BoardMovementActi
 
       return {
         ...state,
-        products: state.products.filter(product => product.order_product_id !== action.orderProductId),
+        products: state.products.filter(product => product.id !== action.orderProductId),
       };
     }
 
@@ -165,6 +165,20 @@ export default function reducer(state = INITIAL_STATE, action: BoardMovementActi
       return {
         ...state,
         payments: action.payments,
+      };
+    }
+
+    case '@boardMovement/SET_CUSTOMER': {
+      if (!state) {
+        return state;
+      }
+
+      return {
+        ...state,
+        customerName: action.name,
+        customer: {
+          name: action.name,
+        } as any,
       };
     }
 

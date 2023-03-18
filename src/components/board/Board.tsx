@@ -12,6 +12,8 @@ import ProductPizzaComplement from './products/detail/pizza_complement/ProductPi
 import ProductComplement from './products/detail/complement/ProductComplement';
 import NoData from '../nodata/NoData';
 import { useRouter } from 'next/router';
+import BoardLoading from './BoardLoading';
+import BoardNoMovement from './BoardNoMovement';
 
 const Board: FC = () => {
   const movement = useSelector(state => state.boardMovement);
@@ -19,6 +21,8 @@ const Board: FC = () => {
   const [isPaymentLoading] = useFetchBoardMovementPayments(movement?.id);
   const [selectedProduct, setSelectedProduct] = useState<BoardOrderProduct | null>(null);
   const router = useRouter();
+
+  const isLoading = useMemo(() => isProductsLoading || isPaymentLoading, [isProductsLoading, isPaymentLoading]);
 
   const isPizza = useMemo(() => {
     return !!selectedProduct?.category.is_pizza;
@@ -32,6 +36,18 @@ const Board: FC = () => {
     return selectedProduct ? !selectedProduct.category.has_complement : false;
   }, [selectedProduct]);
 
+  function getAppBarTitle(): string {
+    if (!movement) {
+      return 'mesa';
+    }
+
+    if (movement.customer) {
+      return `mesa ${movement.board.number} - ${movement.customer.name}`;
+    }
+
+    return `mesa ${movement?.board.number}`;
+  }
+
   return (
     <BoardProvider value={{ selectedProduct, setSelectedProduct }}>
       {isSimple && <ProductSimple onExited={() => setSelectedProduct(null)} />}
@@ -40,10 +56,12 @@ const Board: FC = () => {
 
       {isComplement && <ProductComplement onExited={() => setSelectedProduct(null)} />}
 
-      <CustomAppbar title={movement ? `Mesa ${movement?.board.number} - ${movement.customer.name}` : 'Mesa'} />
+      <CustomAppbar title={getAppBarTitle()} />
 
-      {!movement ? (
-        <NoData message="Você deve ler o código QR disponível na mesa" />
+      {isLoading ? (
+        <BoardLoading />
+      ) : !movement ? (
+        <BoardNoMovement />
       ) : !movement.products.length ? (
         <NoData
           message="nenhum produto para mostrar"

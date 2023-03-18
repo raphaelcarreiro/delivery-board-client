@@ -70,6 +70,7 @@ const BottomNavigator: FC = () => {
   const cart = useSelector(state => state.cart);
   const [activePage, setActivePage] = useState<Pages>('home');
   const router = useRouter();
+  const movement = useSelector(state => state.boardMovement);
 
   useEffect(() => {
     const path = router.pathname.replace('/', '');
@@ -95,7 +96,7 @@ const BottomNavigator: FC = () => {
     <nav className={classes.nav}>
       <div className={classes.content}>
         <Link
-          href={{ pathname: '/', query: router.query }}
+          href={{ pathname: '/', query: movement?.id }}
           onClick={() => setActivePage('home')}
           className={getClassName('home')}
         >
@@ -104,7 +105,7 @@ const BottomNavigator: FC = () => {
         </Link>
 
         <Link
-          href={{ pathname: '/offers', query: router.query }}
+          href={{ pathname: '/offers', query: movement ? { session: movement?.id } : undefined }}
           onClick={() => setActivePage('offers')}
           className={getClassName('offers')}
         >
@@ -113,7 +114,7 @@ const BottomNavigator: FC = () => {
         </Link>
 
         <Link
-          href={{ pathname: '/menu', query: router.query }}
+          href={{ pathname: '/menu', query: movement ? { session: movement?.id } : undefined }}
           onClick={() => setActivePage('menu')}
           className={getClassName('menu')}
         >
@@ -122,7 +123,7 @@ const BottomNavigator: FC = () => {
         </Link>
 
         <Link
-          href={{ pathname: '/cart', query: router.query }}
+          href={{ pathname: '/cart', query: movement ? { session: movement?.id } : undefined }}
           onClick={() => setActivePage('cart')}
           className={getClassName('cart')}
         >
@@ -132,7 +133,7 @@ const BottomNavigator: FC = () => {
         </Link>
 
         <Link
-          href={{ pathname: '/board', query: router.query }}
+          href={{ pathname: '/board', query: movement ? { session: movement?.id } : undefined }}
           onClick={() => setActivePage('board')}
           className={getClassName('board')}
         >

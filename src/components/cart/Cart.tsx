@@ -1,9 +1,9 @@
-import React, { useMemo, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useMemo, useState, FC } from 'react';
+import { useDispatch } from 'react-redux';
 import CartProductList from './products/CartProductList';
 import CartTotal from './CartTotal';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import ProductSimple from './products/detail/simple/ProductSimple';
 import ProductComplement from './products/detail/complements/ProductComplement';
@@ -14,9 +14,12 @@ import CartClosedRestaurant from 'src/components/cart/CartClosedRestaurant';
 import Coupon from './coupon/Coupon';
 import CartCouponButton from './CartCouponButton';
 import { useMessaging } from 'src/providers/MessageProvider';
-import { useAuth } from 'src/providers/AuthProvider';
-import { useApp } from 'src/providers/AppProvider';
 import { CartProvider } from './hooks/useCart';
+import CartButtons from './CartButtonts';
+import { useSelector } from 'src/store/redux/selector';
+import { CartProduct } from 'src/types/cart';
+import CartCustomer from './customer/CartCustomer';
+import { api } from 'src/services/api';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -42,18 +45,6 @@ const useStyles = makeStyles(theme => ({
       display: 'none',
     },
   },
-  action: {
-    marginTop: 20,
-    '& button': {
-      marginBottom: 10,
-    },
-  },
-  buying: {
-    display: 'block',
-    [theme.breakpoints.down('md')]: {
-      display: 'block',
-    },
-  },
   coupon: {
     textAlign: 'right',
     marginBottom: 15,
@@ -75,18 +66,28 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Cart() {
+const Cart: FC = () => {
   const cart = useSelector(state => state.cart);
   const classes = useStyles();
   const router = useRouter();
   const dispatch = useDispatch();
   const messaging = useMessaging();
-  const { handleCartVisibility, setRedirect } = useApp();
-  const restaurant = useSelector(state => state.restaurant);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState<CartProduct | null>(null);
   const [dialogClosedRestaurant, setDialogClosedRestaurant] = useState(false);
   const [couponView, setCouponView] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const [showCustomerDialog, setShowCustomerDialog] = useState(false);
+  const movement = useSelector(state => state.boardMovement);
+  const [saving, setSaving] = useState(false);
+  const restaurant = useSelector(state => state.restaurant);
+
+  const cartContextValue = {
+    selectedProduct,
+    handleUpdateCartProduct,
+    setSelectedProduct: (product: CartProduct) => setSelectedProduct(product),
+    setShowCustomerDialog,
+    saving,
+    handleSubmit,
+  };
 
   const isPizza = useMemo(() => {
     return !!selectedProduct?.category.is_pizza;
@@ -100,58 +101,45 @@ export default function Cart() {
     return selectedProduct ? !selectedProduct.category.has_complement : false;
   }, [selectedProduct]);
 
-  function handleCheckoutClick() {
-    if (!restaurant.is_open) {
-      setDialogClosedRestaurant(true);
-      return;
-    }
-
-    if (restaurant.configs.order_minimum_value > cart.subtotal && restaurant.configs.tax_mode !== 'order_value') {
-      messaging.handleOpen(`O valor mínimo do pedido é ${restaurant.configs.formattedOrderMinimumValue}`);
-      return;
-    }
-
-    if (
-      restaurant.configs.tax_mode !== 'products_amount' &&
-      restaurant.configs.order_minimum_products_amount > cart.productsAmount
-    ) {
-      messaging.handleOpen(`A quantidade mínima de produtos é ${restaurant.configs.order_minimum_products_amount}`);
-      return;
-    }
-
-    if (!isAuthenticated) {
-      if (restaurant.configs.require_login) {
-        router.push('/login');
-        setRedirect('/checkout');
-        return;
-      }
-      router.push('/guest-register');
-      setRedirect('/checkout');
-      return;
-    }
-
-    router.push('/checkout');
-  }
-
-  function handleUpdateCartProduct(product, amount) {
+  function handleUpdateCartProduct(product: CartProduct, amount: number) {
     dispatch(updateProductFromCart(product, amount));
   }
 
-  function handleClickUpdateProduct(product) {
+  function handleClickUpdateProduct(product: CartProduct) {
     messaging.handleClose();
 
     setSelectedProduct(product);
   }
 
-  function handleBuyingClick() {
-    handleCartVisibility(false);
-  }
+  function handleSubmit() {
+    setSaving(true);
 
-  const cartContextValue = {
-    selectedProduct,
-    handleUpdateCartProduct,
-    setSelectedProduct: product => setSelectedProduct(product),
-  };
+    const data = {
+      customer: movement?.customer,
+      paymentMethod: null,
+      shipment: {
+        ...restaurant?.addresses.find(address => address.is_main),
+        shipment_method: 'board',
+      },
+      products: cart.products,
+      board_movement_id: movement?.id,
+      total: cart.total,
+      discount: 0,
+      change: 0,
+      tax: cart.tax,
+    };
+
+    api
+      .post('/orders', data)
+      .then(() =>
+        router.push({
+          pathname: '/board',
+          query: movement ? { session: movement.id } : undefined,
+        })
+      )
+      .catch(err => console.error(err))
+      .finally(() => setSaving(false));
+  }
 
   return (
     <CartProvider value={cartContextValue}>
@@ -165,11 +153,11 @@ export default function Cart() {
 
       {isComplement && <ProductComplement onExited={() => setSelectedProduct(null)} />}
 
+      {showCustomerDialog && <CartCustomer onExited={() => setShowCustomerDialog(false)} />}
+
       {couponView ? (
-        <>
-          <Coupon setClosedCouponView={() => setCouponView(false)} />
-        </>
-      ) : cart.products.length > 0 ? (
+        <Coupon setClosedCouponView={() => setCouponView(false)} />
+      ) : cart.products.length ? (
         <div className={classes.cart}>
           <Typography className={classes.title} variant="h5" color="primary">
             carrinho
@@ -181,31 +169,17 @@ export default function Cart() {
 
           <CartTotal />
 
-          <div className={classes.action}>
-            <Button disabled size="large" onClick={handleCheckoutClick} variant="contained" color="primary" fullWidth>
-              enviar pedido
-            </Button>
-            <Button
-              variant="text"
-              color="primary"
-              size="large"
-              fullWidth
-              className={classes.buying}
-              onClick={() => {
-                router.route === '/cart' ? router.push('/menu') : handleBuyingClick();
-              }}
-            >
-              Continuar comprando
-            </Button>
-          </div>
+          <CartButtons setDialogClosedRestaurant={setDialogClosedRestaurant} />
         </div>
       ) : (
         <div className={classes.emptyCart}>
-          <Typography variant="h5" color="textSecondary">
+          <Typography variant="body1" color="textSecondary">
             carrinho vazio
           </Typography>
         </div>
       )}
     </CartProvider>
   );
-}
+};
+
+export default Cart;

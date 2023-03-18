@@ -10,7 +10,7 @@ export interface BoardMovement {
   admin_user_id: number;
   admin_user: User;
   is_open: boolean;
-  customer: Customer;
+  customer?: Customer;
   created_at: string;
   formattedIsOpen: string;
   formattedCreatedAt: string;

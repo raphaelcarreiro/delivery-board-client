@@ -57,3 +57,10 @@ export function updateBoardTotal(): BoardMovementActions {
     type: '@boardMovement/UPDATE_TOTAL',
   };
 }
+
+export function setBoardCustomer(name: string): BoardMovementActions {
+  return {
+    type: '@boardMovement/SET_CUSTOMER',
+    name,
+  };
+}

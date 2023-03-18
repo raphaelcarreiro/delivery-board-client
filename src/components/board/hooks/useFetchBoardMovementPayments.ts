@@ -9,7 +9,7 @@ export type UseFetchBoardMovementPayment = [boolean];
 export function useFetchBoardMovementPayments(movementId?: string): UseFetchBoardMovementPayment {
   const dispatch = useDispatch();
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!!movementId);
 
   useEffect(() => {
     if (!movementId) {
