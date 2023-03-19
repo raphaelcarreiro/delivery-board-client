@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import ProductSimple from './products/detail/simple/ProductSimple';
 import ProductComplement from './products/detail/complements/ProductComplement';
 import ProductPizzaComplement from './products/detail/pizza_complement/ProductPizzaComplement';
-import { updateProductFromCart } from 'src/store/redux/modules/cart/actions';
+import { clearCart, updateProductFromCart } from 'src/store/redux/modules/cart/actions';
 import CustomAppbar from 'src/components/appbar/CustomAppbar';
 import CartClosedRestaurant from 'src/components/cart/CartClosedRestaurant';
 import Coupon from './coupon/Coupon';
@@ -20,6 +20,9 @@ import { useSelector } from 'src/store/redux/selector';
 import { CartProduct } from 'src/types/cart';
 import CartCustomer from './customer/CartCustomer';
 import { api } from 'src/services/api';
+import packageJson from '../../../package.json';
+import { setBoardCustomer } from 'src/store/redux/modules/boardMovement/actions';
+import { useApp } from 'src/providers/AppProvider';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -79,6 +82,7 @@ const Cart: FC = () => {
   const movement = useSelector(state => state.boardMovement);
   const [saving, setSaving] = useState(false);
   const restaurant = useSelector(state => state.restaurant);
+  const app = useApp();
 
   const cartContextValue = {
     selectedProduct,
@@ -112,31 +116,43 @@ const Cart: FC = () => {
   }
 
   function handleSubmit() {
+    if (!movement) {
+      return;
+    }
+
     setSaving(true);
 
     const data = {
-      customer: movement?.customer,
-      paymentMethod: null,
+      customer: movement.customer,
+      payment_method: null,
       shipment: {
         ...restaurant?.addresses.find(address => address.is_main),
         shipment_method: 'board',
       },
       products: cart.products,
-      board_movement_id: movement?.id,
+      board_movement_id: movement.id,
       total: cart.total,
-      discount: 0,
+      discount: cart.discount,
       change: 0,
       tax: cart.tax,
+      origin: {
+        version: packageJson.version,
+        app_name: packageJson.name,
+        platform: 'board-web-app',
+      },
     };
 
     api
-      .post('/orders', data)
-      .then(() =>
+      .post(`/boardMovements/${movement.id}/orders`, data)
+      .then(response => {
+        dispatch(setBoardCustomer(response.data.customer.name));
+        app.handleCartVisibility(false);
+        dispatch(clearCart());
         router.push({
           pathname: '/board',
           query: movement ? { session: movement.id } : undefined,
-        })
-      )
+        });
+      })
       .catch(err => console.error(err))
       .finally(() => setSaving(false));
   }

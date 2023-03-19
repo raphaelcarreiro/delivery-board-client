@@ -73,7 +73,7 @@ const BoardTotal: React.FC = () => {
 
       <div className={classes.actions}>
         <Button variant="contained" color="primary" size="large" fullWidth onClick={handleClick}>
-          Continuar comprando
+          ACESSAR CARDÁPIO
         </Button>
 
         <Button variant="text" color="primary" size="large" fullWidth>
