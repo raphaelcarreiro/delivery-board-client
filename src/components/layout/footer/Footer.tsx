@@ -87,6 +87,7 @@ const useStyles = makeStyles(theme => ({
 const Footer: React.FC = () => {
   const classes = useStyles();
   const restaurant = useSelector(state => state.restaurant);
+  const movement = useSelector(state => state.boardMovement);
 
   return (
     <footer className={classes.footer}>
@@ -104,16 +105,20 @@ const Footer: React.FC = () => {
           <div>
             <ul className={classes.links}>
               <li>
-                <Link href="/">início</Link>
+                <Link href={{ pathname: '/', query: movement ? { session: movement.id } : undefined }}>início</Link>
               </li>
               <li>
-                <Link href="/menu">cardápio</Link>
+                <Link href={{ pathname: '/menu', query: movement ? { session: movement.id } : undefined }}>
+                  cardápio
+                </Link>
               </li>
               <li>
-                <Link href="/offers">ofertas</Link>
+                <Link href={{ pathname: '/offers', query: movement ? { session: movement.id } : undefined }}>
+                  ofertas
+                </Link>
               </li>
               <li>
-                <Link href="/contact">mesa</Link>
+                <Link href={{ pathname: '/board', query: movement ? { session: movement.id } : undefined }}>mesa</Link>
               </li>
             </ul>
           </div>

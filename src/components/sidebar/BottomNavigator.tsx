@@ -96,7 +96,7 @@ const BottomNavigator: FC = () => {
     <nav className={classes.nav}>
       <div className={classes.content}>
         <Link
-          href={{ pathname: '/', query: movement?.id }}
+          href={{ pathname: '/', query: movement ? { session: movement?.id } : undefined }}
           onClick={() => setActivePage('home')}
           className={getClassName('home')}
         >

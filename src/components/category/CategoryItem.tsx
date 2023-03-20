@@ -3,6 +3,7 @@ import { Typography, ListItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Link from 'next/link';
 import { Category } from 'src/types/category';
+import { useSelector } from 'src/store/redux/selector';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -49,9 +50,13 @@ type CategoryItemProps = {
 
 const CategoryItem: React.FC<CategoryItemProps> = ({ category }) => {
   const classes = useStyles();
+  const movement = useSelector(state => state.boardMovement);
 
   return (
-    <Link href={'/menu/[url]'} as={`/menu/${category.url}`}>
+    <Link
+      href={'/menu/[url]'}
+      as={{ pathname: `/menu/${category.url}`, query: movement ? { session: movement.id } : undefined }}
+    >
       <ListItem className={classes.listItem} button>
         <div className={classes.content}>
           <div className={classes.data}>

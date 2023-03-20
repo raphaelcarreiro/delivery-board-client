@@ -23,6 +23,7 @@ import { api } from 'src/services/api';
 import packageJson from '../../../package.json';
 import { setBoardCustomer } from 'src/store/redux/modules/boardMovement/actions';
 import { useApp } from 'src/providers/AppProvider';
+import CartSuccess from './CartSuccess';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -75,14 +76,14 @@ const Cart: FC = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const messaging = useMessaging();
+  const restaurant = useSelector(state => state.restaurant);
+  const movement = useSelector(state => state.boardMovement);
   const [selectedProduct, setSelectedProduct] = useState<CartProduct | null>(null);
   const [dialogClosedRestaurant, setDialogClosedRestaurant] = useState(false);
   const [couponView, setCouponView] = useState(false);
   const [showCustomerDialog, setShowCustomerDialog] = useState(false);
-  const movement = useSelector(state => state.boardMovement);
   const [saving, setSaving] = useState(false);
-  const restaurant = useSelector(state => state.restaurant);
-  const app = useApp();
+  const [success, setSuccess] = useState(false);
 
   const cartContextValue = {
     selectedProduct,
@@ -146,12 +147,8 @@ const Cart: FC = () => {
       .post(`/boardMovements/${movement.id}/orders`, data)
       .then(response => {
         dispatch(setBoardCustomer(response.data.customer.name));
-        app.handleCartVisibility(false);
         dispatch(clearCart());
-        router.push({
-          pathname: '/board',
-          query: movement ? { session: movement.id } : undefined,
-        });
+        setSuccess(true);
       })
       .catch(err => console.error(err))
       .finally(() => setSaving(false));
@@ -171,7 +168,9 @@ const Cart: FC = () => {
 
       {showCustomerDialog && <CartCustomer onExited={() => setShowCustomerDialog(false)} />}
 
-      {couponView ? (
+      {success ? (
+        <CartSuccess />
+      ) : couponView ? (
         <Coupon setClosedCouponView={() => setCouponView(false)} />
       ) : cart.products.length ? (
         <div className={classes.cart}>

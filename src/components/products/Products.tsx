@@ -19,6 +19,7 @@ import ProductComplement from './detail/complement/ProductComplement';
 import { useApp } from 'src/providers/AppProvider';
 import { ProductsContextValue, ProductsProvider } from './hooks/useProducts';
 import { CartProduct } from 'src/types/cart';
+import { useRouter } from 'next/router';
 
 const useStyles = makeStyles(theme => ({
   pageHeader: {
@@ -66,6 +67,8 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const [search, setSearch] = useState('');
   const ref = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+  const movement = useSelector(state => state.boardMovement);
 
   const isPizza = useMemo(() => {
     return !!selectedProduct?.category.is_pizza;
@@ -188,6 +191,7 @@ const Products: React.FC<ProductsProps> = ({ products, categoryName, categoryTyp
 
       <CustomAppbar
         title={isSearching ? '' : categoryName}
+        cancelAction={() => router.push({ pathname: '/menu', query: movement ? { session: movement.id } : undefined })}
         actionComponent={
           <ProductsActions isSearching={isSearching} handleSearch={handleSearch} setIsSearching={setIsSearching} />
         }
