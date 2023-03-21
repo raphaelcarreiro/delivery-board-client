@@ -64,3 +64,10 @@ export function setBoardCustomer(name: string): BoardMovementActions {
     name,
   };
 }
+
+export function setBoardDiscount(discount: number): BoardMovementActions {
+  return {
+    type: '@boardMovement/SET_DISCOUNT',
+    discount,
+  };
+}

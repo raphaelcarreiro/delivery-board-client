@@ -22,7 +22,6 @@ import CartCustomer from './customer/CartCustomer';
 import { api } from 'src/services/api';
 import packageJson from '../../../package.json';
 import { setBoardCustomer } from 'src/store/redux/modules/boardMovement/actions';
-import { useApp } from 'src/providers/AppProvider';
 import CartSuccess from './CartSuccess';
 
 const useStyles = makeStyles(theme => ({

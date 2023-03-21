@@ -40,7 +40,6 @@ const BoardTotal: React.FC = () => {
   const router = useRouter();
   const movement = useSelector(state => state.boardMovement);
   const classes = styles();
-  const products = movement?.products.reduce((previous, product) => previous + product.amount, 0);
   const orders = new Set(movement?.products.map(product => product.id)).size;
 
   function handleClick() {
@@ -58,8 +57,8 @@ const BoardTotal: React.FC = () => {
           <Typography className="value">{orders}</Typography>
         </div>
         <div className="row">
-          <Typography>Produtos</Typography>
-          <Typography className="value">{products}</Typography>
+          <Typography>Desconto</Typography>
+          <Typography className="value">{movement?.formattedDiscount}</Typography>
         </div>
         <div className="row">
           <Typography>Total</Typography>

@@ -16,6 +16,8 @@ export function useFetchBoardMovementPayments(movementId?: string): UseFetchBoar
       return;
     }
 
+    setLoading(true);
+
     api
       .get<BoardMovementPayment[]>(`/boardMovements/${movementId}/payments`)
       .then(response => {

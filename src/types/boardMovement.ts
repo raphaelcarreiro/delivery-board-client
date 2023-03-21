@@ -24,4 +24,6 @@ export interface BoardMovement {
   totalPaid: number;
   formattedTotalPaid: string;
   isPaid: boolean;
+  discount: number;
+  formattedDiscount: string;
 }

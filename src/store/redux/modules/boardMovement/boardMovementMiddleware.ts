@@ -9,6 +9,9 @@ export const boardMovementMiddleware: Middleware<any, RootState> = store => next
     '@boardMovement/SET_PAYMENTS',
     '@boardMovement/ADD_PRODUCTS',
     '@boardMovement/ADD_PAYMENT',
+    '@boardMovement/SET_DISCOUNT',
+    '@boardMovement/REMOVE_PAYMENT',
+    '@boardMovement/REMOVE_PRODUCT',
   ];
 
   next(action);

@@ -46,6 +46,11 @@ interface SetBoardMovementCustomerAction {
   name: string;
 }
 
+interface SetBoardMovementDiscountAction {
+  type: '@boardMovement/SET_DISCOUNT';
+  discount: number;
+}
+
 export type BoardMovementActions =
   | SetBoardMovementAction
   | SetBoardMovementProducts
@@ -55,4 +60,5 @@ export type BoardMovementActions =
   | RemoveBoardMovementPayment
   | UpdateBoardMovementTotal
   | SetBoardMovementPayments
-  | SetBoardMovementCustomerAction;
+  | SetBoardMovementCustomerAction
+  | SetBoardMovementDiscountAction;

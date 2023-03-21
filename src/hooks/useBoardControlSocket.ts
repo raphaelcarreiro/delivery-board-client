@@ -3,7 +3,12 @@ import { io } from 'socket.io-client';
 import { BoardMovementPayment } from 'src/types/boardMovementPayment';
 import { BoardOrderProduct } from 'src/types/boardOrderProduct';
 import { useDispatch } from 'react-redux';
-import { addBoardPayment, addBoardProducts, removeBoardProduct } from 'src/store/redux/modules/boardMovement/actions';
+import {
+  addBoardPayment,
+  addBoardProducts,
+  removeBoardPayment,
+  removeBoardProduct,
+} from 'src/store/redux/modules/boardMovement/actions';
 
 const socket = io(`${process.env.NEXT_PUBLIC_SOCKET}/board`);
 
@@ -36,6 +41,13 @@ export function useBoardControlSocket(boardMovementId?: string): UseBoardControl
     [dispatch]
   );
 
+  const handlePaymentDeleted = useCallback(
+    (paymentId: string) => {
+      dispatch(removeBoardPayment(paymentId));
+    },
+    [dispatch]
+  );
+
   useEffect(() => {
     if (!boardMovementId) {
       return;
@@ -51,6 +63,8 @@ export function useBoardControlSocket(boardMovementId?: string): UseBoardControl
       handleProductDeleted(payload.order_product_id)
     );
 
+    socket.on('board_payment_deleted', (payload: { paymentId: string }) => handlePaymentDeleted(payload.paymentId));
+
     socket.on('reconnect', () => {
       socket.emit('register', boardMovementId);
     });
@@ -58,7 +72,7 @@ export function useBoardControlSocket(boardMovementId?: string): UseBoardControl
     return () => {
       socket.off(boardMovementId);
     };
-  }, [handleProductsAdded, handlePaymentAdded, handleProductDeleted, boardMovementId]);
+  }, [handleProductsAdded, handlePaymentAdded, handleProductDeleted, handlePaymentDeleted, boardMovementId]);
 
   return [isConnected];
 }

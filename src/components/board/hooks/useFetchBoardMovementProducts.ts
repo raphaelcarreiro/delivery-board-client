@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { api } from 'src/services/api';
-import { setBoardProducts } from 'src/store/redux/modules/boardMovement/actions';
+import { setBoardDiscount, setBoardProducts } from 'src/store/redux/modules/boardMovement/actions';
 
 export type UseFecthBoardMovementProducts = [boolean];
 
@@ -14,10 +14,13 @@ export function useFecthBoardMovementProducts(id?: string): UseFecthBoardMovemen
       return;
     }
 
+    setLoading(true);
+
     api
       .get(`/boardMovements/${id}/products`)
       .then(response => {
         dispatch(setBoardProducts(response.data.products));
+        dispatch(setBoardDiscount(response.data.discount));
       })
       .catch(err => console.error(err))
       .finally(() => setLoading(false));

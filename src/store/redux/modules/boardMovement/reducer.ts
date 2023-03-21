@@ -123,6 +123,8 @@ export default function reducer(state = INITIAL_STATE, action: BoardMovementActi
     }
 
     case '@boardMovement/REMOVE_PAYMENT': {
+      console.log(action);
+
       if (!state) {
         return state;
       }
@@ -192,10 +194,22 @@ export default function reducer(state = INITIAL_STATE, action: BoardMovementActi
 
       return {
         ...state,
-        total,
+        total: total - state.discount,
+        formattedTotal: moneyFormat(total - state.discount),
         totalPaid,
         formattedTotalPaid: moneyFormat(totalPaid),
-        formattedTotal: moneyFormat(total),
+      };
+    }
+
+    case '@boardMovement/SET_DISCOUNT': {
+      if (!state) {
+        return state;
+      }
+
+      return {
+        ...state,
+        discount: action.discount,
+        formattedDiscount: moneyFormat(action.discount),
       };
     }
 
