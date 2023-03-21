@@ -60,7 +60,7 @@ const CartButtons: FC<CartButtonsProps> = ({ setDialogClosedRestaurant }) => {
 
   return (
     <div className={classes.action}>
-      {movement ? (
+      {movement?.is_open && (
         <Button
           disabled={saving}
           size="large"
@@ -71,7 +71,15 @@ const CartButtons: FC<CartButtonsProps> = ({ setDialogClosedRestaurant }) => {
         >
           enviar pedido
         </Button>
-      ) : (
+      )}
+
+      {!movement?.is_open && (
+        <div className={classes.warning}>
+          <Typography variant="h6">Esta conta foi fechada. Não é possível enviar pedidos</Typography>
+        </div>
+      )}
+
+      {!movement && (
         <div className={classes.warning}>
           <Typography variant="h6">Você precisa escanear o código QR disponível na mesa para enviar pedido</Typography>
         </div>

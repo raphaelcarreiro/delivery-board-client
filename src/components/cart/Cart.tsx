@@ -23,6 +23,7 @@ import { api } from 'src/services/api';
 import packageJson from '../../../package.json';
 import { setBoardCustomer } from 'src/store/redux/modules/boardMovement/actions';
 import CartSuccess from './CartSuccess';
+import CartError from './CartError';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -83,6 +84,7 @@ const Cart: FC = () => {
   const [showCustomerDialog, setShowCustomerDialog] = useState(false);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
   const cartContextValue = {
     selectedProduct,
@@ -149,7 +151,9 @@ const Cart: FC = () => {
         dispatch(clearCart());
         setSuccess(true);
       })
-      .catch(err => console.error(err))
+      .catch(err => {
+        setError(err.response?.data?.error ? err.response.data.error : 'Não foi possível enviar o pedido');
+      })
       .finally(() => setSaving(false));
   }
 
@@ -167,7 +171,9 @@ const Cart: FC = () => {
 
       {showCustomerDialog && <CartCustomer onExited={() => setShowCustomerDialog(false)} />}
 
-      {success ? (
+      {error ? (
+        <CartError textError={error} handleReset={() => setError('')} />
+      ) : success ? (
         <CartSuccess />
       ) : couponView ? (
         <Coupon setClosedCouponView={() => setCouponView(false)} />

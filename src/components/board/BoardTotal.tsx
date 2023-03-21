@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { useSelector } from 'src/store/redux/selector';
 
-const styles = makeStyles({
+const styles = makeStyles(theme => ({
   content: {
     display: 'flex',
     // padding: 10,
@@ -34,7 +34,14 @@ const styles = makeStyles({
     flexDirection: 'column',
     gap: 20,
   },
-});
+  warning: {
+    textAlign: 'center',
+    marginBottom: 20,
+    backgroundColor: theme.palette.warning.light,
+    padding: 10,
+    fontWeight: 'bold',
+  },
+}));
 
 const BoardTotal: React.FC = () => {
   const router = useRouter();
@@ -70,15 +77,23 @@ const BoardTotal: React.FC = () => {
         </div>
       </div>
 
-      <div className={classes.actions}>
-        <Button variant="contained" color="primary" size="large" fullWidth onClick={handleClick}>
-          ACESSAR CARDÁPIO
-        </Button>
+      {!movement?.is_open && (
+        <div className={classes.warning}>
+          <Typography variant="h6">Esta conta foi fechada. Não é possível enviar pedidos</Typography>
+        </div>
+      )}
 
-        <Button variant="text" color="primary" size="large" fullWidth>
-          SOLICITAR CONTA
-        </Button>
-      </div>
+      {movement?.is_open && (
+        <div className={classes.actions}>
+          <Button variant="contained" color="primary" size="large" fullWidth onClick={handleClick}>
+            ACESSAR CARDÁPIO
+          </Button>
+
+          <Button variant="text" color="primary" size="large" fullWidth>
+            SOLICITAR CONTA
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
