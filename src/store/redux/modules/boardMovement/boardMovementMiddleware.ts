@@ -17,7 +17,6 @@ export const boardMovementMiddleware: Middleware<any, RootState> = store => next
   next(action);
 
   if (actionsToUpdateTotal.includes(action.type)) {
-    console.log(action);
     store.dispatch(updateBoardTotal());
   }
 };

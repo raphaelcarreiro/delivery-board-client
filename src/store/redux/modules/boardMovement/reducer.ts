@@ -123,8 +123,6 @@ export default function reducer(state = INITIAL_STATE, action: BoardMovementActi
     }
 
     case '@boardMovement/REMOVE_PAYMENT': {
-      console.log(action);
-
       if (!state) {
         return state;
       }

@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { IconButton, Menu, MenuItem, Avatar, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import InputIcon from '@material-ui/icons/Input';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
 import LocalOfferIcons from '@material-ui/icons/LocalOffer';
 import Link from '../../link/Link';
-import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { useAuth } from 'src/providers/AuthProvider';
 import { useApp } from 'src/providers/AppProvider';
 import { PAGE_MAX_WIDTH } from 'src/constants/constants';
+import { AssignmentOutlined, RestaurantMenuOutlined } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -111,35 +108,13 @@ const useStyles = makeStyles(theme => ({
 
 export default function Header() {
   const { handleCartVisibility } = useApp();
-  const { logout } = useAuth();
-  const router = useRouter();
-  const [anchorEl, setAnchorEl] = useState(null);
   const restaurant = useSelector(state => state.restaurant) || {};
-  const user = useSelector(state => state.user);
   const cart = useSelector(state => state.cart);
   const classes = useStyles({
     cartItems: cart.products.length > 0,
     restaurantIsOpen: restaurant && restaurant.is_open,
   });
-
-  function handleCloseMenu() {
-    setAnchorEl(null);
-  }
-
-  function handleMyAccountClick() {
-    handleCloseMenu();
-    router.push('/account');
-  }
-
-  function handleLogoutClick() {
-    handleCloseMenu();
-    logout();
-  }
-
-  function handleMyOrdersClick() {
-    handleCloseMenu();
-    router.push('/account/orders');
-  }
+  const movement = useSelector(state => state.boardMovement);
 
   function handleCartClick() {
     handleCartVisibility();
@@ -151,7 +126,10 @@ export default function Header() {
         <div className={classes.container}>
           <div className={classes.logo}>
             {restaurant.id ? (
-              <Link href="/" className={classes.linkHome}>
+              <Link
+                href={{ pathname: '/', query: movement ? { session: movement.id } : undefined }}
+                className={classes.linkHome}
+              >
                 <img className={classes.img} src={restaurant.image.imageUrl} alt={restaurant.name} />
               </Link>
             ) : (
@@ -160,13 +138,19 @@ export default function Header() {
           </div>
           <div className={classes.headerLinks}>
             <div>
-              <Link href="/offers" className={classes.link}>
+              <Link
+                href={{ pathname: '/offers', query: movement ? { session: movement.id } : undefined }}
+                className={classes.link}
+              >
                 <LocalOfferIcons color="primary" /> ofertas
               </Link>
             </div>
             <div>
-              <Link href="/menu" className={classes.link}>
-                <MenuBookIcon color="primary" /> cardápio
+              <Link
+                href={{ pathname: '/menu', query: movement ? { session: movement.id } : undefined }}
+                className={classes.link}
+              >
+                <RestaurantMenuOutlined color="primary" /> cardápio
               </Link>
             </div>
             <div>
@@ -176,46 +160,12 @@ export default function Header() {
               </Typography>
             </div>
             <div>
-              {!user.id ? (
-                <>
-                  {restaurant.configs && (
-                    <Link
-                      href={restaurant.configs.require_login ? '/login' : '/guest-register'}
-                      className={classes.link}
-                    >
-                      <InputIcon color="primary" /> entrar
-                    </Link>
-                  )}
-                </>
-              ) : (
-                <>
-                  <Menu
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'center',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'center',
-                    }}
-                    getContentAnchorEl={null}
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleCloseMenu}
-                  >
-                    <MenuItem onClick={handleMyAccountClick}>minha conta</MenuItem>
-                    <MenuItem onClick={handleMyOrdersClick}>meus pedidos</MenuItem>
-                    <MenuItem onClick={handleLogoutClick}>sair</MenuItem>
-                  </Menu>
-                  <IconButton className={classes.btnAvatar} onClick={event => setAnchorEl(event.currentTarget)}>
-                    {user.image ? (
-                      <Avatar src={user.image.imageUrl} className={classes.avatar} />
-                    ) : (
-                      <Avatar>{user.name[0]}</Avatar>
-                    )}
-                  </IconButton>
-                </>
-              )}
+              <Link
+                href={{ pathname: '/board', query: movement ? { session: movement.id } : undefined }}
+                className={classes.link}
+              >
+                <AssignmentOutlined color="primary" /> mesa
+              </Link>
             </div>
           </div>
         </div>
