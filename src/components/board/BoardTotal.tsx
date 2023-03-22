@@ -88,10 +88,6 @@ const BoardTotal: React.FC = () => {
           <Button variant="contained" color="primary" size="large" fullWidth onClick={handleClick}>
             ACESSAR CARDÁPIO
           </Button>
-
-          <Button variant="text" color="primary" size="large" fullWidth>
-            SOLICITAR CONTA
-          </Button>
         </div>
       )}
     </div>
