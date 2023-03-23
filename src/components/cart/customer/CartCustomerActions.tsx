@@ -4,21 +4,19 @@ import React, { FC } from 'react';
 import { useModal } from 'src/components/modal/hooks/useModal';
 
 interface CartCustomerActionsProps {
-  handleSubmit(): Promise<void>;
+  handleSubmit(closeDialog: () => void): void;
 }
 
 const CartCustomerActions: FC<CartCustomerActionsProps> = ({ handleSubmit }) => {
   const { handleModalClose } = useModal();
 
   function handleClick() {
-    handleSubmit()
-      .then(handleModalClose)
-      .catch(err => console.error(err));
+    handleSubmit(handleModalClose);
   }
 
   return (
     <div>
-      <IconButton type="submit" color="inherit" onClick={handleClick}>
+      <IconButton color="inherit" onClick={handleClick}>
         <Done />
       </IconButton>
     </div>
