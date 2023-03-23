@@ -130,7 +130,7 @@ const BoardProductItem: FC<BoardProductItemProps> = ({ product }) => {
         <div className={classes.options}>
           <div>
             {product.ingredients
-              .filter(ingredient => ingredient.selected)
+              .filter(ingredient => !ingredient.selected)
               .map(ingredient => (
                 <Typography key={ingredient.id} variant="body2" display="inline" className={classes.ingredients}>
                   s/ {ingredient.name}

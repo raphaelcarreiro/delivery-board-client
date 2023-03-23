@@ -18,7 +18,7 @@ const CartCustomerActions: FC<CartCustomerActionsProps> = ({ handleSubmit }) => 
 
   return (
     <div>
-      <IconButton color="inherit" onClick={handleClick}>
+      <IconButton type="submit" color="inherit" onClick={handleClick}>
         <Done />
       </IconButton>
     </div>

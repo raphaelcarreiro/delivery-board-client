@@ -70,7 +70,10 @@ export function useBoardControlSocket(boardMovementId?: string): UseBoardControl
     });
 
     return () => {
-      socket.off(boardMovementId);
+      socket.off('board_products_added');
+      socket.off('board_products_added');
+      socket.off('board_product_deleted');
+      socket.off('board_payment_deleted');
     };
   }, [handleProductsAdded, handlePaymentAdded, handleProductDeleted, handlePaymentDeleted, boardMovementId]);
 
