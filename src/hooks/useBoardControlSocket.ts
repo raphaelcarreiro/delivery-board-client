@@ -20,8 +20,6 @@ export function useBoardControlSocket(boardMovementId?: string): UseBoardControl
 
   const handleProductsAdded = useCallback(
     (products: BoardOrderProduct[]) => {
-      console.log(products);
-
       dispatch(addBoardProducts(products));
     },
     [dispatch]
