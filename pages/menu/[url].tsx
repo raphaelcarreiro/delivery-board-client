@@ -102,7 +102,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   });
 
   try {
-    const response = await axiosInstance.get<CategoryType, AxiosResponse<CategoryType>>(`/categories/${params?.url}`);
+    const response = await axiosInstance.get<CategoryType, AxiosResponse<CategoryType>>(`/categories/${params?.url}`, {
+      params: { environment: 'board' },
+    });
     const products = response.data.products.map(product => {
       product.formattedPrice = moneyFormat(product.price);
       product.formattedSpecialPrice = moneyFormat(product.special_price);

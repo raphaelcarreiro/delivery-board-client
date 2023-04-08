@@ -36,7 +36,7 @@ export const getStaticProps: GetStaticProps<OffersPageProps> = async () => {
     },
   });
 
-  const response: AxiosResponse<Product[]> = await api.get('/products');
+  const response: AxiosResponse<Product[]> = await api.get('/products', { params: { environment: 'board' } });
 
   const restaurantResponse = await api.get('/restaurants');
 
