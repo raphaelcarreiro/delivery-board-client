@@ -43,8 +43,6 @@ interface AppProps {
   Component: NextComponentType;
 }
 
-// teste de comentário
-
 export const socket: Socket = io(process.env.NEXT_PUBLIC_SOCKET + '/client');
 let defferedPromptPwa;
 
