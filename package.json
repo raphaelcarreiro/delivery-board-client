@@ -40,7 +40,7 @@
   "scripts": {
     "dev": "set NODE_OPTIONS=--inspect && next dev",
     "debug": "set NODE_OPTIONS=--inspect && next dev",
-    "build": "node sitemapGenerator.js && next build",
+    "build": "next build",
     "start": "NODE_ENV=production node server.js -p $PORT",
     "createXml": "node sitemapGenerator.js"
   },
