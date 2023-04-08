@@ -14,7 +14,6 @@ import BottomNavigator from './components/sidebar/BottomNavigator';
 import InitialLoading from './components/loading/InitialLoading';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import defaultTheme from './theme';
-import io, { Socket } from 'socket.io-client';
 import reactGA from 'react-ga';
 import MessagingProvider from './providers/MessageProvider';
 import AuthProvider from './providers/AuthProvider';
@@ -28,6 +27,7 @@ import { Restaurant } from './types/restaurant';
 import LocationProvider from './providers/LocationProvider';
 import { useFetchBoardMovement } from './hooks/useFetchBoardMovement';
 import { useBoardControlSocket } from './hooks/useBoardControlSocket';
+import io, { Socket } from 'socket.io-client';
 
 const useStyles = makeStyles({
   progressBar: {
