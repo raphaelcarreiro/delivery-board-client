@@ -1,19 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { api } from './services/api';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
-import { setRestaurant, setRestaurantIsOpen } from './store/redux/modules/restaurant/actions';
 import { ThemeProvider, makeStyles } from '@material-ui/core/styles';
-import { createTheme } from 'src/helpers/createTheme';
-import { moneyFormat } from './helpers/numberFormat';
-import { setPromotions } from './store/redux/modules/promotion/actions';
 import { NextComponentType } from 'next';
 import { useSelector } from './store/redux/selector';
 import { LinearProgress } from '@material-ui/core';
 import BottomNavigator from './components/sidebar/BottomNavigator';
 import InitialLoading from './components/loading/InitialLoading';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import defaultTheme from './theme';
 import reactGA from 'react-ga';
 import MessagingProvider from './providers/MessageProvider';
 import AuthProvider from './providers/AuthProvider';
@@ -23,11 +16,13 @@ import FacebookLoginProvider from './providers/FacebookProvider';
 import LayoutHandler from './components/layout/LayoutHandler';
 import { AppProvider, AppContextValue } from './providers/AppProvider';
 import { useWindowSize } from './hooks/windowSize';
-import { Restaurant } from './types/restaurant';
 import LocationProvider from './providers/LocationProvider';
 import { useFetchBoardMovement } from './hooks/useFetchBoardMovement';
 import { useBoardControlSocket } from './hooks/useBoardControlSocket';
 import io, { Socket } from 'socket.io-client';
+import { useFetchPromotions } from './hooks/useFetchPromotions';
+import { useAppSocket } from './hooks/useAppSocket';
+import { useFecthRestaurant } from './hooks/useFetchRestaurant';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -49,19 +44,20 @@ let defferedPromptPwa;
 const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const classes = useStyles({});
   const router = useRouter();
-  const dispatch = useDispatch();
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
   const [isCartVisible, setIsCartVisible] = useState(false);
   const [redirect, setRedirect] = useState<string | null>(null);
   const [isProgressBarVisible, setIsProgressBarVisible] = useState(false);
-  const [theme, setTheme] = useState(defaultTheme);
   const [readyToInstall, setReadyToInstall] = useState(false);
   const restaurant = useSelector(state => state.restaurant);
   const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
-  const windowSize = useWindowSize();
+  const [theme, initialLoading] = useFecthRestaurant();
+  const [socket] = useAppSocket();
   const [isBoardMovementLoading] = useFetchBoardMovement(router.query.session as string | undefined);
   const [isSocketBoardConnected] = useBoardControlSocket(router.query.session as string | undefined);
+  const windowSize = useWindowSize();
+
+  useFetchPromotions();
 
   const handleCartVisibility = useCallback((state?: boolean) => {
     setIsCartVisible(oldValue => (state === undefined ? !oldValue : state));
@@ -100,79 +96,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
         reactGA.pageview(window.location.pathname);
       }
   }, [restaurant]);
-
-  useEffect(() => {
-    api
-      .get<Restaurant>('/restaurants')
-      .then(response => {
-        const _restaurant = response.data;
-        const { configs } = _restaurant;
-
-        dispatch(
-          setRestaurant({
-            ..._restaurant,
-            configs: {
-              ..._restaurant.configs,
-              formattedTax: moneyFormat(_restaurant.configs.tax_value),
-              formattedOrderMinimumValue: moneyFormat(_restaurant.configs.order_minimum_value),
-            },
-          })
-        );
-
-        setTheme(createTheme(_restaurant.primary_color, _restaurant.secondary_color));
-
-        if (configs.google_analytics_id) {
-          reactGA.initialize(_restaurant.configs.google_analytics_id);
-          reactGA.set({ page: window.location.pathname });
-          reactGA.pageview(window.location.pathname);
-        }
-      })
-      .catch(() => {
-        console.log('Erro ao carregar os dados do restaurante');
-      })
-      .finally(() => {
-        setInitialLoading(false);
-        document.body.classList.add('zoom');
-      });
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (!restaurant) return;
-    api
-      .get('/promotions')
-      .then(response => {
-        dispatch(setPromotions(response.data));
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }, [dispatch, restaurant]);
-
-  useEffect(() => {
-    function getRestaurantState() {
-      api
-        .get('/restaurant/state')
-        .then(response => {
-          dispatch(setRestaurantIsOpen(response.data.is_open));
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
-
-    if (restaurant) {
-      socket.emit('register', restaurant.id);
-
-      socket.on('handleRestaurantState', ({ state }: { state: boolean }) => {
-        dispatch(setRestaurantIsOpen(state));
-      });
-
-      socket.on('reconnect', () => {
-        socket.emit('register', restaurant.id);
-        getRestaurantState();
-      });
-    }
-  }, [dispatch, restaurant]);
 
   useEffect(() => {
     router.events.on('routeChangeStart', handleRouteChangeStart);
