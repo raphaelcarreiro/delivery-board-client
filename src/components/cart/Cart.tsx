@@ -20,10 +20,12 @@ import { useSelector } from 'src/store/redux/selector';
 import { CartProduct } from 'src/types/cart';
 import CartCustomer from './customer/CartCustomer';
 import { api } from 'src/services/api';
-import packageJson from '../../../package.json';
 import { setBoardCustomer } from 'src/store/redux/modules/boardMovement/actions';
 import CartSuccess from './CartSuccess';
 import CartError from './CartError';
+import { getOrderDataToSubmit } from './getOrderDataToSubmit';
+import InsideSaving from '../loading/InsideSaving';
+import CartHeader from './CartHeader';
 
 const useStyles = makeStyles(theme => ({
   cart: {
@@ -38,34 +40,11 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     flex: 1,
   },
-  title: {
+  header: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    '& svg': {
-      marginRight: 10,
-    },
     [theme.breakpoints.down('sm')]: {
       display: 'none',
-    },
-  },
-  coupon: {
-    textAlign: 'right',
-    marginBottom: 15,
-  },
-  info: {
-    display: 'grid',
-    gridGap: 7,
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginTop: 10,
-    marginBottom: 50,
-  },
-  infoItem: {
-    display: 'flex',
-    alignItems: 'center',
-    '& svg': {
-      marginRight: 10,
     },
   },
 }));
@@ -117,32 +96,42 @@ const Cart: FC = () => {
     setSelectedProduct(product);
   }
 
-  function handleSubmit() {
+  function formatOrderData(customerName?: string) {
+    if (!movement) {
+      return null;
+    }
+
+    if (!restaurant) {
+      return null;
+    }
+
+    const data = getOrderDataToSubmit(cart, movement, restaurant);
+
+    if (!customerName) {
+      return data;
+    }
+
+    return {
+      ...data,
+      customer_name: customerName,
+      customer: {
+        name: customerName,
+      } as any,
+    };
+  }
+
+  function handleSubmit(customerName?: string) {
+    const data = formatOrderData(customerName);
+
+    if (!data) {
+      return;
+    }
+
     if (!movement) {
       return;
     }
 
     setSaving(true);
-
-    const data = {
-      customer: movement.customer,
-      payment_method: null,
-      shipment: {
-        ...restaurant?.addresses.find(address => address.is_main),
-        shipment_method: 'board',
-      },
-      products: cart.products,
-      board_movement_id: movement.id,
-      total: cart.total,
-      discount: cart.discount,
-      change: 0,
-      tax: cart.tax,
-      origin: {
-        version: packageJson.version,
-        app_name: packageJson.name,
-        platform: 'board-web-app',
-      },
-    };
 
     api
       .post(`/boardMovements/${movement.id}/orders`, data)
@@ -171,6 +160,8 @@ const Cart: FC = () => {
 
       {showCustomerDialog && <CartCustomer onExited={() => setShowCustomerDialog(false)} />}
 
+      {saving && <InsideSaving />}
+
       {error ? (
         <CartError textError={error} handleReset={() => setError('')} />
       ) : success ? (
@@ -179,9 +170,7 @@ const Cart: FC = () => {
         <Coupon setClosedCouponView={() => setCouponView(false)} />
       ) : cart.products.length ? (
         <div className={classes.cart}>
-          <Typography className={classes.title} variant="h5" color="primary">
-            carrinho
-          </Typography>
+          <CartHeader />
 
           <CartProductList handleClickUpdateProduct={handleClickUpdateProduct} products={cart.products} />
 

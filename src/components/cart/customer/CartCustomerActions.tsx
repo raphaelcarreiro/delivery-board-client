@@ -4,14 +4,14 @@ import React, { FC } from 'react';
 import { useModal } from 'src/components/modal/hooks/useModal';
 
 interface CartCustomerActionsProps {
-  handleSubmit(closeDialog: () => void): void;
+  handleConfirm(closeDialog: () => void): void;
 }
 
-const CartCustomerActions: FC<CartCustomerActionsProps> = ({ handleSubmit }) => {
+const CartCustomerActions: FC<CartCustomerActionsProps> = ({ handleConfirm }) => {
   const { handleModalClose } = useModal();
 
   function handleClick() {
-    handleSubmit(handleModalClose);
+    handleConfirm(handleModalClose);
   }
 
   return (

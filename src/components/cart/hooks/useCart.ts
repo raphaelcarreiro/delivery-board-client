@@ -7,7 +7,7 @@ export type CartContextValue = {
   selectedProduct: Product | null;
   setShowCustomerDialog: Dispatch<SetStateAction<boolean>>;
   saving: boolean;
-  handleSubmit(): void;
+  handleSubmit(customerName?: string): void;
 };
 
 const CartContextValue = createContext<CartContextValue>({} as CartContextValue);

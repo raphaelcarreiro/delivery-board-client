@@ -5,6 +5,7 @@ import { ModalConsumer } from 'src/components/modal/hooks/useModal';
 import { setBoardCustomer } from 'src/store/redux/modules/boardMovement/actions';
 import Modal from '../../modal/Modal';
 import CartCustomerActions from './CartCustomerActions';
+import { useCart } from '../hooks/useCart';
 
 const styles = makeStyles({
   container: {
@@ -25,8 +26,9 @@ const CartCustomer: FC<CartCustomerProps> = ({ onExited }) => {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
   const input = useRef<HTMLInputElement>(null);
+  const { handleSubmit } = useCart();
 
-  function handleSubmit(closeDialog: () => void, event?: FormEvent<HTMLFormElement>) {
+  function handleConfirm(closeDialog: () => void, event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
 
     setError('');
@@ -39,6 +41,8 @@ const CartCustomer: FC<CartCustomerProps> = ({ onExited }) => {
     dispatch(setBoardCustomer(name));
 
     closeDialog();
+
+    handleSubmit(name);
   }
 
   return (
@@ -46,11 +50,11 @@ const CartCustomer: FC<CartCustomerProps> = ({ onExited }) => {
       maxWidth="sm"
       onExited={onExited}
       title="seu nome"
-      componentActions={<CartCustomerActions handleSubmit={handleSubmit} />}
+      componentActions={<CartCustomerActions handleConfirm={handleConfirm} />}
     >
       <ModalConsumer>
         {context => (
-          <form onSubmit={event => handleSubmit(context.handleModalClose, event)}>
+          <form onSubmit={event => handleConfirm(context.handleModalClose, event)}>
             <div className={classes.container}>
               <Typography variant="body1">Para continuar por favor informe seu nome</Typography>
               <TextField

@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Chip, Button } from '@material-ui/core';
 import { removeCoupon } from 'src/store/redux/modules/cart/actions';
-import PropTyes from 'prop-types';
+import { useSelector } from 'src/store/redux/selector';
 
 const useStyles = makeStyles({
   coupon: {
@@ -12,11 +12,11 @@ const useStyles = makeStyles({
   },
 });
 
-CartCouponButton.propTypes = {
-  setCouponView: PropTyes.func.isRequired,
-};
+interface CartCouponButtonProps {
+  setCouponView: Dispatch<SetStateAction<boolean>>;
+}
 
-export default function CartCouponButton({ setCouponView }) {
+export default function CartCouponButton({ setCouponView }: CartCouponButtonProps) {
   const classes = useStyles();
   const cart = useSelector(state => state.cart);
   const dispatch = useDispatch();
