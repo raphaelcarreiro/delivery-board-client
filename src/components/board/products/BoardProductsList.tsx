@@ -9,6 +9,11 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('md')]: {
       paddingBottom: 15,
     },
+    '& > li:last-child': {
+      [theme.breakpoints.down('sm')]: {
+        border: 'none',
+      },
+    },
   },
 }));
 

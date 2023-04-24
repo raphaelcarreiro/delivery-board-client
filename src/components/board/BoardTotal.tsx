@@ -6,9 +6,10 @@ import { useSelector } from 'src/store/redux/selector';
 const styles = makeStyles(theme => ({
   content: {
     display: 'flex',
-    // padding: 10,
+    backgroundColor: '#f5f5f5',
+    border: '1px solid #eee',
     flexDirection: 'column',
-    // border: '1px solid #eee',
+    padding: 10,
     '& > .row': {
       display: 'grid',
       gridTemplateColumns: '1fr 3fr',
