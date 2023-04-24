@@ -66,7 +66,7 @@ const Categories: React.FC = () => {
   const { isMobile } = useApp();
 
   useEffect(() => {
-    api.get<Category[]>('/categories').then(response => {
+    api.get<Category[]>('/categories', { params: { environment: 'board' } }).then(response => {
       setCategories(response.data.filter(category => category.activated));
     });
   }, []);
