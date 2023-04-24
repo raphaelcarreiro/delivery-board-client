@@ -51,7 +51,7 @@ export const getStaticProps: GetStaticProps<MenuPageProps> = async () => {
   });
 
   try {
-    const response = await instance.get<Category[]>('/categories');
+    const response = await instance.get<Category[]>('/categories', { params: { environment: 'board' } });
     const categories = response.data;
 
     const restaurantResponse = await instance.get<Restaurant>('/restaurants');

@@ -74,7 +74,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   });
 
   try {
-    const response = await instance.get<CategoryType[]>('/categories');
+    const response = await instance.get<CategoryType[]>('/categories', { params: { environment: 'board' } });
     const paths = response.data.map(category => ({
       params: {
         categoryUrl: category.url,
