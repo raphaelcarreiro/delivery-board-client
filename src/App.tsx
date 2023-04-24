@@ -19,7 +19,6 @@ import { useWindowSize } from './hooks/windowSize';
 import LocationProvider from './providers/LocationProvider';
 import { useFetchBoardMovement } from './hooks/useFetchBoardMovement';
 import { useBoardControlSocket } from './hooks/useBoardControlSocket';
-import io, { Socket } from 'socket.io-client';
 import { useFetchPromotions } from './hooks/useFetchPromotions';
 import { useAppSocket } from './hooks/useAppSocket';
 import { useFecthRestaurant } from './hooks/useFetchRestaurant';
@@ -38,8 +37,7 @@ interface AppProps {
   Component: NextComponentType;
 }
 
-export const socket: Socket = io(process.env.NEXT_PUBLIC_SOCKET + '/client');
-let defferedPromptPwa;
+let pwa: any;
 
 const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const classes = useStyles({});
@@ -76,14 +74,14 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   }, []);
 
   const handleInstallApp = useCallback(() => {
-    defferedPromptPwa.prompt();
-    defferedPromptPwa.userChoice.then(choiceResult => {
+    pwa.prompt();
+    pwa.userChoice.then(choiceResult => {
       if (choiceResult.outcome === 'accepted') {
         console.log('User accepted the A2HS prompt');
       } else {
         console.log('User dismissed the A2HS prompt');
       }
-      defferedPromptPwa = null;
+      pwa = null;
     });
   }, []);
 
@@ -107,7 +105,7 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     window.addEventListener('beforeinstallprompt', event => {
       event.preventDefault();
       setReadyToInstall(true);
-      defferedPromptPwa = event;
+      pwa = event;
     });
   }, []);
 
