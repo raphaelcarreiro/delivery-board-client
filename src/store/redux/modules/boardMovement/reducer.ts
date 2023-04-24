@@ -93,7 +93,7 @@ export default function reducer(state = INITIAL_STATE, action: BoardMovementActi
         return state;
       }
 
-      const onlyNonExistingProducts = action.products.filter(product => state.products.some(p => p.id !== product.id));
+      const onlyNonExistingProducts = action.products.filter(product => state.products.every(p => p.id !== product.id));
 
       return {
         ...state,
