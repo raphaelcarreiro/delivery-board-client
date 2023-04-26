@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Socket, io } from 'socket.io-client';
-import { api } from 'src/services/api';
-import { setRestaurantIsOpen } from 'src/store/redux/modules/restaurant/actions';
+import { setKitchenState } from 'src/store/redux/modules/restaurant/actions';
 import { useSelector } from 'src/store/redux/selector';
 
 type UseAppSocket = [Socket, boolean];
@@ -13,17 +12,6 @@ export function useAppSocket(): UseAppSocket {
   const restaurant = useSelector(state => state.restaurant);
   const dispatch = useDispatch();
   const [connected, setConnected] = useState(socket.connected);
-
-  const getRestaurantState = useCallback(() => {
-    api
-      .get('/restaurant/state')
-      .then(response => {
-        dispatch(setRestaurantIsOpen(response.data.is_open));
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }, [dispatch]);
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -47,14 +35,14 @@ export function useAppSocket(): UseAppSocket {
 
     socket.emit('register', restaurant.id);
 
-    socket.on('handleRestaurantState', ({ state }: { state: boolean }) => {
-      dispatch(setRestaurantIsOpen(state));
+    socket.on('kitchen_state_changed', ({ state }: { state: boolean }) => {
+      dispatch(setKitchenState(state));
     });
 
     return () => {
-      socket.off('handleRestaurantState');
+      socket.off('kitchen_state_changed');
     };
-  }, [dispatch, restaurant, getRestaurantState]);
+  }, [dispatch, restaurant]);
 
   useEffect(() => {
     if (restaurant && connected) {

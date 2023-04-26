@@ -54,6 +54,7 @@ interface RestaurantPhones {
 export interface Restaurant {
   id: number;
   is_open: boolean;
+  is_kitchen_open: boolean;
   name: string;
   description: string;
   logo?: string;

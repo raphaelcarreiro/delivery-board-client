@@ -50,7 +50,7 @@ const CartButtons: FC<CartButtonsProps> = ({ setDialogClosedRestaurant }) => {
       return;
     }
 
-    if (!restaurant?.is_open) {
+    if (!restaurant?.is_kitchen_open) {
       setDialogClosedRestaurant(true);
       return;
     }

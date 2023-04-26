@@ -1,5 +1,5 @@
 import { Restaurant, RestaurantConfig } from 'src/types/restaurant';
-import { RestaurantActionTypes, SET_RESTAURANT, SET_RESTAURANT_CONFIG, SET_RESTAURANT_IS_OPEN } from './types';
+import { RestaurantActionTypes, SET_RESTAURANT, SET_RESTAURANT_CONFIG } from './types';
 
 export function setRestaurant(restaurant: Restaurant): RestaurantActionTypes {
   return {
@@ -8,9 +8,9 @@ export function setRestaurant(restaurant: Restaurant): RestaurantActionTypes {
   };
 }
 
-export function setRestaurantIsOpen(state: boolean): RestaurantActionTypes {
+export function setKitchenState(state: boolean): RestaurantActionTypes {
   return {
-    type: SET_RESTAURANT_IS_OPEN,
+    type: '@restaurant/SET_KITCHEN_STATE',
     state,
   };
 }

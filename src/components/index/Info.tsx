@@ -102,7 +102,7 @@ type InfoProps = {
 };
 
 const Info: React.FC<InfoProps> = ({ restaurant }) => {
-  const classes = useStyles({ isOpen: restaurant.is_open });
+  const classes = useStyles({ isOpen: restaurant.is_kitchen_open });
 
   return (
     <div className={classes.container}>

@@ -1,7 +1,7 @@
 import { Restaurant, RestaurantConfig } from 'src/types/restaurant';
 
 export const SET_RESTAURANT = '@restaurant/SET_RESTAURANT';
-export const SET_RESTAURANT_IS_OPEN = '@restaurant/SET_RESTAURANT_IS_OPEN';
+export const SET_KITCHEN_STATE = '@restaurant/SET_KITCHEN_STATE';
 export const SET_RESTAURANT_CONFIG = '@restaurant/SET_RESTAURANT_CONFIG';
 
 interface SetRestaurant {
@@ -9,8 +9,8 @@ interface SetRestaurant {
   restaurant: Restaurant;
 }
 
-interface SetRestaurantIsOpen {
-  type: typeof SET_RESTAURANT_IS_OPEN;
+interface SetKitchenStateAction {
+  type: typeof SET_KITCHEN_STATE;
   state: boolean;
 }
 
@@ -20,4 +20,4 @@ interface SetRestaurantConfig {
   value: any;
 }
 
-export type RestaurantActionTypes = SetRestaurant | SetRestaurantIsOpen | SetRestaurantConfig;
+export type RestaurantActionTypes = SetRestaurant | SetKitchenStateAction | SetRestaurantConfig;
