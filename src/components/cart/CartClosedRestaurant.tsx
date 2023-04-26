@@ -35,7 +35,7 @@ export default function CartClosedRestaurant({ onExited }: CartClosedRestaurantP
         {({ handleCloseDialog }) => (
           <div className={classes.container}>
             <Typography variant="h6" className={classes.message}>
-              A cozinha de {restaurant?.name} está fechada
+              {restaurant?.name} está fechado
             </Typography>
             <Button variant="contained" color="primary" onClick={handleCloseDialog}>
               Entendi :(
