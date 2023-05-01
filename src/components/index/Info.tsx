@@ -122,8 +122,9 @@ const Info: React.FC<InfoProps> = ({ restaurant }) => {
           {restaurant.configs.delivery_time > 0 && (
             <div className={classes.deliveryTime}>
               <Schedule />
+
               <Typography variant="h6" className={classes.infoItem}>
-                {restaurant.configs.delivery_time} minutos
+                {restaurant.configs.board_time} minutos
               </Typography>
             </div>
           )}

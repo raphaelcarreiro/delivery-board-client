@@ -13,6 +13,7 @@ export interface RestaurantConfig {
   tax_value: number;
   formattedTax: string;
   delivery_time: number;
+  board_time: number;
   order_minimum_value: number;
   formattedOrderMinimumValue: string;
   order_auto_approve: boolean;
