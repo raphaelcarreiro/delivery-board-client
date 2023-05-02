@@ -72,6 +72,8 @@ const Cart: FC = () => {
     setShowCustomerDialog,
     saving,
     handleSubmit,
+    setError,
+    error,
   };
 
   const isPizza = useMemo(() => {

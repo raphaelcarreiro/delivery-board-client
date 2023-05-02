@@ -8,6 +8,8 @@ export type CartContextValue = {
   setShowCustomerDialog: Dispatch<SetStateAction<boolean>>;
   saving: boolean;
   handleSubmit(customerName?: string): void;
+  setError: Dispatch<SetStateAction<string>>;
+  error: string;
 };
 
 const CartContextValue = createContext<CartContextValue>({} as CartContextValue);

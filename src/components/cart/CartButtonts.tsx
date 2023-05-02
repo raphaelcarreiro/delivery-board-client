@@ -32,13 +32,13 @@ interface CartButtonsProps {
   setDialogClosedRestaurant: Dispatch<SetStateAction<boolean>>;
 }
 
-const CartButtons: FC<CartButtonsProps> = ({ setDialogClosedRestaurant }) => {
+const CartButtons: FC<CartButtonsProps> = () => {
   const router = useRouter();
   const classes = styles();
   const { handleCartVisibility } = useApp();
   const restaurant = useSelector(state => state.restaurant);
   const movement = useSelector(state => state.boardMovement);
-  const { setShowCustomerDialog, handleSubmit, saving } = useCart();
+  const { setShowCustomerDialog, handleSubmit, saving, setError } = useCart();
 
   function handleBuyingClick() {
     handleCartVisibility(false);
@@ -51,7 +51,7 @@ const CartButtons: FC<CartButtonsProps> = ({ setDialogClosedRestaurant }) => {
     }
 
     if (!restaurant?.is_kitchen_open) {
-      setDialogClosedRestaurant(true);
+      setError(`${restaurant?.name} está fechado`);
       return;
     }
 
@@ -73,7 +73,7 @@ const CartButtons: FC<CartButtonsProps> = ({ setDialogClosedRestaurant }) => {
         </Button>
       )}
 
-      {!movement?.is_open && (
+      {movement && !movement.is_open && (
         <div className={classes.warning}>
           <Typography variant="h6">Esta conta foi fechada. Não é possível enviar pedidos</Typography>
         </div>
