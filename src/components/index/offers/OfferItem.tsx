@@ -6,16 +6,16 @@ import { Product } from 'src/types/product';
 const useStyles = makeStyles({
   li: {
     position: 'relative',
-    width: 200,
-    boxShadow: '0 0 5px 0 #ddd',
+    width: 220,
     cursor: 'pointer',
-
     '&:hover': {
-      transform: 'scale(1.01)',
+      transform: 'scale(1)',
+      boxShadow: '0 0 5px 0 #ddd',
     },
     transition: 'transform 0.3s ease',
+    backgroundColor: '#fff',
+    padding: 15,
   },
-
   image: {
     width: 200,
     height: 200,

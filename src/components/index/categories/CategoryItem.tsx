@@ -21,6 +21,10 @@ const useStyles = makeStyles({
   promotionDescription: {
     marginTop: 5,
   },
+  categoryName: {
+    fontWeight: 600,
+    fontSize: 18,
+  },
 });
 
 interface CategoryItemProps extends HTMLAttributes<HTMLLIElement> {
@@ -39,7 +43,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({ category, ...rest }) => {
           alt={category.name}
         />
         <div className={classes.promotionDescription}>
-          <Typography align="center" color="textSecondary">
+          <Typography className={classes.categoryName} align="center" color="textSecondary">
             {category.name}
           </Typography>
         </div>

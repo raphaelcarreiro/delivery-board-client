@@ -2,6 +2,7 @@ import { makeStyles, Typography } from '@material-ui/core';
 import { Schedule } from '@material-ui/icons';
 import React from 'react';
 import { Restaurant } from 'src/types/restaurant';
+import StatusIcon from '@material-ui/icons/FiberManualRecord';
 
 interface UseStyleProps {
   isOpen: boolean;
@@ -117,6 +118,10 @@ const Info: React.FC<InfoProps> = ({ restaurant }) => {
           <Typography className={classes.description} variant="body2" color="textSecondary">
             {restaurant.description}
           </Typography>
+          <div className={classes.status}>
+            <Typography variant="body1">{restaurant.is_kitchen_open ? 'aberto' : 'fechado'}</Typography>
+            <StatusIcon />
+          </div>
         </div>
         <div className={classes.info}>
           {restaurant.configs.delivery_time > 0 && (

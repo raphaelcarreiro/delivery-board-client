@@ -12,6 +12,9 @@ const useStyles = makeStyles<Theme, MakeStylesProps>(theme => ({
     height: 300,
     position: 'relative',
     zIndex: 1,
+    [theme.breakpoints.down('sm')]: {
+      height: 300,
+    },
   },
   background: ({ coverUrl, mobileCoverUrl }) => ({
     top: 0,
@@ -23,7 +26,6 @@ const useStyles = makeStyles<Theme, MakeStylesProps>(theme => ({
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
     backgroundSize: 'cover',
-    // filter: 'brightness(1) blur(0px)',
     zIndex: 2,
     borderRadius: '10px 10px 0 0',
     [theme.breakpoints.down('sm')]: {
