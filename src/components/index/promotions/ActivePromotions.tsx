@@ -35,7 +35,7 @@ const ActivePromotions: React.FC = () => {
       {selectedPromotion && <PromotionDetail />}
       <div className={classes.container}>
         <div className={classes.header}>
-          <Typography>promoções</Typography>
+          <Typography variant="h6">promoções</Typography>
         </div>
         <ActivePromotionList promotions={promotions} />
       </div>
