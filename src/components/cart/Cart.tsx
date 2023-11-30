@@ -133,6 +133,10 @@ const Cart: FC = () => {
       return;
     }
 
+    if (!saving) {
+      return;
+    }
+
     setSaving(true);
 
     api

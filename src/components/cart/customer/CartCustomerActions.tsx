@@ -2,6 +2,7 @@ import { IconButton } from '@material-ui/core';
 import { Done } from '@material-ui/icons';
 import React, { FC } from 'react';
 import { useModal } from 'src/components/modal/hooks/useModal';
+import { useCart } from '../hooks/useCart';
 
 interface CartCustomerActionsProps {
   handleConfirm(closeDialog: () => void): void;
@@ -9,6 +10,7 @@ interface CartCustomerActionsProps {
 
 const CartCustomerActions: FC<CartCustomerActionsProps> = ({ handleConfirm }) => {
   const { handleModalClose } = useModal();
+  const { saving } = useCart();
 
   function handleClick() {
     handleConfirm(handleModalClose);
@@ -16,7 +18,7 @@ const CartCustomerActions: FC<CartCustomerActionsProps> = ({ handleConfirm }) =>
 
   return (
     <div>
-      <IconButton color="inherit" onClick={handleClick}>
+      <IconButton disabled={saving} color="inherit" onClick={handleClick}>
         <Done />
       </IconButton>
     </div>
