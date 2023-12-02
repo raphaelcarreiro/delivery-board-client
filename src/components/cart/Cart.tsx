@@ -123,6 +123,10 @@ const Cart: FC = () => {
   }
 
   function handleSubmit(customerName?: string) {
+    if (saving) {
+      return;
+    }
+
     const data = formatOrderData(customerName);
 
     if (!data) {
@@ -130,10 +134,6 @@ const Cart: FC = () => {
     }
 
     if (!movement) {
-      return;
-    }
-
-    if (!saving) {
       return;
     }
 
