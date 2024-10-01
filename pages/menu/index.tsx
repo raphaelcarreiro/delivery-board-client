@@ -1,6 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
-import { GetStaticProps, NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import axios from 'axios';
 import { Category } from 'src/types/category';
 import { Typography } from '@material-ui/core';
@@ -42,16 +42,16 @@ const MenuPage: NextPage<MenuPageProps> = ({ categories, error, restaurant }) =>
 
 export default MenuPage;
 
-export const getStaticProps: GetStaticProps<MenuPageProps> = async () => {
+export const getServerSideProps: GetServerSideProps<MenuPageProps> = async () => {
   const instance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API,
     headers: {
-      RestaurantId: process.env.NEXT_PUBLIC_RESTAURANT_ID,
+      'x-restaurant-id': process.env.NEXT_PUBLIC_RESTAURANT_UUID,
     },
   });
 
   try {
-    const response = await instance.get<Category[]>('/categories', { params: { environment: 'board' } });
+    const response = await instance.get<Category[]>('/categories');
     const categories = response.data;
 
     const restaurantResponse = await instance.get<Restaurant>('/restaurants');
@@ -62,12 +62,11 @@ export const getStaticProps: GetStaticProps<MenuPageProps> = async () => {
         categories,
         restaurant,
       },
-      revalidate: 300,
     };
   } catch (err) {
     return {
       props: {
-        error: 'Aconteceu um erro ao carregar as categorias',
+        error: 'Aconteceu um erro ao carregar as categorias' + (err as any).message,
         categories: [],
       },
     };
