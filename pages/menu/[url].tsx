@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { moneyFormat } from 'src/helpers/numberFormat';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
-import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import { Category as CategoryType } from 'src/types/category';
 import InitialLoading from 'src/components/loading/InitialLoading';
 import { useRouter } from 'next/router';
@@ -68,32 +68,7 @@ const CategoryPage: NextPage<CategoryPageProps> = ({ category, error }) => {
 
 export default CategoryPage;
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const instance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API,
-  });
-
-  try {
-    const response = await instance.get<CategoryType[]>('/categories', { params: { environment: 'board' } });
-    const paths = response.data.map(category => ({
-      params: {
-        categoryUrl: category.url,
-      },
-    }));
-
-    return {
-      paths,
-      fallback: 'blocking',
-    };
-  } catch (err) {
-    return {
-      paths: [],
-      fallback: 'blocking',
-    };
-  }
-};
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const axiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API,
     headers: {
@@ -120,7 +95,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       props: {
         category,
       },
-      revalidate: 180,
     };
   } catch (err) {
     const error = err as AxiosError<any>;
