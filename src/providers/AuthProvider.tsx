@@ -1,4 +1,12 @@
-import React, { useCallback, useContext, useState, useEffect, Dispatch, SetStateAction } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+  PropsWithChildren,
+} from 'react';
 import { useDispatch } from 'react-redux';
 import jwt from 'jsonwebtoken';
 import { removeUser, setUser } from 'src/store/redux/modules/user/actions';
@@ -32,7 +40,7 @@ export type SocialUserProfile = {
 
 const AuthContext = React.createContext({} as AuthContextData);
 
-const AuthProvider: React.FC = ({ children }) => {
+const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [loggingOff, setLoggingOff] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
