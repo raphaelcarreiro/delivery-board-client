@@ -53,6 +53,7 @@ interface RestaurantPhones {
 }
 
 export interface Restaurant {
+  uuid: string;
   id: number;
   is_open: boolean;
   is_kitchen_open: boolean;
