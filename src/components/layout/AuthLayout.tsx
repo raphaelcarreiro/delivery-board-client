@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useApp } from 'src/providers/AppProvider';
 
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
   },
 });
 
-const AuthLayout: React.FC = ({ children }) => {
+const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const { windowHeight } = useApp();
   const classes = useStyles({ windowHeight });
 
