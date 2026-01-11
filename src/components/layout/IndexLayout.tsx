@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import Header from './header/Header';
 import Footer from './footer/Footer';
 import { makeStyles } from '@material-ui/core/styles';
@@ -73,7 +73,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const IndexLayout: React.FC = ({ children }) => {
+const IndexLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const { isMobile, windowWidth, isCartVisible, handleCartVisibility, windowHeight } = useApp();
   const classes = useStyles({ isCartVisible, windowHeight });
 
