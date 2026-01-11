@@ -18,10 +18,10 @@ import { AppProvider, AppContextValue } from './providers/AppProvider';
 import { useWindowSize } from './hooks/windowSize';
 import LocationProvider from './providers/LocationProvider';
 import { useFetchBoardMovement } from './hooks/useFetchBoardMovement';
-import { useBoardControlSocket } from './hooks/useBoardControlSocket';
+import { useBoardControlSocket } from './hooks/use-board-control-socket';
 import { useFetchPromotions } from './hooks/useFetchPromotions';
-import { useAppSocket } from './hooks/useAppSocket';
 import { useFecthRestaurant } from './hooks/useFetchRestaurant';
+import { useSocketEvents } from './hooks/use-socket-events';
 
 const useStyles = makeStyles({
   progressBar: {
@@ -50,11 +50,11 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
   const restaurant = useSelector(state => state.restaurant);
   const [shownPlayStoreBanner, setShownPlayStoreBanner] = useState(true);
   const [theme, initialLoading] = useFecthRestaurant();
-  const [socket] = useAppSocket();
   const [isBoardMovementLoading] = useFetchBoardMovement(router.query.session as string | undefined);
-  const [isSocketBoardConnected] = useBoardControlSocket(router.query.session as string | undefined);
   const windowSize = useWindowSize();
 
+  useSocketEvents();
+  useBoardControlSocket(router.query.session as string | undefined);
   useFetchPromotions();
 
   const handleCartVisibility = useCallback((state?: boolean) => {
@@ -124,7 +124,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     isOpenMenu,
     isCartVisible,
     redirect,
-    socket,
     readyToInstall,
     shownPlayStoreBanner,
     handleOpenMenu,
@@ -133,7 +132,6 @@ const App: React.FC<AppProps> = ({ pageProps, Component }) => {
     handleInstallApp,
     handleShowPlayStoreBanner,
     isBoardMovementLoading,
-    isSocketBoardConnected,
   };
 
   return (
