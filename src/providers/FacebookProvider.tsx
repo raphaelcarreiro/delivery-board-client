@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { isFacebookNavigator } from 'src/helpers/isFacebookNavigator';
 import { setRestaurantConfig } from 'src/store/redux/modules/restaurant/actions';
@@ -18,7 +18,7 @@ export function useFacebookLogin(): FacebookLoginContextValue {
   return context;
 }
 
-const FacebookLoginProvider: React.FC = ({ children }) => {
+const FacebookLoginProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [facebookUser, setFacebookUser] = useState<any | null>(null);
   const restaurant = useSelector(state => state.restaurant);
   const { facebookLogin: handleFacebookLogin } = useAuth();
