@@ -132,7 +132,9 @@ MyDocument.getInitialProps = async ctx => {
 
   const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API,
-    headers: { RestaurantId: process.env.NEXT_PUBLIC_RESTAURANT_ID },
+    headers: {
+      'x-restaurant-id': process.env.NEXT_PUBLIC_RESTAURANT_UUID,
+    },
   });
 
   const response = await api.get('restaurants');
