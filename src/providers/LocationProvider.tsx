@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useCallback } from 'react';
+import React, { createContext, useState, useContext, useCallback, PropsWithChildren } from 'react';
 
 interface LocationContextValue {
   location: Location | null;
@@ -14,7 +14,7 @@ interface Location {
 
 const LocationContext = createContext<LocationContextValue>({} as LocationContextValue);
 
-const LocationProvider: React.FC = ({ children }) => {
+const LocationProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [location, setLocation] = useState<Location | null>(null);
   const [isPermittionDenied, setIsPermittionDenied] = useState(false);
   const [positionWasRequested, setPositionWasRequested] = useState(false);
