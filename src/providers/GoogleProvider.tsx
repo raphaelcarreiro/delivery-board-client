@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { isFacebookNavigator } from 'src/helpers/isFacebookNavigator';
 import { setRestaurantConfig } from 'src/store/redux/modules/restaurant/actions';
@@ -18,7 +18,7 @@ export function useGoogleLogin(): GoogleLoginContextValue {
   return context;
 }
 
-const GoogleLoginProvider: React.FC = ({ children }) => {
+const GoogleLoginProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [googleUserProfile, setGoogleUserProfile] = useState<gapi.auth2.BasicProfile | null>(null);
   const restaurant = useSelector(state => state.restaurant);
   const { googleLogin: handleGoogleLogin } = useAuth();
