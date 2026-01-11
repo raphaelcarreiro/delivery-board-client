@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import CheckoutHeader from './header/CheckoutHeader';
 import { makeStyles } from '@material-ui/core/styles';
 import { useApp } from 'src/providers/AppProvider';
@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const CheckoutLayout: React.FC = ({ children }) => {
+const CheckoutLayout: React.FC<PropsWithChildren> = ({ children }) => {
   const { isMobile, windowWidth } = useApp();
   const classes = useStyles();
 
