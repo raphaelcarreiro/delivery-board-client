@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback, CSSProperties } from 'react';
+import React, { useState, useContext, useCallback, CSSProperties, PropsWithChildren } from 'react';
 import Messaging from 'src/components/messaging/Messaging';
 import MessagingLarge from 'src/components/messaging/MessagingLarge';
 import { useApp } from './AppProvider';
@@ -19,7 +19,7 @@ type MessagingOptions = {
   variant?: MessagingContainerType;
 };
 
-const MessagingProvider: React.FC = ({ children }) => {
+const MessagingProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [style, setOptions] = useState<CSSProperties | undefined>(undefined);
