@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
 import {
   firebaseMessagingIsSupported,
   getFirebaseMessaging,
@@ -20,7 +20,7 @@ export function useFirebase(): FirebaseContextValue {
   return context;
 }
 
-const FirebaseProvider: React.FC = ({ children }) => {
+const FirebaseProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [fmHasToken, setFmHasToken] = useState(false);
   const user = useSelector(state => state.user);
 
