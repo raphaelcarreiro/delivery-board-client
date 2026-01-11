@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import CheckoutLayout from './CheckoutLayout';
 import DefaultLayout from './DefaultLayout';
 import AuthLayout from './AuthLayout';
@@ -20,7 +20,7 @@ const checkoutPaths = ['/checkout'];
 
 const indexPath = ['/'];
 
-const LayoutHandler: React.FC = ({ children }) => {
+const LayoutHandler: React.FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
 
   return (
