@@ -40,7 +40,8 @@
     "@typescript-eslint/no-unused-vars": "warn",
     "import/no-duplicates": "off",
     "no-use-before-define": "off",
-    "no-unused-vars": "warn"
+    "no-unused-vars": "warn",
+    "no-useless-constructor": "off"
   },
   "settings": {
     "import/resolver": {
@@ -61,7 +62,8 @@
         "camelcase": "off",
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
-        "react/display-name": "off"
+        "react/display-name": "off",
+        "no-useless-constructor": "off"
       }
     }
   ]
